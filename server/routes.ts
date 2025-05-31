@@ -26,6 +26,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Search attorneys with filters for urgent matching
+  app.get("/api/attorneys/search", async (req, res) => {
+    try {
+      const { location, pricingTier, specialty, emergencyOnly } = req.query;
+      const attorneys = await storage.getAttorneys(); // Simplified for now
+      
+      // Apply client-side filtering until storage method is fixed
+      let filteredAttorneys = attorneys.filter(attorney => {
+        if (location && typeof location === 'string') {
+          const locationMatch = attorney.location.toLowerCase().includes(location.toLowerCase()) ||
+                               attorney.state?.toLowerCase().includes(location.toLowerCase()) ||
+                               attorney.city?.toLowerCase().includes(location.toLowerCase());
+          if (!locationMatch) return false;
+        }
+        
+        if (pricingTier && attorney.pricingTier !== pricingTier) return false;
+        if (emergencyOnly === 'true' && !attorney.availableForEmergency) return false;
+        
+        return true;
+      });
+
+      // Sort by emergency availability first, then by rating
+      filteredAttorneys.sort((a, b) => {
+        if (a.availableForEmergency && !b.availableForEmergency) return -1;
+        if (!a.availableForEmergency && b.availableForEmergency) return 1;
+        return b.rating - a.rating;
+      });
+
+      res.json(filteredAttorneys);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to search attorneys" });
+    }
+  });
+
   // Get attorney by ID
   app.get("/api/attorneys/:id", async (req, res) => {
     try {

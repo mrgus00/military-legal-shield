@@ -7,6 +7,7 @@ export default function Header() {
   const [location] = useLocation();
 
   const navigation = [
+    { name: "Urgent Matching", href: "/urgent-match" },
     { name: "Legal Resources", href: "/resources" },
     { name: "Find Attorneys", href: "/attorneys" },
     { name: "Education", href: "/education" },
@@ -24,8 +25,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <Shield className="text-navy-800 w-8 h-8 mr-3" />
-              <h1 className="text-xl font-bold text-navy-800">MilLegal Defense</h1>
+              <Shield className="text-red-600 w-8 h-8 mr-3" />
+              <h1 className="text-xl font-bold text-red-600">Soldier on Fire</h1>
             </Link>
             <nav className="hidden md:ml-10 md:flex space-x-8">
               {navigation.map((item) => (

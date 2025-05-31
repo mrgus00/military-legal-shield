@@ -17,6 +17,7 @@ import WeekendSafety from "@/pages/weekend-safety";
 import Forum from "@/pages/forum";
 import LearningDashboard from "@/pages/learning-dashboard";
 import MicroChallenges from "@/pages/micro-challenges";
+import TerminologyDemo from "@/pages/terminology-demo";
 
 function Router() {
   return (
@@ -34,6 +35,7 @@ function Router() {
       <Route path="/forum" component={Forum} />
       <Route path="/learning-dashboard" component={LearningDashboard} />
       <Route path="/micro-challenges" component={MicroChallenges} />
+      <Route path="/terminology-demo" component={TerminologyDemo} />
       <Route component={NotFound} />
     </Switch>
   );

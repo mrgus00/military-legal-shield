@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Check, Filter } from "lucide-react";
 import { useState } from "react";
 import type { LegalResource } from "@shared/schema";
+import MilitaryTooltip from "@/components/military-tooltip";
 
 export default function Resources() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");

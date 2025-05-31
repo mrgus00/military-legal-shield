@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle, Users } from "lucide-react";
+import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle, Users, Zap } from "lucide-react";
 import { Link } from "wouter";
 
 export default function QuickActions() {

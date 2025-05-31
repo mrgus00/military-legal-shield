@@ -403,6 +403,66 @@ export const learningStats = pgTable("learning_stats", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Micro-challenges for knowledge retention
+export const microChallenges = pgTable("micro_challenges", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // quiz, scenario, case-study, true-false
+  difficulty: text("difficulty").notNull(), // easy, medium, hard
+  topic: text("topic").notNull(), // ucmj, clearance, administrative, etc
+  questionType: text("question_type").notNull(), // multiple-choice, true-false, scenario-based
+  question: text("question").notNull(),
+  options: text("options").array(), // for multiple choice questions
+  correctAnswer: text("correct_answer").notNull(),
+  explanation: text("explanation").notNull(),
+  points: integer("points").default(10),
+  timeLimit: integer("time_limit").default(60), // seconds
+  tags: text("tags").array(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User challenge attempts and results
+export const challengeAttempts = pgTable("challenge_attempts", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  challengeId: integer("challenge_id").references(() => microChallenges.id),
+  userAnswer: text("user_answer").notNull(),
+  isCorrect: boolean("is_correct").notNull(),
+  timeSpent: integer("time_spent"), // seconds taken to answer
+  pointsEarned: integer("points_earned").default(0),
+  hintsUsed: integer("hints_used").default(0),
+  attemptedAt: timestamp("attempted_at").defaultNow(),
+});
+
+// Daily challenge system
+export const dailyChallenges = pgTable("daily_challenges", {
+  id: serial("id").primaryKey(),
+  challengeDate: timestamp("challenge_date").notNull(),
+  challengeId: integer("challenge_id").references(() => microChallenges.id),
+  category: text("category").notNull(),
+  difficulty: text("difficulty").notNull(),
+  bonusPoints: integer("bonus_points").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Challenge streaks and completion tracking
+export const challengeStats = pgTable("challenge_stats", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  totalChallengesCompleted: integer("total_challenges_completed").default(0),
+  correctAnswers: integer("correct_answers").default(0),
+  currentStreak: integer("current_streak").default(0),
+  longestStreak: integer("longest_streak").default(0),
+  averageScore: integer("average_score").default(0),
+  fastestTime: integer("fastest_time"), // fastest completion time in seconds
+  totalTimeSpent: integer("total_time_spent").default(0),
+  lastChallengeDate: timestamp("last_challenge_date"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -560,6 +620,28 @@ export const insertLearningStatsSchema = createInsertSchema(learningStats).omit(
   updatedAt: true,
 });
 
+export const insertMicroChallengeSchema = createInsertSchema(microChallenges).omit({
+  id: true,
+  isActive: true,
+  createdAt: true,
+});
+
+export const insertChallengeAttemptSchema = createInsertSchema(challengeAttempts).omit({
+  id: true,
+  attemptedAt: true,
+});
+
+export const insertDailyChallengeSchema = createInsertSchema(dailyChallenges).omit({
+  id: true,
+  isActive: true,
+  createdAt: true,
+});
+
+export const insertChallengeStatsSchema = createInsertSchema(challengeStats).omit({
+  id: true,
+  updatedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -643,3 +725,15 @@ export type UserAchievement = typeof userAchievements.$inferSelect;
 
 export type InsertLearningStats = z.infer<typeof insertLearningStatsSchema>;
 export type LearningStats = typeof learningStats.$inferSelect;
+
+export type InsertMicroChallenge = z.infer<typeof insertMicroChallengeSchema>;
+export type MicroChallenge = typeof microChallenges.$inferSelect;
+
+export type InsertChallengeAttempt = z.infer<typeof insertChallengeAttemptSchema>;
+export type ChallengeAttempt = typeof challengeAttempts.$inferSelect;
+
+export type InsertDailyChallenge = z.infer<typeof insertDailyChallengeSchema>;
+export type DailyChallenge = typeof dailyChallenges.$inferSelect;
+
+export type InsertChallengeStats = z.infer<typeof insertChallengeStatsSchema>;
+export type ChallengeStats = typeof challengeStats.$inferSelect;

@@ -2,18 +2,43 @@ import { useQuery } from "@tanstack/react-query";
 import { imageService } from "@/lib/imageService";
 
 export default function MilitaryBranchesBanner() {
-  const { data: militarySeals } = useQuery({
-    queryKey: ["military-seals"],
-    queryFn: () => imageService.searchImages("US military branch seal emblem official", 6),
+  const { data: armyImages } = useQuery({
+    queryKey: ["army-images"],
+    queryFn: () => imageService.searchImages("army soldier military uniform boots", 2),
+  });
+
+  const { data: navyImages } = useQuery({
+    queryKey: ["navy-images"], 
+    queryFn: () => imageService.searchImages("aircraft carrier navy ship military", 2),
+  });
+
+  const { data: marineImages } = useQuery({
+    queryKey: ["marine-images"],
+    queryFn: () => imageService.searchImages("marine soldier combat gear military", 2),
+  });
+
+  const { data: airforceImages } = useQuery({
+    queryKey: ["airforce-images"],
+    queryFn: () => imageService.searchImages("F22 raptor fighter jet military aircraft", 2),
+  });
+
+  const { data: coastguardImages } = useQuery({
+    queryKey: ["coastguard-images"],
+    queryFn: () => imageService.searchImages("coast guard boat ship rescue", 2),
+  });
+
+  const { data: spaceforceImages } = useQuery({
+    queryKey: ["spaceforce-images"],
+    queryFn: () => imageService.searchImages("space satellite rocket military space force", 2),
   });
 
   const branches = [
-    { name: "U.S. Army", established: "1775" },
-    { name: "U.S. Navy", established: "1775" },
-    { name: "U.S. Marine Corps", established: "1775" },
-    { name: "U.S. Air Force", established: "1947" },
-    { name: "U.S. Coast Guard", established: "1790" },
-    { name: "U.S. Space Force", established: "2019" }
+    { name: "U.S. Army", established: "1775", images: armyImages },
+    { name: "U.S. Navy", established: "1775", images: navyImages },
+    { name: "U.S. Marine Corps", established: "1775", images: marineImages },
+    { name: "U.S. Air Force", established: "1947", images: airforceImages },
+    { name: "U.S. Coast Guard", established: "1790", images: coastguardImages },
+    { name: "U.S. Space Force", established: "2019", images: spaceforceImages }
   ];
 
   return (
@@ -29,20 +54,20 @@ export default function MilitaryBranchesBanner() {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center">
-          {branches.map((branch, index) => {
-            const sealImage = militarySeals && militarySeals[index % militarySeals.length];
+          {branches.map((branch) => {
+            const branchImage = branch.images && branch.images.length > 0 ? branch.images[0] : null;
             
             return (
               <div key={branch.name} className="text-center group">
-                <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
-                  {sealImage ? (
+                <div className="w-20 h-20 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
+                  {branchImage ? (
                     <img
-                      src={sealImage.urls.small}
-                      alt={`${branch.name} official seal`}
-                      className="w-16 h-16 object-cover rounded-full"
+                      src={branchImage.urls.small}
+                      alt={`${branch.name} military imagery`}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-16 h-16 bg-navy-800 rounded-full flex items-center justify-center">
+                    <div className="w-full h-full bg-navy-800 flex items-center justify-center">
                       <span className="text-white font-bold text-xs">
                         {branch.name.split(' ').slice(1, 2).join('').toUpperCase()}
                       </span>

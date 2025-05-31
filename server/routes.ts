@@ -399,6 +399,185 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Legal scenario simulation routes
+  app.get("/api/scenarios", async (req, res) => {
+    try {
+      const { category, difficulty, branch } = req.query;
+      const scenarios = await storage.getLegalScenarios(
+        category as string,
+        difficulty as string,
+        branch as string
+      );
+      res.json(scenarios);
+    } catch (error) {
+      console.error("Error fetching scenarios:", error);
+      res.status(500).json({ message: "Error fetching scenarios" });
+    }
+  });
+
+  app.get("/api/scenarios/:id", async (req, res) => {
+    try {
+      const scenarioId = parseInt(req.params.id);
+      const scenario = await storage.getLegalScenario(scenarioId);
+      
+      if (!scenario) {
+        return res.status(404).json({ message: "Scenario not found" });
+      }
+      
+      res.json(scenario);
+    } catch (error) {
+      console.error("Error fetching scenario:", error);
+      res.status(500).json({ message: "Error fetching scenario" });
+    }
+  });
+
+  app.post("/api/scenarios/generate", async (req, res) => {
+    try {
+      const { generateLegalScenario } = await import("./openai");
+      const { category, difficulty, branch, topic } = req.body;
+      
+      const scenarioData = await generateLegalScenario({
+        category,
+        difficulty,
+        branch,
+        topic
+      });
+      
+      const scenario = await storage.createLegalScenario({
+        ...scenarioData,
+        category,
+        difficulty,
+        branch: branch || 'All'
+      });
+      
+      res.json(scenario);
+    } catch (error) {
+      console.error("Error generating scenario:", error);
+      res.status(500).json({ message: "Error generating scenario" });
+    }
+  });
+
+  // Scenario session routes
+  app.get("/api/scenario-sessions", async (req, res) => {
+    try {
+      const userId = 1; // Mock user ID for now
+      const sessions = await storage.getScenarioSessions(userId);
+      res.json(sessions);
+    } catch (error) {
+      console.error("Error fetching scenario sessions:", error);
+      res.status(500).json({ message: "Error fetching scenario sessions" });
+    }
+  });
+
+  app.post("/api/scenario-sessions", async (req, res) => {
+    try {
+      const session = await storage.createScenarioSession({
+        ...req.body,
+        userId: 1 // Mock user ID for now
+      });
+      res.json(session);
+    } catch (error) {
+      console.error("Error creating scenario session:", error);
+      res.status(500).json({ message: "Error creating scenario session" });
+    }
+  });
+
+  app.get("/api/scenario-sessions/:id", async (req, res) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      const session = await storage.getScenarioSession(sessionId);
+      
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      
+      res.json(session);
+    } catch (error) {
+      console.error("Error fetching scenario session:", error);
+      res.status(500).json({ message: "Error fetching scenario session" });
+    }
+  });
+
+  app.put("/api/scenario-sessions/:id", async (req, res) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      const session = await storage.updateScenarioSession(sessionId, req.body);
+      res.json(session);
+    } catch (error) {
+      console.error("Error updating scenario session:", error);
+      res.status(500).json({ message: "Error updating scenario session" });
+    }
+  });
+
+  app.post("/api/scenario-sessions/:id/decision", async (req, res) => {
+    try {
+      const { generateDecisionResponse } = await import("./openai");
+      const sessionId = parseInt(req.params.id);
+      const { decision } = req.body;
+      
+      const session = await storage.getScenarioSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      
+      const scenario = await storage.getLegalScenario(session.scenarioId!);
+      if (!scenario) {
+        return res.status(404).json({ message: "Scenario not found" });
+      }
+      
+      const response = await generateDecisionResponse({
+        scenario: scenario.scenario,
+        userDecision: decision,
+        previousDecisions: session.decisions || [],
+        step: session.currentStep || 1
+      });
+      
+      const updatedDecisions = [...(session.decisions || []), decision];
+      const updatedResponses = [...(session.aiResponses || []), JSON.stringify(response)];
+      
+      const updatedSession = await storage.updateScenarioSession(sessionId, {
+        decisions: updatedDecisions,
+        aiResponses: updatedResponses,
+        currentStep: (session.currentStep || 1) + 1
+      });
+      
+      res.json({ ...response, session: updatedSession });
+    } catch (error) {
+      console.error("Error processing decision:", error);
+      res.status(500).json({ message: "Error processing decision" });
+    }
+  });
+
+  app.post("/api/scenario-sessions/:id/complete", async (req, res) => {
+    try {
+      const { generateFinalFeedback } = await import("./openai");
+      const sessionId = parseInt(req.params.id);
+      const { score } = req.body;
+      
+      const session = await storage.getScenarioSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      
+      const scenario = await storage.getLegalScenario(session.scenarioId!);
+      if (!scenario) {
+        return res.status(404).json({ message: "Scenario not found" });
+      }
+      
+      const feedback = await generateFinalFeedback(
+        scenario.scenario,
+        session.decisions || [],
+        score
+      );
+      
+      const completedSession = await storage.completeScenarioSession(sessionId, score, feedback);
+      res.json(completedSession);
+    } catch (error) {
+      console.error("Error completing scenario session:", error);
+      res.status(500).json({ message: "Error completing scenario session" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

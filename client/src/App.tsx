@@ -11,12 +11,14 @@ import Education from "@/pages/education";
 import UrgentMatch from "@/pages/urgent-match";
 import Pricing from "@/pages/pricing";
 import CaseTracking from "@/pages/case-tracking";
+import Messages from "@/pages/messages";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/urgent-match" component={UrgentMatch} />
+      <Route path="/messages" component={Messages} />
       <Route path="/case-tracking" component={CaseTracking} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/resources" component={Resources} />

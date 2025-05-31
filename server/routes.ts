@@ -213,6 +213,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Messaging routes
+  app.get("/api/conversations", async (req, res) => {
+    try {
+      const { userId, userType } = req.query;
+      if (!userId || !userType) {
+        return res.status(400).json({ message: "userId and userType are required" });
+      }
+      const conversations = await storage.getConversations(Number(userId), userType as 'user' | 'attorney');
+      res.json(conversations);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching conversations: " + error.message });
+    }
+  });
+
+  app.get("/api/conversations/:id", async (req, res) => {
+    try {
+      const conversation = await storage.getConversation(Number(req.params.id));
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      res.json(conversation);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching conversation: " + error.message });
+    }
+  });
+
+  app.post("/api/conversations", async (req, res) => {
+    try {
+      const conversation = await storage.createConversation(req.body);
+      res.json(conversation);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error creating conversation: " + error.message });
+    }
+  });
+
+  app.get("/api/conversations/:id/messages", async (req, res) => {
+    try {
+      const messages = await storage.getMessages(Number(req.params.id));
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching messages: " + error.message });
+    }
+  });
+
+  app.post("/api/conversations/:id/messages", async (req, res) => {
+    try {
+      const messageData = {
+        ...req.body,
+        conversationId: Number(req.params.id)
+      };
+      const message = await storage.createMessage(messageData);
+      res.json(message);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error sending message: " + error.message });
+    }
+  });
+
+  app.put("/api/messages/:id/read", async (req, res) => {
+    try {
+      await storage.markMessageAsRead(Number(req.params.id));
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error marking message as read: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

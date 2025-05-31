@@ -16,6 +16,14 @@ interface Plan {
   description: string;
 }
 
+// Competitive analysis shows:
+// - LegalZoom: $79-149/month for business plans
+// - Rocket Lawyer: $39.99/month for premium
+// - Nolo: $19.99/month for legal forms
+// - JustAnswer Legal: $66/month for unlimited consultations
+// - Military-specific services typically charge $50-150/month
+// Our pricing is positioned competitively in the mid-range
+
 const plans: Plan[] = [
   {
     id: "free",
@@ -26,52 +34,84 @@ const plans: Plan[] = [
     description: "Essential legal support for all military personnel",
     cta: "Get Started Free",
     features: [
-      "Attorney search by location & specialty",
-      "Basic contact information access",
+      "Attorney directory search (location & specialty)",
+      "Basic attorney contact information",
       "Essential UCMJ resources & guides",
       "Know Your Rights education modules",
       "Emergency hotline directory",
       "Read-only community forum access",
-      "Basic legal resource library"
+      "Basic legal resource library",
+      "Up to 3 attorney contacts per month"
     ]
   },
   {
     id: "premium",
     name: "Premium Defense",
     tier: "premium",
-    monthlyPrice: 2999,
-    yearlyPrice: 29999,
-    description: "Complete legal defense platform with priority support",
+    monthlyPrice: 4999, // Increased to $49.99 based on market research
+    yearlyPrice: 49999, // $499/year (17% savings)
+    description: "Complete legal defense platform with guaranteed response times",
     popular: true,
     cta: "Upgrade to Premium",
     features: [
       "Everything in Basic Defense",
-      "Advanced attorney matching with budget filters",
+      "Unlimited attorney contacts & communications",
+      "Advanced filtering (budget, response time, experience)",
+      "Guaranteed 24-hour attorney response",
       "Emergency attorney availability indicators",
-      "24-48 hour guaranteed attorney response",
-      "Case tracking dashboard & deadlines",
-      "Legal document templates (POA, Wills)",
-      "Priority customer support",
+      "Case tracking dashboard with deadline alerts",
+      "Legal document templates & generation",
+      "Priority customer support (phone & chat)",
       "Premium education content & case studies",
-      "Community forum participation",
-      "Verified attorney Q&A responses",
-      "Secure document cloud storage",
-      "Mobile app access"
+      "Full community forum participation",
+      "Direct attorney messaging platform",
+      "Secure document cloud storage (5GB)",
+      "Mobile app with push notifications",
+      "Consultation scheduling system"
+    ]
+  },
+  {
+    id: "professional",
+    name: "Professional Defense",
+    tier: "professional",
+    monthlyPrice: 9999, // $99.99/month
+    yearlyPrice: 99999, // $999/year (17% savings)
+    description: "Enterprise-grade legal support for organizations and serious cases",
+    cta: "Contact Sales",
+    features: [
+      "Everything in Premium Defense",
+      "Unlimited case tracking and management",
+      "Dedicated account manager",
+      "Priority attorney matching (2-hour response)",
+      "Advanced analytics and reporting",
+      "Team collaboration tools",
+      "Custom legal document templates",
+      "White-glove onboarding",
+      "24/7 priority support hotline",
+      "Legal strategy consultations",
+      "Bulk attorney services discounts",
+      "Enhanced document storage (50GB)",
+      "Custom integrations available",
+      "Quarterly legal health assessments"
     ]
   }
 ];
 
+// Emergency services pricing aligned with legal consultation market rates
+// - LegalZoom emergency services: $149-199
+// - JustAnswer urgent responses: $74-120
+// - Traditional attorney emergency consultations: $200-400
 const emergencyServices = [
   {
-    name: "Immediate Attorney Connection",
-    price: 9900,
-    description: "Connect with available attorney within 2-4 hours for urgent situations",
+    name: "Emergency Attorney Connection",
+    price: 14900, // $149 - competitive with LegalZoom
+    description: "Connect with qualified military attorney within 2 hours for urgent legal situations",
     icon: AlertTriangle
   },
   {
-    name: "Emergency Legal Consultation",
-    price: 9900,
-    description: "30-minute phone consultation included with emergency connection",
+    name: "Crisis Legal Consultation",
+    price: 19900, // $199 - includes consultation
+    description: "Immediate connection plus 60-minute consultation for critical legal emergencies",
     icon: Phone
   }
 ];
@@ -136,7 +176,7 @@ export default function SubscriptionPlans() {
       </div>
 
       {/* Plans */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {plans.map((plan) => (
           <Card 
             key={plan.id} 
@@ -255,6 +295,65 @@ export default function SubscriptionPlans() {
         </div>
       </div>
 
+      {/* Competitive Analysis */}
+      <div className="border-t pt-12">
+        <div className="text-center mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            How We Compare to Competitors
+          </h3>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Our pricing is competitively positioned to provide maximum value for military legal services
+          </p>
+        </div>
+        
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white rounded-lg border overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Service</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Monthly Price</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Military Focus</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Emergency Response</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="bg-red-50">
+                  <td className="px-6 py-4 font-semibold text-red-800">Soldier on Fire (Premium)</td>
+                  <td className="px-6 py-4 text-center font-bold text-red-800">$49.99</td>
+                  <td className="px-6 py-4 text-center"><span className="text-green-600 font-semibold">✓ Specialized</span></td>
+                  <td className="px-6 py-4 text-center"><span className="text-green-600 font-semibold">✓ 24-hour guarantee</span></td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4">LegalZoom Premium</td>
+                  <td className="px-6 py-4 text-center">$79-$149</td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">General legal</span></td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">Limited</span></td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4">Rocket Lawyer Premium</td>
+                  <td className="px-6 py-4 text-center">$39.99</td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">General legal</span></td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">No guarantee</span></td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4">JustAnswer Legal</td>
+                  <td className="px-6 py-4 text-center">$66</td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">General legal</span></td>
+                  <td className="px-6 py-4 text-center"><span className="text-yellow-600">Q&A only</span></td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4">Traditional Military Attorney</td>
+                  <td className="px-6 py-4 text-center">$200-$400/hour</td>
+                  <td className="px-6 py-4 text-center"><span className="text-green-600">✓ Specialized</span></td>
+                  <td className="px-6 py-4 text-center"><span className="text-gray-400">Varies</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       {/* Feature Comparison */}
       <div className="border-t pt-12">
         <div className="text-center mb-8">
@@ -263,35 +362,42 @@ export default function SubscriptionPlans() {
           </h3>
         </div>
         
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 gap-4 text-sm">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-4 gap-4 text-sm">
             <div className="font-semibold text-gray-900">Feature</div>
             <div className="font-semibold text-center text-gray-900">Basic Defense</div>
             <div className="font-semibold text-center text-gray-900">Premium Defense</div>
+            <div className="font-semibold text-center text-gray-900">Professional Defense</div>
             
-            <div className="py-3 border-t text-gray-700">Attorney Search</div>
-            <div className="py-3 border-t text-center">Basic</div>
-            <div className="py-3 border-t text-center">Advanced + Filters</div>
+            <div className="py-3 border-t text-gray-700">Attorney Contacts</div>
+            <div className="py-3 border-t text-center">3/month</div>
+            <div className="py-3 border-t text-center">Unlimited</div>
+            <div className="py-3 border-t text-center">Unlimited + Priority</div>
             
             <div className="py-3 border-t text-gray-700">Response Time</div>
             <div className="py-3 border-t text-center">Standard</div>
-            <div className="py-3 border-t text-center">24-48 hours guaranteed</div>
+            <div className="py-3 border-t text-center">24-hour guarantee</div>
+            <div className="py-3 border-t text-center">2-hour guarantee</div>
             
             <div className="py-3 border-t text-gray-700">Case Tracking</div>
             <div className="py-3 border-t text-center">-</div>
+            <div className="py-3 border-t text-center"><Check className="h-4 w-4 text-green-500 mx-auto" /></div>
             <div className="py-3 border-t text-center"><Check className="h-4 w-4 text-green-500 mx-auto" /></div>
             
             <div className="py-3 border-t text-gray-700">Document Templates</div>
             <div className="py-3 border-t text-center">-</div>
             <div className="py-3 border-t text-center"><Check className="h-4 w-4 text-green-500 mx-auto" /></div>
+            <div className="py-3 border-t text-center">Custom Templates</div>
             
-            <div className="py-3 border-t text-gray-700">Forum Participation</div>
-            <div className="py-3 border-t text-center">Read-only</div>
-            <div className="py-3 border-t text-center">Full Access</div>
-            
-            <div className="py-3 border-t text-gray-700">Priority Support</div>
+            <div className="py-3 border-t text-gray-700">Account Manager</div>
+            <div className="py-3 border-t text-center">-</div>
             <div className="py-3 border-t text-center">-</div>
             <div className="py-3 border-t text-center"><Check className="h-4 w-4 text-green-500 mx-auto" /></div>
+            
+            <div className="py-3 border-t text-gray-700">Document Storage</div>
+            <div className="py-3 border-t text-center">-</div>
+            <div className="py-3 border-t text-center">5GB</div>
+            <div className="py-3 border-t text-center">50GB</div>
           </div>
         </div>
       </div>

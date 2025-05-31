@@ -118,6 +118,14 @@ export interface IStorage {
   // Scenario analytics methods
   getScenarioAnalytics(scenarioId: number): Promise<ScenarioAnalytics[]>;
   createScenarioAnalytics(analytics: InsertScenarioAnalytics): Promise<ScenarioAnalytics>;
+
+  // Micro-challenge operations
+  getMicroChallenges(category?: string, difficulty?: string): Promise<MicroChallenge[]>;
+  getMicroChallenge(id: number): Promise<MicroChallenge | undefined>;
+  createChallengeAttempt(attempt: InsertChallengeAttempt): Promise<ChallengeAttempt>;
+  getDailyChallenge(): Promise<(DailyChallenge & { challenge: MicroChallenge }) | undefined>;
+  getChallengeStats(userId: number): Promise<ChallengeStats | undefined>;
+  updateChallengeStats(userId: number, updates: Partial<ChallengeStats>): Promise<ChallengeStats>;
 }
 
 export class DatabaseStorage implements IStorage {

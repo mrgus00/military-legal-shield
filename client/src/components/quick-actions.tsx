@@ -36,6 +36,14 @@ export default function QuickActions() {
       href: "/learning-dashboard",
       bgColor: "bg-emerald-500",
       iconColor: "text-white"
+    },
+    {
+      icon: Zap,
+      title: "Micro-Challenges",
+      description: "Quick knowledge retention exercises",
+      href: "/micro-challenges",
+      bgColor: "bg-indigo-500",
+      iconColor: "text-white"
     }
   ];
 

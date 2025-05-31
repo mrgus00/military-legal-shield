@@ -859,6 +859,168 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Micro-challenge routes
+  app.get('/api/micro-challenges', async (req, res) => {
+    try {
+      const challenges = [
+        {
+          id: 1,
+          title: "Article 92 Knowledge Check",
+          description: "Test your understanding of Article 92 - Failure to obey order or regulation",
+          category: "quiz",
+          difficulty: "easy",
+          topic: "ucmj",
+          questionType: "multiple-choice",
+          question: "Under Article 92, which of the following constitutes a lawful order?",
+          options: [
+            "An order that violates the UCMJ",
+            "A clear, specific directive from a superior officer within their authority",
+            "An order to commit a war crime",
+            "A personal request unrelated to military duties"
+          ],
+          correctAnswer: "A clear, specific directive from a superior officer within their authority",
+          explanation: "Article 92 requires orders to be lawful, clear, and within the superior's authority. Orders violating laws or regulations are not lawful orders.",
+          points: 10,
+          timeLimit: 60,
+          tags: ["ucmj", "orders", "military-law"],
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 2,
+          title: "Security Clearance Scenario",
+          description: "Navigate a security clearance investigation scenario",
+          category: "scenario",
+          difficulty: "medium",
+          topic: "clearance",
+          questionType: "multiple-choice",
+          question: "You're contacted by an investigator about a colleague's security clearance. What should you do?",
+          options: [
+            "Refuse to speak with the investigator",
+            "Only share positive information about your colleague",
+            "Provide honest, factual information as requested",
+            "Ask your colleague what you should say first"
+          ],
+          correctAnswer: "Provide honest, factual information as requested",
+          explanation: "During security clearance investigations, you have a duty to provide truthful, complete information. Withholding information or coordinating responses undermines the process.",
+          points: 15,
+          timeLimit: 90,
+          tags: ["clearance", "investigation", "integrity"],
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 3,
+          title: "Court-Martial Authority",
+          description: "Quick check on court-martial convening authority",
+          category: "true-false",
+          difficulty: "medium",
+          topic: "court-martial",
+          questionType: "true-false",
+          question: "A General Court-Martial can only be convened by a General Officer.",
+          options: ["True", "False"],
+          correctAnswer: "False",
+          explanation: "General Courts-Martial can be convened by officers in the grade of O-6 (Colonel/Captain) or higher who have been designated as convening authorities, not just General Officers.",
+          points: 12,
+          timeLimit: 45,
+          tags: ["court-martial", "authority", "convening"],
+          isActive: true,
+          createdAt: new Date()
+        }
+      ];
+      res.json(challenges);
+    } catch (error) {
+      console.error('Error fetching micro challenges:', error);
+      res.status(500).json({ message: 'Failed to fetch micro challenges' });
+    }
+  });
+
+  app.post('/api/micro-challenges/attempt', async (req, res) => {
+    try {
+      const { challengeId, userAnswer, timeSpent, userId } = req.body;
+      
+      // Sample challenge data for checking answers
+      const challenges = {
+        1: "A clear, specific directive from a superior officer within their authority",
+        2: "Provide honest, factual information as requested",
+        3: "False"
+      };
+
+      const correctAnswer = challenges[challengeId as keyof typeof challenges];
+      const isCorrect = userAnswer === correctAnswer;
+      const pointsEarned = isCorrect ? (challengeId === 1 ? 10 : challengeId === 2 ? 15 : 12) : 0;
+
+      res.json({ isCorrect, pointsEarned });
+    } catch (error) {
+      console.error('Error creating challenge attempt:', error);
+      res.status(500).json({ message: 'Failed to record challenge attempt' });
+    }
+  });
+
+  app.get('/api/daily-challenge', async (req, res) => {
+    try {
+      const dailyChallenge = {
+        id: 1,
+        challengeDate: new Date(),
+        challengeId: 1,
+        category: "quiz",
+        difficulty: "easy",
+        bonusPoints: 5,
+        isActive: true,
+        createdAt: new Date(),
+        challenge: {
+          id: 1,
+          title: "Daily UCMJ Challenge",
+          description: "Today's focus: Understanding lawful orders under Article 92",
+          category: "quiz",
+          difficulty: "easy",
+          topic: "ucmj",
+          questionType: "multiple-choice",
+          question: "Under Article 92, which of the following constitutes a lawful order?",
+          options: [
+            "An order that violates the UCMJ",
+            "A clear, specific directive from a superior officer within their authority",
+            "An order to commit a war crime",
+            "A personal request unrelated to military duties"
+          ],
+          correctAnswer: "A clear, specific directive from a superior officer within their authority",
+          explanation: "Article 92 requires orders to be lawful, clear, and within the superior's authority. Orders violating laws or regulations are not lawful orders.",
+          points: 10,
+          timeLimit: 60,
+          tags: ["ucmj", "orders", "military-law"],
+          isActive: true,
+          createdAt: new Date()
+        }
+      };
+      res.json(dailyChallenge);
+    } catch (error) {
+      console.error('Error fetching daily challenge:', error);
+      res.status(500).json({ message: 'Failed to fetch daily challenge' });
+    }
+  });
+
+  app.get('/api/challenge-stats', async (req, res) => {
+    try {
+      const stats = {
+        id: 1,
+        userId: 1,
+        totalChallengesCompleted: 15,
+        correctAnswers: 12,
+        currentStreak: 3,
+        longestStreak: 7,
+        averageScore: 80,
+        fastestTime: 25,
+        totalTimeSpent: 450,
+        lastChallengeDate: new Date(),
+        updatedAt: new Date()
+      };
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching challenge stats:', error);
+      res.status(500).json({ message: 'Failed to fetch challenge stats' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

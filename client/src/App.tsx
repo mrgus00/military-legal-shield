@@ -16,6 +16,7 @@ import Scenarios from "@/pages/scenarios";
 import WeekendSafety from "@/pages/weekend-safety";
 import Forum from "@/pages/forum";
 import LearningDashboard from "@/pages/learning-dashboard";
+import MicroChallenges from "@/pages/micro-challenges";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/weekend-safety" component={WeekendSafety} />
       <Route path="/forum" component={Forum} />
       <Route path="/learning-dashboard" component={LearningDashboard} />
+      <Route path="/micro-challenges" component={MicroChallenges} />
       <Route component={NotFound} />
     </Switch>
   );

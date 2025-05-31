@@ -2,6 +2,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AttorneyCard from "@/components/attorney-card";
 import PremiumGate from "@/components/premium-gate";
+import SecurityReminder from "@/components/security-reminder";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -66,6 +67,13 @@ export default function Attorneys() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Security Reminder */}
+      <section className="py-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SecurityReminder />
         </div>
       </section>
 

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import PremiumGate from "@/components/premium-gate";
+import SecurityReminder from "@/components/security-reminder";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -131,6 +132,13 @@ export default function Messages() {
               <span>24/7 Secure Access</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Security Reminder */}
+      <section className="py-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SecurityReminder />
         </div>
       </section>
 

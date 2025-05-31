@@ -10,7 +10,14 @@ export const users = pgTable("users", {
   lastName: text("last_name").notNull(),
   branch: text("branch").notNull(),
   rank: text("rank"),
+  email: text("email").notNull().unique(),
+  subscriptionTier: text("subscription_tier").notNull().default("free"), // free, premium
+  subscriptionStatus: text("subscription_status").default("active"), // active, cancelled, expired
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
+  emergencyCredits: integer("emergency_credits").default(0), // For emergency response usage
   isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const attorneys = pgTable("attorneys", {
@@ -134,6 +141,56 @@ export const legalDocuments = pgTable("legal_documents", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Subscription Plans
+export const subscriptionPlans = pgTable("subscription_plans", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  tier: text("tier").notNull(), // free, premium
+  monthlyPrice: integer("monthly_price").notNull(), // in cents
+  yearlyPrice: integer("yearly_price").notNull(), // in cents
+  features: text("features").array().notNull(),
+  isActive: boolean("is_active").default(true),
+});
+
+// User Subscriptions
+export const userSubscriptions = pgTable("user_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  planId: integer("plan_id").references(() => subscriptionPlans.id),
+  status: text("status").notNull(), // active, cancelled, expired, past_due
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  stripeCustomerId: text("stripe_customer_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Emergency Service Usage
+export const emergencyServices = pgTable("emergency_services", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  serviceType: text("service_type").notNull(), // emergency_consultation, immediate_connection
+  status: text("status").notNull(), // requested, connected, completed
+  cost: integer("cost").notNull(), // in cents
+  paymentStatus: text("payment_status").notNull(), // pending, paid, failed
+  requestedAt: timestamp("requested_at").defaultNow(),
+  connectedAt: timestamp("connected_at"),
+  completedAt: timestamp("completed_at"),
+});
+
+// Feature Usage Tracking
+export const featureUsage = pgTable("feature_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  feature: text("feature").notNull(), // attorney_search, case_tracking, documents, forum_post
+  usageCount: integer("usage_count").default(1),
+  lastUsed: timestamp("last_used").defaultNow(),
+  monthYear: text("month_year").notNull(), // "2024-12" for tracking monthly limits
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -191,6 +248,27 @@ export const insertLegalDocumentSchema = createInsertSchema(legalDocuments).omit
   updatedAt: true,
 });
 
+export const insertSubscriptionPlanSchema = createInsertSchema(subscriptionPlans).omit({
+  id: true,
+  isActive: true,
+});
+
+export const insertUserSubscriptionSchema = createInsertSchema(userSubscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertEmergencyServiceSchema = createInsertSchema(emergencyServices).omit({
+  id: true,
+  requestedAt: true,
+});
+
+export const insertFeatureUsageSchema = createInsertSchema(featureUsage).omit({
+  id: true,
+  lastUsed: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -220,3 +298,15 @@ export type ForumAnswer = typeof forumAnswers.$inferSelect;
 
 export type InsertLegalDocument = z.infer<typeof insertLegalDocumentSchema>;
 export type LegalDocument = typeof legalDocuments.$inferSelect;
+
+export type InsertSubscriptionPlan = z.infer<typeof insertSubscriptionPlanSchema>;
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+
+export type InsertUserSubscription = z.infer<typeof insertUserSubscriptionSchema>;
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
+
+export type InsertEmergencyService = z.infer<typeof insertEmergencyServiceSchema>;
+export type EmergencyService = typeof emergencyServices.$inferSelect;
+
+export type InsertFeatureUsage = z.infer<typeof insertFeatureUsageSchema>;
+export type FeatureUsage = typeof featureUsage.$inferSelect;

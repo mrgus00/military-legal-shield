@@ -9,12 +9,14 @@ import Resources from "@/pages/resources";
 import Attorneys from "@/pages/attorneys";
 import Education from "@/pages/education";
 import UrgentMatch from "@/pages/urgent-match";
+import Pricing from "@/pages/pricing";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/urgent-match" component={UrgentMatch} />
+      <Route path="/pricing" component={Pricing} />
       <Route path="/resources" component={Resources} />
       <Route path="/attorneys" component={Attorneys} />
       <Route path="/education" component={Education} />

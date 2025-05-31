@@ -200,7 +200,7 @@ export default function ScenarioSimulator({ onStartScenario }: ScenarioSimulator
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="Court-Martial Defense">Court-Martial Defense</SelectItem>
                 <SelectItem value="Administrative Law">Administrative Law</SelectItem>
                 <SelectItem value="Security Clearance">Security Clearance</SelectItem>
@@ -213,7 +213,7 @@ export default function ScenarioSimulator({ onStartScenario }: ScenarioSimulator
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Levels</SelectItem>
+                <SelectItem value="all">All Levels</SelectItem>
                 <SelectItem value="beginner">Beginner</SelectItem>
                 <SelectItem value="intermediate">Intermediate</SelectItem>
                 <SelectItem value="advanced">Advanced</SelectItem>

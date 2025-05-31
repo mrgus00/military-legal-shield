@@ -1,17 +1,20 @@
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AttorneyCard from "@/components/attorney-card";
+import PremiumGate from "@/components/premium-gate";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, Crown } from "lucide-react";
 import { useState } from "react";
 import type { Attorney } from "@shared/schema";
 
 export default function Attorneys() {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  // For demo purposes, simulating free tier user
+  const userTier = "free"; // In production, this would come from auth context
   
   const { data: attorneys, isLoading } = useQuery<Attorney[]>({
     queryKey: ["/api/attorneys"],
@@ -98,6 +101,67 @@ export default function Attorneys() {
                 {specialty === "all" ? "All Specialties" : specialty}
               </Button>
             ))}
+          </div>
+          
+          {/* Premium Advanced Filters */}
+          <div className="mt-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Crown className="h-5 w-5 text-amber-500" />
+              <h3 className="text-lg font-semibold">Advanced Filters</h3>
+            </div>
+            
+            <PremiumGate
+              feature="Advanced Filtering"
+              description="Get precise attorney matches with budget ranges, response time guarantees, and availability filters."
+              userTier={userTier}
+            >
+              <div className="grid md:grid-cols-4 gap-4 p-6 bg-white rounded-lg border">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Budget Range
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option>Any budget</option>
+                    <option>$100-$300/hour</option>
+                    <option>$300-$500/hour</option>
+                    <option>$500+/hour</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Response Time
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option>Any time</option>
+                    <option>Within 2 hours</option>
+                    <option>Within 24 hours</option>
+                    <option>Within 48 hours</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Experience Level
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option>Any experience</option>
+                    <option>5+ years</option>
+                    <option>10+ years</option>
+                    <option>15+ years</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Availability
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option>Any availability</option>
+                    <option>Emergency only</option>
+                    <option>Same day</option>
+                    <option>This week</option>
+                  </select>
+                </div>
+              </div>
+            </PremiumGate>
           </div>
         </div>
       </section>

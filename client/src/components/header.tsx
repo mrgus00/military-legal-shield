@@ -11,6 +11,7 @@ export default function Header() {
     { name: "Legal Resources", href: "/resources" },
     { name: "Find Attorneys", href: "/attorneys" },
     { name: "Education", href: "/education" },
+    { name: "Pricing", href: "/pricing" },
     { name: "Support", href: "#support" },
   ];
 

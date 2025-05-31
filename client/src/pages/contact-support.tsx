@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import SecurityReminder from "@/components/security-reminder";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,6 +39,11 @@ export default function ContactSupport() {
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Get the help you need from our military legal support team
             </p>
+          </div>
+
+          {/* Security Reminder */}
+          <div className="mb-8">
+            <SecurityReminder />
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">

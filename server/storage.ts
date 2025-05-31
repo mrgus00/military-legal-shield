@@ -1,6 +1,7 @@
 import { 
   users, attorneys, legalResources, educationModules, consultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
+  conversations, messages,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -10,7 +11,9 @@ import {
   type EmergencyResource, type InsertEmergencyResource,
   type ForumQuestion, type InsertForumQuestion,
   type ForumAnswer, type InsertForumAnswer,
-  type LegalDocument, type InsertLegalDocument
+  type LegalDocument, type InsertLegalDocument,
+  type Conversation, type InsertConversation,
+  type Message, type InsertMessage
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -67,6 +70,15 @@ export interface IStorage {
   getLegalDocuments(userId: number): Promise<LegalDocument[]>;
   getLegalDocument(id: number): Promise<LegalDocument | undefined>;
   createLegalDocument(document: InsertLegalDocument): Promise<LegalDocument>;
+
+  // Messaging methods
+  getConversations(userId: number, userType: 'user' | 'attorney'): Promise<Conversation[]>;
+  getConversation(id: number): Promise<Conversation | undefined>;
+  createConversation(conversation: InsertConversation): Promise<Conversation>;
+  getMessages(conversationId: number): Promise<Message[]>;
+  createMessage(message: InsertMessage): Promise<Message>;
+  markMessageAsRead(messageId: number): Promise<void>;
+  updateConversationLastMessage(conversationId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -453,6 +465,66 @@ export class DatabaseStorage implements IStorage {
   async createLegalDocument(insertDocument: InsertLegalDocument): Promise<LegalDocument> {
     const result = await this.db.insert(legalDocuments).values(insertDocument).returning();
     return result[0];
+  }
+
+  // Messaging methods
+  async getConversations(userId: number, userType: 'user' | 'attorney'): Promise<Conversation[]> {
+    const field = userType === 'user' ? conversations.userId : conversations.attorneyId;
+    return await this.db
+      .select()
+      .from(conversations)
+      .where(eq(field, userId))
+      .orderBy(desc(conversations.lastMessageAt));
+  }
+
+  async getConversation(id: number): Promise<Conversation | undefined> {
+    const [conversation] = await this.db
+      .select()
+      .from(conversations)
+      .where(eq(conversations.id, id));
+    return conversation;
+  }
+
+  async createConversation(insertConversation: InsertConversation): Promise<Conversation> {
+    const [conversation] = await this.db
+      .insert(conversations)
+      .values(insertConversation)
+      .returning();
+    return conversation;
+  }
+
+  async getMessages(conversationId: number): Promise<Message[]> {
+    return await this.db
+      .select()
+      .from(messages)
+      .where(eq(messages.conversationId, conversationId))
+      .orderBy(messages.sentAt);
+  }
+
+  async createMessage(insertMessage: InsertMessage): Promise<Message> {
+    const [message] = await this.db
+      .insert(messages)
+      .values(insertMessage)
+      .returning();
+    
+    // Update conversation's last message timestamp
+    await this.updateConversationLastMessage(message.conversationId);
+    
+    return message;
+  }
+
+  async markMessageAsRead(messageId: number): Promise<void> {
+    await this.db
+      .update(messages)
+      .set({ isRead: true, readAt: new Date() })
+      .where(eq(messages.id, messageId));
+  }
+
+  async updateConversationLastMessage(conversationId: number): Promise<void> {
+    await this.db
+      .update(conversations)
+      .set({ lastMessageAt: new Date() })
+      .where(eq(conversations.id, conversationId));
   }
 }
 

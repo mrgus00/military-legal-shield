@@ -191,6 +191,44 @@ export const featureUsage = pgTable("feature_usage", {
   monthYear: text("month_year").notNull(), // "2024-12" for tracking monthly limits
 });
 
+// Conversations between users and attorneys
+export const conversations = pgTable("conversations", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  caseId: integer("case_id").references(() => legalCases.id),
+  subject: text("subject").notNull(),
+  status: text("status").notNull().default("active"), // active, archived, closed
+  lastMessageAt: timestamp("last_message_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Messages within conversations
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => conversations.id),
+  senderId: integer("sender_id").notNull(), // can be user or attorney
+  senderType: text("sender_type").notNull(), // "user" or "attorney"
+  content: text("content").notNull(),
+  messageType: text("message_type").notNull().default("text"), // text, file, image
+  isRead: boolean("is_read").default(false),
+  isEncrypted: boolean("is_encrypted").default(true),
+  readAt: timestamp("read_at"),
+  sentAt: timestamp("sent_at").defaultNow(),
+});
+
+// Message attachments
+export const messageAttachments = pgTable("message_attachments", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => messages.id),
+  fileName: text("file_name").notNull(),
+  fileSize: integer("file_size"),
+  fileType: text("file_type"),
+  filePath: text("file_path").notNull(),
+  isEncrypted: boolean("is_encrypted").default(true),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -269,6 +307,22 @@ export const insertFeatureUsageSchema = createInsertSchema(featureUsage).omit({
   lastUsed: true,
 });
 
+export const insertConversationSchema = createInsertSchema(conversations).omit({
+  id: true,
+  lastMessageAt: true,
+  createdAt: true,
+});
+
+export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  sentAt: true,
+});
+
+export const insertMessageAttachmentSchema = createInsertSchema(messageAttachments).omit({
+  id: true,
+  uploadedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -310,3 +364,12 @@ export type EmergencyService = typeof emergencyServices.$inferSelect;
 
 export type InsertFeatureUsage = z.infer<typeof insertFeatureUsageSchema>;
 export type FeatureUsage = typeof featureUsage.$inferSelect;
+
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export type Conversation = typeof conversations.$inferSelect;
+
+export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type Message = typeof messages.$inferSelect;
+
+export type InsertMessageAttachment = z.infer<typeof insertMessageAttachmentSchema>;
+export type MessageAttachment = typeof messageAttachments.$inferSelect;

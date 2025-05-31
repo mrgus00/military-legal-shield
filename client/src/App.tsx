@@ -13,6 +13,7 @@ import Pricing from "@/pages/pricing";
 import CaseTracking from "@/pages/case-tracking";
 import Messages from "@/pages/messages";
 import Scenarios from "@/pages/scenarios";
+import WeekendSafety from "@/pages/weekend-safety";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/attorneys" component={Attorneys} />
       <Route path="/education" component={Education} />
       <Route path="/scenarios" component={Scenarios} />
+      <Route path="/weekend-safety" component={WeekendSafety} />
       <Route component={NotFound} />
     </Switch>
   );

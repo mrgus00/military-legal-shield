@@ -8,11 +8,13 @@ export default function Header() {
 
   const navigation = [
     { name: "Urgent Matching", href: "/urgent-match" },
+    { name: "Weekend Safety", href: "/weekend-safety", badge: "Free" },
     { name: "Secure Messages", href: "/messages" },
     { name: "Case Tracking", href: "/case-tracking" },
     { name: "Legal Resources", href: "/resources" },
     { name: "Find Attorneys", href: "/attorneys" },
     { name: "Education", href: "/education" },
+    { name: "AI Scenarios", href: "/scenarios" },
     { name: "Pricing", href: "/pricing" },
     { name: "Support", href: "#support" },
   ];
@@ -36,13 +38,18 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors relative ${
                     isActive(item.href)
                       ? "text-navy-800 border-b-2 border-navy-800"
                       : "text-gray-700 hover:text-navy-800"
                   }`}
                 >
                   {item.name}
+                  {item.badge && (
+                    <span className="absolute -top-1 -right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               ))}
             </nav>

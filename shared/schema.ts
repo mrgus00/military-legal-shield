@@ -337,6 +337,72 @@ export const scenarioAnalytics = pgTable("scenario_analytics", {
   generatedAt: timestamp("generated_at").defaultNow(),
 });
 
+// Learning paths for gamified education
+export const learningPaths = pgTable("learning_paths", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // beginner, intermediate, advanced
+  totalModules: integer("total_modules").notNull(),
+  estimatedHours: integer("estimated_hours").notNull(),
+  difficulty: text("difficulty").notNull(), // easy, medium, hard
+  prerequisites: text("prerequisites").array(),
+  badge: text("badge"), // badge earned upon completion
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User progress through learning paths
+export const userProgress = pgTable("user_progress", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  pathId: integer("path_id").references(() => learningPaths.id),
+  currentModule: integer("current_module").default(1),
+  completedModules: integer("completed_modules").array(),
+  totalScore: integer("total_score").default(0),
+  timeSpent: integer("time_spent").default(0), // in minutes
+  lastAccessed: timestamp("last_accessed").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  certificateEarned: boolean("certificate_earned").default(false),
+});
+
+// Achievement system
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  icon: text("icon").notNull(), // icon name or emoji
+  category: text("category").notNull(), // learning, community, expertise
+  points: integer("points").notNull(),
+  requirement: text("requirement").notNull(), // what triggers this achievement
+  badgeColor: text("badge_color").default("blue"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User achievements earned
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  achievementId: integer("achievement_id").references(() => achievements.id),
+  earnedAt: timestamp("earned_at").defaultNow(),
+  progress: integer("progress").default(0), // for progressive achievements
+});
+
+// Learning streaks and statistics
+export const learningStats = pgTable("learning_stats", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  currentStreak: integer("current_streak").default(0),
+  longestStreak: integer("longest_streak").default(0),
+  totalPoints: integer("total_points").default(0),
+  totalHoursLearned: integer("total_hours_learned").default(0),
+  level: integer("level").default(1),
+  experiencePoints: integer("experience_points").default(0),
+  lastActivityDate: timestamp("last_activity_date").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -466,6 +532,34 @@ export const insertScenarioAnalyticsSchema = createInsertSchema(scenarioAnalytic
   generatedAt: true,
 });
 
+export const insertLearningPathSchema = createInsertSchema(learningPaths).omit({
+  id: true,
+  isActive: true,
+  createdAt: true,
+});
+
+export const insertUserProgressSchema = createInsertSchema(userProgress).omit({
+  id: true,
+  lastAccessed: true,
+});
+
+export const insertAchievementSchema = createInsertSchema(achievements).omit({
+  id: true,
+  isActive: true,
+  createdAt: true,
+});
+
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+  id: true,
+  earnedAt: true,
+});
+
+export const insertLearningStatsSchema = createInsertSchema(learningStats).omit({
+  id: true,
+  lastActivityDate: true,
+  updatedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -534,3 +628,18 @@ export type ScenarioSession = typeof scenarioSessions.$inferSelect;
 
 export type InsertScenarioAnalytics = z.infer<typeof insertScenarioAnalyticsSchema>;
 export type ScenarioAnalytics = typeof scenarioAnalytics.$inferSelect;
+
+export type InsertLearningPath = z.infer<typeof insertLearningPathSchema>;
+export type LearningPath = typeof learningPaths.$inferSelect;
+
+export type InsertUserProgress = z.infer<typeof insertUserProgressSchema>;
+export type UserProgress = typeof userProgress.$inferSelect;
+
+export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+export type Achievement = typeof achievements.$inferSelect;
+
+export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
+export type UserAchievement = typeof userAchievements.$inferSelect;
+
+export type InsertLearningStats = z.infer<typeof insertLearningStatsSchema>;
+export type LearningStats = typeof learningStats.$inferSelect;

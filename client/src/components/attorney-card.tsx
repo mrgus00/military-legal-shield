@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Clock, Info } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { imageService } from "@/lib/imageService";
+import AttorneyVerificationBadge from "./attorney-verification-badge";
 import type { Attorney } from "@shared/schema";
 
 interface AttorneyCardProps {
@@ -71,7 +72,10 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
             );
           })()}
           <div className="flex-1">
-            <h4 className="font-semibold text-lg text-gray-900">{attorney.title}</h4>
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="font-semibold text-lg text-gray-900">{attorney.title}</h4>
+              <AttorneyVerificationBadge attorney={attorney} />
+            </div>
             <p className="text-sm text-gray-600">Military Law Attorney</p>
             <div className="flex items-center mt-1">
               <div className="flex">

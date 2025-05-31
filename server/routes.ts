@@ -279,6 +279,126 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Attorney verification routes
+  app.get("/api/attorneys/:id/verification-docs", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const docs = await storage.getAttorneyVerificationDocs(attorneyId);
+      res.json(docs);
+    } catch (error) {
+      console.error("Error fetching verification docs:", error);
+      res.status(500).json({ message: "Error fetching verification documents" });
+    }
+  });
+
+  app.post("/api/attorneys/:id/verification-docs", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const doc = await storage.createAttorneyVerificationDoc({
+        ...req.body,
+        attorneyId
+      });
+      res.json(doc);
+    } catch (error) {
+      console.error("Error uploading verification doc:", error);
+      res.status(500).json({ message: "Error uploading verification document" });
+    }
+  });
+
+  app.put("/api/verification-docs/:id/status", async (req, res) => {
+    try {
+      const docId = parseInt(req.params.id);
+      const { status, verifiedBy, rejectionReason } = req.body;
+      const doc = await storage.updateVerificationDocStatus(docId, status, verifiedBy, rejectionReason);
+      res.json(doc);
+    } catch (error) {
+      console.error("Error updating verification status:", error);
+      res.status(500).json({ message: "Error updating verification status" });
+    }
+  });
+
+  app.get("/api/attorney-verification-requests", async (req, res) => {
+    try {
+      const status = req.query.status as string;
+      const requests = await storage.getAttorneyVerificationRequests(status);
+      res.json(requests);
+    } catch (error) {
+      console.error("Error fetching verification requests:", error);
+      res.status(500).json({ message: "Error fetching verification requests" });
+    }
+  });
+
+  app.post("/api/attorney-verification-requests", async (req, res) => {
+    try {
+      const request = await storage.createAttorneyVerificationRequest(req.body);
+      res.json(request);
+    } catch (error) {
+      console.error("Error creating verification request:", error);
+      res.status(500).json({ message: "Error creating verification request" });
+    }
+  });
+
+  app.put("/api/attorneys/:id/verification-status", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const { status, notes } = req.body;
+      const attorney = await storage.updateAttorneyVerificationStatus(attorneyId, status, notes);
+      res.json(attorney);
+    } catch (error) {
+      console.error("Error updating attorney verification:", error);
+      res.status(500).json({ message: "Error updating attorney verification" });
+    }
+  });
+
+  // Attorney review routes
+  app.get("/api/attorneys/:id/reviews", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const reviews = await storage.getAttorneyReviews(attorneyId);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching attorney reviews:", error);
+      res.status(500).json({ message: "Error fetching attorney reviews" });
+    }
+  });
+
+  app.post("/api/attorneys/:id/reviews", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const review = await storage.createAttorneyReview({
+        ...req.body,
+        attorneyId,
+        userId: 1 // Mock user ID for now
+      });
+      res.json(review);
+    } catch (error) {
+      console.error("Error creating review:", error);
+      res.status(500).json({ message: "Error creating review" });
+    }
+  });
+
+  app.get("/api/attorneys/:id/verified-reviews", async (req, res) => {
+    try {
+      const attorneyId = parseInt(req.params.id);
+      const reviews = await storage.getVerifiedReviews(attorneyId);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching verified reviews:", error);
+      res.status(500).json({ message: "Error fetching verified reviews" });
+    }
+  });
+
+  app.post("/api/reviews/:id/helpful", async (req, res) => {
+    try {
+      const reviewId = parseInt(req.params.id);
+      await storage.markReviewHelpful(reviewId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error marking review as helpful:", error);
+      res.status(500).json({ message: "Error marking review as helpful" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

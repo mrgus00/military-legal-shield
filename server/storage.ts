@@ -1,7 +1,7 @@
 import { 
   users, attorneys, legalResources, educationModules, consultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
-  conversations, messages,
+  conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -13,11 +13,14 @@ import {
   type ForumAnswer, type InsertForumAnswer,
   type LegalDocument, type InsertLegalDocument,
   type Conversation, type InsertConversation,
-  type Message, type InsertMessage
+  type Message, type InsertMessage,
+  type AttorneyVerificationDoc, type InsertAttorneyVerificationDoc,
+  type AttorneyReview, type InsertAttorneyReview,
+  type AttorneyVerificationRequest, type InsertAttorneyVerificationRequest
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { eq, ilike, and, or, desc } from "drizzle-orm";
+import { eq, ilike, and, or, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -540,6 +543,136 @@ export class DatabaseStorage implements IStorage {
       .update(conversations)
       .set({ lastMessageAt: new Date() })
       .where(eq(conversations.id, conversationId));
+  }
+
+  // Attorney verification methods
+  async getAttorneyVerificationDocs(attorneyId: number): Promise<AttorneyVerificationDoc[]> {
+    return await this.db
+      .select()
+      .from(attorneyVerificationDocs)
+      .where(eq(attorneyVerificationDocs.attorneyId, attorneyId))
+      .orderBy(desc(attorneyVerificationDocs.uploadedAt));
+  }
+
+  async createAttorneyVerificationDoc(insertDoc: InsertAttorneyVerificationDoc): Promise<AttorneyVerificationDoc> {
+    const [doc] = await this.db
+      .insert(attorneyVerificationDocs)
+      .values(insertDoc)
+      .returning();
+    return doc;
+  }
+
+  async updateVerificationDocStatus(docId: number, status: string, verifiedBy?: string, rejectionReason?: string): Promise<AttorneyVerificationDoc | undefined> {
+    const [doc] = await this.db
+      .update(attorneyVerificationDocs)
+      .set({
+        verificationStatus: status,
+        verifiedAt: status === 'approved' ? new Date() : undefined,
+        verifiedBy,
+        rejectionReason
+      })
+      .where(eq(attorneyVerificationDocs.id, docId))
+      .returning();
+    return doc;
+  }
+
+  async getAttorneyVerificationRequests(status?: string): Promise<AttorneyVerificationRequest[]> {
+    let query = this.db.select().from(attorneyVerificationRequests);
+    
+    if (status) {
+      query = query.where(eq(attorneyVerificationRequests.status, status));
+    }
+    
+    return await query.orderBy(desc(attorneyVerificationRequests.submittedAt));
+  }
+
+  async createAttorneyVerificationRequest(insertRequest: InsertAttorneyVerificationRequest): Promise<AttorneyVerificationRequest> {
+    const [request] = await this.db
+      .insert(attorneyVerificationRequests)
+      .values(insertRequest)
+      .returning();
+    return request;
+  }
+
+  async updateAttorneyVerificationStatus(attorneyId: number, status: string, notes?: string): Promise<Attorney | undefined> {
+    const [attorney] = await this.db
+      .update(attorneys)
+      .set({
+        verificationStatus: status,
+        isVerified: status === 'verified',
+        verificationDate: status === 'verified' ? new Date() : undefined,
+        verificationNotes: notes,
+        lastVerificationCheck: new Date()
+      })
+      .where(eq(attorneys.id, attorneyId))
+      .returning();
+    return attorney;
+  }
+
+  // Attorney review methods
+  async getAttorneyReviews(attorneyId: number): Promise<AttorneyReview[]> {
+    return await this.db
+      .select()
+      .from(attorneyReviews)
+      .where(eq(attorneyReviews.attorneyId, attorneyId))
+      .orderBy(desc(attorneyReviews.createdAt));
+  }
+
+  async createAttorneyReview(insertReview: InsertAttorneyReview): Promise<AttorneyReview> {
+    const [review] = await this.db
+      .insert(attorneyReviews)
+      .values(insertReview)
+      .returning();
+    
+    // Update attorney's overall rating
+    await this.updateAttorneyRating(insertReview.attorneyId);
+    
+    return review;
+  }
+
+  async updateAttorneyRating(attorneyId: number): Promise<void> {
+    const reviews = await this.db
+      .select({
+        rating: attorneyReviews.rating
+      })
+      .from(attorneyReviews)
+      .where(eq(attorneyReviews.attorneyId, attorneyId));
+
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+      const averageRating = Math.round(totalRating / reviews.length);
+
+      await this.db
+        .update(attorneys)
+        .set({
+          rating: averageRating,
+          reviewCount: reviews.length
+        })
+        .where(eq(attorneys.id, attorneyId));
+    }
+  }
+
+  async getVerifiedReviews(attorneyId: number): Promise<AttorneyReview[]> {
+    return await this.db
+      .select()
+      .from(attorneyReviews)
+      .where(
+        and(
+          eq(attorneyReviews.attorneyId, attorneyId),
+          eq(attorneyReviews.status, 'approved'),
+          eq(attorneyReviews.isVerifiedClient, true)
+        )
+      )
+      .orderBy(desc(attorneyReviews.createdAt));
+  }
+
+  async markReviewHelpful(reviewId: number): Promise<void> {
+    await this.db
+      .update(attorneyReviews)
+      .set({
+        helpfulVotes: sql`${attorneyReviews.helpfulVotes} + 1`
+      })
+      .where(eq(attorneyReviews.id, reviewId));
   }
 }
 

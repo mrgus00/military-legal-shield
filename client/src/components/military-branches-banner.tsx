@@ -1,44 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { imageService } from "@/lib/imageService";
+import armyImage from "@assets/U.S Army.png";
+import navyImage from "@assets/U.S Navy.png";
+import marineImage from "@assets/U.S Marine Corps.png";
+import airforceImage from "@assets/U.S Airforce.png";
+import coastguardImage from "@assets/U.S Coast Guard.jpg";
+import spaceforceImage from "@assets/U.S Space Force.png";
 
 export default function MilitaryBranchesBanner() {
-  const { data: armyImages } = useQuery({
-    queryKey: ["army-images"],
-    queryFn: () => imageService.searchImages("army soldier military uniform boots", 2),
-  });
-
-  const { data: navyImages } = useQuery({
-    queryKey: ["navy-images"], 
-    queryFn: () => imageService.searchImages("aircraft carrier navy ship military", 2),
-  });
-
-  const { data: marineImages } = useQuery({
-    queryKey: ["marine-images"],
-    queryFn: () => imageService.searchImages("marine soldier combat gear military", 2),
-  });
-
-  const { data: airforceImages } = useQuery({
-    queryKey: ["airforce-images"],
-    queryFn: () => imageService.searchImages("F22 raptor fighter jet military aircraft", 2),
-  });
-
-  const { data: coastguardImages } = useQuery({
-    queryKey: ["coastguard-images"],
-    queryFn: () => imageService.searchImages("coast guard boat ship rescue", 2),
-  });
-
-  const { data: spaceforceImages } = useQuery({
-    queryKey: ["spaceforce-images"],
-    queryFn: () => imageService.searchImages("space satellite rocket military space force", 2),
-  });
-
   const branches = [
-    { name: "U.S. Army", established: "1775", images: armyImages },
-    { name: "U.S. Navy", established: "1775", images: navyImages },
-    { name: "U.S. Marine Corps", established: "1775", images: marineImages },
-    { name: "U.S. Air Force", established: "1947", images: airforceImages },
-    { name: "U.S. Coast Guard", established: "1790", images: coastguardImages },
-    { name: "U.S. Space Force", established: "2019", images: spaceforceImages }
+    { name: "U.S. Army", established: "1775", image: armyImage },
+    { name: "U.S. Navy", established: "1775", image: navyImage },
+    { name: "U.S. Marine Corps", established: "1775", image: marineImage },
+    { name: "U.S. Air Force", established: "1947", image: airforceImage },
+    { name: "U.S. Coast Guard", established: "1790", image: coastguardImage },
+    { name: "U.S. Space Force", established: "2019", image: spaceforceImage }
   ];
 
   return (
@@ -54,35 +28,23 @@ export default function MilitaryBranchesBanner() {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center">
-          {branches.map((branch) => {
-            const branchImage = branch.images && branch.images.length > 0 ? branch.images[0] : null;
-            
-            return (
-              <div key={branch.name} className="text-center group">
-                <div className="w-20 h-20 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
-                  {branchImage ? (
-                    <img
-                      src={branchImage.urls.small}
-                      alt={`${branch.name} military imagery`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-navy-800 flex items-center justify-center">
-                      <span className="text-white font-bold text-xs">
-                        {branch.name.split(' ').slice(1, 2).join('').toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <h4 className="text-sm font-semibold text-gray-900 mb-1">
-                  {branch.name}
-                </h4>
-                <p className="text-xs text-gray-500">
-                  Est. {branch.established}
-                </p>
+          {branches.map((branch) => (
+            <div key={branch.name} className="text-center group">
+              <div className="w-20 h-20 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
+                <img
+                  src={branch.image}
+                  alt={`${branch.name} military imagery`}
+                  className="w-full h-full object-cover"
+                />
               </div>
-            );
-          })}
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                {branch.name}
+              </h4>
+              <p className="text-xs text-gray-500">
+                Est. {branch.established}
+              </p>
+            </div>
+          ))}
         </div>
         
         <div className="mt-8 text-center">

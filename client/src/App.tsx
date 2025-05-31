@@ -18,6 +18,11 @@ import Forum from "@/pages/forum";
 import LearningDashboard from "@/pages/learning-dashboard";
 import MicroChallenges from "@/pages/micro-challenges";
 import TerminologyDemo from "@/pages/terminology-demo";
+import HelpCenter from "@/pages/help-center";
+import ContactSupport from "@/pages/contact-support";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import TermsOfService from "@/pages/terms-of-service";
+import LegalDisclaimers from "@/pages/legal-disclaimers";
 
 function Router() {
   return (
@@ -36,6 +41,11 @@ function Router() {
       <Route path="/learning-dashboard" component={LearningDashboard} />
       <Route path="/micro-challenges" component={MicroChallenges} />
       <Route path="/terminology-demo" component={TerminologyDemo} />
+      <Route path="/help-center" component={HelpCenter} />
+      <Route path="/contact-support" component={ContactSupport} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/legal-disclaimers" component={LegalDisclaimers} />
       <Route component={NotFound} />
     </Switch>
   );

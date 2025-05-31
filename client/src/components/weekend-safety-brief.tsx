@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Shield, 
   RefreshCw, 
@@ -12,7 +15,11 @@ import {
   Baby,
   Heart,
   Zap,
-  Coffee
+  Coffee,
+  Settings,
+  Save,
+  Phone,
+  User
 } from "lucide-react";
 
 interface SafetyBriefItem {
@@ -20,6 +27,14 @@ interface SafetyBriefItem {
   title: string;
   message: string;
   category: 'critical' | 'important' | 'humor';
+}
+
+interface UserContacts {
+  cdoNumber: string;
+  eocNumber: string;
+  battleBuddy: string;
+  unitName: string;
+  customReminder: string;
 }
 
 const SAFETY_BRIEF_ITEMS: SafetyBriefItem[] = [
@@ -98,6 +113,27 @@ export default function WeekendSafetyBrief() {
   const [currentItems, setCurrentItems] = useState<SafetyBriefItem[]>([]);
   const [currentQuote, setCurrentQuote] = useState("");
   const [lastGenerated, setLastGenerated] = useState<Date | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [userContacts, setUserContacts] = useState<UserContacts>({
+    cdoNumber: "",
+    eocNumber: "",
+    battleBuddy: "",
+    unitName: "",
+    customReminder: ""
+  });
+
+  // Load saved contacts from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('weekend-safety-contacts');
+    if (saved) {
+      setUserContacts(JSON.parse(saved));
+    }
+  }, []);
+
+  const saveContacts = () => {
+    localStorage.setItem('weekend-safety-contacts', JSON.stringify(userContacts));
+    setShowSettings(false);
+  };
 
   const generateBrief = () => {
     // Select 6 random items ensuring we get at least 2 critical ones
@@ -164,19 +200,120 @@ export default function WeekendSafetyBrief() {
             <Badge variant="outline" className="bg-white">
               {timeUntilNextFriday()}
             </Badge>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={generateBrief}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              New Brief
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowSettings(!showSettings)}
+                className="flex items-center gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Customize
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={generateBrief}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                New Brief
+              </Button>
+            </div>
           </div>
         </CardHeader>
         
         <CardContent className="space-y-4">
+          {showSettings && (
+            <Card className="border-amber-200 bg-amber-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Settings className="h-5 w-5 text-amber-600" />
+                  Customize Your Safety Brief
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="unitName" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Your Unit
+                    </Label>
+                    <Input
+                      id="unitName"
+                      placeholder="e.g., 1st Battalion, 8th Infantry"
+                      value={userContacts.unitName}
+                      onChange={(e) => setUserContacts(prev => ({ ...prev, unitName: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="battleBuddy" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Battle Buddy
+                    </Label>
+                    <Input
+                      id="battleBuddy"
+                      placeholder="Name and phone number"
+                      value={userContacts.battleBuddy}
+                      onChange={(e) => setUserContacts(prev => ({ ...prev, battleBuddy: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="cdoNumber" className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      Command Duty Officer
+                    </Label>
+                    <Input
+                      id="cdoNumber"
+                      placeholder="CDO phone number"
+                      value={userContacts.cdoNumber}
+                      onChange={(e) => setUserContacts(prev => ({ ...prev, cdoNumber: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="eocNumber" className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      Emergency Operations Center
+                    </Label>
+                    <Input
+                      id="eocNumber"
+                      placeholder="EOC phone number"
+                      value={userContacts.eocNumber}
+                      onChange={(e) => setUserContacts(prev => ({ ...prev, eocNumber: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="customReminder" className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    Custom Unit Reminder
+                  </Label>
+                  <Textarea
+                    id="customReminder"
+                    placeholder="Add any specific reminders for your unit (e.g., formation times, special restrictions, etc.)"
+                    value={userContacts.customReminder}
+                    onChange={(e) => setUserContacts(prev => ({ ...prev, customReminder: e.target.value }))}
+                    rows={3}
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button onClick={saveContacts} className="flex items-center gap-2">
+                    <Save className="h-4 w-4" />
+                    Save Settings
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowSettings(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="bg-white p-4 rounded-lg border border-blue-200">
             <p className="text-center text-gray-700 italic">"{currentQuote}"</p>
           </div>
@@ -217,12 +354,30 @@ export default function WeekendSafetyBrief() {
               Emergency Contacts
             </h4>
             <div className="text-sm text-gray-600 space-y-1">
-              <p><strong>Command Duty Officer:</strong> Available 24/7 for emergencies</p>
-              <p><strong>Military Police:</strong> On-base emergencies</p>
+              {userContacts.cdoNumber && (
+                <p><strong>Your Command Duty Officer:</strong> {userContacts.cdoNumber}</p>
+              )}
+              {userContacts.eocNumber && (
+                <p><strong>Your Emergency Operations Center:</strong> {userContacts.eocNumber}</p>
+              )}
+              {userContacts.battleBuddy && (
+                <p><strong>Your Battle Buddy:</strong> {userContacts.battleBuddy}</p>
+              )}
+              <p><strong>Military Police:</strong> 911 (on-base emergencies)</p>
               <p><strong>National Suicide Prevention Lifeline:</strong> 988</p>
               <p><strong>Military Crisis Line:</strong> 1-800-273-8255</p>
             </div>
           </div>
+
+          {userContacts.customReminder && (
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-900 mb-2 flex items-center">
+                <AlertTriangle className="h-4 w-4 text-blue-600 mr-2" />
+                {userContacts.unitName ? `${userContacts.unitName} Reminders` : 'Unit Reminders'}
+              </h4>
+              <p className="text-sm text-blue-800 whitespace-pre-wrap">{userContacts.customReminder}</p>
+            </div>
+          )}
           
           {lastGenerated && (
             <div className="text-xs text-gray-500 text-center">

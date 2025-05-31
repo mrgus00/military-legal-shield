@@ -39,6 +39,14 @@ export const attorneys = pgTable("attorneys", {
   hourlyRate: text("hourly_rate"),
   availableForEmergency: boolean("available_for_emergency").default(false),
   responseTime: text("response_time"), // "< 2 hours", "< 24 hours", etc.
+  isVerified: boolean("is_verified").default(false),
+  verificationDate: timestamp("verification_date"),
+  licenseNumber: text("license_number"),
+  barNumber: text("bar_number"),
+  verificationStatus: text("verification_status").default("pending"), // pending, verified, rejected, expired
+  verificationNotes: text("verification_notes"),
+  credentialsUploaded: boolean("credentials_uploaded").default(false),
+  lastVerificationCheck: timestamp("last_verification_check"),
   isActive: boolean("is_active").default(true),
 });
 
@@ -229,6 +237,55 @@ export const messageAttachments = pgTable("message_attachments", {
   uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
+// Attorney verification documents
+export const attorneyVerificationDocs = pgTable("attorney_verification_docs", {
+  id: serial("id").primaryKey(),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  documentType: text("document_type").notNull(), // license, bar_certificate, education, malpractice_insurance
+  fileName: text("file_name").notNull(),
+  filePath: text("file_path").notNull(),
+  verificationStatus: text("verification_status").default("pending"), // pending, approved, rejected
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+  verifiedAt: timestamp("verified_at"),
+  verifiedBy: text("verified_by"), // admin user who verified
+  rejectionReason: text("rejection_reason"),
+});
+
+// Attorney reviews and ratings
+export const attorneyReviews = pgTable("attorney_reviews", {
+  id: serial("id").primaryKey(),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  userId: integer("user_id").references(() => users.id),
+  caseId: integer("case_id").references(() => legalCases.id),
+  rating: integer("rating").notNull(), // 1-5 stars
+  reviewTitle: text("review_title"),
+  reviewText: text("review_text"),
+  communicationRating: integer("communication_rating"), // 1-5
+  expertiseRating: integer("expertise_rating"), // 1-5
+  responsivenessRating: integer("responsiveness_rating"), // 1-5
+  valueRating: integer("value_rating"), // 1-5
+  isVerifiedClient: boolean("is_verified_client").default(false),
+  isAnonymous: boolean("is_anonymous").default(false),
+  status: text("status").default("pending"), // pending, approved, flagged, rejected
+  helpfulVotes: integer("helpful_votes").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Attorney verification requests
+export const attorneyVerificationRequests = pgTable("attorney_verification_requests", {
+  id: serial("id").primaryKey(),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  requestType: text("request_type").notNull(), // initial, renewal, update
+  status: text("status").default("pending"), // pending, in_review, approved, rejected
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  reviewedAt: timestamp("reviewed_at"),
+  reviewedBy: text("reviewed_by"),
+  notes: text("notes"),
+  requiredDocuments: text("required_documents").array(),
+  completedDocuments: text("completed_documents").array(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -323,6 +380,25 @@ export const insertMessageAttachmentSchema = createInsertSchema(messageAttachmen
   uploadedAt: true,
 });
 
+export const insertAttorneyVerificationDocSchema = createInsertSchema(attorneyVerificationDocs).omit({
+  id: true,
+  uploadedAt: true,
+  verifiedAt: true,
+});
+
+export const insertAttorneyReviewSchema = createInsertSchema(attorneyReviews).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  helpfulVotes: true,
+});
+
+export const insertAttorneyVerificationRequestSchema = createInsertSchema(attorneyVerificationRequests).omit({
+  id: true,
+  submittedAt: true,
+  reviewedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -373,3 +449,12 @@ export type Message = typeof messages.$inferSelect;
 
 export type InsertMessageAttachment = z.infer<typeof insertMessageAttachmentSchema>;
 export type MessageAttachment = typeof messageAttachments.$inferSelect;
+
+export type InsertAttorneyVerificationDoc = z.infer<typeof insertAttorneyVerificationDocSchema>;
+export type AttorneyVerificationDoc = typeof attorneyVerificationDocs.$inferSelect;
+
+export type InsertAttorneyReview = z.infer<typeof insertAttorneyReviewSchema>;
+export type AttorneyReview = typeof attorneyReviews.$inferSelect;
+
+export type InsertAttorneyVerificationRequest = z.infer<typeof insertAttorneyVerificationRequestSchema>;
+export type AttorneyVerificationRequest = typeof attorneyVerificationRequests.$inferSelect;

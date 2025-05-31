@@ -79,6 +79,21 @@ export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(messageId: number): Promise<void>;
   updateConversationLastMessage(conversationId: number): Promise<void>;
+
+  // Attorney verification methods
+  getAttorneyVerificationDocs(attorneyId: number): Promise<AttorneyVerificationDoc[]>;
+  createAttorneyVerificationDoc(doc: InsertAttorneyVerificationDoc): Promise<AttorneyVerificationDoc>;
+  updateVerificationDocStatus(docId: number, status: string, verifiedBy?: string, rejectionReason?: string): Promise<AttorneyVerificationDoc | undefined>;
+  getAttorneyVerificationRequests(status?: string): Promise<AttorneyVerificationRequest[]>;
+  createAttorneyVerificationRequest(request: InsertAttorneyVerificationRequest): Promise<AttorneyVerificationRequest>;
+  updateAttorneyVerificationStatus(attorneyId: number, status: string, notes?: string): Promise<Attorney | undefined>;
+
+  // Attorney review methods
+  getAttorneyReviews(attorneyId: number): Promise<AttorneyReview[]>;
+  createAttorneyReview(review: InsertAttorneyReview): Promise<AttorneyReview>;
+  updateAttorneyRating(attorneyId: number): Promise<void>;
+  getVerifiedReviews(attorneyId: number): Promise<AttorneyReview[]>;
+  markReviewHelpful(reviewId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {

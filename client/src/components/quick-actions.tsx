@@ -31,9 +31,9 @@ export default function QuickActions() {
     },
     {
       icon: GraduationCap,
-      title: "Learn Rights",
-      description: "Educational modules on military law",
-      href: "/education",
+      title: "Learning Paths",
+      description: "Gamified legal education with achievements",
+      href: "/learning-dashboard",
       bgColor: "bg-emerald-500",
       iconColor: "text-white"
     }

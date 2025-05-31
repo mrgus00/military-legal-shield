@@ -666,6 +666,199 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Learning Dashboard API routes
+  app.get("/api/learning-paths", async (req, res) => {
+    try {
+      // For now, return sample data - in production this would come from database
+      const samplePaths = [
+        {
+          id: 1,
+          title: "Military Justice Fundamentals",
+          description: "Master the basics of military justice including UCMJ, Article 15 procedures, and your rights during investigations. Perfect starting point for service members.",
+          category: "beginner",
+          totalModules: 6,
+          estimatedHours: 8,
+          difficulty: "easy",
+          prerequisites: [],
+          badge: "Justice Cadet",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 2,
+          title: "Court-Martial Defense Mastery",
+          description: "Advanced strategies for court-martial proceedings, evidence rules, and defense tactics. Learn from real case studies and expert insights.",
+          category: "advanced",
+          totalModules: 10,
+          estimatedHours: 15,
+          difficulty: "hard",
+          prerequisites: ["Military Justice Fundamentals"],
+          badge: "Defense Expert",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 3,
+          title: "Security Clearance Protection",
+          description: "Complete guide to maintaining and protecting your security clearance throughout your military career. Covers investigations, appeals, and best practices.",
+          category: "intermediate",
+          totalModules: 8,
+          estimatedHours: 12,
+          difficulty: "medium",
+          prerequisites: [],
+          badge: "Clearance Guardian",
+          isActive: true,
+          createdAt: new Date()
+        }
+      ];
+      res.json(samplePaths);
+    } catch (error) {
+      console.error("Error fetching learning paths:", error);
+      res.status(500).json({ message: "Failed to fetch learning paths" });
+    }
+  });
+
+  app.get("/api/user-progress", async (req, res) => {
+    try {
+      // Sample user progress data
+      const sampleProgress = [
+        {
+          id: 1,
+          userId: 1,
+          pathId: 1,
+          currentModule: 4,
+          completedModules: [1, 2, 3],
+          totalScore: 850,
+          timeSpent: 180,
+          lastAccessed: new Date(),
+          completedAt: null,
+          certificateEarned: false
+        }
+      ];
+      res.json(sampleProgress);
+    } catch (error) {
+      console.error("Error fetching user progress:", error);
+      res.status(500).json({ message: "Failed to fetch user progress" });
+    }
+  });
+
+  app.get("/api/achievements", async (req, res) => {
+    try {
+      const sampleAchievements = [
+        {
+          id: 1,
+          title: "First Steps",
+          description: "Complete your first learning module",
+          icon: "star",
+          category: "learning",
+          points: 100,
+          requirement: "Complete 1 module",
+          badgeColor: "blue",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 2,
+          title: "Knowledge Seeker",
+          description: "Complete 5 learning modules",
+          icon: "bookopen",
+          category: "learning",
+          points: 500,
+          requirement: "Complete 5 modules",
+          badgeColor: "green",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 3,
+          title: "Path Master",
+          description: "Complete an entire learning path",
+          icon: "trophy",
+          category: "learning",
+          points: 1000,
+          requirement: "Complete 1 path",
+          badgeColor: "gold",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 4,
+          title: "Community Helper",
+          description: "Answer 10 forum questions",
+          icon: "users",
+          category: "community",
+          points: 750,
+          requirement: "Answer 10 questions",
+          badgeColor: "purple",
+          isActive: true,
+          createdAt: new Date()
+        },
+        {
+          id: 5,
+          title: "Streak Master",
+          description: "Maintain a 7-day learning streak",
+          icon: "zap",
+          category: "learning",
+          points: 300,
+          requirement: "7 day streak",
+          badgeColor: "yellow",
+          isActive: true,
+          createdAt: new Date()
+        }
+      ];
+      res.json(sampleAchievements);
+    } catch (error) {
+      console.error("Error fetching achievements:", error);
+      res.status(500).json({ message: "Failed to fetch achievements" });
+    }
+  });
+
+  app.get("/api/user-achievements", async (req, res) => {
+    try {
+      const sampleUserAchievements = [
+        {
+          id: 1,
+          userId: 1,
+          achievementId: 1,
+          earnedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+          progress: 100
+        },
+        {
+          id: 2,
+          userId: 1,
+          achievementId: 2,
+          earnedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+          progress: 100
+        }
+      ];
+      res.json(sampleUserAchievements);
+    } catch (error) {
+      console.error("Error fetching user achievements:", error);
+      res.status(500).json({ message: "Failed to fetch user achievements" });
+    }
+  });
+
+  app.get("/api/learning-stats", async (req, res) => {
+    try {
+      const sampleStats = {
+        id: 1,
+        userId: 1,
+        currentStreak: 5,
+        longestStreak: 12,
+        totalPoints: 1650,
+        totalHoursLearned: 24,
+        level: 3,
+        experiencePoints: 2650,
+        lastActivityDate: new Date(),
+        updatedAt: new Date()
+      };
+      res.json(sampleStats);
+    } catch (error) {
+      console.error("Error fetching learning stats:", error);
+      res.status(500).json({ message: "Failed to fetch learning stats" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

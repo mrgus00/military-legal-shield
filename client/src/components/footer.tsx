@@ -53,11 +53,11 @@ export default function Footer() {
           <div>
             <h5 className="font-semibold mb-4">Support</h5>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Support</a></li>
+              <li><Link href="/help-center" className="hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link href="/contact-support" className="hover:text-white transition-colors">Contact Support</Link></li>
               <li><Link href="/attorneys" className="hover:text-white transition-colors">Attorney Directory</Link></li>
               <li><Link href="/education" className="hover:text-white transition-colors">Educational Courses</Link></li>
-              <li><a href="#" className="hover:text-white transition-colors">Community Forum</a></li>
+              <li><Link href="/forum" className="hover:text-white transition-colors">Community Forum</Link></li>
             </ul>
           </div>
           

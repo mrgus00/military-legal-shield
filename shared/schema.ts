@@ -122,16 +122,21 @@ export const forumQuestions = pgTable("forum_questions", {
   content: text("content").notNull(),
   category: text("category").notNull(),
   branch: text("branch"),
+  userId: integer("user_id").references(() => users.id),
   isAnswered: boolean("is_answered").default(false),
+  isUrgent: boolean("is_urgent").default(false),
   upvotes: integer("upvotes").default(0),
+  tags: text("tags").array(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const forumAnswers = pgTable("forum_answers", {
   id: serial("id").primaryKey(),
   questionId: integer("question_id").references(() => forumQuestions.id),
+  userId: integer("user_id").references(() => users.id),
   content: text("content").notNull(),
   isVerified: boolean("is_verified").default(false), // verified by legal professional
+  isExpert: boolean("is_expert").default(false), // answered by verified legal expert
   upvotes: integer("upvotes").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });

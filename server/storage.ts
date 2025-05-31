@@ -1,14 +1,20 @@
 import { 
   users, attorneys, legalResources, educationModules, consultations,
+  legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
   type EducationModule, type InsertEducationModule,
-  type Consultation, type InsertConsultation
+  type Consultation, type InsertConsultation,
+  type LegalCase, type InsertLegalCase,
+  type EmergencyResource, type InsertEmergencyResource,
+  type ForumQuestion, type InsertForumQuestion,
+  type ForumAnswer, type InsertForumAnswer,
+  type LegalDocument, type InsertLegalDocument
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { eq, ilike, and } from "drizzle-orm";
+import { eq, ilike, and, or, desc } from "drizzle-orm";
 
 export interface IStorage {
   // User methods

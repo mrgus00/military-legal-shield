@@ -3,38 +3,64 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 20 14.3% 4.1%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+  --background: 210 15% 98%; /* Soft warm white with hint of blue */
+  --foreground: 215 20% 25%; /* Softer dark blue-gray */
+  --muted: 210 25% 94%; /* Gentle blue-tinted background */
+  --muted-foreground: 215 12% 52%; /* Comfortable gray text */
   --popover: 0 0% 100%;
-  --popover-foreground: 20 14.3% 4.1%;
+  --popover-foreground: 215 20% 25%;
   --card: 0 0% 100%;
-  --card-foreground: 20 14.3% 4.1%;
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
-  --primary: 207 90% 54%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 60 4.8% 95.9%;
-  --secondary-foreground: 24 9.8% 10%;
-  --accent: 60 4.8% 95.9%;
-  --accent-foreground: 24 9.8% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 20 14.3% 4.1%;
-  --radius: 0.5rem;
+  --card-foreground: 215 20% 25%;
+  --border: 210 18% 88%; /* Subtle warm borders */
+  --input: 210 18% 88%;
+  --primary: 210 55% 48%; /* Trustworthy medium blue */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 20% 92%; /* Soft blue-gray */
+  --secondary-foreground: 215 20% 25%;
+  --accent: 45 75% 82%; /* Warm encouraging gold */
+  --accent-foreground: 215 20% 25%;
+  --destructive: 0 65% 58%; /* Softer, less harsh red */
+  --destructive-foreground: 210 40% 98%;
+  --ring: 210 55% 48%;
+  --radius: 0.75rem; /* More rounded for friendliness */
   
-  /* Military color scheme */
-  --navy-50: 239 100% 97%;
-  --navy-500: 207 90% 54%;
-  --navy-600: 210 100% 48%;
-  --navy-700: 210 100% 42%;
-  --navy-800: 210 100% 35%;
-  --navy-900: 210 100% 28%;
+  /* Welcoming Military color scheme */
+  --navy-50: 210 35% 96%; /* Softer navy tints */
+  --navy-100: 210 40% 92%;
+  --navy-200: 210 42% 85%;
+  --navy-300: 210 45% 75%;
+  --navy-400: 210 50% 65%;
+  --navy-500: 210 55% 55%; /* Trustworthy main blue */
+  --navy-600: 210 55% 48%;
+  --navy-700: 210 50% 40%;
+  --navy-800: 210 45% 32%; /* Softer dark navy */
+  --navy-900: 210 40% 25%;
   
-  --military-gold-400: 42 96% 68%;
-  --military-gold-500: 42 96% 58%;
-  --military-gold-600: 42 96% 48%;
+  /* Encouraging gold tones */
+  --military-gold-50: 45 60% 94%;
+  --military-gold-100: 45 65% 88%;
+  --military-gold-200: 45 70% 80%;
+  --military-gold-300: 45 75% 72%;
+  --military-gold-400: 45 80% 65%; /* Warm, encouraging gold */
+  --military-gold-500: 45 75% 55%;
+  --military-gold-600: 45 70% 48%;
+  --military-gold-700: 45 65% 40%;
+  
+  /* Calming accent colors */
+  --sage-50: 120 20% 95%;
+  --sage-100: 120 25% 88%;
+  --sage-200: 120 30% 80%;
+  --sage-300: 120 35% 70%;
+  --sage-400: 120 40% 60%; /* Calming sage green */
+  --sage-500: 120 45% 50%;
+  
+  /* Warm supporting colors */
+  --warm-gray-50: 30 8% 96%;
+  --warm-gray-100: 30 10% 90%;
+  --warm-gray-200: 30 12% 82%;
+  --warm-gray-300: 30 15% 70%;
+  --warm-gray-400: 30 18% 58%;
+  --warm-gray-500: 30 20% 46%;
 }
 
 .dark {

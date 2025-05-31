@@ -3,15 +3,15 @@ import { Shield, AlertTriangle } from "lucide-react";
 
 export default function SecurityReminder() {
   return (
-    <Card className="bg-amber-50 border-amber-200 mb-6">
+    <Card className="bg-gradient-to-r from-sage-50 to-military-gold-50 border-sage-200 mb-6 shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center text-amber-800">
-          <Shield className="h-5 w-5 mr-2" />
+        <CardTitle className="flex items-center text-navy-700">
+          <Shield className="h-5 w-5 mr-2 text-sage-400" />
           Security Reminder: Use Smart Digital Habits
-          <AlertTriangle className="h-5 w-5 ml-2" />
+          <AlertTriangle className="h-5 w-5 ml-2 text-military-gold-500" />
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-amber-700 space-y-3">
+      <CardContent className="text-navy-600 space-y-3">
         <p className="font-medium">
           While this app is built with your safety and security in mind, please remember to protect 
           your personal and operational information at all times.

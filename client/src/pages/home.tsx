@@ -33,16 +33,16 @@ export default function Home() {
   const featuredModules = educationModules?.slice(0, 2) || [];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-navy-50 to-white">
       <Header />
       <Hero />
       
       {/* Quick Access Dashboard */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-r from-white to-navy-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Your Legal Command Center</h3>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <h3 className="text-3xl font-bold text-navy-700 mb-4">Your Legal Command Center</h3>
+            <p className="text-lg text-navy-600 max-w-3xl mx-auto">
               Quick access to the most important legal resources and tools for military personnel
             </p>
           </div>

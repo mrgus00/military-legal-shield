@@ -29,7 +29,7 @@ export default function SecurityReminder() {
           </p>
         </div>
         
-        <p className="font-semibold text-amber-800">
+        <p className="font-semibold text-navy-700 bg-military-gold-100 px-3 py-2 rounded-md">
           Stay secure. Stay sharp. Protect yourself and your team.
         </p>
       </CardContent>

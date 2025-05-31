@@ -7,6 +7,7 @@ import ResourceCard from "@/components/resource-card";
 import AttorneyCard from "@/components/attorney-card";
 import EducationModule from "@/components/education-module";
 import ContactForm from "@/components/contact-form";
+import MilitaryBranchesBanner from "@/components/military-branches-banner";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";

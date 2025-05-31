@@ -12,15 +12,6 @@ export interface UnsplashImage {
   };
 }
 
-const UNSPLASH_BASE_URL = 'https://api.unsplash.com';
-
-// For frontend access, we need to proxy through the backend
-const getAccessKey = async (): Promise<string> => {
-  const response = await fetch('/api/unsplash-key');
-  const data = await response.json();
-  return data.key;
-};
-
 export class ImageService {
   private cache = new Map<string, UnsplashImage[]>();
 
@@ -31,12 +22,7 @@ export class ImageService {
 
     try {
       const response = await fetch(
-        `${UNSPLASH_BASE_URL}/search/photos?query=${encodeURIComponent(query)}&per_page=${count}&orientation=landscape`,
-        {
-          headers: {
-            Authorization: `Client-ID ${ACCESS_KEY}`,
-          },
-        }
+        `/api/images/search?query=${encodeURIComponent(query)}&per_page=${count}&orientation=landscape`
       );
 
       if (!response.ok) {

@@ -1,10 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { Rocket, ShieldCheck } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { imageService, type UnsplashImage } from "@/lib/imageService";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
+  const [heroImage, setHeroImage] = useState<UnsplashImage | null>(null);
+
+  const { data: heroImages } = useQuery({
+    queryKey: ["hero-images"],
+    queryFn: () => imageService.getHeroImages(),
+  });
+
+  useEffect(() => {
+    if (heroImages && heroImages.length > 0) {
+      setHeroImage(imageService.getRandomImage(heroImages));
+    }
+  }, [heroImages]);
+
   return (
-    <section className="bg-navy-800 text-white py-16 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-navy-800 text-white py-16 lg:py-24 relative overflow-hidden">
+      {/* Background Image */}
+      {heroImage && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: `url(${heroImage.urls.regular})`,
+          }}
+        >
+          <div className="absolute inset-0 bg-navy-800/85"></div>
+        </div>
+      )}
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
           <div>
             <h2 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
@@ -36,7 +64,7 @@ export default function Hero() {
           </div>
           <div className="mt-12 lg:mt-0">
             <div className="relative">
-              <div className="bg-gradient-to-br from-navy-700 to-navy-900 rounded-xl p-8 shadow-2xl">
+              <div className="bg-gradient-to-br from-navy-700/90 to-navy-900/90 backdrop-blur-sm rounded-xl p-8 shadow-2xl border border-white/10">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
                   <div className="text-center">
                     <div className="w-24 h-24 bg-military-gold-500 rounded-full flex items-center justify-center mx-auto mb-4">

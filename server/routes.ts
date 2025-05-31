@@ -149,6 +149,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Proxy endpoint for Unsplash images
+  app.get("/api/images/search", async (req, res) => {
+    try {
+      const { query, per_page = 10, orientation = "landscape" } = req.query;
+      
+      if (!query || typeof query !== "string") {
+        return res.status(400).json({ message: "Query parameter is required" });
+      }
+
+      const unsplashResponse = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=${per_page}&orientation=${orientation}`,
+        {
+          headers: {
+            Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
+          },
+        }
+      );
+
+      if (!unsplashResponse.ok) {
+        throw new Error('Failed to fetch images from Unsplash');
+      }
+
+      const data = await unsplashResponse.json();
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+      res.status(500).json({ message: "Failed to fetch images" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

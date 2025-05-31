@@ -2,6 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Clock, Info } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { imageService } from "@/lib/imageService";
 import type { Attorney } from "@shared/schema";
 
 interface AttorneyCardProps {
@@ -9,10 +11,18 @@ interface AttorneyCardProps {
 }
 
 export default function AttorneyCard({ attorney }: AttorneyCardProps) {
-  const getAvatarUrl = (name: string) => {
-    // Generate a consistent avatar based on name
-    const seed = name.replace(/\s+/g, '').toLowerCase();
-    return `https://api.dicebear.com/7.x/professional/svg?seed=${seed}&backgroundColor=f0f4f8`;
+  const { data: attorneyImages } = useQuery({
+    queryKey: ["attorney-images"],
+    queryFn: () => imageService.getAttorneyImages(),
+  });
+
+  const getAttorneyImage = () => {
+    if (!attorneyImages || attorneyImages.length === 0) {
+      return null;
+    }
+    // Use attorney ID to get consistent image
+    const imageIndex = attorney.id % attorneyImages.length;
+    return attorneyImages[imageIndex];
   };
 
   const renderStars = (rating: number) => {
@@ -44,11 +54,22 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
     <Card className="bg-gray-50 hover:shadow-lg transition-shadow border border-gray-200 h-full">
       <CardContent className="p-6">
         <div className="flex items-center mb-4">
-          <img 
-            src={getAvatarUrl(`${attorney.firstName} ${attorney.lastName}`)}
-            alt={`${attorney.firstName} ${attorney.lastName}`}
-            className="w-16 h-16 rounded-full object-cover mr-4 bg-gray-200"
-          />
+          {(() => {
+            const attorneyImage = getAttorneyImage();
+            return attorneyImage ? (
+              <img 
+                src={attorneyImage.urls.small}
+                alt={attorneyImage.alt_description || `${attorney.firstName} ${attorney.lastName}`}
+                className="w-16 h-16 rounded-full object-cover mr-4 bg-gray-200"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center mr-4">
+                <span className="text-white font-semibold text-lg">
+                  {attorney.firstName[0]}{attorney.lastName[0]}
+                </span>
+              </div>
+            );
+          })()}
           <div className="flex-1">
             <h4 className="font-semibold text-lg text-gray-900">{attorney.title}</h4>
             <p className="text-sm text-gray-600">Military Law Attorney</p>

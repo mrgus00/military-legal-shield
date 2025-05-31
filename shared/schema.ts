@@ -286,6 +286,52 @@ export const attorneyVerificationRequests = pgTable("attorney_verification_reque
   completedDocuments: text("completed_documents").array(),
 });
 
+// Legal scenario simulations
+export const legalScenarios = pgTable("legal_scenarios", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // court-martial, administrative, clearance, etc.
+  difficulty: text("difficulty").notNull(), // beginner, intermediate, advanced
+  branch: text("branch"), // Army, Navy, Air Force, Marines, Coast Guard, Space Force, All
+  scenario: text("scenario").notNull(), // AI-generated scenario text
+  learningObjectives: text("learning_objectives").array(),
+  tags: text("tags").array(),
+  estimatedTime: integer("estimated_time"), // in minutes
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Scenario sessions (user progress tracking)
+export const scenarioSessions = pgTable("scenario_sessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  scenarioId: integer("scenario_id").references(() => legalScenarios.id),
+  status: text("status").default("in_progress"), // in_progress, completed, abandoned
+  currentStep: integer("current_step").default(1),
+  totalSteps: integer("total_steps"),
+  score: integer("score"), // 0-100
+  decisions: text("decisions").array(), // JSON array of user decisions
+  aiResponses: text("ai_responses").array(), // AI-generated responses to decisions
+  feedback: text("feedback"), // Final AI feedback
+  timeSpent: integer("time_spent"), // in minutes
+  startedAt: timestamp("started_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+});
+
+// Scenario analytics
+export const scenarioAnalytics = pgTable("scenario_analytics", {
+  id: serial("id").primaryKey(),
+  scenarioId: integer("scenario_id").references(() => legalScenarios.id),
+  userId: integer("user_id").references(() => users.id),
+  completionRate: integer("completion_rate"), // percentage
+  averageScore: integer("average_score"),
+  commonMistakes: text("common_mistakes").array(),
+  improvementAreas: text("improvement_areas").array(),
+  generatedAt: timestamp("generated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -399,6 +445,22 @@ export const insertAttorneyVerificationRequestSchema = createInsertSchema(attorn
   reviewedAt: true,
 });
 
+export const insertLegalScenarioSchema = createInsertSchema(legalScenarios).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertScenarioSessionSchema = createInsertSchema(scenarioSessions).omit({
+  id: true,
+  startedAt: true,
+});
+
+export const insertScenarioAnalyticsSchema = createInsertSchema(scenarioAnalytics).omit({
+  id: true,
+  generatedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -458,3 +520,12 @@ export type AttorneyReview = typeof attorneyReviews.$inferSelect;
 
 export type InsertAttorneyVerificationRequest = z.infer<typeof insertAttorneyVerificationRequestSchema>;
 export type AttorneyVerificationRequest = typeof attorneyVerificationRequests.$inferSelect;
+
+export type InsertLegalScenario = z.infer<typeof insertLegalScenarioSchema>;
+export type LegalScenario = typeof legalScenarios.$inferSelect;
+
+export type InsertScenarioSession = z.infer<typeof insertScenarioSessionSchema>;
+export type ScenarioSession = typeof scenarioSessions.$inferSelect;
+
+export type InsertScenarioAnalytics = z.infer<typeof insertScenarioAnalyticsSchema>;
+export type ScenarioAnalytics = typeof scenarioAnalytics.$inferSelect;

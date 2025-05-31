@@ -2,6 +2,7 @@ import {
   users, attorneys, legalResources, educationModules, consultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
+  legalScenarios, scenarioSessions, scenarioAnalytics,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -16,7 +17,10 @@ import {
   type Message, type InsertMessage,
   type AttorneyVerificationDoc, type InsertAttorneyVerificationDoc,
   type AttorneyReview, type InsertAttorneyReview,
-  type AttorneyVerificationRequest, type InsertAttorneyVerificationRequest
+  type AttorneyVerificationRequest, type InsertAttorneyVerificationRequest,
+  type LegalScenario, type InsertLegalScenario,
+  type ScenarioSession, type InsertScenarioSession,
+  type ScenarioAnalytics, type InsertScenarioAnalytics
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -97,6 +101,23 @@ export interface IStorage {
   updateAttorneyRating(attorneyId: number): Promise<void>;
   getVerifiedReviews(attorneyId: number): Promise<AttorneyReview[]>;
   markReviewHelpful(reviewId: number): Promise<void>;
+
+  // Legal scenario methods
+  getLegalScenarios(category?: string, difficulty?: string, branch?: string): Promise<LegalScenario[]>;
+  getLegalScenario(id: number): Promise<LegalScenario | undefined>;
+  createLegalScenario(scenario: InsertLegalScenario): Promise<LegalScenario>;
+  updateLegalScenario(id: number, updates: Partial<InsertLegalScenario>): Promise<LegalScenario | undefined>;
+
+  // Scenario session methods
+  getScenarioSessions(userId: number): Promise<ScenarioSession[]>;
+  getScenarioSession(id: number): Promise<ScenarioSession | undefined>;
+  createScenarioSession(session: InsertScenarioSession): Promise<ScenarioSession>;
+  updateScenarioSession(id: number, updates: Partial<InsertScenarioSession>): Promise<ScenarioSession | undefined>;
+  completeScenarioSession(id: number, score: number, feedback: string): Promise<ScenarioSession | undefined>;
+
+  // Scenario analytics methods
+  getScenarioAnalytics(scenarioId: number): Promise<ScenarioAnalytics[]>;
+  createScenarioAnalytics(analytics: InsertScenarioAnalytics): Promise<ScenarioAnalytics>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -673,6 +694,118 @@ export class DatabaseStorage implements IStorage {
         helpfulVotes: sql`${attorneyReviews.helpfulVotes} + 1`
       })
       .where(eq(attorneyReviews.id, reviewId));
+  }
+
+  // Legal scenario methods
+  async getLegalScenarios(category?: string, difficulty?: string, branch?: string): Promise<LegalScenario[]> {
+    let query = this.db.select().from(legalScenarios).where(eq(legalScenarios.isActive, true));
+
+    const conditions = [];
+    if (category) {
+      conditions.push(eq(legalScenarios.category, category));
+    }
+    if (difficulty) {
+      conditions.push(eq(legalScenarios.difficulty, difficulty));
+    }
+    if (branch && branch !== 'All') {
+      conditions.push(or(eq(legalScenarios.branch, branch), eq(legalScenarios.branch, 'All')));
+    }
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+
+    return await query.orderBy(desc(legalScenarios.createdAt));
+  }
+
+  async getLegalScenario(id: number): Promise<LegalScenario | undefined> {
+    const [scenario] = await this.db
+      .select()
+      .from(legalScenarios)
+      .where(eq(legalScenarios.id, id));
+    return scenario;
+  }
+
+  async createLegalScenario(insertScenario: InsertLegalScenario): Promise<LegalScenario> {
+    const [scenario] = await this.db
+      .insert(legalScenarios)
+      .values(insertScenario)
+      .returning();
+    return scenario;
+  }
+
+  async updateLegalScenario(id: number, updates: Partial<InsertLegalScenario>): Promise<LegalScenario | undefined> {
+    const [scenario] = await this.db
+      .update(legalScenarios)
+      .set(updates)
+      .where(eq(legalScenarios.id, id))
+      .returning();
+    return scenario;
+  }
+
+  // Scenario session methods
+  async getScenarioSessions(userId: number): Promise<ScenarioSession[]> {
+    return await this.db
+      .select()
+      .from(scenarioSessions)
+      .where(eq(scenarioSessions.userId, userId))
+      .orderBy(desc(scenarioSessions.startedAt));
+  }
+
+  async getScenarioSession(id: number): Promise<ScenarioSession | undefined> {
+    const [session] = await this.db
+      .select()
+      .from(scenarioSessions)
+      .where(eq(scenarioSessions.id, id));
+    return session;
+  }
+
+  async createScenarioSession(insertSession: InsertScenarioSession): Promise<ScenarioSession> {
+    const [session] = await this.db
+      .insert(scenarioSessions)
+      .values(insertSession)
+      .returning();
+    return session;
+  }
+
+  async updateScenarioSession(id: number, updates: Partial<InsertScenarioSession>): Promise<ScenarioSession | undefined> {
+    const [session] = await this.db
+      .update(scenarioSessions)
+      .set(updates)
+      .where(eq(scenarioSessions.id, id))
+      .returning();
+    return session;
+  }
+
+  async completeScenarioSession(id: number, score: number, feedback: string): Promise<ScenarioSession | undefined> {
+    const [session] = await this.db
+      .update(scenarioSessions)
+      .set({
+        status: 'completed',
+        score,
+        feedback,
+        completedAt: new Date()
+      })
+      .where(eq(scenarioSessions.id, id))
+      .returning();
+    return session;
+  }
+
+  // Scenario analytics methods
+  async getScenarioAnalytics(scenarioId: number): Promise<ScenarioAnalytics[]> {
+    return await this.db
+      .select()
+      .from(scenarioAnalytics)
+      .where(eq(scenarioAnalytics.scenarioId, scenarioId))
+      .orderBy(desc(scenarioAnalytics.generatedAt));
+  }
+
+  async createScenarioAnalytics(insertAnalytics: InsertScenarioAnalytics): Promise<ScenarioAnalytics> {
+    const [analytics] = await this.db
+      .insert(scenarioAnalytics)
+      .values(insertAnalytics)
+      .returning();
+    return analytics;
   }
 }
 

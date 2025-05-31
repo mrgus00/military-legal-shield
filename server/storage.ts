@@ -275,6 +275,89 @@ export class DatabaseStorage implements IStorage {
       ];
 
       await this.db.insert(educationModules).values(moduleData);
+
+      // Seed forum questions
+      const forumData: InsertForumQuestion[] = [
+        {
+          userId: 1,
+          title: "Article 15 vs Court Martial for AWOL",
+          content: "I was AWOL for 3 days due to a family emergency and couldn't reach my command. My CO is considering Article 15 vs court martial. What factors determine which route they take? This happened last month and I'm trying to understand my options.",
+          category: "Military Justice",
+          branch: "Army",
+          isUrgent: true,
+          tags: ["Article 15", "AWOL", "Court Martial", "Family Emergency"],
+          upvotes: 5
+        },
+        {
+          userId: 1,
+          title: "Security clearance investigation timeline",
+          content: "My Secret clearance investigation has been ongoing for 8 months. Is this normal? What can I do to expedite the process? I need it for my new assignment and my sponsor is getting impatient.",
+          category: "Security Clearance",
+          branch: "Air Force",
+          isUrgent: false,
+          tags: ["Security Clearance", "Investigation", "Timeline"],
+          upvotes: 3
+        },
+        {
+          userId: 1,
+          title: "BAH dispute after PCS move",
+          content: "Finance is saying I owe back BAH from my last duty station, but I followed all proper procedures for my PCS. I have all the paperwork but they're still demanding payment. Has anyone dealt with this before?",
+          category: "Administrative",
+          branch: "Navy",
+          isUrgent: false,
+          tags: ["BAH", "PCS", "Finance", "Dispute"],
+          upvotes: 8
+        },
+        {
+          userId: 1,
+          title: "Involuntary separation for failing PT test",
+          content: "I failed my last PT test by 2 points after recovering from a stress fracture. My command is talking about involuntary separation. What are my rights? Can I appeal this decision?",
+          category: "Administrative",
+          branch: "Marines",
+          isUrgent: true,
+          tags: ["PT Test", "Separation", "Medical", "Appeal"],
+          upvotes: 12
+        },
+        {
+          userId: 1,
+          title: "Spouse employment and security clearance",
+          content: "My spouse got a job offer from a company with foreign contracts. Will this affect my Top Secret clearance renewal? Should I report this to security?",
+          category: "Security Clearance",
+          branch: "Space Force",
+          isUrgent: false,
+          tags: ["Spouse", "Foreign Contracts", "Top Secret"],
+          upvotes: 4
+        }
+      ];
+
+      await this.db.insert(forumQuestions).values(forumData).onConflictDoNothing();
+
+      // Seed forum answers
+      const answerData: InsertForumAnswer[] = [
+        {
+          questionId: 1, // Article 15 vs Court Martial
+          userId: 1,
+          content: "The decision usually depends on the severity, your record, and command discretion. Article 15 is generally for minor offenses. Since you have a valid reason (family emergency), make sure you document everything and consider requesting mast if needed.",
+          isExpert: false,
+          upvotes: 3
+        },
+        {
+          questionId: 1,
+          userId: 1,
+          content: "I went through something similar. The key factors are: 1) Your prior record, 2) Whether you can prove the emergency, 3) Command climate. Get statements from family/hospital if possible. Most COs prefer Article 15 for first-time AWOL if there are extenuating circumstances.",
+          isExpert: false,
+          upvotes: 7
+        },
+        {
+          questionId: 3, // BAH dispute
+          userId: 1,
+          content: "File an appeal through your local finance office and escalate to the DFAS if needed. Make sure you have copies of all your PCS orders, housing termination documents, and any correspondence. This is more common than you think.",
+          isExpert: false,
+          upvotes: 5
+        }
+      ];
+
+      await this.db.insert(forumAnswers).values(answerData).onConflictDoNothing();
     } catch (error) {
       console.error("Error seeding data:", error);
     }

@@ -578,6 +578,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Forum API routes
+  app.get("/api/forum/questions", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const questions = await storage.getForumQuestions(category);
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching forum questions:", error);
+      res.status(500).json({ message: "Failed to fetch forum questions" });
+    }
+  });
+
+  app.get("/api/forum/questions/:id", async (req, res) => {
+    try {
+      const questionId = parseInt(req.params.id);
+      const question = await storage.getForumQuestion(questionId);
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+      res.json(question);
+    } catch (error) {
+      console.error("Error fetching forum question:", error);
+      res.status(500).json({ message: "Failed to fetch forum question" });
+    }
+  });
+
+  app.post("/api/forum/questions", async (req, res) => {
+    try {
+      const question = await storage.createForumQuestion(req.body);
+      res.status(201).json(question);
+    } catch (error) {
+      console.error("Error creating forum question:", error);
+      res.status(500).json({ message: "Failed to create forum question" });
+    }
+  });
+
+  app.post("/api/forum/questions/:id/upvote", async (req, res) => {
+    try {
+      const questionId = parseInt(req.params.id);
+      const question = await storage.getForumQuestion(questionId);
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error upvoting question:", error);
+      res.status(500).json({ message: "Failed to upvote question" });
+    }
+  });
+
+  app.get("/api/forum/answers", async (req, res) => {
+    try {
+      const allQuestions = await storage.getForumQuestions();
+      const allAnswers = [];
+      
+      for (const question of allQuestions) {
+        const questionAnswers = await storage.getForumAnswers(question.id);
+        allAnswers.push(...questionAnswers);
+      }
+      
+      res.json(allAnswers);
+    } catch (error) {
+      console.error("Error fetching forum answers:", error);
+      res.status(500).json({ message: "Failed to fetch forum answers" });
+    }
+  });
+
+  app.get("/api/forum/questions/:id/answers", async (req, res) => {
+    try {
+      const questionId = parseInt(req.params.id);
+      const answers = await storage.getForumAnswers(questionId);
+      res.json(answers);
+    } catch (error) {
+      console.error("Error fetching forum answers:", error);
+      res.status(500).json({ message: "Failed to fetch forum answers" });
+    }
+  });
+
+  app.post("/api/forum/answers", async (req, res) => {
+    try {
+      const answer = await storage.createForumAnswer(req.body);
+      res.status(201).json(answer);
+    } catch (error) {
+      console.error("Error creating forum answer:", error);
+      res.status(500).json({ message: "Failed to create forum answer" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

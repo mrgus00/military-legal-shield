@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle } from "lucide-react";
+import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle, Users } from "lucide-react";
 import { Link } from "wouter";
 
 export default function QuickActions() {
@@ -22,19 +22,19 @@ export default function QuickActions() {
       iconColor: "text-navy-800"
     },
     {
+      icon: Users,
+      title: "Community Forum",
+      description: "Connect with fellow service members",
+      href: "/forum",
+      bgColor: "bg-purple-500",
+      iconColor: "text-white"
+    },
+    {
       icon: GraduationCap,
       title: "Learn Rights",
       description: "Educational modules on military law",
       href: "/education",
       bgColor: "bg-emerald-500",
-      iconColor: "text-white"
-    },
-    {
-      icon: MessageCircle,
-      title: "Get Support",
-      description: "24/7 legal guidance and assistance",
-      href: "#support",
-      bgColor: "bg-blue-500",
       iconColor: "text-white"
     }
   ];

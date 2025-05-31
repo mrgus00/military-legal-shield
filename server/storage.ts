@@ -26,6 +26,7 @@ export interface IStorage {
   getAttorneys(): Promise<Attorney[]>;
   getAttorney(id: number): Promise<Attorney | undefined>;
   getAttorneysBySpecialty(specialty: string): Promise<Attorney[]>;
+  searchAttorneys(location?: string, pricingTier?: string, specialty?: string, emergencyOnly?: boolean): Promise<Attorney[]>;
   createAttorney(attorney: InsertAttorney): Promise<Attorney>;
 
   // Legal resource methods
@@ -44,6 +45,28 @@ export interface IStorage {
   getConsultations(): Promise<Consultation[]>;
   getConsultation(id: number): Promise<Consultation | undefined>;
   createConsultation(consultation: InsertConsultation): Promise<Consultation>;
+
+  // Legal case methods
+  getLegalCases(userId?: number): Promise<LegalCase[]>;
+  getLegalCase(id: number): Promise<LegalCase | undefined>;
+  createLegalCase(legalCase: InsertLegalCase): Promise<LegalCase>;
+  updateLegalCaseStatus(id: number, status: string): Promise<LegalCase | undefined>;
+
+  // Emergency resource methods
+  getEmergencyResources(branch?: string): Promise<EmergencyResource[]>;
+  createEmergencyResource(resource: InsertEmergencyResource): Promise<EmergencyResource>;
+
+  // Forum methods
+  getForumQuestions(category?: string): Promise<ForumQuestion[]>;
+  getForumQuestion(id: number): Promise<ForumQuestion | undefined>;
+  createForumQuestion(question: InsertForumQuestion): Promise<ForumQuestion>;
+  getForumAnswers(questionId: number): Promise<ForumAnswer[]>;
+  createForumAnswer(answer: InsertForumAnswer): Promise<ForumAnswer>;
+
+  // Legal document methods
+  getLegalDocuments(userId: number): Promise<LegalDocument[]>;
+  getLegalDocument(id: number): Promise<LegalDocument | undefined>;
+  createLegalDocument(document: InsertLegalDocument): Promise<LegalDocument>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -65,7 +88,7 @@ export class DatabaseStorage implements IStorage {
         return; // Data already seeded
       }
 
-      // Seed attorneys
+      // Seed attorneys with enhanced data for urgent-response matching
       const attorneyData: InsertAttorney[] = [
         {
           firstName: "Sarah",
@@ -73,12 +96,18 @@ export class DatabaseStorage implements IStorage {
           title: "Col. Sarah Mitchell (Ret.)",
           specialties: ["Court-Martial Defense", "Administrative Law"],
           location: "Washington, DC",
+          state: "DC",
+          city: "Washington",
           experience: "20+ years",
           rating: 5,
           reviewCount: 24,
           email: "sarah.mitchell@millegal.com",
           phone: "(202) 555-0101",
-          bio: "Former military prosecutor turned defense attorney with extensive experience in court-martial proceedings."
+          bio: "Former military prosecutor turned defense attorney with extensive experience in court-martial proceedings.",
+          pricingTier: "premium",
+          hourlyRate: "$450-650/hour",
+          availableForEmergency: true,
+          responseTime: "< 2 hours"
         },
         {
           firstName: "David",
@@ -86,12 +115,18 @@ export class DatabaseStorage implements IStorage {
           title: "Major David Chen (Ret.)",
           specialties: ["Security Clearance", "Appeals"],
           location: "San Diego, CA",
+          state: "CA",
+          city: "San Diego",
           experience: "15+ years",
           rating: 5,
           reviewCount: 31,
           email: "david.chen@millegal.com",
           phone: "(619) 555-0102",
-          bio: "Specialized in security clearance investigations and appeals with a background in military intelligence."
+          bio: "Specialized in security clearance investigations and appeals with a background in military intelligence.",
+          pricingTier: "standard",
+          hourlyRate: "$275-400/hour",
+          availableForEmergency: false,
+          responseTime: "< 24 hours"
         },
         {
           firstName: "Maria",
@@ -99,12 +134,18 @@ export class DatabaseStorage implements IStorage {
           title: "Lt. Col. Maria Rodriguez",
           specialties: ["Appeals", "Admin Separation"],
           location: "Norfolk, VA",
+          state: "VA",
+          city: "Norfolk",
           experience: "12+ years",
           rating: 5,
           reviewCount: 18,
           email: "maria.rodriguez@millegal.com",
           phone: "(757) 555-0103",
-          bio: "Expert in administrative separations and military appeals with a focus on protecting service members' careers."
+          bio: "Expert in administrative separations and military appeals with a focus on protecting service members' careers.",
+          pricingTier: "affordable",
+          hourlyRate: "$150-250/hour",
+          availableForEmergency: true,
+          responseTime: "< 4 hours"
         }
       ];
 
@@ -222,6 +263,40 @@ export class DatabaseStorage implements IStorage {
     // Note: This is a simplified version. For proper array searching, you'd need to use SQL array functions
   }
 
+  async searchAttorneys(location?: string, pricingTier?: string, specialty?: string, emergencyOnly?: boolean): Promise<Attorney[]> {
+    const baseQuery = this.db.select().from(attorneys).where(eq(attorneys.isActive, true));
+    
+    // Apply filters progressively
+    let query = baseQuery;
+    
+    if (location) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        or(
+          ilike(attorneys.state, `%${location}%`),
+          ilike(attorneys.city, `%${location}%`),
+          ilike(attorneys.location, `%${location}%`)
+        )
+      ));
+    }
+    
+    if (pricingTier) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        eq(attorneys.pricingTier, pricingTier)
+      ));
+    }
+    
+    if (emergencyOnly) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        eq(attorneys.availableForEmergency, true)
+      ));
+    }
+    
+    return await query.orderBy(desc(attorneys.rating));
+  }
+
   async createAttorney(insertAttorney: InsertAttorney): Promise<Attorney> {
     const result = await this.db.insert(attorneys).values(insertAttorney).returning();
     return result[0];
@@ -286,6 +361,97 @@ export class DatabaseStorage implements IStorage {
 
   async createConsultation(insertConsultation: InsertConsultation): Promise<Consultation> {
     const result = await this.db.insert(consultations).values(insertConsultation).returning();
+    return result[0];
+  }
+
+  // Legal case methods
+  async getLegalCases(userId?: number): Promise<LegalCase[]> {
+    if (userId) {
+      return await this.db.select().from(legalCases).where(eq(legalCases.userId, userId));
+    }
+    return await this.db.select().from(legalCases).orderBy(desc(legalCases.createdAt));
+  }
+
+  async getLegalCase(id: number): Promise<LegalCase | undefined> {
+    const result = await this.db.select().from(legalCases).where(eq(legalCases.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createLegalCase(insertCase: InsertLegalCase): Promise<LegalCase> {
+    const result = await this.db.insert(legalCases).values(insertCase).returning();
+    return result[0];
+  }
+
+  async updateLegalCaseStatus(id: number, status: string): Promise<LegalCase | undefined> {
+    const result = await this.db.update(legalCases)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(legalCases.id, id))
+      .returning();
+    return result[0];
+  }
+
+  // Emergency resource methods
+  async getEmergencyResources(branch?: string): Promise<EmergencyResource[]> {
+    if (branch) {
+      return await this.db.select().from(emergencyResources)
+        .where(and(
+          eq(emergencyResources.isActive, true),
+          or(eq(emergencyResources.branch, branch), eq(emergencyResources.branch, null))
+        ));
+    }
+    return await this.db.select().from(emergencyResources).where(eq(emergencyResources.isActive, true));
+  }
+
+  async createEmergencyResource(insertResource: InsertEmergencyResource): Promise<EmergencyResource> {
+    const result = await this.db.insert(emergencyResources).values(insertResource).returning();
+    return result[0];
+  }
+
+  // Forum methods
+  async getForumQuestions(category?: string): Promise<ForumQuestion[]> {
+    if (category) {
+      return await this.db.select().from(forumQuestions)
+        .where(eq(forumQuestions.category, category))
+        .orderBy(desc(forumQuestions.createdAt));
+    }
+    return await this.db.select().from(forumQuestions).orderBy(desc(forumQuestions.createdAt));
+  }
+
+  async getForumQuestion(id: number): Promise<ForumQuestion | undefined> {
+    const result = await this.db.select().from(forumQuestions).where(eq(forumQuestions.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createForumQuestion(insertQuestion: InsertForumQuestion): Promise<ForumQuestion> {
+    const result = await this.db.insert(forumQuestions).values(insertQuestion).returning();
+    return result[0];
+  }
+
+  async getForumAnswers(questionId: number): Promise<ForumAnswer[]> {
+    return await this.db.select().from(forumAnswers)
+      .where(eq(forumAnswers.questionId, questionId))
+      .orderBy(desc(forumAnswers.upvotes));
+  }
+
+  async createForumAnswer(insertAnswer: InsertForumAnswer): Promise<ForumAnswer> {
+    const result = await this.db.insert(forumAnswers).values(insertAnswer).returning();
+    return result[0];
+  }
+
+  // Legal document methods
+  async getLegalDocuments(userId: number): Promise<LegalDocument[]> {
+    return await this.db.select().from(legalDocuments)
+      .where(eq(legalDocuments.userId, userId))
+      .orderBy(desc(legalDocuments.createdAt));
+  }
+
+  async getLegalDocument(id: number): Promise<LegalDocument | undefined> {
+    const result = await this.db.select().from(legalDocuments).where(eq(legalDocuments.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createLegalDocument(insertDocument: InsertLegalDocument): Promise<LegalDocument> {
+    const result = await this.db.insert(legalDocuments).values(insertDocument).returning();
     return result[0];
   }
 }

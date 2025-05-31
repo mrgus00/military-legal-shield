@@ -36,9 +36,9 @@ export default function ScenarioSimulator({ onStartScenario }: ScenarioSimulator
     queryKey: ['/api/scenarios', filters],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (filters.category) params.append('category', filters.category);
-      if (filters.difficulty) params.append('difficulty', filters.difficulty);
-      if (filters.branch) params.append('branch', filters.branch);
+      if (filters.category && filters.category !== 'all') params.append('category', filters.category);
+      if (filters.difficulty && filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
+      if (filters.branch && filters.branch !== 'all') params.append('branch', filters.branch);
       
       const response = await fetch(`/api/scenarios?${params}`);
       return response.json();
@@ -225,7 +225,7 @@ export default function ScenarioSimulator({ onStartScenario }: ScenarioSimulator
                 <SelectValue placeholder="Branch" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Branches</SelectItem>
+                <SelectItem value="all">All Branches</SelectItem>
                 <SelectItem value="Army">Army</SelectItem>
                 <SelectItem value="Navy">Navy</SelectItem>
                 <SelectItem value="Air Force">Air Force</SelectItem>

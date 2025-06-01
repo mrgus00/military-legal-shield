@@ -32,6 +32,7 @@ import NetworkingHub from "@/pages/networking-hub";
 import ResumeBuilder from "@/pages/resume-builder";
 import Checkout from "@/pages/checkout";
 import ConsultationBooking from "@/pages/consultation-booking";
+import LeaveReview from "@/pages/leave-review";
 
 function Router() {
   return (
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/resume-builder" component={ResumeBuilder} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/consultation-booking" component={ConsultationBooking} />
+      <Route path="/leave-review" component={LeaveReview} />
       <Route component={NotFound} />
     </Switch>
   );

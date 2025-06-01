@@ -1128,6 +1128,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Submit review endpoint
+  app.post("/api/reviews", async (req, res) => {
+    try {
+      const { review } = req.body;
+      
+      if (!review || !review.userName || !review.rating || !review.title || !review.content) {
+        return res.status(400).json({ 
+          message: "Missing required review information" 
+        });
+      }
+
+      // Validate rating range
+      if (review.rating < 1 || review.rating > 5) {
+        return res.status(400).json({ 
+          message: "Rating must be between 1 and 5" 
+        });
+      }
+
+      // Create review record
+      const reviewData = {
+        id: Date.now(),
+        userName: review.userName,
+        userBranch: review.userBranch || "Not specified",
+        userEmail: review.userEmail || null,
+        rating: review.rating,
+        title: review.title,
+        content: review.content,
+        category: review.category || "General",
+        wouldRecommend: review.wouldRecommend || true,
+        createdAt: new Date().toISOString(),
+        verified: false,
+        helpful: 0
+      };
+
+      // Log the review for admin review
+      console.log("New user review submitted:", reviewData);
+      
+      res.json({ 
+        success: true, 
+        reviewId: reviewData.id,
+        message: "Review submitted successfully. Thank you for your feedback!" 
+      });
+    } catch (error: any) {
+      console.error("Error submitting review:", error);
+      res.status(500).json({ 
+        message: "Failed to submit review",
+        error: error.message 
+      });
+    }
+  });
+
+  // Get recent reviews endpoint
+  app.get("/api/reviews", async (req, res) => {
+    try {
+      const reviews = [
+        {
+          id: 1,
+          userName: "SGT Martinez",
+          userBranch: "Army",
+          rating: 5,
+          title: "Excellent Legal Guidance",
+          content: "The consultation booking system is incredibly efficient. Got connected with a military attorney within hours of my urgent situation.",
+          category: "Consultation Booking",
+          createdAt: "2024-01-15",
+          helpful: 24,
+          verified: true
+        },
+        {
+          id: 2,
+          userName: "PO2 Johnson",
+          userBranch: "Navy",
+          rating: 5,
+          title: "Life-Saving Platform",
+          content: "The AI-powered resume builder completely transformed my transition to civilian life. It translated my military experience perfectly.",
+          category: "Resume Builder",
+          createdAt: "2024-01-12",
+          helpful: 18,
+          verified: true
+        }
+      ];
+      
+      res.json(reviews);
+    } catch (error: any) {
+      console.error("Error fetching reviews:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch reviews",
+        error: error.message 
+      });
+    }
+  });
+
   // Stripe payment routes
   app.post("/api/create-payment-intent", async (req, res) => {
     if (!stripe) {

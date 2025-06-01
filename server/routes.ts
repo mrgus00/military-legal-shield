@@ -4,6 +4,13 @@ import { storage } from "./storage";
 import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
+import Stripe from "stripe";
+
+// Initialize Stripe only if the secret key is available
+let stripe: Stripe | null = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all attorneys
@@ -1062,6 +1069,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Resume generation error:", error);
       res.status(500).json({ 
         message: "Failed to generate veteran resume",
+        error: error.message 
+      });
+    }
+  });
+
+  // Stripe payment routes
+  app.post("/api/create-payment-intent", async (req, res) => {
+    if (!stripe) {
+      return res.status(503).json({ 
+        message: "Payment processing is not available. Stripe configuration required." 
+      });
+    }
+
+    try {
+      const { amount, service } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ 
+          message: "Valid amount is required" 
+        });
+      }
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: "usd",
+        metadata: {
+          service: service || "Legal Service"
+        }
+      });
+      
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      console.error("Payment intent creation error:", error);
+      res.status(500).json({ 
+        message: "Error creating payment intent", 
+        error: error.message 
+      });
+    }
+  });
+
+  app.post("/api/create-subscription", async (req, res) => {
+    if (!stripe) {
+      return res.status(503).json({ 
+        message: "Payment processing is not available. Stripe configuration required." 
+      });
+    }
+
+    try {
+      const { email, name, priceId } = req.body;
+      
+      if (!email || !priceId) {
+        return res.status(400).json({ 
+          message: "Email and price ID are required" 
+        });
+      }
+
+      // Create customer
+      const customer = await stripe.customers.create({
+        email: email,
+        name: name || "Veteran User",
+      });
+
+      // Create subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{
+          price: priceId,
+        }],
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      const invoice = subscription.latest_invoice as any;
+      const paymentIntent = invoice?.payment_intent;
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: paymentIntent?.client_secret || null,
+      });
+    } catch (error: any) {
+      console.error("Subscription creation error:", error);
+      res.status(500).json({ 
+        message: "Error creating subscription", 
         error: error.message 
       });
     }

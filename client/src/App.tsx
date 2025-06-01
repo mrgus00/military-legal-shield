@@ -30,6 +30,7 @@ import CareerAssessment from "@/pages/career-assessment";
 import SkillTranslation from "@/pages/skill-translation";
 import NetworkingHub from "@/pages/networking-hub";
 import ResumeBuilder from "@/pages/resume-builder";
+import Checkout from "@/pages/checkout";
 
 function Router() {
   return (
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/skill-translation" component={SkillTranslation} />
       <Route path="/networking-hub" component={NetworkingHub} />
       <Route path="/resume-builder" component={ResumeBuilder} />
+      <Route path="/checkout" component={Checkout} />
       <Route component={NotFound} />
     </Switch>
   );

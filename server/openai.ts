@@ -1,5 +1,46 @@
 import OpenAI from "openai";
 
+export interface CareerAssessmentRequest {
+  militaryBranch: string;
+  militaryOccupation: string;
+  rank: string;
+  yearsOfService: number;
+  deployments: number;
+  leadershipExperience: string[];
+  technicalSkills: string[];
+  certifications: string[];
+  preferredIndustries: string[];
+  workEnvironmentPreferences: string[];
+  salaryExpectations: string;
+  locationPreferences: string;
+  jobDescription: string;
+  achievements: string;
+}
+
+export interface CareerRecommendation {
+  jobTitle: string;
+  industry: string;
+  salaryRange: string;
+  matchPercentage: number;
+  requiredSkills: string[];
+  transferableSkills: string[];
+  additionalTraining: string[];
+  careerPath: string;
+  description: string;
+}
+
+export interface SkillGap {
+  skill: string;
+  importance: "high" | "medium" | "low";
+  timeToLearn: string;
+  resources: string[];
+}
+
+export interface CareerAnalysisResponse {
+  recommendations: CareerRecommendation[];
+  skillGaps: SkillGap[];
+}
+
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('Missing required OpenAI API key: OPENAI_API_KEY');
 }

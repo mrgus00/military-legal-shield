@@ -29,6 +29,7 @@ import FinancialPlanning from "@/pages/financial-planning";
 import CareerAssessment from "@/pages/career-assessment";
 import SkillTranslation from "@/pages/skill-translation";
 import NetworkingHub from "@/pages/networking-hub";
+import ResumeBuilder from "@/pages/resume-builder";
 
 function Router() {
   return (

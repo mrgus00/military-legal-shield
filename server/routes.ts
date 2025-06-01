@@ -1044,6 +1044,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Resume generation endpoint
+  app.post("/api/generate-veteran-resume", async (req, res) => {
+    try {
+      const resumeData = req.body.resumeData;
+      
+      if (!resumeData || !resumeData.personalInfo || !resumeData.targetRole) {
+        return res.status(400).json({ 
+          message: "Missing required resume data" 
+        });
+      }
+
+      const { generateVeteranResume } = await import("./openai");
+      const generatedResume = await generateVeteranResume(resumeData);
+      res.json(generatedResume);
+    } catch (error: any) {
+      console.error("Resume generation error:", error);
+      res.status(500).json({ 
+        message: "Failed to generate veteran resume",
+        error: error.message 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

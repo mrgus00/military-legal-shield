@@ -292,3 +292,155 @@ export async function analyzeCareerTransition(assessment: CareerAssessmentReques
     throw new Error("Failed to analyze career transition");
   }
 }
+
+// Resume Builder Interfaces and Functions
+export interface ResumePersonalInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  city: string;
+  state: string;
+  linkedinUrl: string;
+  summary: string;
+}
+
+export interface ResumeMilitaryExperience {
+  branch: string;
+  rank: string;
+  mos: string;
+  startDate: string;
+  endDate: string;
+  unit: string;
+  location: string;
+  description: string;
+  achievements: string[];
+  deployments: string[];
+}
+
+export interface ResumeEducation {
+  institution: string;
+  degree: string;
+  field: string;
+  graduationDate: string;
+  gpa?: string;
+  honors?: string;
+}
+
+export interface ResumeCertification {
+  name: string;
+  issuer: string;
+  dateObtained: string;
+  expirationDate?: string;
+}
+
+export interface ResumeGenerationRequest {
+  personalInfo: ResumePersonalInfo;
+  militaryExperience: ResumeMilitaryExperience[];
+  education: ResumeEducation[];
+  certifications: ResumeCertification[];
+  skills: string[];
+  targetRole: string;
+  targetIndustry: string;
+}
+
+export interface GeneratedResumeResponse {
+  professionalSummary: string;
+  workExperience: string[];
+  skillsSection: string[];
+  achievementsHighlights: string[];
+  formattedResume: string;
+}
+
+export async function generateVeteranResume(request: ResumeGenerationRequest): Promise<GeneratedResumeResponse> {
+  const prompt = `Create a professional resume for a military veteran transitioning to civilian employment.
+
+PERSONAL INFORMATION:
+Name: ${request.personalInfo.firstName} ${request.personalInfo.lastName}
+Email: ${request.personalInfo.email}
+Phone: ${request.personalInfo.phone}
+Location: ${request.personalInfo.city}, ${request.personalInfo.state}
+LinkedIn: ${request.personalInfo.linkedinUrl || "Not provided"}
+
+TARGET POSITION:
+Role: ${request.targetRole}
+Industry: ${request.targetIndustry}
+
+MILITARY EXPERIENCE:
+${request.militaryExperience.map(exp => `
+Branch: ${exp.branch}
+Rank: ${exp.rank}
+MOS/Rating: ${exp.mos}
+Dates: ${exp.startDate} to ${exp.endDate}
+Unit: ${exp.unit}
+Location: ${exp.location}
+Description: ${exp.description}
+Achievements: ${exp.achievements.join(", ")}
+Deployments: ${exp.deployments.join(", ")}
+`).join("\n")}
+
+EDUCATION:
+${request.education.map(edu => `
+Institution: ${edu.institution}
+Degree: ${edu.degree} in ${edu.field}
+Graduation: ${edu.graduationDate}
+GPA: ${edu.gpa || "Not specified"}
+Honors: ${edu.honors || "None specified"}
+`).join("\n")}
+
+CERTIFICATIONS:
+${request.certifications.map(cert => `
+- ${cert.name} from ${cert.issuer} (${cert.dateObtained})
+`).join("\n")}
+
+SKILLS:
+${request.skills.join(", ")}
+
+Transform this military experience into a professional civilian resume by:
+1. Translating military terminology to civilian equivalents
+2. Highlighting transferable skills relevant to ${request.targetIndustry}
+3. Quantifying achievements with metrics where possible
+4. Creating a compelling professional summary
+5. Optimizing for Applicant Tracking Systems (ATS)
+
+Provide the resume data in JSON format:
+{
+  "professionalSummary": "Compelling 3-4 sentence summary highlighting key strengths",
+  "workExperience": ["Translated bullet point 1", "Translated bullet point 2", "Translated bullet point 3"],
+  "skillsSection": ["Core Skill 1", "Core Skill 2", "Core Skill 3"],
+  "achievementsHighlights": ["Key achievement 1", "Key achievement 2", "Key achievement 3"],
+  "formattedResume": "Complete formatted resume as single string with proper sections and formatting"
+}`;
+
+  try {
+    // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert resume writer specializing in military-to-civilian career transitions. You excel at translating military experience into language that civilian employers understand and value, while optimizing resumes for both human reviewers and Applicant Tracking Systems."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 2500,
+      temperature: 0.7
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    return {
+      professionalSummary: result.professionalSummary || "",
+      workExperience: result.workExperience || [],
+      skillsSection: result.skillsSection || [],
+      achievementsHighlights: result.achievementsHighlights || [],
+      formattedResume: result.formattedResume || ""
+    };
+  } catch (error) {
+    console.error("Error generating veteran resume:", error);
+    throw new Error("Failed to generate veteran resume");
+  }
+}

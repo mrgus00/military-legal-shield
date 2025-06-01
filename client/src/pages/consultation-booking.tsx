@@ -22,7 +22,11 @@ import {
   Award,
   AlertCircle,
   Zap,
-  Shield
+  Shield,
+  Loader2,
+  AlertTriangle,
+  User,
+  Users
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";

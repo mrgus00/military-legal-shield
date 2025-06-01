@@ -59,6 +59,7 @@ function Router() {
       <Route path="/career-assessment" component={CareerAssessment} />
       <Route path="/skill-translation" component={SkillTranslation} />
       <Route path="/networking-hub" component={NetworkingHub} />
+      <Route path="/resume-builder" component={ResumeBuilder} />
       <Route component={NotFound} />
     </Switch>
   );

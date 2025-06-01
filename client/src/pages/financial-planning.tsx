@@ -31,6 +31,8 @@ interface FinancialProfile {
   vaMonthlyBenefit: number;
   ssdiMonthlyBenefit: number;
   militaryRetirementPension: number;
+  militaryRank: string;
+  yearsOfService: number;
   employmentIncome: number;
   spouseIncome: number;
   dependents: number;
@@ -62,6 +64,8 @@ export default function FinancialPlanning() {
     vaMonthlyBenefit: 0,
     ssdiMonthlyBenefit: 0,
     militaryRetirementPension: 0,
+    militaryRank: "",
+    yearsOfService: 0,
     employmentIncome: 0,
     spouseIncome: 0,
     dependents: 0,
@@ -95,11 +99,64 @@ export default function FinancialPlanning() {
     100: { single: 3737.85, spouse: 3946.25, child: 622.25 }
   };
 
+  // Military retirement pay calculation (2024 base pay scale)
+  const militaryPayScale = {
+    "E-1": { 20: 1785, 25: 1961, 30: 2180 },
+    "E-2": { 20: 1998, 25: 2193, 30: 2430 },
+    "E-3": { 20: 2102, 25: 2309, 30: 2559 },
+    "E-4": { 20: 2329, 25: 2558, 30: 2837 },
+    "E-5": { 20: 2540, 25: 2788, 30: 3092 },
+    "E-6": { 20: 2772, 25: 3042, 30: 3375 },
+    "E-7": { 20: 3207, 25: 3520, 30: 3903 },
+    "E-8": { 20: 4620, 25: 5073, 30: 5627 },
+    "E-9": { 20: 5637, 25: 6190, 30: 6867 },
+    "W-1": { 20: 3045, 25: 3342, 30: 3707 },
+    "W-2": { 20: 3477, 25: 3817, 30: 4234 },
+    "W-3": { 20: 3901, 25: 4283, 30: 4751 },
+    "W-4": { 20: 4202, 25: 4615, 30: 5116 },
+    "W-5": { 20: 5197, 25: 5709, 30: 6330 },
+    "O-1": { 20: 2934, 25: 3223, 30: 3574 },
+    "O-2": { 20: 3379, 25: 3712, 30: 4117 },
+    "O-3": { 20: 4044, 25: 4441, 30: 4925 },
+    "O-4": { 20: 4624, 25: 5078, 30: 5631 },
+    "O-5": { 20: 5394, 25: 5924, 30: 6572 },
+    "O-6": { 20: 6462, 25: 7097, 30: 7869 }
+  };
+
+  const militaryRanks = [
+    { value: "E-1", label: "E-1 Private" },
+    { value: "E-2", label: "E-2 Private" },
+    { value: "E-3", label: "E-3 Private First Class" },
+    { value: "E-4", label: "E-4 Specialist/Corporal" },
+    { value: "E-5", label: "E-5 Sergeant" },
+    { value: "E-6", label: "E-6 Staff Sergeant" },
+    { value: "E-7", label: "E-7 Sergeant First Class" },
+    { value: "E-8", label: "E-8 Master Sergeant" },
+    { value: "E-9", label: "E-9 Sergeant Major" },
+    { value: "W-1", label: "W-1 Warrant Officer" },
+    { value: "W-2", label: "W-2 Chief Warrant Officer 2" },
+    { value: "W-3", label: "W-3 Chief Warrant Officer 3" },
+    { value: "W-4", label: "W-4 Chief Warrant Officer 4" },
+    { value: "W-5", label: "W-5 Chief Warrant Officer 5" },
+    { value: "O-1", label: "O-1 Second Lieutenant" },
+    { value: "O-2", label: "O-2 First Lieutenant" },
+    { value: "O-3", label: "O-3 Captain" },
+    { value: "O-4", label: "O-4 Major" },
+    { value: "O-5", label: "O-5 Lieutenant Colonel" },
+    { value: "O-6", label: "O-6 Colonel" }
+  ];
+
   useEffect(() => {
     if (profile.vaDisabilityRating > 0) {
       calculateVABenefit();
     }
   }, [profile.vaDisabilityRating, profile.dependents]);
+
+  useEffect(() => {
+    if (profile.militaryRank && profile.yearsOfService >= 20) {
+      calculateMilitaryRetirement();
+    }
+  }, [profile.militaryRank, profile.yearsOfService]);
 
   const calculateVABenefit = () => {
     const rating = profile.vaDisabilityRating;
@@ -120,6 +177,38 @@ export default function FinancialPlanning() {
       setProfile(prev => ({
         ...prev,
         vaMonthlyBenefit: Math.round(monthlyBenefit * 100) / 100
+      }));
+    }
+  };
+
+  const calculateMilitaryRetirement = () => {
+    const rank = profile.militaryRank as keyof typeof militaryPayScale;
+    const years = profile.yearsOfService;
+    
+    if (militaryPayScale[rank] && years >= 20) {
+      let basePay = 0;
+      
+      // Determine which pay bracket to use based on years of service
+      if (years >= 30) {
+        basePay = militaryPayScale[rank][30] || militaryPayScale[rank][25] || militaryPayScale[rank][20];
+      } else if (years >= 25) {
+        basePay = militaryPayScale[rank][25] || militaryPayScale[rank][20];
+      } else {
+        basePay = militaryPayScale[rank][20];
+      }
+      
+      // Calculate retirement pay: 2.5% per year of service
+      const retirementPercentage = Math.min(years * 0.025, 0.75); // Cap at 75%
+      const monthlyRetirement = Math.round((basePay * retirementPercentage) * 100) / 100;
+      
+      setProfile(prev => ({
+        ...prev,
+        militaryRetirementPension: monthlyRetirement
+      }));
+    } else if (years < 20) {
+      setProfile(prev => ({
+        ...prev,
+        militaryRetirementPension: 0
       }));
     }
   };
@@ -344,19 +433,57 @@ export default function FinancialPlanning() {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="retirement" className="flex items-center">
-                        <Shield className="h-4 w-4 mr-2 text-military-gold-500" />
+                    <div className="space-y-4">
+                      <Label className="flex items-center text-base font-semibold">
+                        <Shield className="h-5 w-5 mr-2 text-military-gold-500" />
                         Military Retirement Pension
                       </Label>
-                      <Input
-                        id="retirement"
-                        type="number"
-                        value={profile.militaryRetirementPension}
-                        onChange={(e) => setProfile({...profile, militaryRetirementPension: parseFloat(e.target.value) || 0})}
-                        placeholder="Monthly retirement pay"
-                      />
-                      <p className="text-xs text-navy-600">Include your military retirement pension (e.g., E-8 with 27 years service)</p>
+                      
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="rank">Rank at Retirement</Label>
+                          <Select value={profile.militaryRank} onValueChange={(value) => setProfile({...profile, militaryRank: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your rank" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {militaryRanks.map(rank => (
+                                <SelectItem key={rank.value} value={rank.value}>{rank.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="yearsService">Years of Service</Label>
+                          <Input
+                            id="yearsService"
+                            type="number"
+                            min="0"
+                            max="40"
+                            value={profile.yearsOfService}
+                            onChange={(e) => setProfile({...profile, yearsOfService: parseInt(e.target.value) || 0})}
+                            placeholder="e.g., 27"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="calculatedPension">Calculated Monthly Pension</Label>
+                        <Input
+                          id="calculatedPension"
+                          type="number"
+                          value={profile.militaryRetirementPension}
+                          readOnly
+                          className="bg-gray-50 font-semibold"
+                        />
+                        <p className="text-xs text-navy-600">
+                          {profile.yearsOfService >= 20 && profile.militaryRank ? 
+                            `Calculated: ${Math.min(profile.yearsOfService * 2.5, 75)}% of base pay for ${profile.militaryRank} with ${profile.yearsOfService} years` :
+                            "Select rank and enter 20+ years for automatic calculation"
+                          }
+                        </p>
+                      </div>
                     </div>
 
                     <div className="space-y-2">

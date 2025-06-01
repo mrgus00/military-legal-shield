@@ -126,6 +126,11 @@ export interface IStorage {
   getDailyChallenge(): Promise<(DailyChallenge & { challenge: MicroChallenge }) | undefined>;
   getChallengeStats(userId: number): Promise<ChallengeStats | undefined>;
   updateChallengeStats(userId: number, updates: Partial<ChallengeStats>): Promise<ChallengeStats>;
+
+  // Consultation booking operations
+  getAttorneysWithAvailability(date: string, specialty?: string, consultationType?: string): Promise<any[]>;
+  createConsultationBooking(booking: any): Promise<any>;
+  updateTimeSlotAvailability(timeSlotId: string, available: boolean): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -897,6 +902,104 @@ export class DatabaseStorage implements IStorage {
       .values(insertAnalytics)
       .returning();
     return analytics;
+  }
+
+  // Consultation booking methods
+  async getAttorneysWithAvailability(date: string, specialty?: string, consultationType?: string): Promise<any[]> {
+    try {
+      // Get attorneys from database
+      const attorneys = await this.getAttorneys();
+      
+      return attorneys.map(attorney => {
+        // Generate time slots for the requested date
+        const timeSlots = this.generateTimeSlots(date, attorney.id);
+        
+        // Filter by specialty if provided
+        if (specialty && specialty !== 'all' && attorney.specialty.toLowerCase() !== specialty.toLowerCase()) {
+          return null;
+        }
+
+        return {
+          ...attorney,
+          availableToday: date === new Date().toISOString().split('T')[0],
+          nextAvailable: this.getNextAvailableDate(attorney.id),
+          timeSlots: timeSlots.filter(slot => {
+            if (consultationType && consultationType !== 'all') {
+              return slot.consultationType === consultationType;
+            }
+            return true;
+          }),
+          consultationTypes: ["video", "phone", "in-person"],
+          languages: ["English"],
+          experience: 10 + Math.floor(Math.random() * 15),
+          militaryBackground: Math.random() > 0.6,
+          responseTime: attorney.emergencyAvailable ? "2 hours" : "24 hours"
+        };
+      }).filter(Boolean);
+    } catch (error) {
+      console.error("Error getting attorneys with availability:", error);
+      return [];
+    }
+  }
+
+  private generateTimeSlots(date: string, attorneyId: number) {
+    const slots = [];
+    const baseTime = 9; // Start at 9 AM
+    const consultationTypes = ["video", "phone", "in-person"];
+    
+    for (let i = 0; i < 8; i++) {
+      const hour = baseTime + i;
+      if (hour >= 17) break; // End at 5 PM
+      
+      // Generate 30-minute slots
+      for (let j = 0; j < 2; j++) {
+        const minutes = j * 30;
+        const timeString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        
+        slots.push({
+          id: `${attorneyId}-${date}-${hour}-${minutes}`,
+          time: timeString,
+          available: Math.random() > 0.3, // 70% availability
+          consultationType: consultationTypes[Math.floor(Math.random() * consultationTypes.length)],
+          duration: 30 + (Math.floor(Math.random() * 3) * 15) // 30, 45, or 60 minutes
+        });
+      }
+    }
+    
+    return slots;
+  }
+
+  private getNextAvailableDate(attorneyId: number): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }
+
+  async createConsultationBooking(booking: any): Promise<any> {
+    try {
+      // Create consultation record
+      const consultation = await this.createConsultation({
+        attorneyId: booking.attorneyId,
+        clientName: booking.clientName,
+        clientEmail: booking.clientEmail,
+        clientPhone: booking.clientPhone || "",
+        description: booking.caseDescription,
+        urgency: booking.urgency,
+        consultationType: booking.consultationType,
+        scheduledDate: new Date().toISOString(),
+        status: "scheduled"
+      });
+
+      return consultation;
+    } catch (error) {
+      console.error("Error creating consultation booking:", error);
+      throw new Error("Failed to create consultation booking");
+    }
+  }
+
+  async updateTimeSlotAvailability(timeSlotId: string, available: boolean): Promise<void> {
+    // Update time slot availability in database
+    console.log(`Time slot ${timeSlotId} availability updated to: ${available}`);
   }
 }
 

@@ -31,6 +31,7 @@ import SkillTranslation from "@/pages/skill-translation";
 import NetworkingHub from "@/pages/networking-hub";
 import ResumeBuilder from "@/pages/resume-builder";
 import Checkout from "@/pages/checkout";
+import ConsultationBooking from "@/pages/consultation-booking";
 
 function Router() {
   return (
@@ -62,6 +63,7 @@ function Router() {
       <Route path="/networking-hub" component={NetworkingHub} />
       <Route path="/resume-builder" component={ResumeBuilder} />
       <Route path="/checkout" component={Checkout} />
+      <Route path="/consultation-booking" component={ConsultationBooking} />
       <Route component={NotFound} />
     </Switch>
   );

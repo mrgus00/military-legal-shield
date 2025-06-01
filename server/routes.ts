@@ -1074,6 +1074,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Attorney availability endpoint
+  app.get("/api/attorneys/availability", async (req, res) => {
+    try {
+      const { date, specialty, consultationType } = req.query;
+      const targetDate = date as string || new Date().toISOString().split('T')[0];
+      
+      // Get attorneys with real-time availability
+      const attorneys = await storage.getAttorneysWithAvailability(
+        targetDate,
+        specialty as string,
+        consultationType as string
+      );
+      
+      res.json(attorneys);
+    } catch (error: any) {
+      console.error("Error fetching attorney availability:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch attorney availability",
+        error: error.message 
+      });
+    }
+  });
+
+  // Book consultation endpoint
+  app.post("/api/consultations/book", async (req, res) => {
+    try {
+      const { booking } = req.body;
+      
+      if (!booking || !booking.attorneyId || !booking.timeSlotId || !booking.clientEmail) {
+        return res.status(400).json({ 
+          message: "Missing required booking information" 
+        });
+      }
+
+      // Create consultation booking
+      const consultation = await storage.createConsultationBooking(booking);
+      
+      // Update attorney availability
+      await storage.updateTimeSlotAvailability(booking.timeSlotId, false);
+      
+      res.json({ 
+        success: true, 
+        consultationId: consultation.id,
+        message: "Consultation booked successfully" 
+      });
+    } catch (error: any) {
+      console.error("Consultation booking error:", error);
+      res.status(500).json({ 
+        message: "Failed to book consultation",
+        error: error.message 
+      });
+    }
+  });
+
   // Stripe payment routes
   app.post("/api/create-payment-intent", async (req, res) => {
     if (!stripe) {

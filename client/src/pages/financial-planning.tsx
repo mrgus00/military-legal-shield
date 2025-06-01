@@ -30,6 +30,7 @@ interface FinancialProfile {
   vaDisabilityRating: number;
   vaMonthlyBenefit: number;
   ssdiMonthlyBenefit: number;
+  militaryRetirementPension: number;
   employmentIncome: number;
   spouseIncome: number;
   dependents: number;
@@ -60,6 +61,7 @@ export default function FinancialPlanning() {
     vaDisabilityRating: 0,
     vaMonthlyBenefit: 0,
     ssdiMonthlyBenefit: 0,
+    militaryRetirementPension: 0,
     employmentIncome: 0,
     spouseIncome: 0,
     dependents: 0,
@@ -124,7 +126,7 @@ export default function FinancialPlanning() {
 
   const generateRecommendations = () => {
     const recs: FinancialRecommendation[] = [];
-    const totalIncome = profile.vaMonthlyBenefit + profile.ssdiMonthlyBenefit + profile.employmentIncome + profile.spouseIncome;
+    const totalIncome = profile.vaMonthlyBenefit + profile.ssdiMonthlyBenefit + profile.militaryRetirementPension + profile.employmentIncome + profile.spouseIncome;
     const totalExpenses = Object.values(profile.monthlyCosts).reduce((sum, cost) => sum + cost, 0);
     const netIncome = totalIncome - totalExpenses;
 
@@ -188,6 +190,27 @@ export default function FinancialPlanning() {
       });
     }
 
+    // Military retirement specific recommendations
+    if (profile.militaryRetirementPension > 0) {
+      recs.push({
+        category: "Retirement Planning",
+        title: "Survivor Benefit Plan (SBP) Review",
+        description: "Review your SBP election to ensure your spouse is protected. Consider cost vs. benefit analysis based on your total retirement income.",
+        priority: "medium",
+        potentialSavings: 0,
+        action: "Contact DFAS to review SBP options and costs"
+      });
+
+      recs.push({
+        category: "Tax Planning",
+        title: "Military Retirement Tax Strategy",
+        description: "Some states don't tax military retirement pay. Consider residency and tax planning to maximize your pension value.",
+        priority: "medium",
+        potentialSavings: Math.round(profile.militaryRetirementPension * 0.05),
+        action: "Consult tax professional about state tax optimization"
+      });
+    }
+
     // Budget optimization
     if (netIncome < 0) {
       recs.push({
@@ -213,7 +236,7 @@ export default function FinancialPlanning() {
     }
   };
 
-  const totalIncome = profile.vaMonthlyBenefit + profile.ssdiMonthlyBenefit + profile.employmentIncome + profile.spouseIncome;
+  const totalIncome = profile.vaMonthlyBenefit + profile.ssdiMonthlyBenefit + profile.militaryRetirementPension + profile.employmentIncome + profile.spouseIncome;
   const totalExpenses = Object.values(profile.monthlyCosts).reduce((sum, cost) => sum + cost, 0);
   const netIncome = totalIncome - totalExpenses;
   const savingsRate = totalIncome > 0 ? (profile.monthlyCosts.savings / totalIncome) * 100 : 0;
@@ -319,6 +342,21 @@ export default function FinancialPlanning() {
                         onChange={(e) => setProfile({...profile, ssdiMonthlyBenefit: parseFloat(e.target.value) || 0})}
                         placeholder="Enter if receiving SSDI"
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="retirement" className="flex items-center">
+                        <Shield className="h-4 w-4 mr-2 text-military-gold-500" />
+                        Military Retirement Pension
+                      </Label>
+                      <Input
+                        id="retirement"
+                        type="number"
+                        value={profile.militaryRetirementPension}
+                        onChange={(e) => setProfile({...profile, militaryRetirementPension: parseFloat(e.target.value) || 0})}
+                        placeholder="Monthly retirement pay"
+                      />
+                      <p className="text-xs text-navy-600">Include your military retirement pension (e.g., E-8 with 27 years service)</p>
                     </div>
 
                     <div className="space-y-2">

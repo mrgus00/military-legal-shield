@@ -24,6 +24,7 @@ import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import LegalDisclaimers from "@/pages/legal-disclaimers";
 import EmotionalSupport from "@/pages/emotional-support";
+import VeteranServices from "@/pages/veteran-services";
 
 function Router() {
   return (
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/legal-disclaimers" component={LegalDisclaimers} />
       <Route path="/emotional-support" component={EmotionalSupport} />
+      <Route path="/veteran-services" component={VeteranServices} />
       <Route component={NotFound} />
     </Switch>
   );

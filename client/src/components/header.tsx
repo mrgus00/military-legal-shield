@@ -9,6 +9,7 @@ export default function Header() {
   const navigation = [
     { name: "Urgent Matching", href: "/urgent-match" },
     { name: "Weekend Safety", href: "/weekend-safety", badge: "Free" },
+    { name: "Veteran Services", href: "/veteran-services", badge: "Veterans" },
     { name: "Emotional Support", href: "/emotional-support", badge: "Wellness" },
     { name: "Secure Messages", href: "/messages" },
     { name: "Case Tracking", href: "/case-tracking" },

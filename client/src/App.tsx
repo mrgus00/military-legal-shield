@@ -28,6 +28,7 @@ import VeteranServices from "@/pages/veteran-services";
 import FinancialPlanning from "@/pages/financial-planning";
 import CareerAssessment from "@/pages/career-assessment";
 import SkillTranslation from "@/pages/skill-translation";
+import NetworkingHub from "@/pages/networking-hub";
 
 function Router() {
   return (
@@ -56,6 +57,7 @@ function Router() {
       <Route path="/financial-planning" component={FinancialPlanning} />
       <Route path="/career-assessment" component={CareerAssessment} />
       <Route path="/skill-translation" component={SkillTranslation} />
+      <Route path="/networking-hub" component={NetworkingHub} />
       <Route component={NotFound} />
     </Switch>
   );

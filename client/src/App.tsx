@@ -23,6 +23,7 @@ import ContactSupport from "@/pages/contact-support";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import LegalDisclaimers from "@/pages/legal-disclaimers";
+import EmotionalSupport from "@/pages/emotional-support";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/legal-disclaimers" component={LegalDisclaimers} />
+      <Route path="/emotional-support" component={EmotionalSupport} />
       <Route component={NotFound} />
     </Switch>
   );

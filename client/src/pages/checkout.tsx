@@ -85,45 +85,57 @@ const CheckoutForm = ({ amount, service }: CheckoutFormProps) => {
 
 export default function Checkout() {
   const [clientSecret, setClientSecret] = useState("");
-  const [amount, setAmount] = useState(299);
-  const [selectedService, setSelectedService] = useState("Premium Legal Consultation");
+  const [amount, setAmount] = useState(149);
+  const [selectedService, setSelectedService] = useState("Emergency Services");
   const { toast } = useToast();
 
   const services = [
     {
-      id: "consultation",
-      name: "Premium Legal Consultation",
-      price: 299,
-      description: "One-on-one consultation with verified military law attorney",
-      features: [
-        "60-minute private consultation",
-        "Case review and analysis", 
-        "Legal strategy recommendations",
-        "Follow-up summary document"
-      ]
-    },
-    {
-      id: "document-review",
-      name: "Document Review Service",
+      id: "emergency",
+      name: "Emergency Services",
       price: 149,
-      description: "Professional review of legal documents and contracts",
+      description: "Immediate connection to verified military law attorney",
       features: [
-        "Comprehensive document analysis",
-        "Risk assessment report",
-        "Revision recommendations",
-        "48-hour turnaround"
+        "Immediate attorney connection",
+        "Crisis legal support", 
+        "24/7 availability",
+        "Priority case handling"
       ]
     },
     {
-      id: "premium-support",
-      name: "Premium Support Package",
-      price: 499,
-      description: "Comprehensive legal support for ongoing cases",
+      id: "emergency-premium",
+      name: "Emergency Services Premium",
+      price: 199,
+      description: "Enhanced emergency legal support with dedicated attorney",
       features: [
-        "Unlimited consultations for 30 days",
-        "Document drafting assistance",
-        "Court preparation support",
-        "Priority case management"
+        "Dedicated attorney assignment",
+        "Immediate response guarantee",
+        "Extended consultation time",
+        "Follow-up documentation"
+      ]
+    },
+    {
+      id: "premium-defense",
+      name: "Premium Defense Monthly",
+      price: 49.99,
+      description: "Monthly subscription for unlimited attorney contacts",
+      features: [
+        "Unlimited attorney contacts",
+        "24-hour response guarantee",
+        "Monthly legal check-ins",
+        "Priority support queue"
+      ]
+    },
+    {
+      id: "professional-defense",
+      name: "Professional Defense Monthly",
+      price: 99.99,
+      description: "Premium monthly service with dedicated case manager",
+      features: [
+        "Dedicated case manager",
+        "2-hour response guarantee",
+        "Unlimited consultations",
+        "Advanced legal strategies"
       ]
     }
   ];

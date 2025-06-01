@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import SecurityReminder from "@/components/security-reminder";
+import RetirementCalculatorAnimation from "@/components/retirement-calculator-animation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,6 +85,7 @@ export default function FinancialPlanning() {
 
   const [recommendations, setRecommendations] = useState<FinancialRecommendation[]>([]);
   const [calculationComplete, setCalculationComplete] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   // VA disability compensation rates for 2024
   const vaRates = {
@@ -186,6 +188,9 @@ export default function FinancialPlanning() {
     const years = profile.yearsOfService;
     
     if (militaryPayScale[rank] && years >= 20) {
+      // Show animation when calculating
+      setShowAnimation(true);
+      
       let basePay = 0;
       
       // Determine which pay bracket to use based on years of service
@@ -201,15 +206,19 @@ export default function FinancialPlanning() {
       const retirementPercentage = Math.min(years * 0.025, 0.75); // Cap at 75%
       const monthlyRetirement = Math.round((basePay * retirementPercentage) * 100) / 100;
       
-      setProfile(prev => ({
-        ...prev,
-        militaryRetirementPension: monthlyRetirement
-      }));
+      // Delay setting the final value to allow animation to complete
+      setTimeout(() => {
+        setProfile(prev => ({
+          ...prev,
+          militaryRetirementPension: monthlyRetirement
+        }));
+      }, 500);
     } else if (years < 20) {
       setProfile(prev => ({
         ...prev,
         militaryRetirementPension: 0
       }));
+      setShowAnimation(false);
     }
   };
 
@@ -485,6 +494,32 @@ export default function FinancialPlanning() {
                         </p>
                       </div>
                     </div>
+
+                    {/* Retirement Calculator Animation */}
+                    {showAnimation && profile.militaryRank && profile.yearsOfService >= 20 && (
+                      <div className="col-span-full">
+                        <RetirementCalculatorAnimation
+                          rank={profile.militaryRank}
+                          yearsOfService={profile.yearsOfService}
+                          basePay={(() => {
+                            const rank = profile.militaryRank as keyof typeof militaryPayScale;
+                            const years = profile.yearsOfService;
+                            if (militaryPayScale[rank]) {
+                              if (years >= 30) {
+                                return militaryPayScale[rank][30] || militaryPayScale[rank][25] || militaryPayScale[rank][20];
+                              } else if (years >= 25) {
+                                return militaryPayScale[rank][25] || militaryPayScale[rank][20];
+                              } else {
+                                return militaryPayScale[rank][20];
+                              }
+                            }
+                            return 0;
+                          })()}
+                          finalPension={profile.militaryRetirementPension}
+                          isCalculating={showAnimation}
+                        />
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="employment">Monthly Employment Income</Label>

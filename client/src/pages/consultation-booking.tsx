@@ -77,8 +77,12 @@ export default function ConsultationBooking() {
     specialty: "all",
     consultationType: "all",
     availability: "all",
-    priceRange: "all"
+    priceRange: "all",
+    urgency: "standard",
+    militaryBackground: false
   });
+  const [quickBookMode, setQuickBookMode] = useState(false);
+  const [bookingStep, setBookingStep] = useState(1);
   const [bookingData, setBookingData] = useState({
     clientName: "",
     clientEmail: "",
@@ -112,6 +116,27 @@ export default function ConsultationBooking() {
     }
   };
 
+  const handleQuickBook = async (attorney: AttorneyAvailability) => {
+    const nextAvailableSlot = attorney.timeSlots.find(slot => slot.available);
+    if (!nextAvailableSlot) {
+      toast({
+        title: "No Availability",
+        description: "This attorney has no available slots today.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!bookingData.clientName || !bookingData.clientEmail) {
+      setSelectedAttorney(attorney);
+      setQuickBookMode(true);
+      return;
+    }
+
+    // Auto-book with next available slot
+    handleBookConsultation(attorney, nextAvailableSlot);
+  };
+
   const handleBookConsultation = async (attorney: AttorneyAvailability, timeSlot: TimeSlot) => {
     if (!bookingData.clientName || !bookingData.clientEmail || !bookingData.caseDescription) {
       toast({
@@ -142,6 +167,7 @@ export default function ConsultationBooking() {
       // Refresh availability
       loadAttorneysWithAvailability();
       setSelectedAttorney(null);
+      setQuickBookMode(false);
     } catch (error) {
       console.error("Booking error:", error);
       toast({
@@ -423,6 +449,35 @@ export default function ConsultationBooking() {
                           <span className="text-sm text-gray-600">
                             Response time: {attorney.responseTime}
                           </span>
+                        </div>
+                        
+                        {/* One-Click Booking Button */}
+                        <div className="flex space-x-2">
+                          <Button
+                            onClick={() => handleQuickBook(attorney)}
+                            disabled={isBooking || attorney.timeSlots.filter(slot => slot.available).length === 0}
+                            className="bg-military-gold-500 hover:bg-military-gold-600 text-white font-semibold px-6 py-2 rounded-lg shadow-lg"
+                          >
+                            {isBooking ? (
+                              <div className="flex items-center space-x-2">
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <span>Booking...</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center space-x-2">
+                                <Zap className="h-4 w-4" />
+                                <span>Quick Book</span>
+                              </div>
+                            )}
+                          </Button>
+                          
+                          {/* Real-time availability counter */}
+                          <div className="flex items-center space-x-2 bg-sage-50 px-3 py-2 rounded-lg">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-sm font-medium text-sage-700">
+                              {attorney.timeSlots.filter(slot => slot.available).length} slots available
+                            </span>
+                          </div>
                         </div>
                       </div>
 

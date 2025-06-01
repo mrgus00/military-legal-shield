@@ -11,6 +11,7 @@ export default function Header() {
     { name: "Weekend Safety", href: "/weekend-safety", badge: "Free" },
     { name: "Veteran Services", href: "/veteran-services", badge: "Veterans" },
     { name: "Financial Planning", href: "/financial-planning", badge: "Money" },
+    { name: "Career Assessment", href: "/career-assessment", badge: "AI" },
     { name: "Emotional Support", href: "/emotional-support", badge: "Wellness" },
     { name: "Secure Messages", href: "/messages" },
     { name: "Case Tracking", href: "/case-tracking" },

@@ -1022,6 +1022,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Career transition analysis endpoint
+  app.post("/api/analyze-career-transition", async (req, res) => {
+    try {
+      const assessment: CareerAssessmentRequest = req.body.assessment;
+      
+      if (!assessment || !assessment.militaryBranch || !assessment.militaryOccupation) {
+        return res.status(400).json({ 
+          message: "Missing required assessment data" 
+        });
+      }
+
+      const analysis = await analyzeCareerTransition(assessment);
+      res.json(analysis);
+    } catch (error: any) {
+      console.error("Career analysis error:", error);
+      res.status(500).json({ 
+        message: "Failed to analyze career transition",
+        error: error.message 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

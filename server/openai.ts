@@ -226,3 +226,69 @@ Keep the feedback constructive and educational, focusing on helping military per
     throw new Error("Failed to generate final feedback");
   }
 }
+
+export async function analyzeCareerTransition(assessment: CareerAssessmentRequest): Promise<CareerAnalysisResponse> {
+  const prompt = `
+    Analyze this military veteran's career transition profile and provide personalized civilian career recommendations:
+
+    Military Background:
+    - Branch: ${assessment.militaryBranch}
+    - MOS/Occupation: ${assessment.militaryOccupation}
+    - Rank: ${assessment.rank}
+    - Years of Service: ${assessment.yearsOfService}
+    - Deployments: ${assessment.deployments}
+
+    Experience:
+    - Leadership: ${assessment.leadershipExperience.join(", ")}
+    - Technical Skills: ${assessment.technicalSkills.join(", ")}
+    - Certifications: ${assessment.certifications.join(", ")}
+    - Achievements: ${assessment.achievements}
+
+    Career Preferences:
+    - Preferred Industries: ${assessment.preferredIndustries.join(", ")}
+    - Work Environment: ${assessment.workEnvironmentPreferences.join(", ")}
+    - Salary Expectations: ${assessment.salaryExpectations}
+    - Location: ${assessment.locationPreferences}
+    - Ideal Job Description: ${assessment.jobDescription}
+
+    Provide career analysis in JSON format with:
+    1. "recommendations" array with 3-5 career matches including:
+       - jobTitle, industry, salaryRange, matchPercentage (0-100)
+       - requiredSkills, transferableSkills, additionalTraining arrays
+       - careerPath and description strings
+    
+    2. "skillGaps" array with 3-5 important skills to develop including:
+       - skill name, importance (high/medium/low), timeToLearn
+       - resources array with specific learning recommendations
+
+    Focus on realistic career transitions that leverage military experience and match the veteran's preferences.
+  `;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a career transition specialist for military veterans with expertise in translating military skills to civilian careers. Provide practical, actionable career guidance based on real industry needs and veteran success stories."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 2000,
+      temperature: 0.7
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    return {
+      recommendations: result.recommendations || [],
+      skillGaps: result.skillGaps || []
+    };
+  } catch (error) {
+    console.error("Error analyzing career transition:", error);
+    throw new Error("Failed to analyze career transition");
+  }
+}

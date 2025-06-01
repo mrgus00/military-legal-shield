@@ -26,6 +26,7 @@ import LegalDisclaimers from "@/pages/legal-disclaimers";
 import EmotionalSupport from "@/pages/emotional-support";
 import VeteranServices from "@/pages/veteran-services";
 import FinancialPlanning from "@/pages/financial-planning";
+import CareerAssessment from "@/pages/career-assessment";
 
 function Router() {
   return (
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/emotional-support" component={EmotionalSupport} />
       <Route path="/veteran-services" component={VeteranServices} />
       <Route path="/financial-planning" component={FinancialPlanning} />
+      <Route path="/career-assessment" component={CareerAssessment} />
       <Route component={NotFound} />
     </Switch>
   );

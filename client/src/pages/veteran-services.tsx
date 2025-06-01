@@ -31,6 +31,21 @@ export default function VeteranServices() {
 
   const transitionServices = [
     {
+      title: "Social Security Benefits for 100% Disabled Veterans",
+      icon: DollarSign,
+      urgency: "high",
+      description: "Specialized representation for Social Security Disability claims for 100% disabled veterans",
+      services: [
+        "SSDI claims for 100% disabled veterans",
+        "SSI supplemental income assistance",
+        "Appeals for denied SS claims",
+        "Expedited processing for disabled veterans",
+        "Coordination with VA disability benefits"
+      ],
+      timeframe: "3-12 months",
+      priority: "Critical - specialized legal expertise required"
+    },
+    {
       title: "VA Benefits & Disability Claims",
       icon: Shield,
       urgency: "high",
@@ -73,6 +88,36 @@ export default function VeteranServices() {
       priority: "Critical basic need"
     },
     {
+      title: "Personal Injury & Accident Claims",
+      icon: Heart,
+      urgency: "high",
+      description: "Veteran-focused personal injury representation for accidents and negligence claims",
+      services: [
+        "Motor vehicle accidents",
+        "Workplace injury claims",
+        "Medical malpractice",
+        "VA medical facility negligence",
+        "Service-connected injury claims"
+      ],
+      timeframe: "6 months - 3 years",
+      priority: "Critical for compensation and medical care"
+    },
+    {
+      title: "Estate Planning & Trusts",
+      icon: FileText,
+      urgency: "medium",
+      description: "Protect your family with veteran-specific estate planning and asset protection",
+      services: [
+        "Wills for disabled veterans",
+        "Special needs trusts",
+        "VA benefits preservation trusts",
+        "Power of attorney documents",
+        "Beneficiary designations optimization"
+      ],
+      timeframe: "1-3 months",
+      priority: "Essential for family protection"
+    },
+    {
       title: "Education Benefits (GI Bill)",
       icon: GraduationCap,
       urgency: "medium",
@@ -89,6 +134,15 @@ export default function VeteranServices() {
   ];
 
   const veteranResources = [
+    {
+      category: "Specialized Legal Services",
+      color: "military-gold",
+      resources: [
+        { name: "Social Security Disability Attorneys", contact: "Veteran-specialized firms", available: "M-F consultation" },
+        { name: "Personal Injury for Veterans", contact: "Veteran accident lawyers", available: "24/7 emergency" },
+        { name: "Estate Planning for Disabled Veterans", contact: "Trust & will specialists", available: "By appointment" }
+      ]
+    },
     {
       category: "Immediate Support",
       color: "red",
@@ -378,6 +432,78 @@ export default function VeteranServices() {
 
             {/* Legal Advocacy */}
             <TabsContent value="advocacy" className="space-y-8">
+              {/* Featured Critical Services */}
+              <div className="grid lg:grid-cols-3 gap-6 mb-8">
+                <Card className="bg-gradient-to-br from-red-50 to-white border-red-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-red-700">
+                      <DollarSign className="h-6 w-6 mr-3" />
+                      Social Security Disability
+                    </CardTitle>
+                    <Badge className="bg-red-100 text-red-800 w-fit">100% Disabled Veterans</Badge>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-red-600 text-sm">
+                      Specialized attorneys for SSDI claims for 100% disabled veterans - hard to find expertise
+                    </p>
+                    <ul className="text-xs text-red-600 space-y-1">
+                      <li>• SSDI + VA coordination</li>
+                      <li>• Expedited processing</li>
+                      <li>• Appeals representation</li>
+                    </ul>
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-sm">
+                      Find SS Disability Attorney
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-military-gold-50 to-white border-military-gold-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-military-gold-700">
+                      <Heart className="h-6 w-6 mr-3" />
+                      Personal Injury
+                    </CardTitle>
+                    <Badge className="bg-military-gold-100 text-military-gold-800 w-fit">Veteran-Focused</Badge>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-military-gold-600 text-sm">
+                      Veterans need specialized PI attorneys who understand service-connected injuries
+                    </p>
+                    <ul className="text-xs text-military-gold-600 space-y-1">
+                      <li>• Auto accidents</li>
+                      <li>• VA medical malpractice</li>
+                      <li>• Workplace injuries</li>
+                    </ul>
+                    <Button className="w-full bg-military-gold-600 hover:bg-military-gold-700 text-sm">
+                      Find PI Attorney
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-sage-50 to-white border-sage-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-sage-700">
+                      <FileText className="h-6 w-6 mr-3" />
+                      Trusts & Wills
+                    </CardTitle>
+                    <Badge className="bg-sage-100 text-sage-800 w-fit">Asset Protection</Badge>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-sage-600 text-sm">
+                      Protect VA benefits and disability income with specialized estate planning
+                    </p>
+                    <ul className="text-xs text-sage-600 space-y-1">
+                      <li>• Special needs trusts</li>
+                      <li>• VA benefits preservation</li>
+                      <li>• Disabled veteran wills</li>
+                    </ul>
+                    <Button className="w-full bg-sage-600 hover:bg-sage-700 text-sm">
+                      Find Estate Attorney
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
               <div className="grid lg:grid-cols-2 gap-8">
                 <Card className="bg-gradient-to-br from-navy-50 to-white">
                   <CardHeader>
@@ -439,24 +565,46 @@ export default function VeteranServices() {
               {/* Success Stories */}
               <Card className="bg-gradient-to-r from-sage-50 to-warm-gray-50">
                 <CardHeader>
-                  <CardTitle className="text-center text-navy-700">Veteran Success Stories</CardTitle>
+                  <CardTitle className="text-center text-navy-700">Why Veterans Choose Specialized Legal Help</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-6 text-center">
                     <div className="p-4">
-                      <DollarSign className="h-8 w-8 text-sage-500 mx-auto mb-2" />
-                      <h4 className="font-semibold text-navy-700">85% Success Rate</h4>
-                      <p className="text-sm text-navy-600">VA disability appeals won</p>
+                      <DollarSign className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                      <h4 className="font-semibold text-navy-700">Social Security Disability</h4>
+                      <p className="text-sm text-navy-600">100% disabled veterans need specialized SSDI attorneys who understand VA coordination</p>
                     </div>
                     <div className="p-4">
-                      <Users className="h-8 w-8 text-sage-500 mx-auto mb-2" />
-                      <h4 className="font-semibold text-navy-700">5,000+ Veterans</h4>
-                      <p className="text-sm text-navy-600">Successfully transitioned</p>
+                      <Heart className="h-8 w-8 text-military-gold-500 mx-auto mb-2" />
+                      <h4 className="font-semibold text-navy-700">Personal Injury Law</h4>
+                      <p className="text-sm text-navy-600">Service-connected injuries require attorneys familiar with military service impacts</p>
                     </div>
                     <div className="p-4">
-                      <Clock className="h-8 w-8 text-sage-500 mx-auto mb-2" />
-                      <h4 className="font-semibold text-navy-700">Average 90 Days</h4>
-                      <p className="text-sm text-navy-600">To benefits resolution</p>
+                      <FileText className="h-8 w-8 text-sage-500 mx-auto mb-2" />
+                      <h4 className="font-semibold text-navy-700">Estate Planning</h4>
+                      <p className="text-sm text-navy-600">Protect VA benefits with specialized trusts and wills for disabled veterans</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-8 p-6 bg-white rounded-lg border border-gray-200">
+                    <h4 className="font-semibold text-navy-700 mb-4 text-center">Critical Legal Gaps for Veterans</h4>
+                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-2">
+                        <h5 className="font-medium text-red-700">Social Security Disability:</h5>
+                        <ul className="text-navy-600 space-y-1">
+                          <li>• Most attorneys don't understand VA disability coordination</li>
+                          <li>• 100% disabled veterans have unique expedited processes</li>
+                          <li>• SSDI appeals require specialized knowledge</li>
+                        </ul>
+                      </div>
+                      <div className="space-y-2">
+                        <h5 className="font-medium text-military-gold-700">Personal Injury & Estate Planning:</h5>
+                        <ul className="text-navy-600 space-y-1">
+                          <li>• Service-connected injury complications</li>
+                          <li>• VA benefits preservation in trusts</li>
+                          <li>• Special needs planning for disabled veterans</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

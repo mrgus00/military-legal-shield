@@ -96,6 +96,38 @@ export default function CareerAssessment() {
     "Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"
   ];
 
+  const militaryRanks = [
+    // Enlisted Ranks
+    { value: "E-1", label: "E-1 Private/Seaman Recruit/Airman Basic" },
+    { value: "E-2", label: "E-2 Private/Seaman Apprentice/Airman" },
+    { value: "E-3", label: "E-3 Private First Class/Seaman/Airman First Class" },
+    { value: "E-4", label: "E-4 Specialist/Corporal/Petty Officer 3rd Class/Senior Airman" },
+    { value: "E-5", label: "E-5 Sergeant/Petty Officer 2nd Class/Staff Sergeant" },
+    { value: "E-6", label: "E-6 Staff Sergeant/Petty Officer 1st Class/Technical Sergeant" },
+    { value: "E-7", label: "E-7 Sergeant First Class/Chief Petty Officer/Master Sergeant" },
+    { value: "E-8", label: "E-8 Master Sergeant/Senior Chief Petty Officer" },
+    { value: "E-9", label: "E-9 Sergeant Major/Master Chief Petty Officer/Chief Master Sergeant" },
+    
+    // Warrant Officers
+    { value: "W-1", label: "W-1 Warrant Officer" },
+    { value: "W-2", label: "W-2 Chief Warrant Officer 2" },
+    { value: "W-3", label: "W-3 Chief Warrant Officer 3" },
+    { value: "W-4", label: "W-4 Chief Warrant Officer 4" },
+    { value: "W-5", label: "W-5 Chief Warrant Officer 5" },
+    
+    // Officers
+    { value: "O-1", label: "O-1 Second Lieutenant/Ensign" },
+    { value: "O-2", label: "O-2 First Lieutenant/Lieutenant Junior Grade" },
+    { value: "O-3", label: "O-3 Captain/Lieutenant" },
+    { value: "O-4", label: "O-4 Major/Lieutenant Commander" },
+    { value: "O-5", label: "O-5 Lieutenant Colonel/Commander" },
+    { value: "O-6", label: "O-6 Colonel/Captain" },
+    { value: "O-7", label: "O-7 Brigadier General/Rear Admiral (Lower Half)" },
+    { value: "O-8", label: "O-8 Major General/Rear Admiral" },
+    { value: "O-9", label: "O-9 Lieutenant General/Vice Admiral" },
+    { value: "O-10", label: "O-10 General/Admiral" }
+  ];
+
   const leadershipOptions = [
     "Squad/Team Leader", "Section Leader", "Platoon Sergeant", "First Sergeant",
     "Company Commander", "Battalion Staff", "Training Instructor", "Supervisor",
@@ -304,21 +336,28 @@ export default function CareerAssessment() {
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="rank">Rank</Label>
-                        <Input
-                          id="rank"
-                          value={assessment.rank}
-                          onChange={(e) => setAssessment({...assessment, rank: e.target.value})}
-                          placeholder="e.g., E-8, O-3"
-                        />
+                        <Label htmlFor="rank">Rank at Discharge/Retirement</Label>
+                        <Select value={assessment.rank} onValueChange={(value) => setAssessment({...assessment, rank: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your rank" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {militaryRanks.map(rank => (
+                              <SelectItem key={rank.value} value={rank.value}>{rank.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="years">Years of Service</Label>
                         <Input
                           id="years"
                           type="number"
+                          min="0"
+                          max="40"
                           value={assessment.yearsOfService}
                           onChange={(e) => setAssessment({...assessment, yearsOfService: parseInt(e.target.value) || 0})}
+                          placeholder="e.g., 27"
                         />
                       </div>
                     </div>

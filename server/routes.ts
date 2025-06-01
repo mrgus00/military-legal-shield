@@ -1094,6 +1094,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to cents
         currency: "usd",
+        payment_method_types: ["card"],
         metadata: {
           service: service || "Legal Service"
         }

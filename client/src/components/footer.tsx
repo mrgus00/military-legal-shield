@@ -1,6 +1,7 @@
 import { Shield } from "lucide-react";
 import { Link } from "wouter";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
+import SocialShare, { SharePresets } from "@/components/social-share";
 
 export default function Footer() {
   return (
@@ -17,6 +18,9 @@ export default function Footer() {
             <p className="text-gray-400 text-sm mb-4">
               Protecting the rights of those who protect our nation. Professional legal defense resources for military personnel.
             </p>
+            <div className="flex items-center space-x-4 mb-4">
+              <SocialShare {...SharePresets.platform()} />
+            </div>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <span className="sr-only">Twitter</span>

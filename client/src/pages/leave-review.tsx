@@ -11,8 +11,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import SocialShare, { SharePresets } from "@/components/social-share";
 
 interface Review {
   id: number;
@@ -40,6 +42,7 @@ export default function LeaveReview() {
     wouldRecommend: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [recentReviews, setRecentReviews] = useState<Review[]>([
     {
       id: 1,
@@ -109,6 +112,9 @@ export default function LeaveReview() {
         title: "Review Submitted Successfully",
         description: "Thank you for your feedback! Your review helps improve our platform for all military personnel.",
       });
+
+      // Show success state with sharing option
+      setShowSuccessDialog(true);
 
       // Reset form
       setRating(0);
@@ -412,6 +418,50 @@ export default function LeaveReview() {
 
         <SecurityReminder />
       </div>
+
+      {/* Success Dialog with Social Sharing */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-center">
+              <CheckCircle className="w-6 h-6 text-green-500" />
+              Review Successfully Submitted!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">
+                Thank you for your feedback! Your review helps fellow service members make informed decisions.
+              </p>
+              
+              <div className="bg-sage-50 p-4 rounded-lg border mb-4">
+                <p className="text-sm font-medium text-sage-800 mb-2">
+                  Help spread the word about MilLegal Defense
+                </p>
+                <p className="text-xs text-sage-600 mb-3">
+                  Share your positive experience to help other military personnel discover our platform
+                </p>
+                <SocialShare 
+                  title="Shared my experience with MilLegal Defense"
+                  description="Just left a review for MilLegal Defense - excellent legal support platform for military personnel!"
+                  category="review"
+                  customMessage="Just shared my experience with MilLegal Defense! Excellent platform providing comprehensive legal support for military personnel and veterans. Highly recommend to fellow service members. 🇺🇸⚖️"
+                  showCustomMessage={true}
+                />
+              </div>
+            </div>
+            
+            <Button 
+              onClick={() => setShowSuccessDialog(false)}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );

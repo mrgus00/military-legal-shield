@@ -1075,7 +1075,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Attorney availability endpoint
-  app.get("/api/attorneys/availability", async (req, res) => {
+  app.get("/api/availability/attorneys", async (req, res) => {
     try {
       const { date, specialty, consultationType } = req.query;
       const targetDate = date as string || new Date().toISOString().split('T')[0];

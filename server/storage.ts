@@ -915,7 +915,9 @@ export class DatabaseStorage implements IStorage {
         const timeSlots = this.generateTimeSlots(date, attorney.id);
         
         // Filter by specialty if provided
-        if (specialty && specialty !== 'all' && attorney.specialty.toLowerCase() !== specialty.toLowerCase()) {
+        if (specialty && specialty !== 'all' && !attorney.specialties.some(spec => 
+          spec.toLowerCase().includes(specialty.toLowerCase())
+        )) {
           return null;
         }
 

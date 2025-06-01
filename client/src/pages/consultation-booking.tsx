@@ -97,7 +97,7 @@ export default function ConsultationBooking() {
   const loadAttorneysWithAvailability = async () => {
     setIsLoading(true);
     try {
-      const response = await apiRequest("GET", `/api/attorneys/availability?date=${selectedDate}&specialty=${searchFilters.specialty}&consultationType=${searchFilters.consultationType}`);
+      const response = await apiRequest("GET", `/api/availability/attorneys?date=${selectedDate}&specialty=${searchFilters.specialty}&consultationType=${searchFilters.consultationType}`);
       const data = await response.json();
       setAttorneys(data);
     } catch (error) {

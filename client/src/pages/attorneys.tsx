@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Filter, Search, Crown } from "lucide-react";
 import { useState } from "react";
 import type { Attorney } from "@shared/schema";
+import SocialShare, { SharePresets } from "@/components/social-share";
 
 export default function Attorneys() {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("all");

@@ -5,6 +5,7 @@ import { Star, MapPin, Clock, Info } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { imageService } from "@/lib/imageService";
 import AttorneyVerificationBadge from "./attorney-verification-badge";
+import SocialShare, { SharePresets } from "./social-share";
 import type { Attorney } from "@shared/schema";
 
 interface AttorneyCardProps {
@@ -127,6 +128,12 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           >
             <Info className="w-4 h-4" />
           </Button>
+          <SocialShare 
+            {...SharePresets.attorney(
+              `${attorney.firstName} ${attorney.lastName}`,
+              attorney.specialties.join(", ")
+            )}
+          />
         </div>
       </CardContent>
     </Card>

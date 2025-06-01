@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Crown, Check } from "lucide-react";
+import SocialShare, { SharePresets } from "@/components/social-share";
 import type { LegalResource, Attorney, EducationModule as EducationModuleType } from "@shared/schema";
 
 export default function Home() {

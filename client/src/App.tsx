@@ -25,6 +25,7 @@ import TermsOfService from "@/pages/terms-of-service";
 import LegalDisclaimers from "@/pages/legal-disclaimers";
 import EmotionalSupport from "@/pages/emotional-support";
 import VeteranServices from "@/pages/veteran-services";
+import FinancialPlanning from "@/pages/financial-planning";
 
 function Router() {
   return (
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/legal-disclaimers" component={LegalDisclaimers} />
       <Route path="/emotional-support" component={EmotionalSupport} />
       <Route path="/veteran-services" component={VeteranServices} />
+      <Route path="/financial-planning" component={FinancialPlanning} />
       <Route component={NotFound} />
     </Switch>
   );

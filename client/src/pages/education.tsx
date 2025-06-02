@@ -1,3 +1,5 @@
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import { useState, useEffect } from "react";
 import { useMood, useMoodDetection } from "@/contexts/MoodContext";
 import MoodIndicator from "@/components/mood-indicator";
@@ -38,6 +40,8 @@ export default function Education() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
+      <Header />
+      
       {/* Mood Indicator */}
       <div className="fixed top-4 right-4 z-50">
         <MoodIndicator />

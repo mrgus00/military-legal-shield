@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import ResourceCard from "@/components/resource-card";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -94,6 +95,8 @@ export default function Resources() {
           )}
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 }

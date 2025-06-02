@@ -12,11 +12,11 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center mb-4">
-              <Shield className="text-military-gold-400 w-8 h-8 mr-3" />
-              <h4 className="text-xl font-bold">MilLegal Defense</h4>
+              <Shield className="text-yellow-400 w-8 h-8 mr-3" />
+              <h4 className="text-xl font-bold">Mil-Legal</h4>
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              Protecting the rights of those who protect our nation. Professional legal defense resources for military personnel.
+              Comprehensive legal support for military personnel, veterans, and their families. Expert defense when you need it most.
             </p>
             <div className="flex items-center space-x-4 mb-4">
               <SocialShare {...SharePresets.platform()} />
@@ -80,7 +80,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-400">© 2024 MilLegal Defense. All rights reserved.</p>
+            <p className="text-sm text-gray-400">© 2024 Mil-Legal. All rights reserved.</p>
             <div className="mt-4 md:mt-0">
               <p className="text-xs text-gray-500 flex items-center">
                 <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { imageService } from "@/lib/imageService";
 import AttorneyVerificationBadge from "./attorney-verification-badge";
 import SocialShare, { SharePresets } from "./social-share";
+import VideoCall from "./video-call";
 import type { Attorney } from "@shared/schema";
 
 interface AttorneyCardProps {
@@ -115,25 +116,37 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           </span>
         </div>
         
-        <div className="flex space-x-2">
-          <Button 
-            className="flex-1 bg-navy-800 hover:bg-navy-900 text-white text-sm font-medium click-ripple hover-glow transition-smooth"
-          >
-            Contact Attorney
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 hover-scale transition-smooth"
-          >
-            <Info className="w-4 h-4" />
-          </Button>
-          <SocialShare 
-            {...SharePresets.attorney(
-              `${attorney.firstName} ${attorney.lastName}`,
-              attorney.specialties.join(", ")
-            )}
-          />
+        <div className="flex flex-col space-y-2">
+          <div className="flex space-x-2">
+            <Button 
+              className="flex-1 bg-navy-800 hover:bg-navy-900 text-white text-sm font-medium click-ripple hover-glow transition-smooth"
+            >
+              Contact Attorney
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 hover-scale transition-smooth"
+            >
+              <Info className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex space-x-2">
+            <VideoCall 
+              attorneyName={`${attorney.firstName} ${attorney.lastName}`}
+              attorneyImage={(() => {
+                const attorneyImage = getAttorneyImage();
+                return attorneyImage?.urls?.small;
+              })()}
+              specialty={attorney.specialties[0]}
+            />
+            <SocialShare 
+              {...SharePresets.attorney(
+                `${attorney.firstName} ${attorney.lastName}`,
+                attorney.specialties.join(", ")
+              )}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

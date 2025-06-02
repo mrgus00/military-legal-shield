@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Enhanced Typography for Accessibility */
+html {
+  font-size: 16px; /* Ensure minimum 16px base font size */
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6; /* Improved line spacing for readability */
+  letter-spacing: 0.01em; /* Slight letter spacing for clarity */
+}
+
+/* Improved text spacing and readability */
+p, li, div {
+  line-height: 1.65;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.4;
+  margin-bottom: 0.75em;
+}
+
+/* Ensure focus visibility for keyboard navigation */
+*:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Skip to main content link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
 :root {
   --background: 210 15% 98%; /* Soft warm white with hint of blue */
   --foreground: 215 20% 25%; /* Softer dark blue-gray */

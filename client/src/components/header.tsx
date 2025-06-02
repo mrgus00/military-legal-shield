@@ -75,11 +75,12 @@ export default function Header() {
               {/* Home Button */}
               <Link
                 href="/"
-                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md border ${
+                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md border focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
                   isActive("/")
                     ? "bg-navy-800 text-white border-navy-800"
                     : "text-navy-700 border-navy-200 hover:text-navy-800 hover:bg-navy-50 hover:border-navy-300"
                 }`}
+                aria-label="Navigate to homepage"
               >
                 🏠 Home
               </Link>
@@ -89,14 +90,15 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
                       menuGroups.emergency.some(item => isActive(item.href))
                         ? "text-red-700 bg-red-50"
                         : "text-gray-700 hover:text-navy-800"
                     }`}
+                    aria-label="Emergency services menu"
                   >
                     Emergency
-                    <ChevronDown className="ml-1 w-4 h-4" />
+                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -120,14 +122,15 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
                       menuGroups.legal.some(item => isActive(item.href))
                         ? "text-navy-700 bg-navy-50"
                         : "text-gray-700 hover:text-navy-800"
                     }`}
+                    aria-label="Legal services menu"
                   >
                     Legal Services
-                    <ChevronDown className="ml-1 w-4 h-4" />
+                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -151,14 +154,15 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                       menuGroups.education.some(item => isActive(item.href))
                         ? "text-blue-700 bg-blue-50"
                         : "text-gray-700 hover:text-navy-800"
                     }`}
+                    aria-label="Education and learning menu"
                   >
                     Education
-                    <ChevronDown className="ml-1 w-4 h-4" />
+                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -182,14 +186,15 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
                       menuGroups.veteran.some(item => isActive(item.href))
                         ? "text-green-700 bg-green-50"
                         : "text-gray-700 hover:text-navy-800"
                     }`}
+                    aria-label="Veteran services and transition support menu"
                   >
                     Veteran Services
-                    <ChevronDown className="ml-1 w-4 h-4" />
+                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -213,14 +218,15 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 ${
                       menuGroups.community.some(item => isActive(item.href))
                         ? "text-purple-700 bg-purple-50"
                         : "text-gray-700 hover:text-navy-800"
                     }`}
+                    aria-label="Community and support menu"
                   >
                     Community
-                    <ChevronDown className="ml-1 w-4 h-4" />
+                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -242,11 +248,12 @@ export default function Header() {
               {/* Pricing - Direct Link */}
               <Link
                 href="/pricing"
-                className={`px-3 py-2 text-sm font-medium transition-smooth hover-lift ${
+                className={`px-3 py-2 text-sm font-medium transition-smooth hover-lift focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
                   isActive("/pricing")
                     ? "text-navy-800 border-b-2 border-navy-800"
                     : "text-gray-700 hover:text-navy-800"
                 }`}
+                aria-label="View pricing plans"
               >
                 Pricing
               </Link>

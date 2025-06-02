@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Shield, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import Logo from "@/components/logo";
 
 export default function Header() {
   const [location] = useLocation();
@@ -38,8 +39,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <Shield className="text-red-600 w-8 h-8 mr-3" />
-              <h1 className="text-xl font-bold text-red-600">Soldier on Fire</h1>
+              <Logo width={140} height={50} />
             </Link>
             <nav className="hidden md:ml-10 md:flex space-x-8">
               {navigation.map((item) => (

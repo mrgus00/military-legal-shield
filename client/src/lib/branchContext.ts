@@ -34,7 +34,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "army",
     name: "United States Army",
     shortName: "Army",
-    emblem: "/attached_assets/U.S Army.png",
+    emblem: "/attached_assets/U.S%20Army.png",
     colors: {
       primary: "#4B5320", // Army Green
       secondary: "#FFD700", // Gold
@@ -97,7 +97,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "navy",
     name: "United States Navy",
     shortName: "Navy",
-    emblem: "/attached_assets/U.S Navy.png",
+    emblem: "/attached_assets/U.S%20Navy.png",
     colors: {
       primary: "#000080", // Navy Blue
       secondary: "#FFD700", // Gold
@@ -157,7 +157,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "airforce",
     name: "United States Air Force",
     shortName: "Air Force",
-    emblem: "/attached_assets/U.S Airforce.png",
+    emblem: "/attached_assets/U.S%20Airforce.png",
     colors: {
       primary: "#004F98", // Air Force Blue
       secondary: "#FFD700", // Gold
@@ -211,7 +211,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "marines",
     name: "United States Marine Corps",
     shortName: "Marines",
-    emblem: "/attached_assets/U.S Marine Corps.png",
+    emblem: "/attached_assets/U.S%20Marine%20Corps.png",
     colors: {
       primary: "#CC0000", // Scarlet
       secondary: "#FFD700", // Gold
@@ -273,7 +273,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "spaceforce",
     name: "United States Space Force",
     shortName: "Space Force",
-    emblem: "/attached_assets/U.S Space Force.png",
+    emblem: "/attached_assets/U.S%20Space%20Force.png",
     colors: {
       primary: "#1C2951", // Space Force Blue
       secondary: "#FFFFFF", // White
@@ -327,7 +327,7 @@ export const branchConfigs: Record<string, BranchConfig> = {
     id: "coastguard",
     name: "United States Coast Guard",
     shortName: "Coast Guard",
-    emblem: "/attached_assets/U.S Coast Guard.jpg",
+    emblem: "/attached_assets/U.S%20Coast%20Guard.jpg",
     colors: {
       primary: "#003366", // Coast Guard Blue
       secondary: "#FF0000", // Red

@@ -18,8 +18,11 @@ import { useBranch, useBranchTerminology } from "@/contexts/BranchContext";
 import type { LegalResource, Attorney, EducationModule as EducationModuleType } from "@shared/schema";
 
 export default function Home() {
-  const { branchConfig, isPersonalized } = useBranch();
-  const terminology = useBranchTerminology();
+  // Temporarily disable branch context to fix provider issue
+  // const { branchConfig, isPersonalized } = useBranch();
+  // const terminology = useBranchTerminology();
+  const isPersonalized = false;
+  const terminology = { serviceMember: "service member", command: "command", unit: "unit" };
   
   const { data: resources, isLoading: resourcesLoading } = useQuery<LegalResource[]>({
     queryKey: ["/api/resources"],

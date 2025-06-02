@@ -23,13 +23,13 @@ export default function Education() {
   });
 
   const categorizedModules = {
-    beginner: modules?.filter(m => m.difficulty === "Beginner") || [],
-    intermediate: modules?.filter(m => m.difficulty === "Intermediate") || [],
-    advanced: modules?.filter(m => m.difficulty === "Advanced") || []
+    beginner: modules?.filter(m => m.level === "Beginner") || [],
+    intermediate: modules?.filter(m => m.level === "Intermediate") || [],
+    advanced: modules?.filter(m => m.level === "Advanced") || []
   };
 
-  const getDifficultyPriority = (difficulty: string) => {
-    switch (difficulty) {
+  const getDifficultyPriority = (level: string) => {
+    switch (level) {
       case "Advanced": return "high";
       case "Intermediate": return "normal";
       default: return "low";
@@ -123,7 +123,7 @@ export default function Education() {
                     levelModules.map((module) => (
                       <MoodAwareCard 
                         key={module.id} 
-                        priority={getDifficultyPriority(module.difficulty)}
+                        priority={getDifficultyPriority(module.level)}
                         title={module.title}
                       >
                         <div className="space-y-4">
@@ -135,11 +135,11 @@ export default function Education() {
                                 color: colors.text 
                               }}
                             >
-                              {module.category}
+                              {module.level}
                             </Badge>
                             <div className="flex items-center text-sm opacity-75">
                               <Clock className="w-4 h-4 mr-1" />
-                              {module.estimatedHours}h
+                              {module.duration}
                             </div>
                           </div>
                           
@@ -151,7 +151,7 @@ export default function Education() {
                             <div className="flex items-center space-x-4 opacity-75">
                               <div className="flex items-center">
                                 <Users className="w-4 h-4 mr-1" />
-                                {module.enrolledCount}
+                                {module.studentCount}
                               </div>
                               <div className="flex items-center">
                                 <Star className="w-4 h-4 mr-1" />

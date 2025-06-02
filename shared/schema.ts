@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -737,3 +737,39 @@ export type DailyChallenge = typeof dailyChallenges.$inferSelect;
 
 export type InsertChallengeStats = z.infer<typeof insertChallengeStatsSchema>;
 export type ChallengeStats = typeof challengeStats.$inferSelect;
+
+// Stories table for veterans' storytelling corner
+export const stories = pgTable("stories", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  authorName: varchar("author_name", { length: 255 }),
+  authorBranch: varchar("author_branch", { length: 100 }),
+  authorRank: varchar("author_rank", { length: 100 }),
+  content: text("content").notNull(),
+  mediaType: varchar("media_type", { length: 20 }).notNull().default("text"), // text, audio, video
+  mediaUrl: varchar("media_url", { length: 500 }),
+  category: varchar("category", { length: 100 }).notNull(),
+  location: varchar("location", { length: 255 }),
+  timeframe: varchar("timeframe", { length: 100 }).notNull(),
+  likes: integer("likes").notNull().default(0),
+  comments: integer("comments").notNull().default(0),
+  views: integer("views").notNull().default(0),
+  tags: text("tags").array().default([]),
+  isAnonymous: boolean("is_anonymous").notNull().default(false),
+  isApproved: boolean("is_approved").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertStorySchema = createInsertSchema(stories).omit({
+  id: true,
+  likes: true,
+  comments: true,
+  views: true,
+  isApproved: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertStory = z.infer<typeof insertStorySchema>;
+export type Story = typeof stories.$inferSelect;

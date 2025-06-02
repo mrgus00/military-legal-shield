@@ -10,7 +10,7 @@ export default function Logo({ className = "", width = 120, height = 120 }: Logo
   return (
     <img 
       src={logoImage} 
-      alt="Soldier on Fire - Military Legal Defense"
+      alt="Mil-Legal - Military Legal Defense Platform Logo"
       className={`object-contain ${className}`}
       width={width}
       height={height}

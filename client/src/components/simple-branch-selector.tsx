@@ -122,7 +122,7 @@ export default function SimpleBranchSelector() {
                         <div className="mb-3">
                           <img 
                             src={branch.emblem} 
-                            alt={`${branch.shortName} emblem`}
+                            alt={`Official ${branch.name} military emblem and insignia`}
                             className="w-16 h-16 mx-auto object-contain group-hover:scale-110 transition-transform"
                             onError={(e) => {
                               console.log(`Failed to load image: ${branch.emblem}`);
@@ -155,7 +155,7 @@ export default function SimpleBranchSelector() {
                 <div className="flex items-center space-x-4">
                   <img 
                     src={selectedBranchData!.emblem} 
-                    alt={`${selectedBranchData!.shortName} emblem`}
+                    alt={`Official ${selectedBranchData!.name} military emblem representing ${selectedBranchData!.serviceMember} service members`}
                     className="w-12 h-12 object-contain"
                     onError={(e) => {
                       console.log(`Failed to load selected image: ${selectedBranchData!.emblem}`);
@@ -216,7 +216,7 @@ export default function SimpleBranchSelector() {
                               <div className="mb-2">
                                 <img 
                                   src={branch.emblem} 
-                                  alt={`${branch.shortName} emblem`}
+                                  alt={`Official ${branch.name} military emblem and insignia for ${branch.serviceMember}s`}
                                   className="w-12 h-12 mx-auto object-contain"
                                   onError={(e) => {
                                     console.log(`Failed to load dialog image: ${branch.emblem}`);

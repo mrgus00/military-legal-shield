@@ -53,10 +53,7 @@ export default function Home() {
               {isPersonalized ? `Your Legal ${terminology.command} Center` : "Your Legal Command Center"}
             </h3>
             <p className="text-lg text-navy-600 max-w-3xl mx-auto">
-              {isPersonalized 
-                ? `Quick access to the most important legal resources and tools for ${branchConfig.shortName} ${terminology.serviceMember}s`
-                : "Quick access to the most important legal resources and tools for military personnel"
-              }
+              Quick access to the most important legal resources and tools for military personnel
             </p>
           </div>
 
@@ -70,13 +67,10 @@ export default function Home() {
           <div className="max-w-4xl mx-auto mt-16">
             <div className="bg-gradient-to-r from-military-gold-50 to-sage-50 rounded-2xl p-8 border border-military-gold-200 text-center">
               <h4 className="text-2xl font-bold text-navy-700 mb-3">
-                {isPersonalized ? `Help Your Fellow ${terminology.serviceMember}s` : "Help Your Fellow Service Members"}
+                Help Your Fellow Service Members
               </h4>
               <p className="text-navy-600 mb-6 max-w-2xl mx-auto">
-                {isPersonalized 
-                  ? `Share MilLegal Defense with your ${terminology.unit}, friends, and family. Every ${terminology.serviceMember} deserves access to professional legal support when they need it most.`
-                  : "Share MilLegal Defense with your unit, friends, and family. Every service member deserves access to professional legal support when they need it most."
-                }
+                Share MilLegal Defense with your unit, friends, and family. Every service member deserves access to professional legal support when they need it most.
               </p>
               <div className="flex justify-center">
                 <SocialShare {...SharePresets.platform()} />

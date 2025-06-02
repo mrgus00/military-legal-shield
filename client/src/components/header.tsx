@@ -58,6 +58,8 @@ export default function Header() {
 
   const isActive = (href: string) => {
     if (href.startsWith("#")) return false;
+    if (href === "/" && location === "/") return true;
+    if (href !== "/" && location.startsWith(href)) return true;
     return location === href;
   };
 
@@ -73,13 +75,13 @@ export default function Header() {
               {/* Home Button */}
               <Link
                 href="/"
-                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md ${
+                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md border ${
                   isActive("/")
-                    ? "bg-navy-800 text-white"
-                    : "text-gray-700 hover:text-navy-800 hover:bg-navy-50"
+                    ? "bg-navy-800 text-white border-navy-800"
+                    : "text-navy-700 border-navy-200 hover:text-navy-800 hover:bg-navy-50 hover:border-navy-300"
                 }`}
               >
-                Home
+                🏠 Home
               </Link>
 
               {/* Emergency Services */}
@@ -87,7 +89,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover-lift transition-smooth"
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                      menuGroups.emergency.some(item => isActive(item.href))
+                        ? "text-red-700 bg-red-50"
+                        : "text-gray-700 hover:text-navy-800"
+                    }`}
                   >
                     Emergency
                     <ChevronDown className="ml-1 w-4 h-4" />
@@ -114,7 +120,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover-lift transition-smooth"
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                      menuGroups.legal.some(item => isActive(item.href))
+                        ? "text-navy-700 bg-navy-50"
+                        : "text-gray-700 hover:text-navy-800"
+                    }`}
                   >
                     Legal Services
                     <ChevronDown className="ml-1 w-4 h-4" />
@@ -141,7 +151,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover-lift transition-smooth"
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                      menuGroups.education.some(item => isActive(item.href))
+                        ? "text-blue-700 bg-blue-50"
+                        : "text-gray-700 hover:text-navy-800"
+                    }`}
                   >
                     Education
                     <ChevronDown className="ml-1 w-4 h-4" />
@@ -168,7 +182,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover-lift transition-smooth"
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                      menuGroups.veteran.some(item => isActive(item.href))
+                        ? "text-green-700 bg-green-50"
+                        : "text-gray-700 hover:text-navy-800"
+                    }`}
                   >
                     Veteran Services
                     <ChevronDown className="ml-1 w-4 h-4" />
@@ -195,7 +213,11 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover-lift transition-smooth"
+                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth ${
+                      menuGroups.community.some(item => isActive(item.href))
+                        ? "text-purple-700 bg-purple-50"
+                        : "text-gray-700 hover:text-navy-800"
+                    }`}
                   >
                     Community
                     <ChevronDown className="ml-1 w-4 h-4" />

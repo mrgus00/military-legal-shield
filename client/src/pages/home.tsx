@@ -18,6 +18,7 @@ import { useBranch, useBranchTerminology } from "@/contexts/BranchContext";
 import { useMood, useMoodDetection } from "@/contexts/MoodContext";
 import MoodIndicator from "@/components/mood-indicator";
 import MoodAwareCard from "@/components/mood-aware-card";
+import GlobalSearch from "@/components/global-search";
 import type { LegalResource, Attorney, EducationModule as EducationModuleType } from "@shared/schema";
 
 export default function Home() {
@@ -49,8 +50,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy-50 to-white">
-      {/* Mood Indicator */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Mood Indicator and Search */}
+      <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
+        <GlobalSearch />
         <MoodIndicator />
       </div>
       

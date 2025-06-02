@@ -1384,6 +1384,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Global search endpoint
+  app.get("/api/search", async (req, res) => {
+    try {
+      const { query } = req.query as { query: string };
+      
+      if (!query || query.length < 3) {
+        return res.json([]);
+      }
+
+      const searchTerm = query.toLowerCase();
+      const results = [];
+
+      // Use existing mock data for search results
+      const mockResults = [
+        {
+          id: "resource-ucmj",
+          type: "resource",
+          title: "Article 15 Nonjudicial Punishment Guide",
+          description: "Complete guide to understanding Article 15 proceedings and your rights",
+          url: "/resources",
+          category: "UCMJ"
+        },
+        {
+          id: "attorney-mitchell",
+          type: "attorney", 
+          title: "Sarah Mitchell",
+          description: "Court-Martial Defense • Virginia",
+          url: "/attorneys",
+          category: "Court-Martial Defense"
+        },
+        {
+          id: "education-rights",
+          type: "education",
+          title: "Understanding Your UCMJ Rights",
+          description: "Essential knowledge for military personnel facing legal proceedings",
+          url: "/education", 
+          category: "Beginner"
+        }
+      ];
+
+      // Filter based on search term
+      const filteredResults = mockResults.filter(item =>
+        item.title.toLowerCase().includes(searchTerm) ||
+        item.description.toLowerCase().includes(searchTerm) ||
+        item.category.toLowerCase().includes(searchTerm)
+      );
+
+      // Add story results if searching for storytelling terms
+      if (searchTerm.includes("story") || searchTerm.includes("veteran") || searchTerm.includes("experience")) {
+        results.push({
+          id: "storytelling-corner",
+          type: "story",
+          title: "Veterans' Storytelling Corner",
+          description: "Share and explore military experiences through multimedia storytelling",
+          url: "/storytelling-corner",
+          category: "Community"
+        });
+      }
+
+      // Add emergency match for urgent terms
+      if (searchTerm.includes("urgent") || searchTerm.includes("emergency") || searchTerm.includes("help")) {
+        results.push({
+          id: "urgent-match",
+          type: "attorney",
+          title: "Emergency Legal Support",
+          description: "Immediate connection to experienced military legal counsel",
+          url: "/urgent-match",
+          category: "Emergency"
+        });
+      }
+
+      // Combine all results
+      results.push(...filteredResults);
+
+      // Sort by relevance (exact matches first, then partial)
+      results.sort((a, b) => {
+        const aExact = a.title.toLowerCase().includes(searchTerm) ? 1 : 0;
+        const bExact = b.title.toLowerCase().includes(searchTerm) ? 1 : 0;
+        return bExact - aExact;
+      });
+
+      res.json(results.slice(0, 10)); // Return top 10 results
+    } catch (error) {
+      console.error("Error performing search:", error);
+      res.status(500).json({ message: "Search failed" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

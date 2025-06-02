@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
@@ -1473,5 +1474,134 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // WebSocket server for video call signaling
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // Store active video call sessions
+  const activeCalls = new Map<string, { users: Set<WebSocket>, roomId: string }>();
+  
+  wss.on('connection', (ws: WebSocket) => {
+    console.log('WebSocket client connected for video calling');
+    
+    ws.on('message', (message: Buffer) => {
+      try {
+        const data = JSON.parse(message.toString());
+        
+        switch (data.type) {
+          case 'join-call':
+            handleJoinCall(ws, data);
+            break;
+          case 'call-offer':
+          case 'call-answer':
+          case 'ice-candidate':
+            relaySignalingMessage(ws, data);
+            break;
+          case 'leave-call':
+            handleLeaveCall(ws, data);
+            break;
+          default:
+            console.log('Unknown message type:', data.type);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    });
+    
+    ws.on('close', () => {
+      console.log('WebSocket client disconnected');
+      handleDisconnect(ws);
+    });
+    
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+    });
+  });
+  
+  function handleJoinCall(ws: WebSocket, data: any) {
+    const { roomId, userId, userType } = data;
+    
+    if (!activeCalls.has(roomId)) {
+      activeCalls.set(roomId, { users: new Set(), roomId });
+    }
+    
+    const room = activeCalls.get(roomId)!;
+    room.users.add(ws);
+    
+    // Store user info on the WebSocket
+    (ws as any).roomId = roomId;
+    (ws as any).userId = userId;
+    (ws as any).userType = userType;
+    
+    // Notify other users in the room
+    const joinMessage = {
+      type: 'user-joined',
+      userId,
+      userType,
+      roomId
+    };
+    
+    room.users.forEach(client => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(joinMessage));
+      }
+    });
+    
+    console.log(`User ${userId} (${userType}) joined call room ${roomId}`);
+  }
+  
+  function relaySignalingMessage(ws: WebSocket, data: any) {
+    const roomId = (ws as any).roomId;
+    if (!roomId || !activeCalls.has(roomId)) return;
+    
+    const room = activeCalls.get(roomId)!;
+    
+    // Relay the signaling message to other users in the room
+    room.users.forEach(client => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
+    });
+  }
+  
+  function handleLeaveCall(ws: WebSocket, data: any) {
+    const roomId = (ws as any).roomId;
+    const userId = (ws as any).userId;
+    
+    if (roomId && activeCalls.has(roomId)) {
+      const room = activeCalls.get(roomId)!;
+      room.users.delete(ws);
+      
+      // Notify other users
+      const leaveMessage = {
+        type: 'user-left',
+        userId,
+        roomId
+      };
+      
+      room.users.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(leaveMessage));
+        }
+      });
+      
+      // Clean up empty rooms
+      if (room.users.size === 0) {
+        activeCalls.delete(roomId);
+      }
+      
+      console.log(`User ${userId} left call room ${roomId}`);
+    }
+  }
+  
+  function handleDisconnect(ws: WebSocket) {
+    const roomId = (ws as any).roomId;
+    const userId = (ws as any).userId;
+    
+    if (roomId && activeCalls.has(roomId)) {
+      handleLeaveCall(ws, { roomId, userId });
+    }
+  }
+  
   return httpServer;
 }

@@ -17,6 +17,7 @@ export default function Header() {
     { name: "Networking Hub", href: "/networking-hub", badge: "Community" },
     { name: "Resume Builder", href: "/resume-builder", badge: "AI" },
     { name: "Book Consultation", href: "/consultation-booking", badge: "One-Click" },
+    { name: "Video Consultation", href: "/video-consultation", badge: "Live" },
     { name: "Emotional Support", href: "/emotional-support", badge: "Wellness" },
     { name: "Secure Messages", href: "/messages" },
     { name: "Case Tracking", href: "/case-tracking" },

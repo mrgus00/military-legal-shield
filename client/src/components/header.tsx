@@ -70,6 +70,18 @@ export default function Header() {
               <Logo width={140} height={50} />
             </Link>
             <nav className="hidden md:ml-10 md:flex space-x-6">
+              {/* Home Button */}
+              <Link
+                href="/"
+                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md ${
+                  isActive("/")
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-navy-50"
+                }`}
+              >
+                Home
+              </Link>
+
               {/* Emergency Services */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -234,6 +246,18 @@ export default function Header() {
                 </SheetTrigger>
                 <SheetContent>
                   <div className="flex flex-col space-y-4 mt-6">
+                    {/* Home Button */}
+                    <Link
+                      href="/"
+                      className={`px-4 py-3 text-lg font-medium rounded-md transition-smooth ${
+                        isActive("/")
+                          ? "bg-navy-800 text-white"
+                          : "text-gray-700 hover:text-navy-800 hover:bg-navy-50"
+                      }`}
+                    >
+                      🏠 Home
+                    </Link>
+
                     {/* Emergency Services */}
                     <div className="space-y-2">
                       <h4 className="font-semibold text-red-600 text-sm">Emergency</h4>

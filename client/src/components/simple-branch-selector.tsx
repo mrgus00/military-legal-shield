@@ -93,7 +93,7 @@ export default function SimpleBranchSelector() {
     <>
       {/* Branch Selection Banner */}
       <section 
-        className="py-8 transition-all duration-500"
+        className="py-3 transition-all duration-500"
         style={{
           backgroundColor: selectedBranchData ? selectedBranchData.colors.primary : '#1f2937',
           background: selectedBranchData 
@@ -105,11 +105,11 @@ export default function SimpleBranchSelector() {
           <div className="text-center">
             {!selectedBranch ? (
               <>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-xl font-bold text-white mb-2">
                   Select Your Branch of Service
                 </h3>
-                <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
-                  Choose your military branch to personalize the website with branch-specific terminology, ranks, and relevant information.
+                <p className="text-gray-200 mb-4 max-w-2xl mx-auto text-sm">
+                  Personalize with branch-specific information
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-4xl mx-auto">
                   {branches.map((branch) => (
@@ -253,14 +253,14 @@ export default function SimpleBranchSelector() {
 
       {/* Branch-specific welcome message */}
       {selectedBranch && selectedBranchData && (
-        <section className="py-4 bg-white border-b border-gray-200">
+        <section className="py-2 bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-navy-600">
+              <p className="text-navy-600 text-sm">
                 <span className="font-semibold" style={{ color: selectedBranchData.colors.primary }}>
                   {selectedBranchData.greeting}
                 </span>
-                {" "}Welcome, {selectedBranchData.serviceMember}! This site is now personalized with {selectedBranchData.shortName}-specific information.
+                {" "}Welcome, {selectedBranchData.serviceMember}! Site personalized for {selectedBranchData.shortName}.
               </p>
             </div>
           </div>

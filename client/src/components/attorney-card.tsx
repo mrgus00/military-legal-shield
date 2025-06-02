@@ -53,7 +53,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
   };
 
   return (
-    <Card className="bg-gray-50 hover:shadow-lg transition-shadow border border-gray-200 h-full">
+    <Card className="bg-gray-50 hover:shadow-lg transition-shadow border border-gray-200 h-full hover-lift animate-fade-in transition-smooth">
       <CardContent className="p-6">
         <div className="flex items-center mb-4">
           {(() => {

@@ -33,6 +33,7 @@ import ResumeBuilder from "@/pages/resume-builder";
 import Checkout from "@/pages/checkout";
 import ConsultationBooking from "@/pages/consultation-booking";
 import LeaveReview from "@/pages/leave-review";
+import FinancialWizard from "@/pages/financial-wizard";
 
 function Router() {
   return (
@@ -66,6 +67,7 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/consultation-booking" component={ConsultationBooking} />
       <Route path="/leave-review" component={LeaveReview} />
+      <Route path="/financial-wizard" component={FinancialWizard} />
       <Route component={NotFound} />
     </Switch>
   );

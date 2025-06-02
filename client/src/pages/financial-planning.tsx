@@ -359,6 +359,35 @@ export default function FinancialPlanning() {
               Optimize your financial strategy with VA disability benefits, Social Security, and veteran-specific opportunities. 
               Get personalized recommendations based on your unique situation.
             </p>
+            
+            {/* Comprehensive Financial Wizard CTA */}
+            <div className="max-w-4xl mx-auto mb-12">
+              <Card className="bg-gradient-to-r from-military-gold-50 to-sage-50 border-military-gold-200">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="flex justify-center mb-4">
+                      <div className="p-3 bg-military-gold-100 rounded-full">
+                        <TrendingUp className="h-8 w-8 text-military-gold-600" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-navy-700 mb-3">
+                      Need a Complete Financial Plan?
+                    </h3>
+                    <p className="text-navy-600 mb-6 max-w-2xl mx-auto">
+                      Use our comprehensive Financial Planning Wizard for a detailed, step-by-step analysis of your entire financial situation, including military transition planning, retirement strategies, and personalized recommendations.
+                    </p>
+                    <Button 
+                      size="lg" 
+                      className="bg-military-gold-500 hover:bg-military-gold-600 text-white font-semibold px-8 py-3"
+                      onClick={() => window.location.href = '/financial-wizard'}
+                    >
+                      Launch Financial Planning Wizard
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
             <div className="flex justify-center space-x-4">
               <Badge className="bg-military-gold-100 text-military-gold-800 px-4 py-2">
                 <Shield className="h-4 w-4 mr-1" />

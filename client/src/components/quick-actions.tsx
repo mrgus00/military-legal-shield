@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle, Users, Zap } from "lucide-react";
+import { BookOpen, UserRoundCheck, GraduationCap, MessageCircle, Users, Zap, Calculator } from "lucide-react";
 import { Link } from "wouter";
 
 export default function QuickActions() {
@@ -44,11 +44,19 @@ export default function QuickActions() {
       href: "/micro-challenges",
       bgColor: "bg-indigo-500",
       iconColor: "text-white"
+    },
+    {
+      icon: Calculator,
+      title: "Financial Wizard",
+      description: "Comprehensive financial planning for veterans",
+      href: "/financial-wizard",
+      bgColor: "bg-green-600",
+      iconColor: "text-white"
     }
   ];
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {actions.map((action, index) => (
         <Link key={index} href={action.href}>
           <Card className="bg-gray-50 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 h-full">

@@ -62,7 +62,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
               <img 
                 src={attorneyImage.urls.small}
                 alt={attorneyImage.alt_description || `${attorney.firstName} ${attorney.lastName}`}
-                className="w-16 h-16 rounded-full object-cover mr-4 bg-gray-200"
+                className="w-16 h-16 rounded-full object-cover mr-4 bg-gray-200 hover-scale transition-smooth"
               />
             ) : (
               <div className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center mr-4">
@@ -117,14 +117,14 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
         
         <div className="flex space-x-2">
           <Button 
-            className="flex-1 bg-navy-800 hover:bg-navy-900 text-white text-sm font-medium"
+            className="flex-1 bg-navy-800 hover:bg-navy-900 text-white text-sm font-medium click-ripple hover-glow transition-smooth"
           >
             Contact Attorney
           </Button>
           <Button 
             variant="outline" 
             size="sm"
-            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 hover-scale transition-smooth"
           >
             <Info className="w-4 h-4" />
           </Button>

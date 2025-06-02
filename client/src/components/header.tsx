@@ -42,19 +42,19 @@ export default function Header() {
               <Logo width={140} height={50} />
             </Link>
             <nav className="hidden md:ml-10 md:flex space-x-8">
-              {navigation.map((item) => (
+              {navigation.map((item, index) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors relative ${
+                  className={`px-3 py-2 text-sm font-medium transition-smooth relative animate-fade-in stagger-${Math.min(index + 1, 5)} ${
                     isActive(item.href)
                       ? "text-navy-800 border-b-2 border-navy-800"
-                      : "text-gray-700 hover:text-navy-800"
+                      : "text-gray-700 hover:text-navy-800 hover-lift"
                   }`}
                 >
                   {item.name}
                   {item.badge && (
-                    <span className="absolute -top-1 -right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                    <span className="absolute -top-1 -right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-bounce-in">
                       {item.badge}
                     </span>
                   )}
@@ -63,10 +63,10 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" className="text-navy-800 hover:text-navy-900 font-medium text-sm">
+            <Button variant="ghost" className="text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth">
               Sign In
             </Button>
-            <Button className="bg-navy-800 hover:bg-navy-900 text-white">
+            <Button className="bg-navy-800 hover:bg-navy-900 text-white click-ripple hover-glow transition-smooth">
               Get Started
             </Button>
             <div className="md:hidden">

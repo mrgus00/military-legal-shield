@@ -20,7 +20,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
   };
 
   return (
-    <Card className="bg-white hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden h-full">
+    <Card className="bg-white hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden h-full hover-lift animate-fade-in transition-smooth">
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-2">
@@ -37,8 +37,8 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
               {resource.category}
             </Badge>
           </div>
-          <Button variant="ghost" size="sm" className="p-0">
-            <Bookmark className="w-4 h-4 text-gray-300 hover:text-navy-800" />
+          <Button variant="ghost" size="sm" className="p-0 hover-scale transition-smooth">
+            <Bookmark className="w-4 h-4 text-gray-300 hover:text-navy-800 transition-smooth" />
           </Button>
         </div>
         
@@ -58,7 +58,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
           <Button 
             variant="ghost" 
             size="sm"
-            className="text-navy-800 hover:text-navy-900 font-medium text-sm p-0"
+            className="text-navy-800 hover:text-navy-900 font-medium text-sm p-0 hover-glow transition-smooth"
           >
             {resource.isPremium && resource.readTime.includes("course") 
               ? "View Course →" 

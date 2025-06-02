@@ -52,16 +52,17 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <main id="main-content">
+        {/* Hero Section */}
+        <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
+          <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <div className="inline-flex items-center px-4 py-2 bg-navy-100 rounded-full text-navy-800 text-sm font-medium mb-6">
               <Shield className="w-4 h-4 mr-2" />
               Trusted by 50,000+ Service Members
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight">
+            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight">
               Legal Support for
               <span className="text-navy-600 block">Every Service Member</span>
             </h1>
@@ -73,19 +74,35 @@ export default function Home() {
 
             {/* Lead Capture Form */}
             <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mb-12">
-              <h3 className="text-2xl font-bold text-navy-900 mb-4">Get Instant Access</h3>
+              <h3 id="signup-heading" className="text-2xl font-bold text-navy-900 mb-4">Get Instant Access</h3>
               <p className="text-gray-600 mb-6">Join thousands of service members getting the legal help they need</p>
               
-              <form onSubmit={handleLeadCapture} className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={handleLeadCapture} className="space-y-4" role="form" aria-labelledby="signup-heading">
+                <div className="form-field">
+                  <label htmlFor="email-input" className="form-label">
+                    Email Address
+                  </label>
                   <Input
+                    id="email-input"
                     type="email"
                     placeholder="Enter your military email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1"
+                    className="form-input"
                     required
+                    aria-describedby="email-description email-error"
+                    aria-invalid={!email && isSubmitting ? "true" : "false"}
                   />
+                  <div id="email-description" className="sr-only">
+                    Enter your valid military email address to get started
+                  </div>
+                  {!email && isSubmitting && (
+                    <div id="email-error" className="text-red-600 text-sm mt-1" role="alert">
+                      Email address is required to continue
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
@@ -281,6 +298,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </main>
     </div>
   );
 }

@@ -1303,6 +1303,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stories routes for storytelling corner
+  app.get("/api/stories", async (req, res) => {
+    try {
+      const mockStories = [
+        {
+          id: 1,
+          title: "Brotherhood in Afghanistan",
+          authorName: "SSG Michael Rodriguez",
+          authorBranch: "Army",
+          authorRank: "Staff Sergeant",
+          content: "During my deployment to Afghanistan in 2019, our unit faced one of the most challenging missions of our tour. What started as a routine patrol turned into a 12-hour firefight that tested everything we had trained for. But what I remember most wasn't the fear or the chaos - it was how my brothers and sisters in arms never left anyone behind. When our medic was wounded, three soldiers immediately moved to his position under fire. That day taught me that courage isn't the absence of fear, but acting despite it to protect those who serve beside you.",
+          mediaType: "text",
+          category: "deployment",
+          location: "Kandahar Province, Afghanistan",
+          timeframe: "2019-2020",
+          likes: 47,
+          comments: 12,
+          views: 234,
+          tags: ["brotherhood", "courage", "afghanistan", "combat"],
+          createdAt: "2024-01-15T10:30:00Z",
+          isAnonymous: false
+        },
+        {
+          id: 2,
+          title: "Coming Home: A Transition Story",
+          authorName: "Anonymous Veteran",
+          authorBranch: "Marines",
+          authorRank: "Corporal",
+          content: "The hardest part wasn't the deployment - it was coming home. After 15 months overseas, I found myself struggling to connect with civilian life. Simple things like grocery shopping felt overwhelming. The constant noise, the crowds, the lack of structure. I want other veterans to know that it's okay to struggle with transition. It's okay to ask for help. I found support through the VA's counseling services and a local veterans group. Today, I'm thriving in my civilian career and helping other veterans navigate their own transitions. You're not alone in this journey.",
+          mediaType: "text",
+          category: "transition",
+          timeframe: "2020-2023",
+          likes: 89,
+          comments: 31,
+          views: 567,
+          tags: ["transition", "mental-health", "support", "civilian-life"],
+          createdAt: "2024-01-10T14:45:00Z",
+          isAnonymous: true
+        },
+        {
+          id: 3,
+          title: "Leading Through Crisis",
+          authorName: "CPT Sarah Chen",
+          authorBranch: "Air Force",
+          authorRank: "Captain",
+          content: "As a young officer, I was thrust into a leadership role during a natural disaster response mission. Hurricane Maria had devastated Puerto Rico, and our team was tasked with coordinating relief efforts. I had 50 airmen under my command, working 18-hour days in challenging conditions. The pressure was immense, but I learned that true leadership isn't about having all the answers - it's about empowering your team, listening to their expertise, and making decisive decisions when it matters most. That mission shaped my understanding of service and sacrifice.",
+          mediaType: "text",
+          category: "leadership",
+          location: "Puerto Rico",
+          timeframe: "2017",
+          likes: 62,
+          comments: 18,
+          views: 345,
+          tags: ["leadership", "disaster-relief", "teamwork", "puerto-rico"],
+          createdAt: "2024-01-08T09:15:00Z",
+          isAnonymous: false
+        }
+      ];
+      
+      res.json(mockStories);
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+      res.status(500).json({ message: "Failed to fetch stories" });
+    }
+  });
+
+  app.post("/api/stories", async (req, res) => {
+    try {
+      // For now, return a success response
+      // In a real implementation, this would save to database
+      res.json({ 
+        id: Date.now(),
+        message: "Story submitted successfully",
+        ...req.body 
+      });
+    } catch (error) {
+      console.error("Error creating story:", error);
+      res.status(500).json({ message: "Failed to create story" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

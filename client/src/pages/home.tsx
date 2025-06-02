@@ -15,6 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Crown, Check } from "lucide-react";
 import SocialShare, { SharePresets } from "@/components/social-share";
 import { useBranch, useBranchTerminology } from "@/contexts/BranchContext";
+import { useMood, useMoodDetection } from "@/contexts/MoodContext";
+import MoodIndicator from "@/components/mood-indicator";
+import MoodAwareCard from "@/components/mood-aware-card";
 import type { LegalResource, Attorney, EducationModule as EducationModuleType } from "@shared/schema";
 
 export default function Home() {
@@ -23,6 +26,10 @@ export default function Home() {
   // const terminology = useBranchTerminology();
   const isPersonalized = false;
   const terminology = { serviceMember: "service member", command: "command", unit: "unit" };
+  
+  // Initialize mood detection for this page
+  const { colors, currentMood } = useMood();
+  useMoodDetection();
   
   const { data: resources, isLoading: resourcesLoading } = useQuery<LegalResource[]>({
     queryKey: ["/api/resources"],
@@ -42,6 +49,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy-50 to-white">
+      {/* Mood Indicator */}
+      <div className="fixed top-4 right-4 z-50">
+        <MoodIndicator />
+      </div>
+      
       <Header />
       <Hero />
       

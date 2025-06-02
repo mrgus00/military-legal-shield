@@ -1,204 +1,237 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import EducationModule from "@/components/education-module";
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect } from "react";
+import { useMood, useMoodDetection } from "@/contexts/MoodContext";
+import MoodIndicator from "@/components/mood-indicator";
+import MoodAwareCard from "@/components/mood-aware-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Check, Filter, GraduationCap, Clock, Users } from "lucide-react";
-import { useState } from "react";
-import type { EducationModule as EducationModuleType } from "@shared/schema";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BookOpen, Clock, Users, Star, GraduationCap, Award } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import type { EducationModule } from "@shared/schema";
 
 export default function Education() {
-  const [selectedLevel, setSelectedLevel] = useState<string>("all");
-  const [showPremiumOnly, setShowPremiumOnly] = useState<boolean>(false);
+  const { setMood, colors, detectMoodFromContent } = useMood();
   
-  const { data: modules, isLoading } = useQuery<EducationModuleType[]>({
+  // Set calm mood for educational content
+  useEffect(() => {
+    setMood("calm");
+  }, [setMood]);
+
+  const { data: modules, isLoading } = useQuery<EducationModule[]>({
     queryKey: ["/api/education"],
   });
 
-  const levels = ["all", "Beginner", "Intermediate", "Advanced"];
+  const categorizedModules = {
+    beginner: modules?.filter(m => m.difficulty === "Beginner") || [],
+    intermediate: modules?.filter(m => m.difficulty === "Intermediate") || [],
+    advanced: modules?.filter(m => m.difficulty === "Advanced") || []
+  };
 
-  const filteredModules = modules?.filter(module => {
-    const matchesLevel = selectedLevel === "all" || module.level === selectedLevel;
-    const matchesPremium = !showPremiumOnly || module.isPremium;
-    return matchesLevel && matchesPremium;
-  }) || [];
-
-  const totalStudents = modules?.reduce((sum, module) => sum + module.studentCount, 0) || 0;
-  const freeModules = modules?.filter(module => !module.isPremium).length || 0;
-  const premiumModules = modules?.filter(module => module.isPremium).length || 0;
+  const getDifficultyPriority = (difficulty: string) => {
+    switch (difficulty) {
+      case "Advanced": return "high";
+      case "Intermediate": return "normal";
+      default: return "low";
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      {/* Hero Section */}
-      <section className="bg-navy-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Military Law <span className="text-military-gold-400">Education</span>
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Interactive courses and educational modules designed to help military personnel understand their legal rights, responsibilities, and the military justice system.
+    <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
+      {/* Mood Indicator */}
+      <div className="fixed top-4 right-4 z-50">
+        <MoodIndicator />
+      </div>
+
+      {/* Header */}
+      <div className="py-12" style={{ backgroundColor: colors.primary }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-white">
+            <GraduationCap className="w-16 h-16 mx-auto mb-4" />
+            <h1 className="text-4xl font-bold mb-4">Legal Education Center</h1>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto">
+              Comprehensive legal education resources designed specifically for military personnel
             </p>
-            
-            {/* Stats */}
-            <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center justify-center mb-2">
-                  <GraduationCap className="w-6 h-6 text-military-gold-400 mr-2" />
-                  <span className="text-2xl font-bold">{modules?.length || 0}</span>
-                </div>
-                <div className="text-sm text-gray-300">Total Courses</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center justify-center mb-2">
-                  <Users className="w-6 h-6 text-military-gold-400 mr-2" />
-                  <span className="text-2xl font-bold">{totalStudents.toLocaleString()}</span>
-                </div>
-                <div className="text-sm text-gray-300">Students Enrolled</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center justify-center mb-2">
-                  <Check className="w-6 h-6 text-emerald-400 mr-2" />
-                  <span className="text-2xl font-bold">{freeModules}</span>
-                </div>
-                <div className="text-sm text-gray-300">Free Courses</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center justify-center mb-2">
-                  <Crown className="w-6 h-6 text-military-gold-400 mr-2" />
-                  <span className="text-2xl font-bold">{premiumModules}</span>
-                </div>
-                <div className="text-sm text-gray-300">Premium Courses</div>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Features Section */}
-      <section className="py-8 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-navy-800 rounded-lg flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-white" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Learning Progress Overview */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
+            Your Learning Journey
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <MoodAwareCard priority="normal" title="Courses Completed">
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2" style={{ color: colors.primary }}>
+                  12
+                </div>
+                <p className="text-sm opacity-75">Total modules finished</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Self-Paced Learning</h3>
-              <p className="text-gray-600 text-sm">Learn at your own pace with flexible scheduling that fits your military lifestyle.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-military-gold-500 rounded-lg flex items-center justify-center mb-4">
-                <GraduationCap className="w-6 h-6 text-navy-800" />
+            </MoodAwareCard>
+            
+            <MoodAwareCard priority="normal" title="Current Streak">
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2" style={{ color: colors.primary }}>
+                  7
+                </div>
+                <p className="text-sm opacity-75">Days of continuous learning</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Expert Instruction</h3>
-              <p className="text-gray-600 text-sm">Courses developed by experienced military law attorneys and legal experts.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-4">
-                <Badge className="w-6 h-6 text-white" />
+            </MoodAwareCard>
+            
+            <MoodAwareCard priority="normal" title="Certifications">
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2" style={{ color: colors.primary }}>
+                  3
+                </div>
+                <p className="text-sm opacity-75">Professional certifications earned</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Certification</h3>
-              <p className="text-gray-600 text-sm">Earn certificates of completion to demonstrate your legal knowledge.</p>
-            </div>
+            </MoodAwareCard>
           </div>
         </div>
-      </section>
 
-      {/* Filters */}
-      <section className="py-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-4 justify-center items-center">
-            <div className="flex items-center mr-4">
-              <Filter className="w-4 h-4 mr-2 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Filter courses:</span>
-            </div>
+        {/* Course Categories */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
+            Available Courses
+          </h2>
+          
+          <Tabs defaultValue="beginner" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="beginner">Beginner</TabsTrigger>
+              <TabsTrigger value="intermediate">Intermediate</TabsTrigger>
+              <TabsTrigger value="advanced">Advanced</TabsTrigger>
+            </TabsList>
             
-            {levels.map((level) => (
-              <Button
-                key={level}
-                variant={selectedLevel === level ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedLevel(level)}
-                className={selectedLevel === level ? "bg-navy-800 hover:bg-navy-900" : ""}
-              >
-                {level === "all" ? "All Levels" : level}
-              </Button>
+            {Object.entries(categorizedModules).map(([level, levelModules]) => (
+              <TabsContent key={level} value={level} className="mt-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {isLoading ? (
+                    Array.from({ length: 6 }).map((_, i) => (
+                      <Card key={i} className="p-6">
+                        <div className="animate-pulse">
+                          <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                          <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                          <div className="h-16 bg-gray-200 rounded mb-4"></div>
+                          <div className="h-4 bg-gray-200 rounded"></div>
+                        </div>
+                      </Card>
+                    ))
+                  ) : (
+                    levelModules.map((module) => (
+                      <MoodAwareCard 
+                        key={module.id} 
+                        priority={getDifficultyPriority(module.difficulty)}
+                        title={module.title}
+                      >
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <Badge 
+                              variant="outline"
+                              style={{ 
+                                borderColor: colors.border,
+                                color: colors.text 
+                              }}
+                            >
+                              {module.category}
+                            </Badge>
+                            <div className="flex items-center text-sm opacity-75">
+                              <Clock className="w-4 h-4 mr-1" />
+                              {module.estimatedHours}h
+                            </div>
+                          </div>
+                          
+                          <p className="text-sm opacity-75 line-clamp-3">
+                            {module.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between text-sm">
+                            <div className="flex items-center space-x-4 opacity-75">
+                              <div className="flex items-center">
+                                <Users className="w-4 h-4 mr-1" />
+                                {module.enrolledCount}
+                              </div>
+                              <div className="flex items-center">
+                                <Star className="w-4 h-4 mr-1" />
+                                4.8
+                              </div>
+                            </div>
+                            <Button 
+                              size="sm"
+                              style={{ 
+                                backgroundColor: colors.accent,
+                                color: "white"
+                              }}
+                            >
+                              Start Learning
+                            </Button>
+                          </div>
+                        </div>
+                      </MoodAwareCard>
+                    ))
+                  )}
+                </div>
+              </TabsContent>
             ))}
-            
-            <Button
-              variant={showPremiumOnly ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowPremiumOnly(!showPremiumOnly)}
-              className={showPremiumOnly ? "bg-military-gold-500 hover:bg-military-gold-600 text-navy-800" : ""}
-            >
-              <Crown className="w-4 h-4 mr-1" />
-              Premium Only
-            </Button>
-          </div>
+          </Tabs>
         </div>
-      </section>
 
-      {/* Modules Grid */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
-              {selectedLevel === "all" ? "All Courses" : `${selectedLevel} Courses`}
-              {showPremiumOnly && " (Premium)"}
-            </h2>
-            <div className="flex items-center space-x-2 text-sm">
-              <Badge variant="secondary" className="bg-military-gold-100 text-military-gold-800">
-                <Crown className="w-3 h-3 mr-1" />
-                Premium
-              </Badge>
-              <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">
-                <Check className="w-3 h-3 mr-1" />
-                Free
-              </Badge>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <Skeleton className="w-12 h-12 rounded-lg" />
-                    <Skeleton className="h-6 w-20" />
+        {/* Featured Learning Paths */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
+            Recommended Learning Paths
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <MoodAwareCard priority="high" title="Court-Martial Defense Specialist">
+              <div className="space-y-4">
+                <p className="text-sm opacity-75">
+                  Comprehensive training for understanding and defending court-martial proceedings
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Badge variant="outline" className="text-xs">8 modules</Badge>
+                    <Badge variant="outline" className="text-xs">40 hours</Badge>
                   </div>
-                  <Skeleton className="h-6 w-full mb-3" />
-                  <Skeleton className="h-16 w-full mb-4" />
-                  <Skeleton className="h-10 w-full" />
+                  <Button 
+                    size="sm"
+                    style={{ 
+                      backgroundColor: colors.primary,
+                      color: "white"
+                    }}
+                  >
+                    Start Path
+                  </Button>
                 </div>
-              ))
-            ) : filteredModules.length > 0 ? (
-              filteredModules.map((module) => (
-                <EducationModule key={module.id} module={module} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-500 text-lg">No courses found matching your criteria.</p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSelectedLevel("all");
-                    setShowPremiumOnly(false);
-                  }}
-                  className="mt-4"
-                >
-                  Clear Filters
-                </Button>
               </div>
-            )}
+            </MoodAwareCard>
+            
+            <MoodAwareCard priority="normal" title="Military Justice Fundamentals">
+              <div className="space-y-4">
+                <p className="text-sm opacity-75">
+                  Essential knowledge of military justice system and service member rights
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Badge variant="outline" className="text-xs">5 modules</Badge>
+                    <Badge variant="outline" className="text-xs">25 hours</Badge>
+                  </div>
+                  <Button 
+                    size="sm"
+                    style={{ 
+                      backgroundColor: colors.primary,
+                      color: "white"
+                    }}
+                  >
+                    Start Path
+                  </Button>
+                </div>
+              </div>
+            </MoodAwareCard>
           </div>
         </div>
-      </section>
-
-      <Footer />
+      </div>
     </div>
   );
 }

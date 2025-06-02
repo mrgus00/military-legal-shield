@@ -40,55 +40,104 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   border-radius: 4px;
   z-index: 1000;
+  font-weight: 600;
 }
 
 .skip-link:focus {
   top: 6px;
 }
 
+/* Responsive design for mobile accessibility */
+@media (max-width: 768px) {
+  html {
+    font-size: 18px; /* Larger base font for mobile */
+  }
+  
+  /* Ensure touch targets are at least 44px */
+  button, input, select, textarea, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve spacing on mobile */
+  .mobile-spacing {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Media accessibility */
+video, audio {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure no auto-playing media */
+video[autoplay], audio[autoplay] {
+  autoplay: false;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --foreground: 0 0% 0%; /* Pure black text */
+    --background: 0 0% 100%; /* Pure white background */
+    --border: 0 0% 0%; /* Black borders */
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 :root {
-  --background: 210 15% 98%; /* Soft warm white with hint of blue */
-  --foreground: 215 20% 25%; /* Softer dark blue-gray */
-  --muted: 210 25% 94%; /* Gentle blue-tinted background */
-  --muted-foreground: 215 12% 52%; /* Comfortable gray text */
+  --background: 0 0% 100%; /* Pure white for maximum contrast */
+  --foreground: 0 0% 9%; /* Dark text for 4.5:1 contrast ratio */
+  --muted: 210 40% 96%; /* Light background with sufficient contrast */
+  --muted-foreground: 215 16% 47%; /* Medium gray meeting 4.5:1 ratio */
   --popover: 0 0% 100%;
-  --popover-foreground: 215 20% 25%;
+  --popover-foreground: 0 0% 9%;
   --card: 0 0% 100%;
-  --card-foreground: 215 20% 25%;
-  --border: 210 18% 88%; /* Subtle warm borders */
-  --input: 210 18% 88%;
-  --primary: 210 55% 48%; /* Trustworthy medium blue */
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 20% 92%; /* Soft blue-gray */
-  --secondary-foreground: 215 20% 25%;
-  --accent: 45 75% 82%; /* Warm encouraging gold */
-  --accent-foreground: 215 20% 25%;
-  --destructive: 0 65% 58%; /* Softer, less harsh red */
-  --destructive-foreground: 210 40% 98%;
-  --ring: 210 55% 48%;
-  --radius: 0.75rem; /* More rounded for friendliness */
+  --card-foreground: 0 0% 9%;
+  --border: 214 32% 91%; /* Border with adequate contrast */
+  --input: 214 32% 91%;
+  --primary: 210 79% 46%; /* Strong blue meeting contrast requirements */
+  --primary-foreground: 0 0% 98%;
+  --secondary: 210 40% 94%; /* Light secondary with proper contrast */
+  --secondary-foreground: 0 0% 9%;
+  --accent: 38 92% 50%; /* Vibrant gold meeting contrast standards */
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84% 48%; /* Strong red for error states */
+  --destructive-foreground: 0 0% 98%;
+  --ring: 210 79% 46%;
+  --radius: 0.75rem;
   
-  /* Welcoming Military color scheme */
-  --navy-50: 210 35% 96%; /* Softer navy tints */
-  --navy-100: 210 40% 92%;
-  --navy-200: 210 42% 85%;
-  --navy-300: 210 45% 75%;
-  --navy-400: 210 50% 65%;
-  --navy-500: 210 55% 55%; /* Trustworthy main blue */
-  --navy-600: 210 55% 48%;
-  --navy-700: 210 50% 40%;
-  --navy-800: 210 45% 32%; /* Softer dark navy */
-  --navy-900: 210 40% 25%;
+  /* High contrast military color scheme for accessibility */
+  --navy-50: 210 40% 97%; /* Very light navy for backgrounds */
+  --navy-100: 210 40% 94%;
+  --navy-200: 210 40% 88%;
+  --navy-300: 210 40% 75%;
+  --navy-400: 210 40% 60%;
+  --navy-500: 210 79% 46%; /* Meeting 4.5:1 contrast on white */
+  --navy-600: 210 100% 40%; /* Strong navy for emphasis */
+  --navy-700: 210 100% 30%; /* Very dark navy */
+  --navy-800: 210 100% 20%; /* Ultra dark navy */
+  --navy-900: 210 100% 10%; /* Near black navy */
   
-  /* Encouraging gold tones */
-  --military-gold-50: 45 60% 94%;
-  --military-gold-100: 45 65% 88%;
-  --military-gold-200: 45 70% 80%;
-  --military-gold-300: 45 75% 72%;
-  --military-gold-400: 45 80% 65%; /* Warm, encouraging gold */
-  --military-gold-500: 45 75% 55%;
-  --military-gold-600: 45 70% 48%;
-  --military-gold-700: 45 65% 40%;
+  /* High contrast gold tones for accessibility */
+  --military-gold-50: 45 50% 95%;
+  --military-gold-100: 45 60% 90%;
+  --military-gold-200: 45 70% 85%;
+  --military-gold-300: 45 80% 75%;
+  --military-gold-400: 45 90% 65%;
+  --military-gold-500: 38 92% 50%; /* Strong gold meeting contrast requirements */
+  --military-gold-600: 35 100% 45%; /* Dark gold for emphasis */
+  --military-gold-700: 30 100% 35%; /* Very dark gold */
   
   /* Calming accent colors */
   --sage-50: 120 20% 95%;

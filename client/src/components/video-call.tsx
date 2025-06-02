@@ -33,6 +33,8 @@ interface CallState {
   isCalling: boolean;
   callDuration: number;
   connectionQuality: 'excellent' | 'good' | 'poor';
+  captionsEnabled: boolean;
+  recordingEnabled: boolean;
 }
 
 export default function VideoCall({ 
@@ -47,7 +49,9 @@ export default function VideoCall({
     isAudioEnabled: true,
     isCalling: false,
     callDuration: 0,
-    connectionQuality: 'excellent'
+    connectionQuality: 'excellent',
+    captionsEnabled: false,
+    recordingEnabled: false
   });
   
   const [isCallDialogOpen, setIsCallDialogOpen] = useState(false);
@@ -141,7 +145,9 @@ export default function VideoCall({
       isAudioEnabled: true,
       isCalling: false,
       callDuration: 0,
-      connectionQuality: 'excellent'
+      connectionQuality: 'excellent',
+      captionsEnabled: false,
+      recordingEnabled: false
     });
     
     setIsCallDialogOpen(false);

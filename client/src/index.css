@@ -48,6 +48,14 @@
   
   /* Calming accent colors */
   --sage-50: 120 20% 95%;
+  
+  /* Mood-based color variables */
+  --mood-primary: #1E40AF;
+  --mood-secondary: #EFF6FF;
+  --mood-accent: #3B82F6;
+  --mood-background: #F8FAFC;
+  --mood-text: #1E293B;
+  --mood-border: #CBD5E1;
   --sage-100: 120 25% 88%;
   --sage-200: 120 30% 80%;
   --sage-300: 120 35% 70%;

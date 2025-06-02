@@ -59,9 +59,9 @@ export default function QuickActions() {
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {actions.map((action, index) => (
         <Link key={index} href={action.href}>
-          <Card className="bg-gray-50 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 h-full">
+          <Card className={`bg-gray-50 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 h-full hover-lift animate-fade-in stagger-${Math.min(index + 1, 5)} transition-smooth`}>
             <CardContent className="p-6">
-              <div className={`w-12 h-12 ${action.bgColor} rounded-lg flex items-center justify-center mb-4`}>
+              <div className={`w-12 h-12 ${action.bgColor} rounded-lg flex items-center justify-center mb-4 hover-scale transition-smooth animate-float`} style={{ animationDelay: `${index * 0.5}s` }}>
                 <action.icon className={`${action.iconColor} w-6 h-6`} />
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">{action.title}</h4>

@@ -117,16 +117,18 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {resourcesLoading ? (
               Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <Skeleton className="h-6 w-20 mb-4" />
-                  <Skeleton className="h-6 w-full mb-3" />
-                  <Skeleton className="h-16 w-full mb-4" />
-                  <Skeleton className="h-4 w-32" />
+                <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in">
+                  <Skeleton className="h-6 w-20 mb-4 loading-skeleton" />
+                  <Skeleton className="h-6 w-full mb-3 loading-skeleton" />
+                  <Skeleton className="h-16 w-full mb-4 loading-skeleton" />
+                  <Skeleton className="h-4 w-32 loading-skeleton" />
                 </div>
               ))
             ) : (
-              featuredResources.map((resource) => (
-                <ResourceCard key={resource.id} resource={resource} />
+              featuredResources.map((resource, index) => (
+                <div key={resource.id} className={`animate-fade-in stagger-${Math.min(index + 1, 5)}`}>
+                  <ResourceCard resource={resource} />
+                </div>
               ))
             )}
           </div>
@@ -144,31 +146,33 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap gap-4 mb-8 justify-center">
-            <Button className="bg-navy-800 text-white hover:bg-navy-900">All Specialties</Button>
-            <Button variant="outline">Court-Martial</Button>
-            <Button variant="outline">Administrative</Button>
-            <Button variant="outline">Security Clearance</Button>
-            <Button variant="outline">Appeals</Button>
+            <Button className="bg-navy-800 text-white hover:bg-navy-900 click-ripple hover-glow transition-smooth">All Specialties</Button>
+            <Button variant="outline" className="hover-scale transition-smooth">Court-Martial</Button>
+            <Button variant="outline" className="hover-scale transition-smooth">Administrative</Button>
+            <Button variant="outline" className="hover-scale transition-smooth">Security Clearance</Button>
+            <Button variant="outline" className="hover-scale transition-smooth">Appeals</Button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {attorneysLoading ? (
               Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div key={i} className="bg-gray-50 rounded-xl p-6 border border-gray-200 animate-fade-in">
                   <div className="flex items-center mb-4">
-                    <Skeleton className="w-16 h-16 rounded-full mr-4" />
+                    <Skeleton className="w-16 h-16 rounded-full mr-4 loading-skeleton" />
                     <div>
-                      <Skeleton className="h-5 w-32 mb-2" />
-                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-5 w-32 mb-2 loading-skeleton" />
+                      <Skeleton className="h-4 w-24 loading-skeleton" />
                     </div>
                   </div>
-                  <Skeleton className="h-16 w-full mb-4" />
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-16 w-full mb-4 loading-skeleton" />
+                  <Skeleton className="h-10 w-full loading-skeleton" />
                 </div>
               ))
             ) : (
-              featuredAttorneys.map((attorney) => (
-                <AttorneyCard key={attorney.id} attorney={attorney} />
+              featuredAttorneys.map((attorney, index) => (
+                <div key={attorney.id} className={`animate-scale-in stagger-${Math.min(index + 1, 5)}`}>
+                  <AttorneyCard attorney={attorney} />
+                </div>
               ))
             )}
           </div>

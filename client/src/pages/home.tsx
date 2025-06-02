@@ -52,7 +52,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white">
       <Header />
       
-      <main id="main-content">
+      <main id="main-content" role="main">
         {/* Hero Section */}
         <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
           <div className="max-w-7xl mx-auto">

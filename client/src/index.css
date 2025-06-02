@@ -2,15 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enhanced Typography for Accessibility */
+/* Enhanced Typography for Accessibility and Clean Layout */
 html {
   font-size: 16px; /* Ensure minimum 16px base font size */
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6; /* Improved line spacing for readability */
   letter-spacing: 0.01em; /* Slight letter spacing for clarity */
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+}
+
+/* Clean layout principles - minimal clutter */
+.content-section {
+  margin-bottom: 4rem;
+  padding: 2rem 0;
+}
+
+.visual-separator {
+  margin: 3rem 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+/* Whitespace and section divisions */
+.section-spacing {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.content-spacing {
+  margin-bottom: 1.5rem;
 }
 
 /* Improved text spacing and readability */
@@ -235,6 +259,54 @@ th, td {
 th {
   font-weight: 600;
   background-color: hsl(var(--muted));
+}
+
+/* ARIA landmarks and interactive element enhancements */
+[role="banner"], [role="navigation"], [role="main"], [role="contentinfo"], [role="complementary"] {
+  display: block;
+}
+
+/* ARIA state indicators */
+button[aria-expanded="true"] {
+  background-color: hsl(var(--accent));
+}
+
+[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 2px hsla(var(--destructive), 0.2);
+}
+
+[aria-required="true"]::after {
+  content: " *";
+  color: hsl(var(--destructive));
+}
+
+/* Focus management for complex widgets */
+[role="tabpanel"]:not([aria-hidden="true"]) {
+  display: block;
+}
+
+[role="tabpanel"][aria-hidden="true"] {
+  display: none;
+}
+
+/* Alert and status messaging */
+[role="alert"], [role="status"] {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+[role="alert"] {
+  background-color: hsla(var(--destructive), 0.1);
+  border: 1px solid hsl(var(--destructive));
+  color: hsl(var(--destructive));
+}
+
+[role="status"] {
+  background-color: hsla(var(--primary), 0.1);
+  border: 1px solid hsl(var(--primary));
+  color: hsl(var(--primary));
 }
 
 :root {

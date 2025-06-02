@@ -69,14 +69,14 @@ export default function Header() {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
             <Link href="/" className="flex items-center focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded" aria-label="Go to Mil-Legal homepage">
               <Logo width={140} height={50} />
             </Link>
-            <nav className="hidden md:ml-10 md:flex space-x-6">
+            <nav className="hidden md:ml-10 md:flex space-x-6" role="navigation" aria-label="Main navigation">
               {/* Home Button */}
               <Link
                 href="/"

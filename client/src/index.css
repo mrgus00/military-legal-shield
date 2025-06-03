@@ -37,6 +37,29 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Branch theming smooth transitions */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dynamic branch theme application */
+.branch-themed-bg {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, hsl(var(--background)) 100%);
+}
+
+.branch-themed-border {
+  border-color: hsl(var(--primary) / 0.2);
+}
+
+.branch-themed-text {
+  color: hsl(var(--primary));
+}
+
+.branch-themed-accent {
+  background-color: hsl(var(--accent) / 0.1);
+  color: hsl(var(--accent));
+}
+
 /* Improved text spacing and readability */
 p, li, div {
   line-height: 1.65;

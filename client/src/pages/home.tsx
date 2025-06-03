@@ -66,18 +66,21 @@ export default function Home() {
             
             <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight">
               Legal Support for
-              <span className="text-navy-600 block">Every Service Member</span>
+              <span className="text-navy-600 block">Every {getTerminology('personnel').slice(0, -1)}</span>
             </h1>
             
             <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Comprehensive legal assistance for military personnel, veterans, and their families. 
+              Comprehensive legal assistance for {getTerminology('personnel').toLowerCase()}, veterans, and their families. 
               From urgent defense to family matters, Mil-Legal has you covered 24/7.
+              <span className="block mt-3 text-lg font-semibold" style={{ color: `hsl(${branchTheme.colors.primary})` }}>
+                "{getMotto()}" - Defending those who defend our freedom.
+              </span>
             </p>
 
             {/* Lead Capture Form */}
             <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mb-12">
               <h3 id="signup-heading" className="text-2xl font-bold text-navy-900 mb-4">Get Instant Access</h3>
-              <p className="text-gray-600 mb-6">Join thousands of service members getting the legal help they need</p>
+              <p className="text-gray-600 mb-6">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
               
               <form onSubmit={handleLeadCapture} className="space-y-4" role="form" aria-labelledby="signup-heading">
                 <div className="form-field">

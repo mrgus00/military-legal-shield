@@ -269,12 +269,61 @@ export default function Header() {
           </div>
           <div className="flex items-center space-x-4">
             <GlobalSearch className="hidden md:block" />
-            <Button variant="ghost" className="text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth">
-              Sign In
-            </Button>
-            <Button className="bg-navy-800 hover:bg-navy-900 text-white click-ripple hover-glow transition-smooth">
-              Get Started
-            </Button>
+            {isLoading ? (
+              <div className="animate-pulse flex space-x-2">
+                <div className="h-8 w-16 bg-gray-200 rounded"></div>
+                <div className="h-8 w-20 bg-gray-200 rounded"></div>
+              </div>
+            ) : isAuthenticated && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2 text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth">
+                    {user.profileImageUrl ? (
+                      <img 
+                        src={user.profileImageUrl} 
+                        alt="Profile" 
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-4 h-4" />
+                    )}
+                    <span>{user.firstName || user.email}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center">
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <a href="/api/logout" className="flex items-center text-red-600">
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className="text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Sign In
+                </Button>
+                <Button 
+                  className="bg-navy-800 hover:bg-navy-900 text-white click-ripple hover-glow transition-smooth"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>

@@ -7,10 +7,11 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import GlobalSearch from "@/components/global-search";
+import { useAuth } from "@/hooks/useAuth";
 
 interface MenuItem {
   name: string;
@@ -20,6 +21,7 @@ interface MenuItem {
 
 export default function Header() {
   const [location] = useLocation();
+  const { isAuthenticated, user, isLoading } = useAuth();
 
   const menuGroups: Record<string, MenuItem[]> = {
     emergency: [

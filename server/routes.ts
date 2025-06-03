@@ -6,6 +6,7 @@ import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
 import Stripe from "stripe";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 
 // Initialize Stripe only if the secret key is available
 let stripe: Stripe | null = null;
@@ -14,6 +15,21 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Set up authentication
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   // Get all attorneys
   app.get("/api/attorneys", async (req, res) => {
     try {

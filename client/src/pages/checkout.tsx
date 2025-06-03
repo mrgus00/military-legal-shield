@@ -89,6 +89,30 @@ export default function Checkout() {
   const [selectedService, setSelectedService] = useState("Emergency Services");
   const { toast } = useToast();
 
+  // Get URL parameters for client secret and plan
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlClientSecret = urlParams.get('client_secret');
+    const plan = urlParams.get('plan');
+    
+    if (urlClientSecret) {
+      setClientSecret(urlClientSecret);
+    }
+    
+    if (plan) {
+      // Map plan IDs to display names and amounts
+      const planMapping: { [key: string]: { name: string; amount: number } } = {
+        'premium': { name: 'Premium Defense Plan', amount: 49.99 },
+        'professional': { name: 'Professional Defense Plan', amount: 99.99 }
+      };
+      
+      if (planMapping[plan]) {
+        setSelectedService(planMapping[plan].name);
+        setAmount(planMapping[plan].amount);
+      }
+    }
+  }, []);
+
   const services = [
     {
       id: "emergency",

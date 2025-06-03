@@ -73,7 +73,7 @@ export default function BranchTerminologyDisplay() {
                   color: `hsl(${branchTheme.colors.primary})`
                 }}
               >
-                {rank}
+                {rank.payGrade} - {rank.abbreviation}
               </span>
             ))}
           </div>

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useBranch } from "@/contexts/BranchContext";
+import { branchThemes } from "@/lib/branchThemes";
 
 const branches = [
   {
@@ -70,7 +72,7 @@ const branches = [
 ];
 
 export default function SimpleBranchSelector() {
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
+  const { selectedBranch, setBranch, branchTheme } = useBranch();
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
@@ -78,14 +80,28 @@ export default function SimpleBranchSelector() {
 
   const handleBranchSelect = (branchId: string) => {
     const branch = branches.find(b => b.id === branchId);
-    if (branch) {
-      setSelectedBranch(branchId);
+    const theme = branchThemes[branchId];
+    if (branch && theme) {
+      setBranch(branchId);
       setIsOpen(false);
       
       toast({
         title: `${branch.shortName} Selected`,
-        description: `Website personalized for ${branch.serviceMember}s. ${branch.greeting}`,
+        description: `Website personalized for ${theme.terminology.personnel}. ${branch.greeting}`,
       });
+
+      // Announce the change to screen readers
+      const announcement = `Branch changed to ${theme.name}. Website theme, colors, and terminology updated to match ${theme.terminology.personnel} experience.`;
+      const ariaLive = document.createElement('div');
+      ariaLive.setAttribute('aria-live', 'polite');
+      ariaLive.setAttribute('aria-atomic', 'true');
+      ariaLive.className = 'sr-only';
+      ariaLive.textContent = announcement;
+      document.body.appendChild(ariaLive);
+      
+      setTimeout(() => {
+        document.body.removeChild(ariaLive);
+      }, 1000);
     }
   };
 

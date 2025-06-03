@@ -7,11 +7,13 @@ import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/header";
 import { apiRequest } from "@/lib/queryClient";
+import { useBranch } from "@/contexts/BranchContext";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { getTerminology, branchTheme, getMotto } = useBranch();
 
   const handleLeadCapture = async (e: React.FormEvent) => {
     e.preventDefault();

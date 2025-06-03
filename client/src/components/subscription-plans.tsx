@@ -3,6 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Shield, AlertTriangle, Clock, FileText, Users, Phone } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Plan {
   id: string;
@@ -118,6 +122,49 @@ const emergencyServices = [
 
 export default function SubscriptionPlans() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const createPaymentMutation = useMutation({
+    mutationFn: async ({ planId, amount }: { planId: string; amount: number }) => {
+      const response = await apiRequest("POST", "/api/create-payment-intent", { 
+        planId, 
+        amount,
+        billingCycle 
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // Redirect to checkout page with client secret
+      window.location.href = `/checkout?client_secret=${data.clientSecret}&plan=${data.planId}`;
+    },
+    onError: () => {
+      toast({
+        title: "Payment Error",
+        description: "Unable to process payment. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleUpgrade = (plan: Plan) => {
+    if (!isAuthenticated) {
+      // Redirect to login if not authenticated
+      window.location.href = '/api/login';
+      return;
+    }
+
+    if (plan.tier === "free") {
+      toast({
+        title: "Already Free",
+        description: "You're already using the free plan.",
+      });
+      return;
+    }
+
+    const amount = getPrice(plan);
+    createPaymentMutation.mutate({ planId: plan.id, amount });
+  };
 
   const formatPrice = (priceInCents: number) => {
     return (priceInCents / 100).toFixed(2);
@@ -238,8 +285,10 @@ export default function SubscriptionPlans() {
                     ? "bg-red-600 hover:bg-red-700" 
                     : "bg-blue-600 hover:bg-blue-700"
                 }`}
+                onClick={() => handleUpgrade(plan)}
+                disabled={createPaymentMutation.isPending}
               >
-                {plan.cta}
+                {createPaymentMutation.isPending ? "Processing..." : plan.cta}
               </Button>
               
               <ul className="space-y-3">

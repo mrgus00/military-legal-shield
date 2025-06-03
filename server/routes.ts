@@ -51,6 +51,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stripe payment routes
+  app.post("/api/create-payment-intent", async (req, res) => {
+    if (!stripe) {
+      return res.status(500).json({ message: "Payment processing not configured" });
+    }
+
+    try {
+      const { planId, amount } = req.body;
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount), // Amount already in cents
+        currency: "usd",
+        metadata: {
+          planId: planId
+        }
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        planId: planId
+      });
+    } catch (error: any) {
+      console.error("Stripe payment intent error:", error);
+      res.status(500).json({ message: "Error creating payment intent: " + error.message });
+    }
+  });
+
   // Search attorneys with filters for urgent matching
   app.get("/api/attorneys/search", async (req, res) => {
     try {

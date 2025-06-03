@@ -331,6 +331,14 @@ function StoryCard({ story }: { story: Story }) {
   const { colors } = useMood();
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   const getMediaIcon = () => {
     switch (story.mediaType) {
       case "audio": return <Volume2 className="w-4 h-4" />;

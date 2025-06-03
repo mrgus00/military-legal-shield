@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/header";
+import MobileContainer from "@/components/mobile-container";
 import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
 
@@ -51,10 +52,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white">
-      <Header />
-      
-      <main id="main-content" role="main">
+    <MobileContainer>
+      <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white">
+        <Header />
+        
+        <main id="main-content" role="main">
         {/* Hero Section */}
         <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
           <div className="max-w-7xl mx-auto">
@@ -152,7 +154,7 @@ export default function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-navy-200 hover-lift transition-smooth">
+            <Card className="border-navy-200 hover-lift transition-smooth card-interactive touch-optimized">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Shield className="w-8 h-8 text-navy-600" />
@@ -167,7 +169,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-navy-200 hover-lift transition-smooth">
+            <Card className="border-navy-200 hover-lift transition-smooth card-interactive touch-optimized">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-8 h-8 text-blue-600" />
@@ -304,6 +306,7 @@ export default function Home() {
         </div>
       </section>
       </main>
-    </div>
+      </div>
+    </MobileContainer>
   );
 }

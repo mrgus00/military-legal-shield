@@ -10,6 +10,7 @@ import {
 import { Menu, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
+import GlobalSearch from "@/components/global-search";
 
 interface MenuItem {
   name: string;
@@ -265,6 +266,7 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center space-x-4">
+            <GlobalSearch className="hidden md:block" />
             <Button variant="ghost" className="text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth">
               Sign In
             </Button>

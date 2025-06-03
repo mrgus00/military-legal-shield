@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BranchProvider } from "@/contexts/BranchContext";
 import { MoodProvider } from "@/contexts/MoodContext";
+import BackToTop from "@/components/back-to-top";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Resources from "@/pages/resources";
@@ -89,6 +90,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <Router />
+            <BackToTop />
           </TooltipProvider>
         </BranchProvider>
       </MoodProvider>

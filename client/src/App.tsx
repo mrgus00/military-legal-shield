@@ -38,6 +38,7 @@ import LeaveReview from "@/pages/leave-review";
 import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
+import BenefitsCalculator from "@/pages/benefits-calculator";
 
 function Router() {
   return (
@@ -74,6 +75,7 @@ function Router() {
       <Route path="/leave-review" component={LeaveReview} />
       <Route path="/financial-wizard" component={FinancialWizard} />
       <Route path="/storytelling-corner" component={StorytellingCorner} />
+      <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route component={NotFound} />
     </Switch>
   );

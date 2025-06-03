@@ -17,8 +17,9 @@ export interface BranchTheme {
     mission: string;
   };
   ranks: {
-    enlisted: string[];
-    officers: string[];
+    enlisted: Array<{payGrade: string; rank: string; abbreviation: string}>;
+    officers: Array<{payGrade: string; rank: string; abbreviation: string}>;
+    warrantOfficers?: Array<{payGrade: string; rank: string; abbreviation: string}>;
   };
   motto: string;
   culture: {
@@ -47,8 +48,40 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Mission'
     },
     ranks: {
-      enlisted: ['PVT', 'PV2', 'PFC', 'SPC', 'CPL', 'SGT', 'SSG', 'SFC', 'MSG', 'SGM', 'CSM'],
-      officers: ['2LT', '1LT', 'CPT', 'MAJ', 'LTC', 'COL', 'BG', 'MG', 'LTG', 'GEN']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Private', abbreviation: 'PVT'},
+        {payGrade: 'E-2', rank: 'Private Second Class', abbreviation: 'PV2'},
+        {payGrade: 'E-3', rank: 'Private First Class', abbreviation: 'PFC'},
+        {payGrade: 'E-4', rank: 'Specialist', abbreviation: 'SPC'},
+        {payGrade: 'E-4', rank: 'Corporal', abbreviation: 'CPL'},
+        {payGrade: 'E-5', rank: 'Sergeant', abbreviation: 'SGT'},
+        {payGrade: 'E-6', rank: 'Staff Sergeant', abbreviation: 'SSG'},
+        {payGrade: 'E-7', rank: 'Sergeant First Class', abbreviation: 'SFC'},
+        {payGrade: 'E-8', rank: 'Master Sergeant', abbreviation: 'MSG'},
+        {payGrade: 'E-8', rank: 'First Sergeant', abbreviation: '1SG'},
+        {payGrade: 'E-9', rank: 'Sergeant Major', abbreviation: 'SGM'},
+        {payGrade: 'E-9', rank: 'Command Sergeant Major', abbreviation: 'CSM'},
+        {payGrade: 'E-9', rank: 'Sergeant Major of the Army', abbreviation: 'SMA'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Second Lieutenant', abbreviation: '2LT'},
+        {payGrade: 'O-2', rank: 'First Lieutenant', abbreviation: '1LT'},
+        {payGrade: 'O-3', rank: 'Captain', abbreviation: 'CPT'},
+        {payGrade: 'O-4', rank: 'Major', abbreviation: 'MAJ'},
+        {payGrade: 'O-5', rank: 'Lieutenant Colonel', abbreviation: 'LTC'},
+        {payGrade: 'O-6', rank: 'Colonel', abbreviation: 'COL'},
+        {payGrade: 'O-7', rank: 'Brigadier General', abbreviation: 'BG'},
+        {payGrade: 'O-8', rank: 'Major General', abbreviation: 'MG'},
+        {payGrade: 'O-9', rank: 'Lieutenant General', abbreviation: 'LTG'},
+        {payGrade: 'O-10', rank: 'General', abbreviation: 'GEN'}
+      ],
+      warrantOfficers: [
+        {payGrade: 'W-1', rank: 'Warrant Officer 1', abbreviation: 'WO1'},
+        {payGrade: 'W-2', rank: 'Chief Warrant Officer 2', abbreviation: 'CW2'},
+        {payGrade: 'W-3', rank: 'Chief Warrant Officer 3', abbreviation: 'CW3'},
+        {payGrade: 'W-4', rank: 'Chief Warrant Officer 4', abbreviation: 'CW4'},
+        {payGrade: 'W-5', rank: 'Chief Warrant Officer 5', abbreviation: 'CW5'}
+      ]
     },
     motto: 'This We\'ll Defend',
     culture: {
@@ -75,8 +108,30 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Operation'
     },
     ranks: {
-      enlisted: ['SR', 'SA', 'SN', 'PO3', 'PO2', 'PO1', 'CPO', 'SCPO', 'MCPO', 'MCPON'],
-      officers: ['ENS', 'LTJG', 'LT', 'LCDR', 'CDR', 'CAPT', 'RADM(LH)', 'RADM(UH)', 'VADM', 'ADM']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Seaman Recruit', abbreviation: 'SR'},
+        {payGrade: 'E-2', rank: 'Seaman Apprentice', abbreviation: 'SA'},
+        {payGrade: 'E-3', rank: 'Seaman', abbreviation: 'SN'},
+        {payGrade: 'E-4', rank: 'Petty Officer Third Class', abbreviation: 'PO3'},
+        {payGrade: 'E-5', rank: 'Petty Officer Second Class', abbreviation: 'PO2'},
+        {payGrade: 'E-6', rank: 'Petty Officer First Class', abbreviation: 'PO1'},
+        {payGrade: 'E-7', rank: 'Chief Petty Officer', abbreviation: 'CPO'},
+        {payGrade: 'E-8', rank: 'Senior Chief Petty Officer', abbreviation: 'SCPO'},
+        {payGrade: 'E-9', rank: 'Master Chief Petty Officer', abbreviation: 'MCPO'},
+        {payGrade: 'E-9', rank: 'Master Chief Petty Officer of the Navy', abbreviation: 'MCPON'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Ensign', abbreviation: 'ENS'},
+        {payGrade: 'O-2', rank: 'Lieutenant Junior Grade', abbreviation: 'LTJG'},
+        {payGrade: 'O-3', rank: 'Lieutenant', abbreviation: 'LT'},
+        {payGrade: 'O-4', rank: 'Lieutenant Commander', abbreviation: 'LCDR'},
+        {payGrade: 'O-5', rank: 'Commander', abbreviation: 'CDR'},
+        {payGrade: 'O-6', rank: 'Captain', abbreviation: 'CAPT'},
+        {payGrade: 'O-7', rank: 'Rear Admiral (Lower Half)', abbreviation: 'RADM(LH)'},
+        {payGrade: 'O-8', rank: 'Rear Admiral (Upper Half)', abbreviation: 'RADM(UH)'},
+        {payGrade: 'O-9', rank: 'Vice Admiral', abbreviation: 'VADM'},
+        {payGrade: 'O-10', rank: 'Admiral', abbreviation: 'ADM'}
+      ]
     },
     motto: 'Honor, Courage, Commitment',
     culture: {
@@ -103,8 +158,32 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Mission'
     },
     ranks: {
-      enlisted: ['Pvt', 'PFC', 'LCpl', 'Cpl', 'Sgt', 'SSgt', 'GySgt', 'MSgt', 'MGySgt', 'SgtMaj'],
-      officers: ['2ndLt', '1stLt', 'Capt', 'Maj', 'LtCol', 'Col', 'BGen', 'MajGen', 'LtGen', 'Gen']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Private', abbreviation: 'Pvt'},
+        {payGrade: 'E-2', rank: 'Private First Class', abbreviation: 'PFC'},
+        {payGrade: 'E-3', rank: 'Lance Corporal', abbreviation: 'LCpl'},
+        {payGrade: 'E-4', rank: 'Corporal', abbreviation: 'Cpl'},
+        {payGrade: 'E-5', rank: 'Sergeant', abbreviation: 'Sgt'},
+        {payGrade: 'E-6', rank: 'Staff Sergeant', abbreviation: 'SSgt'},
+        {payGrade: 'E-7', rank: 'Gunnery Sergeant', abbreviation: 'GySgt'},
+        {payGrade: 'E-8', rank: 'Master Sergeant', abbreviation: 'MSgt'},
+        {payGrade: 'E-8', rank: 'First Sergeant', abbreviation: '1stSgt'},
+        {payGrade: 'E-9', rank: 'Master Gunnery Sergeant', abbreviation: 'MGySgt'},
+        {payGrade: 'E-9', rank: 'Sergeant Major', abbreviation: 'SgtMaj'},
+        {payGrade: 'E-9', rank: 'Sergeant Major of the Marine Corps', abbreviation: 'SMMC'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Second Lieutenant', abbreviation: '2ndLt'},
+        {payGrade: 'O-2', rank: 'First Lieutenant', abbreviation: '1stLt'},
+        {payGrade: 'O-3', rank: 'Captain', abbreviation: 'Capt'},
+        {payGrade: 'O-4', rank: 'Major', abbreviation: 'Maj'},
+        {payGrade: 'O-5', rank: 'Lieutenant Colonel', abbreviation: 'LtCol'},
+        {payGrade: 'O-6', rank: 'Colonel', abbreviation: 'Col'},
+        {payGrade: 'O-7', rank: 'Brigadier General', abbreviation: 'BGen'},
+        {payGrade: 'O-8', rank: 'Major General', abbreviation: 'MajGen'},
+        {payGrade: 'O-9', rank: 'Lieutenant General', abbreviation: 'LtGen'},
+        {payGrade: 'O-10', rank: 'General', abbreviation: 'Gen'}
+      ]
     },
     motto: 'Semper Fidelis',
     culture: {
@@ -131,8 +210,30 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Mission'
     },
     ranks: {
-      enlisted: ['AB', 'Amn', 'A1C', 'SrA', 'SSgt', 'TSgt', 'MSgt', 'SMSgt', 'CMSgt', 'CMSAF'],
-      officers: ['2d Lt', '1st Lt', 'Capt', 'Maj', 'Lt Col', 'Col', 'Brig Gen', 'Maj Gen', 'Lt Gen', 'Gen']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Airman Basic', abbreviation: 'AB'},
+        {payGrade: 'E-2', rank: 'Airman', abbreviation: 'Amn'},
+        {payGrade: 'E-3', rank: 'Airman First Class', abbreviation: 'A1C'},
+        {payGrade: 'E-4', rank: 'Senior Airman', abbreviation: 'SrA'},
+        {payGrade: 'E-5', rank: 'Staff Sergeant', abbreviation: 'SSgt'},
+        {payGrade: 'E-6', rank: 'Technical Sergeant', abbreviation: 'TSgt'},
+        {payGrade: 'E-7', rank: 'Master Sergeant', abbreviation: 'MSgt'},
+        {payGrade: 'E-8', rank: 'Senior Master Sergeant', abbreviation: 'SMSgt'},
+        {payGrade: 'E-9', rank: 'Chief Master Sergeant', abbreviation: 'CMSgt'},
+        {payGrade: 'E-9', rank: 'Chief Master Sergeant of the Air Force', abbreviation: 'CMSAF'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Second Lieutenant', abbreviation: '2d Lt'},
+        {payGrade: 'O-2', rank: 'First Lieutenant', abbreviation: '1st Lt'},
+        {payGrade: 'O-3', rank: 'Captain', abbreviation: 'Capt'},
+        {payGrade: 'O-4', rank: 'Major', abbreviation: 'Maj'},
+        {payGrade: 'O-5', rank: 'Lieutenant Colonel', abbreviation: 'Lt Col'},
+        {payGrade: 'O-6', rank: 'Colonel', abbreviation: 'Col'},
+        {payGrade: 'O-7', rank: 'Brigadier General', abbreviation: 'Brig Gen'},
+        {payGrade: 'O-8', rank: 'Major General', abbreviation: 'Maj Gen'},
+        {payGrade: 'O-9', rank: 'Lieutenant General', abbreviation: 'Lt Gen'},
+        {payGrade: 'O-10', rank: 'General', abbreviation: 'Gen'}
+      ]
     },
     motto: 'Aim High... Fly-Fight-Win',
     culture: {
@@ -159,8 +260,29 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Operation'
     },
     ranks: {
-      enlisted: ['SR', 'SA', 'SN', 'PO3', 'PO2', 'PO1', 'CPO', 'SCPO', 'MCPO', 'MCPOCG'],
-      officers: ['ENS', 'LTJG', 'LT', 'LCDR', 'CDR', 'CAPT', 'RADM', 'VADM', 'ADM']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Seaman Recruit', abbreviation: 'SR'},
+        {payGrade: 'E-2', rank: 'Seaman Apprentice', abbreviation: 'SA'},
+        {payGrade: 'E-3', rank: 'Seaman', abbreviation: 'SN'},
+        {payGrade: 'E-4', rank: 'Petty Officer Third Class', abbreviation: 'PO3'},
+        {payGrade: 'E-5', rank: 'Petty Officer Second Class', abbreviation: 'PO2'},
+        {payGrade: 'E-6', rank: 'Petty Officer First Class', abbreviation: 'PO1'},
+        {payGrade: 'E-7', rank: 'Chief Petty Officer', abbreviation: 'CPO'},
+        {payGrade: 'E-8', rank: 'Senior Chief Petty Officer', abbreviation: 'SCPO'},
+        {payGrade: 'E-9', rank: 'Master Chief Petty Officer', abbreviation: 'MCPO'},
+        {payGrade: 'E-9', rank: 'Master Chief Petty Officer of the Coast Guard', abbreviation: 'MCPOCG'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Ensign', abbreviation: 'ENS'},
+        {payGrade: 'O-2', rank: 'Lieutenant Junior Grade', abbreviation: 'LTJG'},
+        {payGrade: 'O-3', rank: 'Lieutenant', abbreviation: 'LT'},
+        {payGrade: 'O-4', rank: 'Lieutenant Commander', abbreviation: 'LCDR'},
+        {payGrade: 'O-5', rank: 'Commander', abbreviation: 'CDR'},
+        {payGrade: 'O-6', rank: 'Captain', abbreviation: 'CAPT'},
+        {payGrade: 'O-7', rank: 'Rear Admiral', abbreviation: 'RADM'},
+        {payGrade: 'O-8', rank: 'Vice Admiral', abbreviation: 'VADM'},
+        {payGrade: 'O-9', rank: 'Admiral', abbreviation: 'ADM'}
+      ]
     },
     motto: 'Semper Paratus',
     culture: {
@@ -187,8 +309,30 @@ export const branchThemes: Record<string, BranchTheme> = {
       mission: 'Mission'
     },
     ranks: {
-      enlisted: ['Spc1', 'Spc2', 'Spc3', 'Spc4', 'Sgt', 'TSgt', 'MSgt', 'SMSgt', 'CMSgt', 'CMSSF'],
-      officers: ['2d Lt', '1st Lt', 'Capt', 'Maj', 'Lt Col', 'Col', 'Brig Gen', 'Maj Gen', 'Lt Gen', 'Gen']
+      enlisted: [
+        {payGrade: 'E-1', rank: 'Specialist 1', abbreviation: 'Spc1'},
+        {payGrade: 'E-2', rank: 'Specialist 2', abbreviation: 'Spc2'},
+        {payGrade: 'E-3', rank: 'Specialist 3', abbreviation: 'Spc3'},
+        {payGrade: 'E-4', rank: 'Specialist 4', abbreviation: 'Spc4'},
+        {payGrade: 'E-5', rank: 'Sergeant', abbreviation: 'Sgt'},
+        {payGrade: 'E-6', rank: 'Technical Sergeant', abbreviation: 'TSgt'},
+        {payGrade: 'E-7', rank: 'Master Sergeant', abbreviation: 'MSgt'},
+        {payGrade: 'E-8', rank: 'Senior Master Sergeant', abbreviation: 'SMSgt'},
+        {payGrade: 'E-9', rank: 'Chief Master Sergeant', abbreviation: 'CMSgt'},
+        {payGrade: 'E-9', rank: 'Chief Master Sergeant of the Space Force', abbreviation: 'CMSSF'}
+      ],
+      officers: [
+        {payGrade: 'O-1', rank: 'Second Lieutenant', abbreviation: '2d Lt'},
+        {payGrade: 'O-2', rank: 'First Lieutenant', abbreviation: '1st Lt'},
+        {payGrade: 'O-3', rank: 'Captain', abbreviation: 'Capt'},
+        {payGrade: 'O-4', rank: 'Major', abbreviation: 'Maj'},
+        {payGrade: 'O-5', rank: 'Lieutenant Colonel', abbreviation: 'Lt Col'},
+        {payGrade: 'O-6', rank: 'Colonel', abbreviation: 'Col'},
+        {payGrade: 'O-7', rank: 'Brigadier General', abbreviation: 'Brig Gen'},
+        {payGrade: 'O-8', rank: 'Major General', abbreviation: 'Maj Gen'},
+        {payGrade: 'O-9', rank: 'Lieutenant General', abbreviation: 'Lt Gen'},
+        {payGrade: 'O-10', rank: 'General', abbreviation: 'Gen'}
+      ]
     },
     motto: 'Semper Supra',
     culture: {

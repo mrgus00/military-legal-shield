@@ -6,7 +6,7 @@ interface BranchContextType {
   branchTheme: BranchTheme;
   setBranch: (branchId: string) => void;
   getTerminology: (key: keyof BranchTheme['terminology']) => string;
-  getRanks: (type: 'enlisted' | 'officers') => string[];
+  getRanks: (type: 'enlisted' | 'officers' | 'warrantOfficers') => Array<{payGrade: string; rank: string; abbreviation: string}>;
   getMotto: () => string;
   getValues: () => string[];
 }
@@ -28,8 +28,11 @@ export function BranchProvider({ children }: { children: ReactNode }) {
     return branchTheme.terminology[key];
   };
 
-  const getRanks = (type: 'enlisted' | 'officers'): string[] => {
-    return branchTheme.ranks[type];
+  const getRanks = (type: 'enlisted' | 'officers' | 'warrantOfficers'): Array<{payGrade: string; rank: string; abbreviation: string}> => {
+    if (type === 'warrantOfficers' && branchTheme.ranks.warrantOfficers) {
+      return branchTheme.ranks.warrantOfficers;
+    }
+    return branchTheme.ranks[type as 'enlisted' | 'officers'];
   };
 
   const getMotto = (): string => {

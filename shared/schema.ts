@@ -1,16 +1,27 @@
-import { pgTable, text, varchar, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, serial, integer, boolean, timestamp, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Session storage table for Replit Auth
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table for Replit Auth
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
-  branch: text("branch").notNull(),
+  id: varchar("id").primaryKey().notNull(),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  branch: text("branch"),
   rank: text("rank"),
-  email: text("email").notNull().unique(),
   subscriptionTier: text("subscription_tier").notNull().default("free"), // free, premium
   subscriptionStatus: text("subscription_status").default("active"), // active, cancelled, expired
   subscriptionStartDate: timestamp("subscription_start_date"),
@@ -18,6 +29,7 @@ export const users = pgTable("users", {
   emergencyCredits: integer("emergency_credits").default(0), // For emergency response usage
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const attorneys = pgTable("attorneys", {
@@ -643,7 +655,6 @@ export const insertChallengeStatsSchema = createInsertSchema(challengeStats).omi
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
 
 export type InsertAttorney = z.infer<typeof insertAttorneySchema>;
 export type Attorney = typeof attorneys.$inferSelect;
@@ -773,3 +784,7 @@ export const insertStorySchema = createInsertSchema(stories).omit({
 
 export type InsertStory = z.infer<typeof insertStorySchema>;
 export type Story = typeof stories.$inferSelect;
+
+// User types for Replit Auth
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;

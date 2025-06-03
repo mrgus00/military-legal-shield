@@ -27,10 +27,9 @@ import { Pool } from "pg";
 import { eq, ilike, and, or, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  // User methods for Replit Auth
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
 
   // Attorney methods
   getAttorneys(): Promise<Attorney[]>;

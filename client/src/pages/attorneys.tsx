@@ -24,8 +24,7 @@ export default function Attorneys() {
   }) || [];
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <PageLayout className="bg-white">
       
       {/* Simplified Hero */}
       <section className="bg-navy-900 text-white py-12">
@@ -96,7 +95,6 @@ export default function Attorneys() {
         </div>
       </section>
       
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

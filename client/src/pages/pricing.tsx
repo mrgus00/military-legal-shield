@@ -4,8 +4,7 @@ import { Shield, AlertTriangle } from "lucide-react";
 
 export default function Pricing() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <PageLayout className="bg-gray-50">
       
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-900 via-red-800 to-red-700 text-white py-16">
@@ -75,7 +74,6 @@ export default function Pricing() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

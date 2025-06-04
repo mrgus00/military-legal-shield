@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import GlobalSearch from "@/components/global-search";
@@ -17,50 +17,27 @@ interface MenuItem {
   name: string;
   href: string;
   badge?: string;
+  icon?: any;
 }
 
 export default function Header() {
   const [location] = useLocation();
   const { isAuthenticated, user, isLoading } = useAuth();
 
-  const menuGroups: Record<string, MenuItem[]> = {
-    emergency: [
-      { name: "Urgent Matching", href: "/urgent-match", badge: "24/7" },
-      { name: "Weekend Safety", href: "/weekend-safety", badge: "Free" },
-      { name: "Emotional Support", href: "/emotional-support", badge: "Wellness" }
-    ],
-    legal: [
-      { name: "Find Attorneys", href: "/attorneys" },
-      { name: "Book Consultation", href: "/consultation-booking", badge: "One-Click" },
-      { name: "Video Consultation", href: "/video-consultation", badge: "Live" },
-      { name: "Legal Resources", href: "/resources" },
-      { name: "Case Tracking", href: "/case-tracking" },
-      { name: "Secure Messages", href: "/messages" }
-    ],
-    education: [
-      { name: "Education Center", href: "/education" },
-      { name: "AI Scenarios", href: "/scenarios", badge: "Interactive" },
-      { name: "Learning Dashboard", href: "/learning-dashboard" },
-      { name: "Micro-Challenges", href: "/micro-challenges" }
-    ],
-    veteran: [
-      { name: "Veteran Services", href: "/veteran-services", badge: "Veterans" },
-      { name: "Financial Planning", href: "/financial-planning", badge: "Money" },
-      { name: "Career Assessment", href: "/career-assessment", badge: "AI" },
-      { name: "Skill Translation", href: "/skill-translation", badge: "Interactive" },
-      { name: "Resume Builder", href: "/resume-builder", badge: "AI" },
-      { name: "Networking Hub", href: "/networking-hub", badge: "Community" },
-      { name: "Storytelling Corner", href: "/storytelling-corner" }
-    ],
-    community: [
-      { name: "Forum", href: "/forum", badge: "Active" },
-      { name: "Help Center", href: "/help-center" },
-      { name: "Contact Support", href: "/contact-support" }
-    ]
-  };
+  const menuItems: MenuItem[] = [
+    { name: "Home", href: "/", icon: Home },
+    { name: "Urgent Matching", href: "/urgent-match", badge: "24/7", icon: Shield },
+    { name: "Find Attorneys", href: "/attorneys", icon: Scale },
+    { name: "Book Consultation", href: "/consultation-booking", icon: Phone },
+    { name: "Legal Resources", href: "/resources", icon: BookOpen },
+    { name: "Education Center", href: "/education", icon: BookOpen },
+    { name: "AI Scenarios", href: "/scenarios", badge: "Interactive", icon: BookOpen },
+    { name: "Career Assessment", href: "/career-assessment", badge: "AI", icon: Users },
+    { name: "Forum", href: "/forum", badge: "Active", icon: Users },
+    { name: "Pricing", href: "/pricing", icon: Scale },
+  ];
 
   const isActive = (href: string) => {
-    if (href.startsWith("#")) return false;
     if (href === "/" && location === "/") return true;
     if (href !== "/" && location.startsWith(href)) return true;
     return location === href;
@@ -69,401 +46,213 @@ export default function Header() {
   return (
     <>
       {/* Skip to main content link for screen readers */}
-      <a href="#main-content" className="skip-link">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-navy-800 text-white px-4 py-2 rounded">
         Skip to main content
       </a>
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 mobile-nav" role="banner">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 touch-optimized">
+      
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 w-full">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            
+            {/* Logo */}
             <div className="flex items-center">
-            <Link href="/" className="flex items-center focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded" aria-label="Go to Mil-Legal homepage">
-              <Logo width={140} height={50} />
-            </Link>
-            <nav className="hidden md:ml-10 md:flex space-x-6" role="navigation" aria-label="Main navigation">
-              {/* Home Button */}
+              <Link href="/" className="flex items-center">
+                <Logo width={140} height={50} />
+              </Link>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-6">
               <Link
                 href="/"
-                className={`px-4 py-2 text-sm font-medium transition-smooth hover-lift rounded-md border focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive("/")
-                    ? "bg-navy-800 text-white border-navy-800"
-                    : "text-navy-700 border-navy-200 hover:text-navy-800 hover:bg-navy-50 hover:border-navy-300"
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
                 }`}
-                aria-label="Navigate to homepage"
               >
-                🏠 Home
+                Home
               </Link>
-
-              {/* Emergency Services */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
-                      menuGroups.emergency.some(item => isActive(item.href))
-                        ? "text-red-700 bg-red-50"
-                        : "text-gray-700 hover:text-navy-800"
-                    }`}
-                    aria-label="Emergency services menu"
-                  >
-                    Emergency
-                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {menuGroups.emergency.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center justify-between w-full">
-                        {item.name}
-                        {item.badge && (
-                          <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Legal Services */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
-                      menuGroups.legal.some(item => isActive(item.href))
-                        ? "text-navy-700 bg-navy-50"
-                        : "text-gray-700 hover:text-navy-800"
-                    }`}
-                    aria-label="Legal services menu"
-                  >
-                    Legal Services
-                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {menuGroups.legal.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center justify-between w-full">
-                        {item.name}
-                        {item.badge && (
-                          <span className="bg-navy-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Education */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                      menuGroups.education.some(item => isActive(item.href))
-                        ? "text-blue-700 bg-blue-50"
-                        : "text-gray-700 hover:text-navy-800"
-                    }`}
-                    aria-label="Education and learning menu"
-                  >
-                    Education
-                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {menuGroups.education.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center justify-between w-full">
-                        {item.name}
-                        {item.badge && (
-                          <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Veteran Services */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
-                      menuGroups.veteran.some(item => isActive(item.href))
-                        ? "text-green-700 bg-green-50"
-                        : "text-gray-700 hover:text-navy-800"
-                    }`}
-                    aria-label="Veteran services and transition support menu"
-                  >
-                    Veteran Services
-                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {menuGroups.veteran.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center justify-between w-full">
-                        {item.name}
-                        {item.badge && (
-                          <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Community */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`px-3 py-2 text-sm font-medium hover-lift transition-smooth focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 ${
-                      menuGroups.community.some(item => isActive(item.href))
-                        ? "text-purple-700 bg-purple-50"
-                        : "text-gray-700 hover:text-navy-800"
-                    }`}
-                    aria-label="Community and support menu"
-                  >
-                    Community
-                    <ChevronDown className="ml-1 w-4 h-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {menuGroups.community.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center justify-between w-full">
-                        {item.name}
-                        {item.badge && (
-                          <span className="bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Pricing - Direct Link */}
+              
+              <Link
+                href="/urgent-match"
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive("/urgent-match")
+                    ? "bg-red-600 text-white"
+                    : "text-red-600 hover:text-red-700 hover:bg-red-50"
+                }`}
+              >
+                Emergency <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">24/7</span>
+              </Link>
+              
+              <Link
+                href="/attorneys"
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive("/attorneys")
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
+                }`}
+              >
+                Find Attorneys
+              </Link>
+              
+              <Link
+                href="/resources"
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive("/resources")
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
+                }`}
+              >
+                Resources
+              </Link>
+              
+              <Link
+                href="/education"
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive("/education")
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
+                }`}
+              >
+                Education
+              </Link>
+              
               <Link
                 href="/pricing"
-                className={`px-3 py-2 text-sm font-medium transition-smooth hover-lift focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 ${
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive("/pricing")
-                    ? "text-navy-800 border-b-2 border-navy-800"
-                    : "text-gray-700 hover:text-navy-800"
+                    ? "bg-navy-800 text-white"
+                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
                 }`}
-                aria-label="View pricing plans"
               >
                 Pricing
               </Link>
             </nav>
-          </div>
-          <div className="flex items-center space-x-4">
-            <GlobalSearch className="hidden md:block" />
-            {isLoading ? (
-              <div className="animate-pulse flex space-x-2">
-                <div className="h-8 w-16 bg-gray-200 rounded"></div>
-                <div className="h-8 w-20 bg-gray-200 rounded"></div>
+
+            {/* Right Side - Search, User Menu, Mobile Menu */}
+            <div className="flex items-center space-x-4">
+              
+              {/* Global Search - Hidden on mobile */}
+              <div className="hidden md:block">
+                <GlobalSearch />
               </div>
-            ) : isAuthenticated && user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2 text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth">
-                    {user.profileImageUrl ? (
-                      <img 
-                        src={user.profileImageUrl} 
-                        alt="Profile" 
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
-                    ) : (
+
+              {/* User Menu or Auth Buttons */}
+              {isLoading ? (
+                <div className="animate-pulse flex space-x-2">
+                  <div className="h-8 w-16 bg-gray-200 rounded"></div>
+                  <div className="h-8 w-20 bg-gray-200 rounded"></div>
+                </div>
+              ) : isAuthenticated && user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-2">
                       <User className="w-4 h-4" />
-                    )}
-                    <span>{user.firstName || user.email}</span>
-                    <ChevronDown className="w-3 h-3" />
+                      <span className="hidden sm:inline">{(user as any).firstName || (user as any).email || "User"}</span>
+                      <ChevronDown className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <a href="/api/logout" className="flex items-center w-full">
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </a>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Button variant="ghost" asChild>
+                    <a href="/api/login">Login</a>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="flex items-center">
-                      <User className="w-4 h-4 mr-2" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <a href="/api/logout" className="flex items-center text-red-600">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
-                    </a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
-                <Button 
-                  variant="ghost" 
-                  className="text-navy-800 hover:text-navy-900 font-medium text-sm hover-scale transition-smooth"
-                  onClick={() => window.location.href = '/api/login'}
-                >
-                  Sign In
-                </Button>
-                <Button 
-                  className="bg-navy-800 hover:bg-navy-900 text-white click-ripple hover-glow transition-smooth"
-                  onClick={() => window.location.href = '/api/login'}
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
-            <div className="md:hidden">
+                  <Button asChild>
+                    <a href="/api/login">Get Started</a>
+                  </Button>
+                </div>
+              )}
+
+              {/* Mobile Menu */}
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <Menu className="h-5 w-5" />
+                  <Button variant="ghost" size="sm" className="lg:hidden">
+                    <Menu className="w-5 h-5" />
+                    <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent>
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <div className="flex flex-col space-y-4 mt-6">
-                    {/* Home Button */}
-                    <Link
-                      href="/"
-                      className={`px-4 py-3 text-lg font-medium rounded-md transition-smooth ${
-                        isActive("/")
-                          ? "bg-navy-800 text-white"
-                          : "text-gray-700 hover:text-navy-800 hover:bg-navy-50"
-                      }`}
-                    >
-                      🏠 Home
-                    </Link>
-
-                    {/* Emergency Services */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-red-600 text-sm">Emergency</h4>
-                      {menuGroups.emergency.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center justify-between text-gray-700 hover:text-navy-800 font-medium pl-2"
-                        >
-                          {item.name}
-                          {item.badge && (
-                            <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
+                    
+                    {/* Mobile Search */}
+                    <div className="px-4">
+                      <GlobalSearch />
                     </div>
+                    
+                    {/* Mobile Navigation Links */}
+                    <nav className="flex flex-col space-y-2 px-4">
+                      {menuItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors ${
+                              isActive(item.href)
+                                ? "bg-navy-800 text-white"
+                                : "text-gray-700 hover:bg-gray-100"
+                            }`}
+                          >
+                            {IconComponent && <IconComponent className="w-5 h-5" />}
+                            <span className="font-medium">{item.name}</span>
+                            {item.badge && (
+                              <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                {item.badge}
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </nav>
 
-                    {/* Legal Services */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-navy-600 text-sm">Legal Services</h4>
-                      {menuGroups.legal.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center justify-between text-gray-700 hover:text-navy-800 font-medium pl-2"
-                        >
-                          {item.name}
-                          {item.badge && (
-                            <span className="bg-navy-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Education */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-blue-600 text-sm">Education</h4>
-                      {menuGroups.education.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center justify-between text-gray-700 hover:text-navy-800 font-medium pl-2"
-                        >
-                          {item.name}
-                          {item.badge && (
-                            <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Veteran Services */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-green-600 text-sm">Veteran Services</h4>
-                      {menuGroups.veteran.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center justify-between text-gray-700 hover:text-navy-800 font-medium pl-2"
-                        >
-                          {item.name}
-                          {item.badge && (
-                            <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Community */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-purple-600 text-sm">Community</h4>
-                      {menuGroups.community.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center justify-between text-gray-700 hover:text-navy-800 font-medium pl-2"
-                        >
-                          {item.name}
-                          {item.badge && (
-                            <span className="bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                              {item.badge}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Pricing */}
-                    <Link
-                      href="/pricing"
-                      className="text-gray-700 hover:text-navy-800 font-medium"
-                    >
-                      Pricing
-                    </Link>
-
-                    <div className="pt-4 border-t border-gray-200">
-                      <Button variant="ghost" className="w-full justify-start text-navy-800 mb-2">
-                        Sign In
-                      </Button>
-                      <Button className="w-full bg-navy-800 hover:bg-navy-900">
-                        Get Started
-                      </Button>
-                    </div>
+                    {/* Mobile User Section */}
+                    {isAuthenticated ? (
+                      <div className="border-t pt-4 px-4">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <User className="w-8 h-8 text-gray-400" />
+                          <div>
+                            <p className="font-medium">{(user as any)?.firstName || "User"}</p>
+                            <p className="text-sm text-gray-500">{(user as any)?.email}</p>
+                          </div>
+                        </div>
+                        <Button variant="outline" className="w-full" asChild>
+                          <a href="/api/logout">Logout</a>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="border-t pt-4 px-4 space-y-2">
+                        <Button className="w-full" asChild>
+                          <a href="/api/login">Get Started</a>
+                        </Button>
+                        <Button variant="outline" className="w-full" asChild>
+                          <a href="/api/login">Login</a>
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </SheetContent>
               </Sheet>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
     </>
   );
 }

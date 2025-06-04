@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import MobileContainer from "@/components/mobile-container";
 import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
@@ -307,6 +308,9 @@ export default function Home() {
         </div>
       </section>
       </main>
+
+      {/* Footer */}
+      <Footer />
       </div>
     </MobileContainer>
   );

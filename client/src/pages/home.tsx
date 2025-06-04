@@ -53,10 +53,10 @@ export default function Home() {
 
   return (
     <MobileContainer>
-      <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white">
+      <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white hw-accelerated safari-fix">
         <Header />
         
-        <main id="main-content" role="main">
+        <main id="main-content" role="main" className="hw-accelerated">
         {/* Hero Section */}
         <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
           <div className="max-w-7xl mx-auto">
@@ -80,11 +80,11 @@ export default function Home() {
             </p>
 
             {/* Lead Capture Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mb-12">
+            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mb-12 ios-form-fix">
               <h3 id="signup-heading" className="text-2xl font-bold text-navy-900 mb-4">Get Instant Access</h3>
               <p className="text-gray-600 mb-6">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
               
-              <form onSubmit={handleLeadCapture} className="space-y-4" role="form" aria-labelledby="signup-heading">
+              <form onSubmit={handleLeadCapture} className="space-y-4 ios-form-fix" role="form" aria-labelledby="signup-heading">
                 <div className="form-field">
                   <label htmlFor="email-input" className="form-label">
                     Email Address
@@ -95,7 +95,8 @@ export default function Home() {
                     placeholder="Enter your military email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="form-input"
+                    className="form-input w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                    style={{ fontSize: '16px', WebkitAppearance: 'none', borderRadius: '6px' }}
                     required
                     aria-describedby="email-description email-error"
                     aria-invalid={!email && isSubmitting ? "true" : "false"}

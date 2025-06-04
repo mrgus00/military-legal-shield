@@ -33,11 +33,20 @@ export default function MobileContainer({
 
     checkMobile();
     
-    // Handle orientation changes
+    // Handle orientation changes and iOS viewport fixes
     const handleOrientationChange = () => {
       // Force viewport height recalculation on mobile
       if (isMobile) {
         document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+        
+        // iOS Safari specific fixes
+        if (isIOS) {
+          // Force layout recalculation
+          document.body.style.height = `${window.innerHeight}px`;
+          setTimeout(() => {
+            document.body.style.height = '';
+          }, 100);
+        }
       }
     };
 
@@ -54,9 +63,9 @@ export default function MobileContainer({
   }, [isMobile]);
 
   const containerClasses = cn(
-    "min-h-screen",
+    "min-h-screen w-full overflow-x-hidden no-bounce",
     {
-      "ios-safe-area": enableSafeArea && isIOS,
+      "ios-safe-area ios-scroll-fix": enableSafeArea && isIOS,
       "android-viewport": isAndroid,
       "touch-optimized": enableTouch && isMobile,
     },

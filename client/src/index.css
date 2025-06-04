@@ -4,13 +4,36 @@
 
 /* Mobile Cross-Platform Optimizations */
 @layer base {
+  /* Critical iOS Safari fixes */
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Fix iOS viewport height issues */
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    position: relative;
+  }
+
   /* iOS Safari specific fixes */
   @supports (-webkit-touch-callout: none) {
     .ios-safe-area {
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
+      padding-top: max(env(safe-area-inset-top), 20px);
+      padding-bottom: max(env(safe-area-inset-bottom), 20px);
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
+    }
+
+    /* Fix iOS Safari scrolling */
+    .ios-scroll-fix {
+      -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
     }
   }
 
@@ -26,17 +49,31 @@
   .touch-optimized {
     touch-action: manipulation;
     -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-select: none;
+    user-select: none;
   }
 
-  /* Prevent zoom on input focus (iOS) */
+  /* Critical: Prevent zoom on input focus (iOS) */
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   input[type="password"],
+  input[type="search"],
   textarea,
   select {
-    font-size: 16px;
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    border-radius: 0;
+    transform: translateZ(0);
+  }
+
+  /* Fix iOS input styling */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    -webkit-appearance: none;
   }
 
   /* Smooth scrolling for mobile */
@@ -53,15 +90,20 @@
     touch-action: manipulation;
     -webkit-user-select: none;
     user-select: none;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    transform: translateZ(0);
   }
 
   /* Mobile card touch feedback */
   .card-interactive {
-    transition: transform 0.1s ease-in-out;
+    transition: transform 0.15s ease-out;
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .card-interactive:active {
-    transform: scale(0.98);
+    transform: scale(0.97) translateZ(0);
   }
 
   /* Mobile modal optimizations */
@@ -71,6 +113,7 @@
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 
   /* Mobile navigation optimizations */
@@ -80,6 +123,56 @@
     z-index: 40;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    transform: translateZ(0);
+  }
+
+  /* Fix iOS bounce scrolling */
+  .no-bounce {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix iOS form styling */
+  .ios-form-fix input,
+  .ios-form-fix textarea,
+  .ios-form-fix select {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    appearance: none;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Hardware acceleration for smooth animations */
+  .hw-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Fix iOS Safari rendering issues */
+  .safari-fix {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Prevent iOS Safari from adding gray overlay on tap */
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+
+  /* Fix button styling on iOS */
+  button {
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 }
 

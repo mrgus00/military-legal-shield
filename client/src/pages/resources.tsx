@@ -1,5 +1,4 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import PageLayout from "@/components/page-layout";
 import ResourceCard from "@/components/resource-card";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";

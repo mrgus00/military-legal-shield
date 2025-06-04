@@ -1,5 +1,4 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import PageLayout from "@/components/page-layout";
 import SubscriptionPlans from "@/components/subscription-plans";
 import { Shield, AlertTriangle } from "lucide-react";
 

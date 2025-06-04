@@ -174,6 +174,69 @@
     border: none;
     cursor: pointer;
   }
+
+  /* Mobile layout stability fixes */
+  @media screen and (max-width: 768px) {
+    body {
+      overflow-x: hidden;
+      width: 100vw;
+      max-width: 100vw;
+    }
+    
+    * {
+      max-width: 100vw;
+      box-sizing: border-box;
+    }
+
+    /* Prevent horizontal scrolling */
+    .container, .max-w-7xl, .max-w-6xl, .max-w-5xl {
+      max-width: 100vw !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    /* Fix grid layouts on mobile */
+    .grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+
+    /* Consistent mobile spacing */
+    .space-y-4 > * + * {
+      margin-top: 1rem !important;
+    }
+    
+    .space-y-6 > * + * {
+      margin-top: 1.5rem !important;
+    }
+    
+    .space-y-8 > * + * {
+      margin-top: 2rem !important;
+    }
+
+    /* Mobile padding consistency */
+    .px-4 {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    .py-8 {
+      padding-top: 2rem !important;
+      padding-bottom: 2rem !important;
+    }
+
+    .py-12 {
+      padding-top: 3rem !important;
+      padding-bottom: 3rem !important;
+    }
+
+    .py-16 {
+      padding-top: 4rem !important;
+      padding-bottom: 4rem !important;
+    }
+  }
 }
 
 /* Enhanced Typography for Accessibility and Clean Layout */

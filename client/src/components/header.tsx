@@ -56,7 +56,7 @@ export default function Header() {
             
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center">
+              <Link href="/" className="flex items-center" aria-label="Go to MilitaryLegalShield homepage">
                 <Logo width={140} height={50} />
               </Link>
             </div>

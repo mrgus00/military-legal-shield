@@ -68,7 +68,7 @@ export default function Home() {
             
             <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
               Comprehensive legal assistance for {getTerminology('personnel').toLowerCase()}, veterans, and their families. 
-              From urgent defense to family matters, Mil-Legal has you covered 24/7.
+              From urgent defense to family matters, MilitaryLegalShield has you covered 24/7.
               <span className="block mt-3 text-lg font-semibold" style={{ color: `hsl(${branchTheme.colors.primary})` }}>
                 "{getMotto()}" - Defending those who defend our freedom.
               </span>

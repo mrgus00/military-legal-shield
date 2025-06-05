@@ -118,7 +118,7 @@ export default function Footer() {
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <div>
                   <p className="font-medium text-white">Support Email</p>
-                  <p>support@mil-legal.com</p>
+                  <p>support@militarylegalshield.com</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 text-sm text-gray-300">
@@ -151,7 +151,7 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="text-sm text-gray-400 text-center lg:text-right">
-              <p>&copy; 2024 Mil-Legal. All rights reserved.</p>
+              <p>&copy; 2024 MilitaryLegalShield. All rights reserved.</p>
               <p className="mt-1">Supporting our nation's heroes with comprehensive legal assistance.</p>
             </div>
           </div>

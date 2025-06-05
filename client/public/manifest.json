@@ -1,7 +1,7 @@
 {
-  "name": "Soldier on Fire - Military Legal Defense",
-  "short_name": "SoldierOnFire",
-  "description": "Professional legal defense platform for military personnel and veterans",
+  "name": "MilitaryLegalShield - Military Legal Defense Platform",
+  "short_name": "MilitaryLegalShield",
+  "description": "Professional legal defense platform for military personnel and veterans. Connect with expert attorneys and access comprehensive military legal resources.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

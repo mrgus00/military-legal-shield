@@ -6,7 +6,7 @@ import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
 import Stripe from "stripe";
-import { setupPublicAuth, isAuthenticated } from "./publicAuth";
+// No authentication imports - completely public deployment
 
 // Initialize Stripe only if the secret key is available
 let stripe: Stripe | null = null;
@@ -15,26 +15,18 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up public authentication system (no login required)
-  await setupPublicAuth(app);
-  console.log("Running in public access mode - authentication disabled");
+  // Complete authentication bypass - no middleware setup at all
+  console.log("MilitaryLegalShield running in public access mode - all authentication disabled");
+  
+  // Override any potential authentication redirects
+  app.get('/api/login', (req, res) => res.redirect('/'));
+  app.get('/api/logout', (req, res) => res.redirect('/'));
+  app.get('/api/callback', (req, res) => res.redirect('/'));
+  app.get('/api/auth', (req, res) => res.redirect('/'));
 
-  // Public auth route that doesn't require authentication
-  app.get('/api/auth/user', async (req: any, res) => {
-    try {
-      // Check if user is authenticated
-      if (req.isAuthenticated && req.isAuthenticated() && req.user?.claims?.sub) {
-        const userId = req.user.claims.sub;
-        const user = await storage.getUser(userId);
-        res.json(user);
-      } else {
-        // Return null for unauthenticated users instead of 401
-        res.json(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.json(null);
-    }
+  // Public API - always returns null (no authentication)
+  app.get('/api/auth/user', (req, res) => {
+    res.json(null);
   });
 
   // Get all attorneys

@@ -6,7 +6,7 @@ import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
 import Stripe from "stripe";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupPublicAuth, isAuthenticated } from "./publicAuth";
 
 // Initialize Stripe only if the secret key is available
 let stripe: Stripe | null = null;
@@ -15,8 +15,9 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up authentication
-  await setupAuth(app);
+  // Set up public authentication system (no login required)
+  await setupPublicAuth(app);
+  console.log("Running in public access mode - authentication disabled");
 
   // Public auth route that doesn't require authentication
   app.get('/api/auth/user', async (req: any, res) => {

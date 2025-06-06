@@ -1,15 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { FileText, Download, Eye, Clock, CheckCircle } from "lucide-react";
@@ -53,28 +49,59 @@ export default function DocumentWizard() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [generatedDocument, setGeneratedDocument] = useState<GeneratedDocument | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [formSchema, setFormSchema] = useState<z.ZodSchema<any> | null>(null);
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Fetch document templates
   const { data: templates = [], isLoading: templatesLoading } = useQuery({
     queryKey: ["/api/document-templates", selectedCategory],
-    queryFn: () => apiRequest("GET", `/api/document-templates?category=${selectedCategory}`),
+    queryFn: async () => {
+      try {
+        const response = await fetch(`/api/document-templates?category=${selectedCategory}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json() as DocumentTemplate[];
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+        return [] as DocumentTemplate[];
+      }
+    },
   });
 
-  // Fetch user documents (mock user ID for demo)
+  // Fetch user documents
   const { data: userDocuments = [], isLoading: documentsLoading } = useQuery({
     queryKey: ["/api/documents/user", "demo-user"],
-    queryFn: () => apiRequest("GET", "/api/documents/user/demo-user"),
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/documents/user/demo-user");
+        if (!response.ok) {
+          if (response.status === 404) return [] as GeneratedDocument[];
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json() as GeneratedDocument[];
+      } catch (error) {
+        console.error("Error fetching user documents:", error);
+        return [] as GeneratedDocument[];
+      }
+    },
   });
 
   // Generate document mutation
   const generateDocumentMutation = useMutation({
-    mutationFn: async (data: { templateId: number; formData: any; userId?: string }) => {
-      return apiRequest("POST", "/api/documents/generate", data);
+    mutationFn: async (data: { templateId: number; formData: Record<string, string>; userId?: string }) => {
+      const response = await fetch("/api/documents/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json() as GeneratedDocument;
     },
-    onSuccess: (document) => {
+    onSuccess: (document: GeneratedDocument) => {
       setGeneratedDocument(document);
       setShowPreview(true);
       queryClient.invalidateQueries({ queryKey: ["/api/documents/user"] });
@@ -84,6 +111,7 @@ export default function DocumentWizard() {
       });
     },
     onError: (error) => {
+      console.error("Generation error:", error);
       toast({
         title: "Generation Failed",
         description: "Failed to generate document. Please try again.",
@@ -92,58 +120,37 @@ export default function DocumentWizard() {
     },
   });
 
-  // Create dynamic form schema based on selected template
-  useEffect(() => {
-    if (selectedTemplate) {
-      const schemaFields: Record<string, z.ZodSchema<any>> = {};
-      
-      selectedTemplate.requiredFields.forEach(field => {
-        schemaFields[field] = z.string().min(1, `${field} is required`);
-      });
-      
-      selectedTemplate.optionalFields.forEach(field => {
-        schemaFields[field] = z.string().optional();
-      });
+  const handleTemplateSelect = (template: DocumentTemplate) => {
+    setSelectedTemplate(template);
+    setGeneratedDocument(null);
+    setShowPreview(false);
+    setFormData({});
+  };
 
-      const schema = z.object(schemaFields);
-      setFormSchema(schema);
-    }
-  }, [selectedTemplate]);
+  const handleFormDataChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
-  const form = useForm({
-    resolver: formSchema ? zodResolver(formSchema) : undefined,
-    defaultValues: {},
-  });
-
-  const onSubmit = (data: any) => {
+  const handleGenerateDocument = () => {
     if (selectedTemplate) {
       generateDocumentMutation.mutate({
         templateId: selectedTemplate.id,
-        formData: data,
+        formData,
         userId: "demo-user"
       });
     }
   };
 
-  const handleTemplateSelect = (template: DocumentTemplate) => {
-    setSelectedTemplate(template);
-    setGeneratedDocument(null);
-    setShowPreview(false);
-    form.reset();
-  };
-
-  const downloadDocument = () => {
-    if (generatedDocument) {
-      const blob = new Blob([generatedDocument.documentContent], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${generatedDocument.documentName}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
+  const downloadDocument = (doc: GeneratedDocument) => {
+    const blob = new Blob([doc.documentContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = window.document.createElement('a');
+    link.href = url;
+    link.download = `${doc.documentName}.txt`;
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const formatFieldLabel = (field: string) => {
@@ -210,7 +217,7 @@ export default function DocumentWizard() {
                     templates.map((template: DocumentTemplate) => (
                       <Card
                         key={template.id}
-                        className={`cursor-pointer transition-colors hover:bg-accent ${
+                        className={`cursor-pointer transition-colors hover:bg-accent mb-2 ${
                           selectedTemplate?.id === template.id ? 'ring-2 ring-primary' : ''
                         }`}
                         onClick={() => handleTemplateSelect(template)}
@@ -244,105 +251,93 @@ export default function DocumentWizard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {selectedTemplate && formSchema ? (
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedTemplate.requiredFields.map((field) => (
-                          <FormField
-                            key={field}
-                            control={form.control}
-                            name={field}
-                            render={({ field: formField }) => (
-                              <FormItem>
-                                <FormLabel>{formatFieldLabel(field)} *</FormLabel>
-                                <FormControl>
-                                  {field.toLowerCase().includes('address') || field.toLowerCase().includes('description') || field.toLowerCase().includes('statement') ? (
-                                    <Textarea
-                                      placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
-                                      {...formField}
-                                    />
-                                  ) : (
-                                    <Input
-                                      placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
-                                      {...formField}
-                                    />
-                                  )}
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        ))}
-
-                        {selectedTemplate.optionalFields.map((field) => (
-                          <FormField
-                            key={field}
-                            control={form.control}
-                            name={field}
-                            render={({ field: formField }) => (
-                              <FormItem>
-                                <FormLabel>{formatFieldLabel(field)} (Optional)</FormLabel>
-                                <FormControl>
-                                  {field.toLowerCase().includes('address') || field.toLowerCase().includes('description') || field.toLowerCase().includes('statement') ? (
-                                    <Textarea
-                                      placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
-                                      {...formField}
-                                    />
-                                  ) : (
-                                    <Input
-                                      placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
-                                      {...formField}
-                                    />
-                                  )}
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="flex gap-4 pt-4">
-                        <Button 
-                          type="submit" 
-                          disabled={generateDocumentMutation.isPending}
-                          className="flex items-center gap-2"
-                        >
-                          {generateDocumentMutation.isPending ? (
-                            <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                {selectedTemplate ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {selectedTemplate.requiredFields.map((field) => (
+                        <div key={field}>
+                          <Label htmlFor={field}>{formatFieldLabel(field)} *</Label>
+                          {field.toLowerCase().includes('address') || field.toLowerCase().includes('description') || field.toLowerCase().includes('statement') ? (
+                            <Textarea
+                              id={field}
+                              placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
+                              value={formData[field] || ''}
+                              onChange={(e) => handleFormDataChange(field, e.target.value)}
+                              className="mt-1"
+                            />
                           ) : (
-                            <FileText className="h-4 w-4" />
+                            <Input
+                              id={field}
+                              placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
+                              value={formData[field] || ''}
+                              onChange={(e) => handleFormDataChange(field, e.target.value)}
+                              className="mt-1"
+                            />
                           )}
-                          Generate Document
-                        </Button>
-                        
-                        {generatedDocument && (
-                          <>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => setShowPreview(!showPreview)}
-                              className="flex items-center gap-2"
-                            >
-                              <Eye className="h-4 w-4" />
-                              {showPreview ? 'Hide Preview' : 'Show Preview'}
-                            </Button>
-                            
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              onClick={downloadDocument}
-                              className="flex items-center gap-2"
-                            >
-                              <Download className="h-4 w-4" />
-                              Download
-                            </Button>
-                          </>
+                        </div>
+                      ))}
+
+                      {selectedTemplate.optionalFields.map((field) => (
+                        <div key={field}>
+                          <Label htmlFor={field}>{formatFieldLabel(field)} (Optional)</Label>
+                          {field.toLowerCase().includes('address') || field.toLowerCase().includes('description') || field.toLowerCase().includes('statement') ? (
+                            <Textarea
+                              id={field}
+                              placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
+                              value={formData[field] || ''}
+                              onChange={(e) => handleFormDataChange(field, e.target.value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <Input
+                              id={field}
+                              placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
+                              value={formData[field] || ''}
+                              onChange={(e) => handleFormDataChange(field, e.target.value)}
+                              className="mt-1"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                      <Button 
+                        onClick={handleGenerateDocument}
+                        disabled={generateDocumentMutation.isPending}
+                        className="flex items-center gap-2"
+                      >
+                        {generateDocumentMutation.isPending ? (
+                          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                        ) : (
+                          <FileText className="h-4 w-4" />
                         )}
-                      </div>
-                    </form>
-                  </Form>
+                        Generate Document
+                      </Button>
+                      
+                      {generatedDocument && (
+                        <>
+                          <Button
+                            variant="outline"
+                            onClick={() => setShowPreview(!showPreview)}
+                            className="flex items-center gap-2"
+                          >
+                            <Eye className="h-4 w-4" />
+                            {showPreview ? 'Hide Preview' : 'Show Preview'}
+                          </Button>
+                          
+                          <Button
+                            variant="secondary"
+                            onClick={() => downloadDocument(generatedDocument)}
+                            className="flex items-center gap-2"
+                          >
+                            <Download className="h-4 w-4" />
+                            Download
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                     <FileText className="h-16 w-16 mx-auto mb-4 opacity-50" />
@@ -419,17 +414,7 @@ export default function DocumentWizard() {
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={() => {
-                              const blob = new Blob([document.documentContent], { type: 'text/plain' });
-                              const url = URL.createObjectURL(blob);
-                              const a = document.createElement('a');
-                              a.href = url;
-                              a.download = `${document.documentName}.txt`;
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
-                              URL.revokeObjectURL(url);
-                            }}
+                            onClick={() => downloadDocument(document)}
                           >
                             <Download className="h-4 w-4 mr-1" />
                             Download

@@ -223,13 +223,15 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="text-center hover-lift transition-smooth">
-              <CardContent className="p-6">
-                <FileText className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                <h3 className="font-semibold text-navy-900 mb-2">Family Legal</h3>
-                <p className="text-gray-600 text-sm">Wills, powers of attorney, and family matters</p>
-              </CardContent>
-            </Card>
+            <Link href="/document-wizard">
+              <Card className="text-center hover-lift transition-smooth cursor-pointer">
+                <CardContent className="p-6">
+                  <FileText className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                  <h3 className="font-semibold text-navy-900 mb-2">Document Wizard</h3>
+                  <p className="text-gray-600 text-sm">One-click legal document preparation</p>
+                </CardContent>
+              </Card>
+            </Link>
 
             <Card className="text-center hover-lift transition-smooth">
               <CardContent className="p-6">

@@ -585,7 +585,7 @@ button[aria-expanded="true"] {
   --secondary: 210 40% 94%; /* Light secondary with proper contrast */
   --secondary-foreground: 0 0% 9%;
   --accent: 38 92% 50%; /* Vibrant gold meeting contrast standards */
-  --accent-foreground: 0 0% 9%;
+  --accent-foreground: 0 0% 9%; /* Dark text on yellow/gold backgrounds */
   --destructive: 0 84% 48%; /* Strong red for error states */
   --destructive-foreground: 0 0% 98%;
   --ring: 210 79% 46%;
@@ -609,9 +609,10 @@ button[aria-expanded="true"] {
   --military-gold-200: 45 70% 85%;
   --military-gold-300: 45 80% 75%;
   --military-gold-400: 45 90% 65%;
-  --military-gold-500: 38 92% 50%; /* Strong gold meeting contrast requirements */
-  --military-gold-600: 35 100% 45%; /* Dark gold for emphasis */
-  --military-gold-700: 30 100% 35%; /* Very dark gold */
+  --military-gold-500: 38 92% 50%; /* Strong gold background */
+  --military-gold-600: 35 100% 25%; /* Dark gold text for contrast on yellow */
+  --military-gold-700: 30 100% 15%; /* Very dark gold text for high contrast */
+  --military-gold-800: 25 100% 10%; /* Near-black gold for maximum contrast */
   
   /* Calming accent colors */
   --sage-50: 120 20% 95%;

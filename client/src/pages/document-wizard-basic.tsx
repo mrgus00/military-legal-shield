@@ -6,7 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FileText, Download } from "lucide-react";
 
-const templates = [
+interface DocumentTemplate {
+  id: number;
+  name: string;
+  category: string;
+  template: string;
+  fields: string[];
+}
+
+const templates: DocumentTemplate[] = [
   {
     id: 1,
     name: "Power of Attorney",
@@ -95,12 +103,12 @@ Commanding Officer`,
 ];
 
 export default function DocumentWizardBasic() {
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [generatedDocument, setGeneratedDocument] = useState("");
   const [showPreview, setShowPreview] = useState(false);
 
-  const handleFormChange = (field, value) => {
+  const handleFormChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -123,6 +131,7 @@ export default function DocumentWizardBasic() {
   };
 
   const downloadDocument = () => {
+    if (!selectedTemplate) return;
     const blob = new Blob([generatedDocument], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -134,8 +143,8 @@ export default function DocumentWizardBasic() {
     URL.revokeObjectURL(url);
   };
 
-  const formatFieldName = (field) => {
-    return field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+  const formatFieldName = (field: string) => {
+    return field.replace(/([A-Z])/g, ' $1').replace(/^./, (str: string) => str.toUpperCase());
   };
 
   return (

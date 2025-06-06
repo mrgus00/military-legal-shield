@@ -78,11 +78,123 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add North Carolina Military Defense Attorneys
+  app.post("/api/attorneys/seed-nc", async (req, res) => {
+    try {
+      const ncAttorneys = [
+        {
+          firstName: "R. Davis",
+          lastName: "Younts",
+          title: "R. Davis Younts",
+          specialties: ["Court-martial defense", "Military criminal law"],
+          location: "Fayetteville, NC",
+          state: "NC",
+          city: "Fayetteville",
+          experience: "15+ years",
+          rating: 4.8,
+          reviewCount: 0,
+          email: "contact@yountslaw.com",
+          phone: "Contact via website",
+          bio: "Experienced military defense attorney specializing in court-martial defense and military criminal law.",
+          pricingTier: "standard",
+          hourlyRate: "Contact for rates",
+          availableForEmergency: true,
+          responseTime: "< 24 hours"
+        },
+        {
+          firstName: "Philip D.",
+          lastName: "Cave",
+          title: "Philip D. Cave",
+          specialties: ["Global military law", "Courts-martial", "Administrative actions"],
+          location: "Serves NC statewide",
+          state: "NC",
+          city: "Statewide",
+          experience: "25+ years",
+          rating: 4.9,
+          reviewCount: 0,
+          email: "contact@cavelawoffice.com",
+          phone: "(800) 401-1583",
+          bio: "Nationally recognized military law expert serving clients worldwide in courts-martial and administrative actions.",
+          pricingTier: "premium",
+          hourlyRate: "Contact for rates",
+          availableForEmergency: true,
+          responseTime: "< 4 hours"
+        },
+        {
+          firstName: "Matthew James",
+          lastName: "Thomas",
+          title: "Matthew James Thomas",
+          specialties: ["Court-martial defense", "Military investigations"],
+          location: "Jacksonville, NC",
+          state: "NC",
+          city: "Jacksonville",
+          experience: "12+ years",
+          rating: 4.8,
+          reviewCount: 0,
+          email: "contact@thomasmilitarylaw.com",
+          phone: "(910) 939-0263",
+          bio: "Military defense attorney specializing in court-martial defense and military investigations.",
+          pricingTier: "standard",
+          hourlyRate: "Contact for rates",
+          availableForEmergency: true,
+          responseTime: "< 8 hours"
+        },
+        {
+          firstName: "Joseph Aaron",
+          lastName: "Morman",
+          title: "Joseph Aaron Morman",
+          specialties: ["Military law", "Criminal defense"],
+          location: "Fort Bragg, NC",
+          state: "NC",
+          city: "Fort Bragg",
+          experience: "16+ years",
+          rating: 4.7,
+          reviewCount: 0,
+          email: "contact@mormanlaw.com",
+          phone: "(910) 432-1706",
+          bio: "Military law and criminal defense attorney serving Fort Bragg and surrounding areas.",
+          pricingTier: "standard",
+          hourlyRate: "Contact for rates",
+          availableForEmergency: true,
+          responseTime: "< 4 hours"
+        },
+        {
+          firstName: "Elizabeth Fowler",
+          lastName: "Lunn",
+          title: "Elizabeth Fowler Lunn",
+          specialties: ["Veterans benefits", "Social Security Disability"],
+          location: "Raleigh, NC",
+          state: "NC",
+          city: "Raleigh",
+          experience: "12+ years",
+          rating: 4.7,
+          reviewCount: 0,
+          email: "contact@lunnlaw.com",
+          phone: "(866) 257-2106",
+          bio: "Dedicated to helping veterans secure the benefits they have earned through military service.",
+          pricingTier: "standard",
+          hourlyRate: "Contact for rates",
+          availableForEmergency: false,
+          responseTime: "< 48 hours"
+        }
+      ];
+
+      for (const attorney of ncAttorneys) {
+        await storage.createAttorney(attorney);
+      }
+
+      res.json({ message: "North Carolina attorneys successfully added", count: ncAttorneys.length });
+    } catch (error) {
+      console.error("Error adding NC attorneys:", error);
+      res.status(500).json({ message: "Failed to add North Carolina attorneys" });
+    }
+  });
+
   // Search attorneys with filters for urgent matching
   app.get("/api/attorneys/search", async (req, res) => {
     try {
       const { location, pricingTier, specialty, emergencyOnly } = req.query;
-      const attorneys = await storage.getAttorneys(); // Simplified for now
+      const attorneys = await storage.getAttorneys();
       
       // Apply client-side filtering until storage method is fixed
       let filteredAttorneys = attorneys.filter(attorney => {

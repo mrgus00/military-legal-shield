@@ -2,7 +2,7 @@ import {
   users, attorneys, legalResources, educationModules, consultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
-  legalScenarios, scenarioSessions, scenarioAnalytics, stories,
+  legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -21,7 +21,9 @@ import {
   type LegalScenario, type InsertLegalScenario,
   type ScenarioSession, type InsertScenarioSession,
   type ScenarioAnalytics, type InsertScenarioAnalytics,
-  type Story, type InsertStory
+  type Story, type InsertStory,
+  type DocumentTemplate, type InsertDocumentTemplate,
+  type GeneratedDocument, type InsertGeneratedDocument
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -137,6 +139,15 @@ export interface IStorage {
   getStory(id: number): Promise<Story | undefined>;
   createStory(story: InsertStory): Promise<Story>;
   updateStoryEngagement(id: number, type: 'like' | 'comment' | 'view'): Promise<void>;
+
+  // Document wizard operations
+  getDocumentTemplates(category?: string): Promise<DocumentTemplate[]>;
+  getDocumentTemplate(id: number): Promise<DocumentTemplate | undefined>;
+  createDocumentTemplate(template: InsertDocumentTemplate): Promise<DocumentTemplate>;
+  generateDocument(templateId: number, formData: any, userId?: string): Promise<GeneratedDocument>;
+  getUserDocuments(userId: string): Promise<GeneratedDocument[]>;
+  getGeneratedDocument(id: number): Promise<GeneratedDocument | undefined>;
+  updateDocumentStatus(id: number, status: string): Promise<GeneratedDocument | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1341,6 +1352,109 @@ export class DatabaseStorage implements IStorage {
 
   async updateChallengeStats(userId: number, updates: any): Promise<any> {
     return {};
+  }
+
+  // Document wizard operations
+  async getDocumentTemplates(category?: string): Promise<DocumentTemplate[]> {
+    try {
+      let queryBuilder = this.db.select().from(documentTemplates);
+      
+      if (category && category !== "all") {
+        queryBuilder = queryBuilder.where(and(eq(documentTemplates.isActive, true), eq(documentTemplates.category, category)));
+      } else {
+        queryBuilder = queryBuilder.where(eq(documentTemplates.isActive, true));
+      }
+      
+      return await queryBuilder.orderBy(documentTemplates.name);
+    } catch (error) {
+      console.error("Error fetching document templates:", error);
+      return [];
+    }
+  }
+
+  async getDocumentTemplate(id: number): Promise<DocumentTemplate | undefined> {
+    try {
+      const [template] = await this.db.select().from(documentTemplates).where(eq(documentTemplates.id, id));
+      return template;
+    } catch (error) {
+      console.error("Error fetching document template:", error);
+      return undefined;
+    }
+  }
+
+  async createDocumentTemplate(insertTemplate: InsertDocumentTemplate): Promise<DocumentTemplate> {
+    try {
+      const [template] = await this.db.insert(documentTemplates).values(insertTemplate).returning();
+      return template;
+    } catch (error) {
+      console.error("Error creating document template:", error);
+      throw new Error("Failed to create document template");
+    }
+  }
+
+  async generateDocument(templateId: number, formData: any, userId?: string): Promise<GeneratedDocument> {
+    try {
+      const template = await this.getDocumentTemplate(templateId);
+      if (!template) {
+        throw new Error("Template not found");
+      }
+
+      // Process template with form data
+      let documentContent = template.template;
+      Object.entries(formData).forEach(([key, value]) => {
+        const placeholder = `{{${key}}}`;
+        documentContent = documentContent.replace(new RegExp(placeholder, 'g'), String(value));
+      });
+
+      const documentData = {
+        templateId,
+        userId,
+        documentName: `${template.name} - ${new Date().toLocaleDateString()}`,
+        documentContent,
+        formData: JSON.stringify(formData),
+        status: 'completed'
+      };
+
+      const [document] = await this.db.insert(generatedDocuments).values(documentData).returning();
+      return document;
+    } catch (error) {
+      console.error("Error generating document:", error);
+      throw new Error("Failed to generate document");
+    }
+  }
+
+  async getUserDocuments(userId: string): Promise<GeneratedDocument[]> {
+    try {
+      return await this.db.select().from(generatedDocuments)
+        .where(eq(generatedDocuments.userId, userId))
+        .orderBy(desc(generatedDocuments.createdAt));
+    } catch (error) {
+      console.error("Error fetching user documents:", error);
+      return [];
+    }
+  }
+
+  async getGeneratedDocument(id: number): Promise<GeneratedDocument | undefined> {
+    try {
+      const [document] = await this.db.select().from(generatedDocuments).where(eq(generatedDocuments.id, id));
+      return document;
+    } catch (error) {
+      console.error("Error fetching generated document:", error);
+      return undefined;
+    }
+  }
+
+  async updateDocumentStatus(id: number, status: string): Promise<GeneratedDocument | undefined> {
+    try {
+      const [document] = await this.db.update(generatedDocuments)
+        .set({ status, updatedAt: new Date() })
+        .where(eq(generatedDocuments.id, id))
+        .returning();
+      return document;
+    } catch (error) {
+      console.error("Error updating document status:", error);
+      return undefined;
+    }
   }
 }
 

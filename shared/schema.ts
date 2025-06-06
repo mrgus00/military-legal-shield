@@ -782,6 +782,51 @@ export const insertStorySchema = createInsertSchema(stories).omit({
   updatedAt: true,
 });
 
+// Document templates for legal document wizard
+export const documentTemplates = pgTable("document_templates", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  description: text("description").notNull(),
+  template: text("template").notNull(), // Template with placeholder variables
+  requiredFields: text("required_fields").array().notNull(),
+  optionalFields: text("optional_fields").array().default([]),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertDocumentTemplateSchema = createInsertSchema(documentTemplates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Generated documents
+export const generatedDocuments = pgTable("generated_documents", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").references(() => documentTemplates.id),
+  userId: varchar("user_id"),
+  documentName: varchar("document_name", { length: 255 }).notNull(),
+  documentContent: text("document_content").notNull(),
+  formData: text("form_data").notNull(), // JSON string of form inputs
+  status: varchar("status", { length: 50 }).notNull().default("draft"), // draft, completed, signed
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertGeneratedDocumentSchema = createInsertSchema(generatedDocuments).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertDocumentTemplate = z.infer<typeof insertDocumentTemplateSchema>;
+export type DocumentTemplate = typeof documentTemplates.$inferSelect;
+
+export type InsertGeneratedDocument = z.infer<typeof insertGeneratedDocumentSchema>;
+export type GeneratedDocument = typeof generatedDocuments.$inferSelect;
+
 export type InsertStory = z.infer<typeof insertStorySchema>;
 export type Story = typeof stories.$inferSelect;
 

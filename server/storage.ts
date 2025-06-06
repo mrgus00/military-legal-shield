@@ -1261,6 +1261,87 @@ export class DatabaseStorage implements IStorage {
     // Update time slot availability in database
     console.log(`Time slot ${timeSlotId} availability updated to: ${available}`);
   }
+
+  // Story operations for veterans' storytelling corner
+  async getStories(category?: string): Promise<Story[]> {
+    try {
+      let queryBuilder = this.db.select().from(stories);
+      
+      if (category && category !== "all") {
+        queryBuilder = queryBuilder.where(and(eq(stories.isApproved, true), eq(stories.category, category)));
+      } else {
+        queryBuilder = queryBuilder.where(eq(stories.isApproved, true));
+      }
+      
+      return await queryBuilder.orderBy(desc(stories.createdAt));
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+      return [];
+    }
+  }
+
+  async getStory(id: number): Promise<Story | undefined> {
+    try {
+      const [story] = await this.db.select().from(stories).where(eq(stories.id, id));
+      
+      if (story) {
+        // Increment view count
+        await this.updateStoryEngagement(id, 'view');
+      }
+      
+      return story;
+    } catch (error) {
+      console.error("Error fetching story:", error);
+      return undefined;
+    }
+  }
+
+  async createStory(insertStory: InsertStory): Promise<Story> {
+    try {
+      const [story] = await this.db.insert(stories).values(insertStory).returning();
+      return story;
+    } catch (error) {
+      console.error("Error creating story:", error);
+      throw new Error("Failed to create story");
+    }
+  }
+
+  async updateStoryEngagement(id: number, type: 'like' | 'comment' | 'view'): Promise<void> {
+    try {
+      const updateField = type === 'like' ? 'likes' : type === 'comment' ? 'comments' : 'views';
+      
+      await this.db.update(stories)
+        .set({ [updateField]: sql`${stories[updateField]} + 1` })
+        .where(eq(stories.id, id));
+    } catch (error) {
+      console.error(`Error updating story ${type}:`, error);
+    }
+  }
+
+  // Placeholder implementations for micro-challenges (to satisfy interface)
+  async getMicroChallenges(category?: string, difficulty?: string): Promise<any[]> {
+    return [];
+  }
+
+  async getMicroChallenge(id: number): Promise<any> {
+    return undefined;
+  }
+
+  async createChallengeAttempt(attempt: any): Promise<any> {
+    return {};
+  }
+
+  async getDailyChallenge(): Promise<any> {
+    return undefined;
+  }
+
+  async getChallengeStats(userId: number): Promise<any> {
+    return undefined;
+  }
+
+  async updateChallengeStats(userId: number, updates: any): Promise<any> {
+    return {};
+  }
 }
 
 export const storage = new DatabaseStorage();

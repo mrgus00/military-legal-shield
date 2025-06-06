@@ -742,6 +742,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stories API routes for veterans' storytelling corner
+  app.get("/api/stories", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const stories = await storage.getStories(category);
+      res.json(stories);
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+      res.status(500).json({ message: "Failed to fetch stories" });
+    }
+  });
+
+  app.get("/api/stories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid story ID" });
+      }
+      const story = await storage.getStory(id);
+      if (!story) {
+        return res.status(404).json({ message: "Story not found" });
+      }
+      res.json(story);
+    } catch (error) {
+      console.error("Error fetching story:", error);
+      res.status(500).json({ message: "Failed to fetch story" });
+    }
+  });
+
+  app.post("/api/stories", async (req, res) => {
+    try {
+      const storyData = {
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.category,
+        location: req.body.location || null,
+        timeframe: req.body.timeframe,
+        tags: req.body.tags ? req.body.tags.split(',').map((tag: string) => tag.trim()) : [],
+        authorName: req.body.isAnonymous ? null : req.body.authorName,
+        authorBranch: req.body.isAnonymous ? null : req.body.authorBranch,
+        authorRank: req.body.isAnonymous ? null : req.body.authorRank,
+        isAnonymous: req.body.isAnonymous === 'true',
+        mediaType: req.body.mediaType || 'text',
+        mediaUrl: req.body.mediaUrl || null
+      };
+
+      const story = await storage.createStory(storyData);
+      res.json(story);
+    } catch (error) {
+      console.error("Error creating story:", error);
+      res.status(500).json({ message: "Failed to create story" });
+    }
+  });
+
+  app.put("/api/stories/:id/like", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid story ID" });
+      }
+      await storage.updateStoryEngagement(id, 'like');
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating story likes:", error);
+      res.status(500).json({ message: "Failed to update story likes" });
+    }
+  });
+
+  app.put("/api/stories/:id/comment", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid story ID" });
+      }
+      await storage.updateStoryEngagement(id, 'comment');
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating story comments:", error);
+      res.status(500).json({ message: "Failed to update story comments" });
+    }
+  });
+
   // Forum API routes
   app.get("/api/forum/questions", async (req, res) => {
     try {

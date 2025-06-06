@@ -40,6 +40,7 @@ import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
+import DocumentWizard from "@/pages/document-wizard";
 
 function Router() {
   return (
@@ -77,6 +78,7 @@ function Router() {
       <Route path="/financial-wizard" component={FinancialWizard} />
       <Route path="/storytelling-corner" component={StorytellingCorner} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
+      <Route path="/document-wizard" component={DocumentWizard} />
       <Route component={NotFound} />
     </Switch>
   );

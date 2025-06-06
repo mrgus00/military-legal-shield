@@ -824,6 +824,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Document wizard API routes
+  app.get("/api/document-templates", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const templates = await storage.getDocumentTemplates(category);
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching document templates:", error);
+      res.status(500).json({ message: "Failed to fetch document templates" });
+    }
+  });
+
+  app.get("/api/document-templates/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid template ID" });
+      }
+      const template = await storage.getDocumentTemplate(id);
+      if (!template) {
+        return res.status(404).json({ message: "Template not found" });
+      }
+      res.json(template);
+    } catch (error) {
+      console.error("Error fetching document template:", error);
+      res.status(500).json({ message: "Failed to fetch document template" });
+    }
+  });
+
+  app.post("/api/documents/generate", async (req, res) => {
+    try {
+      const { templateId, formData, userId } = req.body;
+      const document = await storage.generateDocument(templateId, formData, userId);
+      res.json(document);
+    } catch (error) {
+      console.error("Error generating document:", error);
+      res.status(500).json({ message: "Failed to generate document" });
+    }
+  });
+
+  app.get("/api/documents/user/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const documents = await storage.getUserDocuments(userId);
+      res.json(documents);
+    } catch (error) {
+      console.error("Error fetching user documents:", error);
+      res.status(500).json({ message: "Failed to fetch user documents" });
+    }
+  });
+
+  app.get("/api/documents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid document ID" });
+      }
+      const document = await storage.getGeneratedDocument(id);
+      if (!document) {
+        return res.status(404).json({ message: "Document not found" });
+      }
+      res.json(document);
+    } catch (error) {
+      console.error("Error fetching document:", error);
+      res.status(500).json({ message: "Failed to fetch document" });
+    }
+  });
+
   // Forum API routes
   app.get("/api/forum/questions", async (req, res) => {
     try {

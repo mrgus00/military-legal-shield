@@ -320,6 +320,28 @@ button:focus, input:focus, select:focus, textarea:focus, a:focus {
   box-shadow: 0 0 0 1px hsl(var(--background));
 }
 
+/* WCAG AA Compliant Text on Yellow/Gold Backgrounds */
+.text-on-yellow {
+  color: hsl(25 100% 10%) !important; /* Near-black for maximum contrast */
+}
+
+.text-on-gold {
+  color: hsl(30 100% 15%) !important; /* Very dark brown for gold backgrounds */
+}
+
+/* High contrast text utilities for accessibility */
+.text-high-contrast {
+  color: hsl(0 0% 9%) !important; /* Dark text for light backgrounds */
+}
+
+.bg-accent .text-high-contrast,
+.bg-yellow-400 .text-high-contrast,
+.bg-yellow-500 .text-high-contrast,
+.bg-amber-400 .text-high-contrast,
+.bg-amber-500 .text-high-contrast {
+  color: hsl(25 100% 10%) !important; /* Ensure dark text on yellow/amber */
+}
+
 /* Skip to main content link for screen readers */
 .skip-link {
   position: absolute;

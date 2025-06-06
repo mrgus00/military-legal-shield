@@ -2,7 +2,7 @@ import {
   users, attorneys, legalResources, educationModules, consultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
-  legalScenarios, scenarioSessions, scenarioAnalytics,
+  legalScenarios, scenarioSessions, scenarioAnalytics, stories,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -20,7 +20,8 @@ import {
   type AttorneyVerificationRequest, type InsertAttorneyVerificationRequest,
   type LegalScenario, type InsertLegalScenario,
   type ScenarioSession, type InsertScenarioSession,
-  type ScenarioAnalytics, type InsertScenarioAnalytics
+  type ScenarioAnalytics, type InsertScenarioAnalytics,
+  type Story, type InsertStory
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -29,7 +30,7 @@ import { eq, ilike, and, or, desc, sql } from "drizzle-orm";
 export interface IStorage {
   // User methods for Replit Auth
   getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  upsertUser(user: InsertUser): Promise<User>;
 
   // Attorney methods
   getAttorneys(): Promise<Attorney[]>;
@@ -130,6 +131,12 @@ export interface IStorage {
   getAttorneysWithAvailability(date: string, specialty?: string, consultationType?: string): Promise<any[]>;
   createConsultationBooking(booking: any): Promise<any>;
   updateTimeSlotAvailability(timeSlotId: string, available: boolean): Promise<void>;
+
+  // Story operations for veterans' storytelling corner
+  getStories(category?: string): Promise<Story[]>;
+  getStory(id: number): Promise<Story | undefined>;
+  createStory(story: InsertStory): Promise<Story>;
+  updateStoryEngagement(id: number, type: 'like' | 'comment' | 'view'): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {

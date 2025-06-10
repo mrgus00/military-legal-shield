@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 import { insertConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
@@ -586,8 +588,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/benefits/calculate", async (req, res) => {
     try {
       const eligibilityData = req.body;
-      const result = await storage.calculateBenefitsEligibility(eligibilityData);
-      res.json(result);
+      
+      // Get benefits from database using direct SQL
+      const benefitsResult = await db.execute(sql`SELECT * FROM benefits_database`);
+      const allBenefits = benefitsResult.rows;
+      
+      const eligibleBenefits = [];
+      
+      // Check eligibility for each benefit
+      for (const benefit of allBenefits) {
+        let isEligible = true;
+        
+        // Check years of service requirement
+        if (benefit.min_years_of_service && eligibilityData.serviceDates.totalYears < benefit.min_years_of_service) {
+          isEligible = false;
+        }
+        
+        // Check discharge type requirement
+        if (benefit.required_discharge_types && !benefit.required_discharge_types.includes(eligibilityData.dischargeType)) {
+          isEligible = false;
+        }
+        
+        // Check disability rating requirement
+        if (benefit.min_disability_rating && eligibilityData.disabilityRating < benefit.min_disability_rating) {
+          isEligible = false;
+        }
+        
+        // Check income limits
+        if (benefit.income_limit && eligibilityData.income.householdIncome > benefit.income_limit) {
+          isEligible = false;
+        }
+        
+        // Check combat veteran requirement
+        if (benefit.combat_veteran_only && !eligibilityData.combatVeteran) {
+          isEligible = false;
+        }
+        
+        // Check state eligibility
+        if (benefit.eligible_states && !benefit.eligible_states.includes(eligibilityData.location.state)) {
+          isEligible = false;
+        }
+        
+        if (isEligible) {
+          eligibleBenefits.push({
+            id: benefit.id,
+            benefitName: benefit.benefit_name,
+            benefitType: benefit.benefit_type,
+            description: benefit.description,
+            benefitAmount: benefit.benefit_amount,
+            applicationProcess: benefit.application_process,
+            processingTime: benefit.processing_time,
+            websiteUrl: benefit.website_url,
+            phoneNumber: benefit.phone_number
+          });
+        }
+      }
+      
+      // Store eligibility record
+      const insertResult = await db.execute(sql`
+        INSERT INTO benefits_eligibility (
+          service_status, branch, years_of_service, discharge_type, disability_rating,
+          combat_veteran, purple_heart, prisoner_of_war, has_spouse, number_of_children,
+          annual_income, household_income, state, zip_code, eligible_benefits
+        ) VALUES (
+          ${eligibilityData.serviceStatus}, ${eligibilityData.branch}, ${eligibilityData.serviceDates.totalYears},
+          ${eligibilityData.dischargeType}, ${eligibilityData.disabilityRating}, ${eligibilityData.combatVeteran},
+          ${eligibilityData.purpleHeart}, ${eligibilityData.prisonerOfWar}, ${eligibilityData.dependents.spouse},
+          ${eligibilityData.dependents.children}, ${eligibilityData.income.annualIncome}, ${eligibilityData.income.householdIncome},
+          ${eligibilityData.location.state}, ${eligibilityData.location.zipCode}, ${JSON.stringify(eligibleBenefits)}
+        ) RETURNING id
+      `);
+      
+      res.json({
+        success: true,
+        eligibilityId: insertResult.rows[0].id,
+        eligibleBenefits: eligibleBenefits,
+        summary: {
+          totalBenefits: eligibleBenefits.length,
+          estimatedValue: 'Varies by benefit',
+          processingTimeRange: '1-6 months'
+        }
+      });
     } catch (error: any) {
       console.error("Benefits calculation error:", error);
       res.status(500).json({ 

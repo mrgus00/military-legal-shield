@@ -74,6 +74,7 @@ function Router() {
       <Route path="/resume-builder" component={ResumeBuilder} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/consultation-booking" component={ConsultationBooking} />
+      <Route path="/emergency-consultation" component={EmergencyConsultation} />
       <Route path="/video-consultation" component={VideoConsultation} />
       <Route path="/leave-review" component={LeaveReview} />
       <Route path="/financial-wizard" component={FinancialWizard} />

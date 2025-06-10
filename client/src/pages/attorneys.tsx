@@ -577,6 +577,63 @@ const militaryBaseAttorneys = {
       experience: "12+ years",
       rating: 4.6
     }
+  ],
+  10: [ // White Sands Missile Range, New Mexico
+    {
+      id: "sands-1",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "sands-2",
+      name: "Richard V. Stevens, Attorney at Law",
+      location: "Nationwide",
+      phone: "(888) 399-0693",
+      website: "https://www.militaryappealslawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations"],
+      description: "Former active duty JAG defense lawyer with worldwide practice.",
+      experience: "22+ years",
+      rating: 4.8
+    },
+    {
+      id: "sands-3",
+      name: "The Matthew James",
+      location: "Las Cruces, NM",
+      phone: "(575) 526-7765",
+      website: "https://www.thematthewjames.com",
+      specialties: ["Military defense", "Court-martial representation", "Administrative actions"],
+      description: "Experienced legal team dedicated to defending service members in the Las Cruces area.",
+      experience: "12+ years",
+      rating: 4.6
+    },
+    {
+      id: "sands-4",
+      name: "Ray Rojas Law L.L.C.",
+      location: "Las Cruces, NM",
+      phone: "(575) 526-7765",
+      website: "https://www.rayrojaslaw.com",
+      specialties: ["Criminal defense", "Military law", "Immigration law"],
+      description: "Local Las Cruces firm offering comprehensive legal services including military law.",
+      experience: "10+ years",
+      rating: 4.5
+    },
+    {
+      id: "sands-5",
+      name: "Military Law Center",
+      location: "Nationwide",
+      phone: "(760) 536-9038",
+      website: "https://www.militarylawcenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "NJP", "Corrections of military records"],
+      description: "Staffed by Marine veterans with extensive experience in military law.",
+      experience: "15+ years",
+      rating: 4.7
+    }
   ]
 };
 

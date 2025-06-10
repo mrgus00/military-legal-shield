@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Shield, MapPin, Users } from "lucide-react";
+import { Search, Shield, MapPin, Users, Phone, Globe, Star, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import type { Attorney } from "@shared/schema";
 
@@ -21,6 +21,88 @@ const militaryBases = [
   { id: 9, name: "Fort Bliss", state: "Texas", location: "Fort Bliss, TX" },
   { id: 10, name: "White Sands Missile Range", state: "New Mexico", location: "White Sands, NM" }
 ];
+
+const militaryBaseAttorneys = {
+  2: [ // Edwards AFB, California
+    {
+      id: "edwards-1",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "edwards-2", 
+      name: "Aaron Meyer Law",
+      location: "California",
+      phone: "Contact via website",
+      website: "https://www.aaronmeyerlaw.com",
+      specialties: ["Military criminal defense", "UCMJ violations", "Administrative separations"],
+      description: "Former Marine Judge Advocate with extensive trial experience.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "edwards-3",
+      name: "Gonzalez & Waddington, LLC", 
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "edwards-4",
+      name: "Joseph L. Jordan, Attorney at Law",
+      location: "Nationwide", 
+      phone: "Contact via website",
+      website: "https://www.jordanucmj.com",
+      specialties: ["UCMJ defense", "Article 120 cases", "Article 15 proceedings", "Administrative boards"],
+      description: "Former Army Judge Advocate with a strong track record.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "edwards-5",
+      name: "Military Law Center",
+      location: "California",
+      phone: "Contact via website", 
+      website: "https://www.militarylawcenter.com",
+      specialties: ["Military defense", "Court-martial representation", "Legal guidance for service members"],
+      description: "Experienced civilian military defense attorneys.",
+      experience: "12+ years",
+      rating: 4.6
+    },
+    {
+      id: "edwards-6",
+      name: "Kern Law, APC",
+      location: "Southern California",
+      phone: "(619) 202-5583",
+      website: "https://www.kernlawsd.com", 
+      specialties: ["Defense against civilian criminal charges", "DUI defense", "Domestic violence defense"],
+      description: "Defense against civilian criminal charges affecting military personnel.",
+      experience: "10+ years",
+      rating: 4.5
+    },
+    {
+      id: "edwards-7",
+      name: "Richard V. Stevens, Attorney at Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.militaryappealslawyer.com",
+      specialties: ["Court-martial defense", "Discharge upgrades", "Administrative actions"],
+      description: "Former active duty JAG defense lawyer with worldwide practice.",
+      experience: "22+ years", 
+      rating: 4.8
+    }
+  ]
+};
 
 export default function Attorneys() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -132,21 +214,22 @@ export default function Attorneys() {
             </div>
             
             {selectedBase && (
-              <div className="mt-12 p-8 bg-white rounded-lg border border-yellow-200">
-                <div className="text-center">
-                  <h3 className="text-xl font-bold text-navy-900 mb-4">
-                    Attorneys for {militaryBases.find(b => b.id === selectedBase)?.name}
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    You selected {militaryBases.find(b => b.id === selectedBase)?.location}. 
-                    Attorney listings for this base will be displayed here once you provide the attorney data.
-                  </p>
-                  <div className="flex justify-center space-x-4">
+              <div className="mt-12">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 className="text-2xl font-bold text-navy-900 mb-2">
+                      🛡️ Military Defense Attorneys Serving {militaryBases.find(b => b.id === selectedBase)?.name}
+                    </h3>
+                    <p className="text-gray-600">
+                      {militaryBases.find(b => b.id === selectedBase)?.location} • {militaryBaseAttorneys[selectedBase]?.length || 0} Attorneys Available
+                    </p>
+                  </div>
+                  <div className="flex space-x-3">
                     <Button
                       variant="outline"
                       onClick={() => setSelectedBase(null)}
                     >
-                      Back to Base Selection
+                      ← Back to Bases
                     </Button>
                     <Button
                       onClick={() => {
@@ -158,6 +241,90 @@ export default function Attorneys() {
                     </Button>
                   </div>
                 </div>
+
+                {militaryBaseAttorneys[selectedBase] ? (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {militaryBaseAttorneys[selectedBase].map((attorney) => (
+                      <Card key={attorney.id} className="hover:shadow-lg transition-shadow duration-200">
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                              <h4 className="font-bold text-navy-900 text-lg mb-2 leading-tight">
+                                {attorney.name}
+                              </h4>
+                              <div className="flex items-center space-x-2 mb-2">
+                                <MapPin className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm text-gray-600">{attorney.location}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                              <span className="text-sm font-medium text-gray-700">{attorney.rating}</span>
+                            </div>
+                          </div>
+
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {attorney.description}
+                          </p>
+
+                          <div className="mb-4">
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {attorney.specialties.slice(0, 3).map((specialty, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-navy-100 text-navy-800 text-xs rounded-full"
+                                >
+                                  {specialty}
+                                </span>
+                              ))}
+                              {attorney.specialties.length > 3 && (
+                                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                                  +{attorney.specialties.length - 3} more
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="space-y-2 mb-4">
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Phone className="w-4 h-4 text-gray-400" />
+                              <span className="text-gray-600">{attorney.phone}</span>
+                            </div>
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Globe className="w-4 h-4 text-gray-400" />
+                              <a 
+                                href={attorney.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-yellow-600 hover:text-yellow-700 hover:underline"
+                              >
+                                Visit Website
+                              </a>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span className="text-sm text-gray-500">{attorney.experience}</span>
+                            <Button size="sm" className="bg-navy-900 hover:bg-navy-800">
+                              Contact Attorney
+                              <ExternalLink className="w-4 h-4 ml-1" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      Attorneys Coming Soon
+                    </h4>
+                    <p className="text-gray-600">
+                      Attorney listings for {militaryBases.find(b => b.id === selectedBase)?.name} will be available soon.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>

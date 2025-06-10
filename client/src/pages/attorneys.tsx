@@ -180,6 +180,85 @@ const militaryBaseAttorneys = {
       experience: "100+ years combined",
       rating: 4.7
     }
+  ],
+  4: [ // Eglin Air Force Base, Florida
+    {
+      id: "eglin-1",
+      name: "Joseph L. Jordan, Attorney at Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.jordanucmj.com",
+      specialties: ["UCMJ defense", "Article 120 cases", "Article 15 proceedings", "Administrative boards"],
+      description: "Former Army Judge Advocate with a strong track record.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "eglin-2",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "eglin-3",
+      name: "Bilecki Law Group, PLLC",
+      location: "Tampa, FL",
+      phone: "(813) 669-3500",
+      website: "https://www.bileckilaw.com",
+      specialties: ["Court-martial defense", "UCMJ investigations", "Administrative separations", "Non-judicial punishment (NJP)", "GOMOR rebuttals"],
+      description: "Specialized military defense firm serving Florida military personnel.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "eglin-4",
+      name: "Flaherty & Merrifield",
+      location: "Fort Walton Beach, FL",
+      phone: "(850) 243-6097",
+      website: "https://www.flahertymerrifield.com",
+      specialties: ["Criminal defense", "DUI", "Domestic violence", "Sex offenses"],
+      description: "Local criminal defense firm serving military personnel in the Fort Walton Beach area.",
+      experience: "20+ years",
+      rating: 4.6
+    },
+    {
+      id: "eglin-5",
+      name: "Gagne, Scherer & Associates, LLC",
+      location: "Nationwide",
+      phone: "(800) 319-3134",
+      website: "https://www.gagnescherer.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "All attorneys are former military members who served in the Judge Advocate General's (JAG) Corps.",
+      experience: "25+ years",
+      rating: 4.8
+    },
+    {
+      id: "eglin-6",
+      name: "Military Justice Attorneys",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.militaryjusticeattorneys.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Security clearance issues"],
+      description: "Over 100 years of combined military law experience.",
+      experience: "100+ years combined",
+      rating: 4.7
+    },
+    {
+      id: "eglin-7",
+      name: "The Hanzel Law Firm",
+      location: "Serves Florida",
+      phone: "(843) 202-4714",
+      website: "https://www.hanzellaw.com",
+      specialties: ["Military sexual offenses", "Urinalysis & drug crimes", "UCMJ offenses", "Officer misconduct", "Military appeals", "Security clearances"],
+      description: "Specialized military defense firm serving Florida military bases.",
+      experience: "12+ years",
+      rating: 4.6
+    }
   ]
 };
 

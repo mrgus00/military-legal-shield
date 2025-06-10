@@ -283,26 +283,26 @@ export default function BenefitsCalculator() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                        <Label htmlFor="state">State</Label>
-                        <Input
-                          id="state"
-                          value={formData.location.state}
-                          onChange={(e) => handleInputChange('location.state', e.target.value)}
-                          placeholder="Enter your state"
-                        />
-                      </div>
+                          <Label htmlFor="state">State</Label>
+                          <Input
+                            id="state"
+                            value={formData.location.state}
+                            onChange={(e) => handleInputChange('location.state', e.target.value)}
+                            placeholder="Enter your state"
+                          />
+                        </div>
 
-                      <div>
-                        <Label htmlFor="zipCode">ZIP Code</Label>
-                        <Input
-                          id="zipCode"
-                          value={formData.location.zipCode}
-                          onChange={(e) => handleInputChange('location.zipCode', e.target.value)}
-                          placeholder="Enter ZIP code"
-                        />
+                        <div>
+                          <Label htmlFor="zipCode">ZIP Code</Label>
+                          <Input
+                            id="zipCode"
+                            value={formData.location.zipCode}
+                            onChange={(e) => handleInputChange('location.zipCode', e.target.value)}
+                            placeholder="Enter ZIP code"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
 
                   <TabsContent value="service" className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -539,6 +539,7 @@ export default function BenefitsCalculator() {
                       )}
                     </div>
                   )}
+                  </Tabs>
                 </CardContent>
               </Card>
             </div>

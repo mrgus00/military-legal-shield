@@ -29,6 +29,7 @@ export default function Header() {
     { name: "Urgent Matching", href: "/urgent-match", badge: "24/7", icon: Shield },
     { name: "Find Attorneys", href: "/attorneys", icon: Scale },
     { name: "Book Consultation", href: "/consultation-booking", icon: Phone },
+    { name: "Benefits Calculator", href: "/benefits-calculator", badge: "Real-time", icon: Users },
     { name: "Legal Resources", href: "/resources", icon: BookOpen },
     { name: "Education Center", href: "/education", icon: BookOpen },
     { name: "AI Scenarios", href: "/scenarios", badge: "Interactive", icon: BookOpen },

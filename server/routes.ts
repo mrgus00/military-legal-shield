@@ -582,6 +582,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Benefits Eligibility Calculator API
+  app.post("/api/benefits/calculate", async (req, res) => {
+    try {
+      const eligibilityData = req.body;
+      const result = await storage.calculateBenefitsEligibility(eligibilityData);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Benefits calculation error:", error);
+      res.status(500).json({ 
+        message: "Failed to calculate benefits eligibility",
+        error: error.message 
+      });
+    }
+  });
+
+  app.get("/api/benefits/database", async (req, res) => {
+    try {
+      const benefits = await storage.getBenefitsDatabase();
+      res.json(benefits);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch benefits database" });
+    }
+  });
+
+  app.get("/api/benefits/type/:type", async (req, res) => {
+    try {
+      const benefitType = req.params.type;
+      const benefits = await storage.getBenefitsByType(benefitType);
+      res.json(benefits);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch benefits by type" });
+    }
+  });
+
+  app.get("/api/benefits/eligibility/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const eligibility = await storage.getBenefitsEligibility(id);
+      if (!eligibility) {
+        return res.status(404).json({ message: "Eligibility record not found" });
+      }
+      res.json(eligibility);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch eligibility record" });
+    }
+  });
+
   // Legal scenario simulation routes
   app.get("/api/scenarios", async (req, res) => {
     try {

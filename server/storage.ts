@@ -1466,6 +1466,123 @@ export class DatabaseStorage implements IStorage {
       return undefined;
     }
   }
+
+  // Benefits eligibility implementation
+  async calculateBenefitsEligibility(eligibilityData: InsertBenefitsEligibility): Promise<BenefitsEligibility> {
+    try {
+      // Get all available benefits from database
+      const allBenefits = await this.getBenefitsDatabase();
+      
+      // Calculate eligibility for each benefit
+      const eligibleBenefits = allBenefits.filter(benefit => {
+        return this.checkBenefitEligibility(benefit, eligibilityData);
+      }).map(benefit => ({
+        id: benefit.id,
+        benefitName: benefit.benefitName,
+        benefitType: benefit.benefitType,
+        description: benefit.description,
+        benefitAmount: benefit.benefitAmount,
+        applicationProcess: benefit.applicationProcess,
+        processingTime: benefit.processingTime,
+        websiteUrl: benefit.websiteUrl,
+        phoneNumber: benefit.phoneNumber
+      }));
+
+      // Save the calculation results
+      const calculationData = {
+        ...eligibilityData,
+        eligibleBenefits: JSON.stringify(eligibleBenefits)
+      };
+
+      const [result] = await this.db.insert(benefitsEligibility).values(calculationData).returning();
+      return result;
+    } catch (error) {
+      console.error("Error calculating benefits eligibility:", error);
+      throw new Error("Failed to calculate benefits eligibility");
+    }
+  }
+
+  private checkBenefitEligibility(benefit: BenefitsDatabase, userData: InsertBenefitsEligibility): boolean {
+    const criteria = benefit.eligibilityCriteria as any;
+    
+    // Check service status requirements
+    if (criteria.serviceStatus && !criteria.serviceStatus.includes(userData.serviceStatus)) {
+      return false;
+    }
+
+    // Check branch requirements
+    if (criteria.branch && criteria.branch !== 'All' && criteria.branch !== userData.branch) {
+      return false;
+    }
+
+    // Check discharge type requirements
+    if (criteria.dischargeType && userData.dischargeType && !criteria.dischargeType.includes(userData.dischargeType)) {
+      return false;
+    }
+
+    // Check minimum service time
+    const serviceDates = userData.serviceDates as any;
+    if (criteria.minimumServiceYears && serviceDates?.totalYears < criteria.minimumServiceYears) {
+      return false;
+    }
+
+    // Check disability rating requirements
+    if (criteria.minimumDisabilityRating && (!userData.disabilityRating || userData.disabilityRating < criteria.minimumDisabilityRating)) {
+      return false;
+    }
+
+    // Check combat veteran requirements
+    if (criteria.combatVeteranRequired && !userData.combatVeteran) {
+      return false;
+    }
+
+    // Check income requirements
+    const income = userData.income as any;
+    if (criteria.maxIncome && income?.annualIncome > criteria.maxIncome) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async getBenefitsEligibility(id: number): Promise<BenefitsEligibility | undefined> {
+    try {
+      const [result] = await this.db.select().from(benefitsEligibility).where(eq(benefitsEligibility.id, id));
+      return result;
+    } catch (error) {
+      console.error("Error fetching benefits eligibility:", error);
+      return undefined;
+    }
+  }
+
+  async getBenefitsDatabase(): Promise<BenefitsDatabase[]> {
+    try {
+      return await this.db.select().from(benefitsDatabase).where(eq(benefitsDatabase.isActive, true));
+    } catch (error) {
+      console.error("Error fetching benefits database:", error);
+      return [];
+    }
+  }
+
+  async getBenefitsByType(benefitType: string): Promise<BenefitsDatabase[]> {
+    try {
+      return await this.db.select().from(benefitsDatabase)
+        .where(and(eq(benefitsDatabase.benefitType, benefitType), eq(benefitsDatabase.isActive, true)));
+    } catch (error) {
+      console.error("Error fetching benefits by type:", error);
+      return [];
+    }
+  }
+
+  async createBenefitsDatabase(benefit: InsertBenefitsDatabase): Promise<BenefitsDatabase> {
+    try {
+      const [result] = await this.db.insert(benefitsDatabase).values(benefit).returning();
+      return result;
+    } catch (error) {
+      console.error("Error creating benefits database entry:", error);
+      throw new Error("Failed to create benefits database entry");
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();

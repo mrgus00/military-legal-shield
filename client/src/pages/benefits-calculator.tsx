@@ -247,42 +247,42 @@ export default function BenefitsCalculator() {
                     </TabsList>
 
                     <TabsContent value="basic" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="serviceStatus">Service Status</Label>
-                        <Select value={formData.serviceStatus} onValueChange={(value) => handleInputChange('serviceStatus', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="active">Active Duty</SelectItem>
-                            <SelectItem value="veteran">Veteran</SelectItem>
-                            <SelectItem value="retired">Retired</SelectItem>
-                            <SelectItem value="discharged">Discharged</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="serviceStatus">Service Status</Label>
+                          <Select value={formData.serviceStatus} onValueChange={(value) => handleInputChange('serviceStatus', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="active">Active Duty</SelectItem>
+                              <SelectItem value="veteran">Veteran</SelectItem>
+                              <SelectItem value="retired">Retired</SelectItem>
+                              <SelectItem value="discharged">Discharged</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="branch">Military Branch</Label>
+                          <Select value={formData.branch} onValueChange={(value) => handleInputChange('branch', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select branch" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Army">U.S. Army</SelectItem>
+                              <SelectItem value="Navy">U.S. Navy</SelectItem>
+                              <SelectItem value="Air Force">U.S. Air Force</SelectItem>
+                              <SelectItem value="Marines">U.S. Marine Corps</SelectItem>
+                              <SelectItem value="Coast Guard">U.S. Coast Guard</SelectItem>
+                              <SelectItem value="Space Force">U.S. Space Force</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
 
-                      <div>
-                        <Label htmlFor="branch">Military Branch</Label>
-                        <Select value={formData.branch} onValueChange={(value) => handleInputChange('branch', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select branch" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Army">U.S. Army</SelectItem>
-                            <SelectItem value="Navy">U.S. Navy</SelectItem>
-                            <SelectItem value="Air Force">U.S. Air Force</SelectItem>
-                            <SelectItem value="Marines">U.S. Marine Corps</SelectItem>
-                            <SelectItem value="Coast Guard">U.S. Coast Guard</SelectItem>
-                            <SelectItem value="Space Force">U.S. Space Force</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
                         <Label htmlFor="state">State</Label>
                         <Input
                           id="state"

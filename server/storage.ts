@@ -1517,50 +1517,42 @@ export class DatabaseStorage implements IStorage {
 
   private checkBenefitEligibility(benefit: any, eligibilityData: any): boolean {
     // Check service requirements
-    if (benefit.minYearsOfService && eligibilityData.serviceDates.totalYears < benefit.minYearsOfService) {
+    if (benefit.min_years_of_service && eligibilityData.serviceDates.totalYears < benefit.min_years_of_service) {
       return false;
     }
 
     // Check discharge type requirements
-    if (benefit.requiredDischargeTypes && !benefit.requiredDischargeTypes.includes(eligibilityData.dischargeType)) {
+    if (benefit.required_discharge_types && !benefit.required_discharge_types.includes(eligibilityData.dischargeType)) {
       return false;
     }
 
     // Check disability rating requirements
-    if (benefit.minDisabilityRating && eligibilityData.disabilityRating < benefit.minDisabilityRating) {
+    if (benefit.min_disability_rating && eligibilityData.disabilityRating < benefit.min_disability_rating) {
       return false;
     }
 
     // Check income limits
-    if (benefit.incomeLimit && eligibilityData.income.householdIncome > benefit.incomeLimit) {
+    if (benefit.income_limit && eligibilityData.income.householdIncome > benefit.income_limit) {
       return false;
     }
 
     // Check combat veteran requirements
-    if (benefit.combatVeteranOnly && !eligibilityData.combatVeteran) {
+    if (benefit.combat_veteran_only && !eligibilityData.combatVeteran) {
       return false;
     }
 
     // Check state-specific benefits
-    if (benefit.eligibleStates && !benefit.eligibleStates.includes(eligibilityData.location.state)) {
+    if (benefit.eligible_states && !benefit.eligible_states.includes(eligibilityData.location.state)) {
       return false;
     }
 
     return true;
   }
 
-  async getBenefitsDatabase(): Promise<BenefitsDatabase[]> {
+  async getBenefitsDatabase(): Promise<any[]> {
     try {
       // Query the actual database table we created
       const result = await this.db.execute(sql`SELECT * FROM benefits_database`);
-      
-      // If no benefits in database, populate with comprehensive federal and state benefits
-      if (result.rows.length === 0) {
-        await this.populateBenefitsDatabase();
-        const newResult = await this.db.execute(sql`SELECT * FROM benefits_database`);
-        return newResult.rows as any[];
-      }
-      
       return result.rows as any[];
     } catch (error) {
       console.error("Error fetching benefits database:", error);

@@ -150,10 +150,10 @@ export interface IStorage {
   generateDocument(templateId: number, formData: any, userId?: string): Promise<GeneratedDocument>;
 
   // Benefits eligibility operations
-  calculateBenefitsEligibility(eligibilityData: InsertBenefitsEligibility): Promise<BenefitsEligibility>;
-  getBenefitsEligibility(id: number): Promise<BenefitsEligibility | undefined>;
+  calculateBenefitsEligibility(eligibilityData: any): Promise<any>;
   getBenefitsDatabase(): Promise<BenefitsDatabase[]>;
   getBenefitsByType(benefitType: string): Promise<BenefitsDatabase[]>;
+  getBenefitsEligibility(id: number): Promise<BenefitsEligibility | undefined>;
   createBenefitsDatabase(benefit: InsertBenefitsDatabase): Promise<BenefitsDatabase>;
   getUserDocuments(userId: string): Promise<GeneratedDocument[]>;
   getGeneratedDocument(id: number): Promise<GeneratedDocument | undefined>;
@@ -1464,6 +1464,361 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error updating document status:", error);
       return undefined;
+    }
+  }
+
+  // Benefits calculation implementation
+  async calculateBenefitsEligibility(eligibilityData: any): Promise<any> {
+    try {
+      const eligibleBenefits = [];
+      const benefits = await this.getBenefitsDatabase();
+      
+      for (const benefit of benefits) {
+        if (this.checkBenefitEligibility(benefit, eligibilityData)) {
+          eligibleBenefits.push({
+            id: benefit.id,
+            benefitName: benefit.benefitName,
+            benefitType: benefit.benefitType,
+            description: benefit.description,
+            benefitAmount: benefit.benefitAmount,
+            applicationProcess: benefit.applicationProcess,
+            processingTime: benefit.processingTime,
+            websiteUrl: benefit.websiteUrl,
+            phoneNumber: benefit.phoneNumber
+          });
+        }
+      }
+
+      // Create eligibility record
+      const eligibilityRecord = {
+        serviceStatus: eligibilityData.serviceStatus,
+        branch: eligibilityData.branch,
+        yearsOfService: eligibilityData.serviceDates.totalYears,
+        dischargeType: eligibilityData.dischargeType,
+        disabilityRating: eligibilityData.disabilityRating,
+        combatVeteran: eligibilityData.combatVeteran,
+        purpleHeart: eligibilityData.purpleHeart,
+        prisonerOfWar: eligibilityData.prisonerOfWar,
+        hasSpouse: eligibilityData.dependents.spouse,
+        numberOfChildren: eligibilityData.dependents.children,
+        annualIncome: eligibilityData.income.annualIncome,
+        householdIncome: eligibilityData.income.householdIncome,
+        state: eligibilityData.location.state,
+        zipCode: eligibilityData.location.zipCode,
+        eligibleBenefits: JSON.stringify(eligibleBenefits)
+      };
+
+      const [record] = await this.db.insert(benefitsEligibility).values(eligibilityRecord).returning();
+      return record;
+    } catch (error) {
+      console.error("Error calculating benefits eligibility:", error);
+      throw new Error("Failed to calculate benefits eligibility");
+    }
+  }
+
+  private checkBenefitEligibility(benefit: any, eligibilityData: any): boolean {
+    // Check service requirements
+    if (benefit.minYearsOfService && eligibilityData.serviceDates.totalYears < benefit.minYearsOfService) {
+      return false;
+    }
+
+    // Check discharge type requirements
+    if (benefit.requiredDischargeTypes && !benefit.requiredDischargeTypes.includes(eligibilityData.dischargeType)) {
+      return false;
+    }
+
+    // Check disability rating requirements
+    if (benefit.minDisabilityRating && eligibilityData.disabilityRating < benefit.minDisabilityRating) {
+      return false;
+    }
+
+    // Check income limits
+    if (benefit.incomeLimit && eligibilityData.income.householdIncome > benefit.incomeLimit) {
+      return false;
+    }
+
+    // Check combat veteran requirements
+    if (benefit.combatVeteranOnly && !eligibilityData.combatVeteran) {
+      return false;
+    }
+
+    // Check state-specific benefits
+    if (benefit.eligibleStates && !benefit.eligibleStates.includes(eligibilityData.location.state)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async getBenefitsDatabase(): Promise<BenefitsDatabase[]> {
+    try {
+      let benefits = await this.db.select().from(benefitsDatabase);
+      
+      // If no benefits in database, populate with comprehensive federal and state benefits
+      if (benefits.length === 0) {
+        await this.populateBenefitsDatabase();
+        benefits = await this.db.select().from(benefitsDatabase);
+      }
+      
+      return benefits;
+    } catch (error) {
+      console.error("Error fetching benefits database:", error);
+      return [];
+    }
+  }
+
+  async getBenefitsByType(benefitType: string): Promise<BenefitsDatabase[]> {
+    try {
+      return await this.db.select().from(benefitsDatabase)
+        .where(eq(benefitsDatabase.benefitType, benefitType));
+    } catch (error) {
+      console.error("Error fetching benefits by type:", error);
+      return [];
+    }
+  }
+
+  async getBenefitsEligibility(id: number): Promise<BenefitsEligibility | undefined> {
+    try {
+      const [eligibility] = await this.db.select().from(benefitsEligibility)
+        .where(eq(benefitsEligibility.id, id));
+      return eligibility;
+    } catch (error) {
+      console.error("Error fetching benefits eligibility:", error);
+      return undefined;
+    }
+  }
+
+  async createBenefitsDatabase(benefit: InsertBenefitsDatabase): Promise<BenefitsDatabase> {
+    try {
+      const [newBenefit] = await this.db.insert(benefitsDatabase).values(benefit).returning();
+      return newBenefit;
+    } catch (error) {
+      console.error("Error creating benefit:", error);
+      throw new Error("Failed to create benefit");
+    }
+  }
+
+  private async populateBenefitsDatabase(): Promise<void> {
+    try {
+      const federalBenefits = [
+        // VA Disability Benefits
+        {
+          benefitName: "VA Disability Compensation",
+          benefitType: "disability",
+          description: "Monthly tax-free payments for service-connected disabilities",
+          benefitAmount: "$165.92 - $3,737.85/month (10%-100% rating)",
+          minDisabilityRating: 10,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Apply online at VA.gov or visit VA Regional Office",
+          processingTime: "3-6 months",
+          websiteUrl: "https://www.va.gov/disability/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+        {
+          benefitName: "Individual Unemployability (IU)",
+          benefitType: "disability",
+          description: "100% disability rating compensation for those unable to work",
+          benefitAmount: "$3,737.85/month",
+          minDisabilityRating: 60,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "File VA Form 21-8940 with supporting documentation",
+          processingTime: "6-12 months",
+          websiteUrl: "https://www.va.gov/disability/eligibility/special-claims/unemployability/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+
+        // Healthcare Benefits
+        {
+          benefitName: "VA Healthcare",
+          benefitType: "healthcare",
+          description: "Comprehensive medical care through VA medical centers",
+          benefitAmount: "Free or low-cost healthcare",
+          minDisabilityRating: null,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Apply online at VA.gov or call enrollment line",
+          processingTime: "2-4 weeks",
+          websiteUrl: "https://www.va.gov/health-care/",
+          phoneNumber: "877-222-8387",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: 50000,
+          minYearsOfService: null
+        },
+        {
+          benefitName: "CHAMPVA",
+          benefitType: "healthcare",
+          description: "Healthcare program for spouses and children of 100% disabled veterans",
+          benefitAmount: "75% coverage of approved services",
+          minDisabilityRating: 100,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Submit VA Form 10-10d",
+          processingTime: "4-6 weeks",
+          websiteUrl: "https://www.va.gov/health-care/family-caregiver-benefits/champva/",
+          phoneNumber: "800-733-8387",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+
+        // Education Benefits
+        {
+          benefitName: "Post-9/11 GI Bill",
+          benefitType: "education",
+          description: "Education benefits for veterans who served after September 10, 2001",
+          benefitAmount: "Up to full tuition + housing allowance",
+          minDisabilityRating: null,
+          requiredDischargeTypes: ["honorable"],
+          applicationProcess: "Apply online at VA.gov using VA Form 22-1990",
+          processingTime: "4-6 weeks",
+          websiteUrl: "https://www.va.gov/education/about-gi-bill-benefits/post-9-11/",
+          phoneNumber: "888-442-4551",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+        {
+          benefitName: "Vocational Rehabilitation (VR&E)",
+          benefitType: "education",
+          description: "Education and training for veterans with service-connected disabilities",
+          benefitAmount: "Full tuition + monthly housing allowance",
+          minDisabilityRating: 20,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Apply online using VA Form 28-1900",
+          processingTime: "2-3 months",
+          websiteUrl: "https://www.va.gov/careers-employment/vocational-rehabilitation/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+
+        // Housing Benefits
+        {
+          benefitName: "VA Home Loan",
+          benefitType: "housing",
+          description: "Zero down payment home loans with competitive rates",
+          benefitAmount: "No down payment, no PMI",
+          minDisabilityRating: null,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Obtain Certificate of Eligibility, find VA-approved lender",
+          processingTime: "2-4 weeks for COE",
+          websiteUrl: "https://www.va.gov/housing-assistance/home-loans/",
+          phoneNumber: "877-827-3702",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: 2
+        },
+        {
+          benefitName: "Specially Adapted Housing (SAH)",
+          benefitType: "housing",
+          description: "Grants for adapting homes for severely disabled veterans",
+          benefitAmount: "Up to $101,754 grant",
+          minDisabilityRating: 100,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Apply using VA Form 26-4555",
+          processingTime: "3-6 months",
+          websiteUrl: "https://www.va.gov/housing-assistance/disability-housing-grants/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+
+        // Employment Benefits
+        {
+          benefitName: "Veterans' Preference in Federal Hiring",
+          benefitType: "employment",
+          description: "Preference points in federal job applications",
+          benefitAmount: "5-10 preference points",
+          minDisabilityRating: null,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Include DD-214 with federal job applications",
+          processingTime: "Immediate",
+          websiteUrl: "https://www.fedshirevets.gov/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+
+        // Burial Benefits
+        {
+          benefitName: "VA Burial Benefits",
+          benefitType: "burial",
+          description: "Burial allowance and cemetery services for eligible veterans",
+          benefitAmount: "Up to $2,000 burial allowance",
+          minDisabilityRating: null,
+          requiredDischargeTypes: ["honorable", "general"],
+          applicationProcess: "Apply using VA Form 21P-530EZ",
+          processingTime: "2-4 weeks",
+          websiteUrl: "https://www.va.gov/burials-memorials/",
+          phoneNumber: "800-827-1000",
+          combatVeteranOnly: false,
+          eligibleStates: null,
+          incomeLimit: null,
+          minYearsOfService: null
+        }
+      ];
+
+      // State-specific benefits (North Carolina examples)
+      const stateBenefits = [
+        {
+          benefitName: "North Carolina Property Tax Exemption",
+          benefitType: "financial",
+          description: "Property tax exemption for 100% disabled veterans",
+          benefitAmount: "Full property tax exemption",
+          minDisabilityRating: 100,
+          requiredDischargeTypes: ["honorable"],
+          applicationProcess: "Apply with county tax assessor",
+          processingTime: "30-60 days",
+          websiteUrl: "https://www.ncdor.gov/",
+          phoneNumber: "919-814-1000",
+          combatVeteranOnly: false,
+          eligibleStates: ["North Carolina"],
+          incomeLimit: null,
+          minYearsOfService: null
+        },
+        {
+          benefitName: "North Carolina Veterans Property Tax Exclusion",
+          benefitType: "financial",
+          description: "$45,000 property value exclusion for disabled veterans",
+          benefitAmount: "$45,000 property value exclusion",
+          minDisabilityRating: 50,
+          requiredDischargeTypes: ["honorable"],
+          applicationProcess: "File with county tax office",
+          processingTime: "30 days",
+          websiteUrl: "https://www.ncdor.gov/",
+          phoneNumber: "919-814-1000",
+          combatVeteranOnly: false,
+          eligibleStates: ["North Carolina"],
+          incomeLimit: null,
+          minYearsOfService: null
+        }
+      ];
+
+      const allBenefits = [...federalBenefits, ...stateBenefits];
+
+      for (const benefit of allBenefits) {
+        await this.db.insert(benefitsDatabase).values(benefit);
+      }
+
+      console.log(`Populated benefits database with ${allBenefits.length} benefits`);
+    } catch (error) {
+      console.error("Error populating benefits database:", error);
     }
   }
 

@@ -164,13 +164,18 @@ export default function BenefitsCalculator() {
       if (keys.length === 1) {
         return { ...prev, [field]: value };
       } else if (keys.length === 2) {
-        return {
-          ...prev,
-          [keys[0]]: {
-            ...prev[keys[0] as keyof EligibilityFormData],
-            [keys[1]]: value
-          }
-        };
+        const [parentKey, childKey] = keys;
+        const parentValue = prev[parentKey as keyof EligibilityFormData];
+        
+        if (typeof parentValue === 'object' && parentValue !== null) {
+          return {
+            ...prev,
+            [parentKey]: {
+              ...parentValue,
+              [childKey]: value
+            }
+          };
+        }
       }
       return prev;
     });

@@ -441,6 +441,63 @@ const militaryBaseAttorneys = {
       experience: "15+ years",
       rating: 4.6
     }
+  ],
+  8: [ // Yuma Proving Ground, Arizona
+    {
+      id: "yuma-1",
+      name: "Capovilla & Williams",
+      location: "Nationwide",
+      phone: "(855) 684-0743",
+      website: "https://www.capovilla-williams.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations", "Sexual assault", "Domestic violence", "Drug offenses", "AWOL"],
+      description: "Nationwide military defense firm specializing in complex UCMJ cases.",
+      experience: "18+ years",
+      rating: 4.8
+    },
+    {
+      id: "yuma-2",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "yuma-3",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "yuma-4",
+      name: "Stone Rose Law",
+      location: "Arizona",
+      phone: "(480) 498-8998",
+      website: "https://www.stoneroselaw.com",
+      specialties: ["Court-martial defense", "Administrative separation (ADSEP)", "UCMJ violations"],
+      description: "Arizona-based military defense firm serving southwestern installations.",
+      experience: "12+ years",
+      rating: 4.7
+    },
+    {
+      id: "yuma-5",
+      name: "Military Law Center",
+      location: "California & Arizona",
+      phone: "(760) 536-9038",
+      website: "https://www.militarylawcenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "NJP", "Corrections of military records"],
+      description: "Staffed by Marine veterans with extensive experience in military law.",
+      experience: "15+ years",
+      rating: 4.7
+    }
   ]
 };
 

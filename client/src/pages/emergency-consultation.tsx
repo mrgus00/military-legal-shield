@@ -205,7 +205,7 @@ export default function EmergencyConsultation() {
               </div>
             ) : (
               <div className="grid gap-4">
-                {emergencyAttorneys?.map((attorney: any) => (
+                {(emergencyAttorneys || []).map((attorney: any) => (
                   <Card 
                     key={attorney.id}
                     className={`cursor-pointer transition-all ${
@@ -309,7 +309,7 @@ export default function EmergencyConsultation() {
                       <FormItem>
                         <FormLabel>Phone Number</FormLabel>
                         <FormControl>
-                          <Input type="tel" {...field} />
+                          <Input type="tel" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -349,7 +349,7 @@ export default function EmergencyConsultation() {
                       <FormItem>
                         <FormLabel>Military Rank</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., E-5, O-3, W-2" {...field} />
+                          <Input placeholder="e.g., E-5, O-3, W-2" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -511,7 +511,7 @@ export default function EmergencyConsultation() {
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
+                          checked={field.value || false}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
@@ -553,6 +553,7 @@ export default function EmergencyConsultation() {
                       <FormControl>
                         <Textarea 
                           {...field} 
+                          value={field.value || ""}
                           rows={3}
                           placeholder="Any additional information that might be helpful for the attorney to know..."
                         />

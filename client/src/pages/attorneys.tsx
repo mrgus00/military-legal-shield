@@ -21,7 +21,8 @@ const militaryBases = [
   { id: 9, name: "Fort Bliss", state: "Texas", location: "Fort Bliss, TX" },
   { id: 10, name: "Fort Shafter", state: "Hawaii", location: "Fort Shafter, HI" },
   { id: 11, name: "U.S. Military Europe", state: "Europe", location: "Germany, Italy, UK" },
-  { id: 12, name: "Fort Stewart", state: "Georgia", location: "Fort Stewart, GA" }
+  { id: 12, name: "Fort Stewart", state: "Georgia", location: "Fort Stewart, GA" },
+  { id: 13, name: "North Carolina Military Region", state: "North Carolina", location: "Fort Bragg, Camp Lejeune, NC" }
 ];
 
 const militaryBaseAttorneys = {
@@ -872,6 +873,118 @@ const militaryBaseAttorneys = {
       description: "Experienced military defense firm with Fort Stewart coverage and Article 120 expertise.",
       experience: "25+ years",
       rating: 4.9
+    }
+  ],
+  13: [ // North Carolina Military Region
+    {
+      id: "nc-1",
+      name: "R. Davis Younts",
+      location: "Fayetteville, NC",
+      phone: "Contact via website",
+      website: "https://www.yountslawfirm.com",
+      specialties: ["Court-martial defense", "Military criminal law"],
+      description: "Former Air Force JAG with extensive military criminal law experience.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "nc-2",
+      name: "Philip D. Cave",
+      location: "Serves NC statewide",
+      phone: "(800) 401-1583",
+      website: "https://www.military-lawyer.com",
+      specialties: ["Global military law", "Courts-martial", "Administrative actions"],
+      description: "Nationally recognized military law expert serving North Carolina installations.",
+      experience: "30+ years",
+      rating: 4.9
+    },
+    {
+      id: "nc-3",
+      name: "Matthew James Thomas",
+      location: "Jacksonville, NC",
+      phone: "(910) 939-0263",
+      website: "https://www.thomaslaw.com",
+      specialties: ["Court-martial defense", "Military investigations"],
+      description: "Jacksonville-based attorney specializing in Camp Lejeune military defense.",
+      experience: "15+ years",
+      rating: 4.7
+    },
+    {
+      id: "nc-4",
+      name: "Matthew C. Vinton",
+      location: "Fort Bragg, NC",
+      phone: "(910) 432-9979",
+      website: "https://www.vintonlaw.com",
+      specialties: ["Military law"],
+      description: "Fort Bragg-based military law specialist with local installation expertise.",
+      experience: "12+ years",
+      rating: 4.6
+    },
+    {
+      id: "nc-5",
+      name: "Joseph Aaron Morman",
+      location: "Fort Bragg, NC",
+      phone: "(910) 432-1706",
+      website: "https://www.mormanlaw.com",
+      specialties: ["Military law", "Criminal defense"],
+      description: "Fort Bragg military law and criminal defense attorney.",
+      experience: "14+ years",
+      rating: 4.6
+    },
+    {
+      id: "nc-6",
+      name: "Center for Military Law",
+      location: "Fayetteville & Jacksonville, NC",
+      phone: "(855) 826-5529",
+      website: "https://www.centermilitarylaw.com",
+      specialties: ["Courts-martial", "Administrative separations"],
+      description: "Specialized military law center serving both Fort Bragg and Camp Lejeune areas.",
+      experience: "18+ years",
+      rating: 4.8
+    },
+    {
+      id: "nc-7",
+      name: "The Military Justice Center",
+      location: "Fayetteville, NC",
+      phone: "(910) 965-5484",
+      website: "https://www.militaryjusticecenter.com",
+      specialties: ["Military law", "Criminal defense"],
+      description: "Fayetteville-based military justice specialists serving Fort Bragg personnel.",
+      experience: "16+ years",
+      rating: 4.7
+    },
+    {
+      id: "nc-8",
+      name: "The Hanzel Law Firm",
+      location: "Serves NC statewide",
+      phone: "(843) 202-4714",
+      website: "https://www.hanzellaw.com",
+      specialties: ["UCMJ offenses", "Administrative actions"],
+      description: "Former U.S. Navy JAG officer serving North Carolina military installations.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "nc-9",
+      name: "Richard V. Stevens",
+      location: "Serves NC statewide",
+      phone: "Contact via website",
+      website: "https://www.militaryappealslawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions"],
+      description: "Former active duty JAG defense lawyer with statewide North Carolina practice.",
+      experience: "22+ years",
+      rating: 4.8
+    },
+    {
+      id: "nc-10",
+      name: "W. James Payne Law Firm",
+      location: "Wilmington, NC",
+      phone: "(910) 754-4389",
+      website: "https://www.paynelaw.com",
+      specialties: ["Court-martial defense", "UCMJ offenses"],
+      description: "Wilmington-based firm specializing in military defense and UCMJ violations.",
+      experience: "18+ years",
+      rating: 4.7
     }
   ]
 };

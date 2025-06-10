@@ -20,7 +20,8 @@ const militaryBases = [
   { id: 8, name: "Yuma Proving Ground", state: "Arizona", location: "Yuma, AZ" },
   { id: 9, name: "Fort Bliss", state: "Texas", location: "Fort Bliss, TX" },
   { id: 10, name: "Fort Shafter", state: "Hawaii", location: "Fort Shafter, HI" },
-  { id: 11, name: "U.S. Military Europe", state: "Europe", location: "Germany, Italy, UK" }
+  { id: 11, name: "U.S. Military Europe", state: "Europe", location: "Germany, Italy, UK" },
+  { id: 12, name: "Fort Stewart", state: "Georgia", location: "Fort Stewart, GA" }
 ];
 
 const militaryBaseAttorneys = {
@@ -781,6 +782,96 @@ const militaryBaseAttorneys = {
       description: "Represents service members across various U.S. military installations in Germany.",
       experience: "14+ years",
       rating: 4.6
+    }
+  ],
+  12: [ // Fort Stewart, Georgia
+    {
+      id: "stewart-1",
+      name: "JAG Defense",
+      location: "Serves Fort Stewart",
+      phone: "(877) 222-4199",
+      website: "https://www.jagdefense.com",
+      specialties: ["Military courts-martial", "Security clearance defense", "Military sexual assault", "Administrative discharges", "NJP/Article 15", "Courts-martial appeals"],
+      description: "Specialized military defense firm serving Fort Stewart with comprehensive UCMJ expertise.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "stewart-2",
+      name: "Mangan Law",
+      location: "Savannah, GA",
+      phone: "(360) 908-2203",
+      website: "https://www.manganlaw.com",
+      specialties: ["Criminal investigations", "Administrative investigations", "Military medical privileging/credentialing", "Adverse administrative actions", "Court-martial representation"],
+      description: "Savannah-based firm specializing in military legal defense and medical credentialing issues.",
+      experience: "15+ years",
+      rating: 4.7
+    },
+    {
+      id: "stewart-3",
+      name: "Arnold & Stafford",
+      location: "Hinesville, GA",
+      phone: "(912) 289-0673",
+      website: "https://www.arnoldstafford.com",
+      specialties: ["Courts-martial", "Article 15", "Chapter separations", "Letters of reprimand", "Medical boards", "Military medical malpractice"],
+      description: "Local Hinesville firm with extensive Fort Stewart military legal experience.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "stewart-4",
+      name: "Balbo & Gregg, Attorneys at Law, PC",
+      location: "Hinesville, GA",
+      phone: "(866) 580-3089",
+      website: "https://www.balbogregg.com",
+      specialties: ["Military law", "Criminal defense", "Family law", "DUI & traffic offenses"],
+      description: "Comprehensive legal services for Fort Stewart personnel and families in Hinesville.",
+      experience: "12+ years",
+      rating: 4.6
+    },
+    {
+      id: "stewart-5",
+      name: "The Hanzel Law Firm",
+      location: "Serves Georgia",
+      phone: "(843) 202-4714",
+      website: "https://www.hanzellaw.com",
+      specialties: ["Military sexual offenses", "Urinalysis & drug crimes", "UCMJ offenses", "Officer misconduct", "Military appeals", "Security clearances"],
+      description: "Former U.S. Navy JAG officer serving Georgia military installations.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "stewart-6",
+      name: "Capovilla & Williams",
+      location: "Serves Fort Stewart",
+      phone: "(855) 684-0743",
+      website: "https://www.capovilla-williams.com",
+      specialties: ["Disciplinary measures", "Courts-martial", "Separation boards", "GOMOR rebuttals", "OER/NCOER rebuttals"],
+      description: "Nationwide firm with dedicated Fort Stewart military defense coverage.",
+      experience: "18+ years",
+      rating: 4.8
+    },
+    {
+      id: "stewart-7",
+      name: "Shewmaker & Shewmaker",
+      location: "Serves Fort Stewart",
+      phone: "(770) 939-1939",
+      website: "https://www.shewmakerlaw.com",
+      specialties: ["UCMJ offenses", "Administrative hearings", "Sexual assault defense"],
+      description: "Georgia-based military defense specialists serving Fort Stewart personnel.",
+      experience: "16+ years",
+      rating: 4.7
+    },
+    {
+      id: "stewart-8",
+      name: "Gonzalez & Waddington",
+      location: "Serves Fort Stewart",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "UCMJ actions", "Administrative separation boards", "Article 120 offenses"],
+      description: "Experienced military defense firm with Fort Stewart coverage and Article 120 expertise.",
+      experience: "25+ years",
+      rating: 4.9
     }
   ]
 };

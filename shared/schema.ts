@@ -349,6 +349,46 @@ export const scenarioAnalytics = pgTable("scenario_analytics", {
   generatedAt: timestamp("generated_at").defaultNow(),
 });
 
+// Benefits eligibility calculations
+export const benefitsEligibility = pgTable("benefits_eligibility", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Optional - can be used for guests
+  serviceStatus: text("service_status").notNull(), // active, veteran, retired, discharged
+  branch: text("branch").notNull(), // Army, Navy, Air Force, Marines, Coast Guard, Space Force
+  serviceDates: jsonb("service_dates").notNull(), // { startDate, endDate, totalYears, totalMonths }
+  deployments: jsonb("deployments"), // Array of deployment records
+  dischargeType: text("discharge_type"), // honorable, general, other_than_honorable, dishonorable
+  disabilityRating: integer("disability_rating"), // VA disability percentage 0-100
+  combatVeteran: boolean("combat_veteran").default(false),
+  prisonerOfWar: boolean("prisoner_of_war").default(false),
+  purpleHeart: boolean("purple_heart").default(false),
+  medals: text("medals").array(), // Array of medals/decorations
+  dependents: jsonb("dependents"), // Spouse and children information
+  income: jsonb("income"), // Household income information
+  location: jsonb("location"), // State, ZIP for location-based benefits
+  eligibleBenefits: jsonb("eligible_benefits"), // Calculated benefits array
+  calculatedAt: timestamp("calculated_at").defaultNow(),
+  lastUpdated: timestamp("last_updated").defaultNow(),
+});
+
+// Benefits database
+export const benefitsDatabase = pgTable("benefits_database", {
+  id: serial("id").primaryKey(),
+  benefitType: text("benefit_type").notNull(), // healthcare, education, disability, housing, etc.
+  benefitName: text("benefit_name").notNull(),
+  description: text("description").notNull(),
+  eligibilityCriteria: jsonb("eligibility_criteria").notNull(),
+  applicationProcess: text("application_process"),
+  requiredDocuments: text("required_documents").array(),
+  processingTime: text("processing_time"),
+  benefitAmount: text("benefit_amount"),
+  renewalRequired: boolean("renewal_required").default(false),
+  websiteUrl: text("website_url"),
+  phoneNumber: text("phone_number"),
+  isActive: boolean("is_active").default(true),
+  lastUpdated: timestamp("last_updated").defaultNow(),
+});
+
 // Learning paths for gamified education
 export const learningPaths = pgTable("learning_paths", {
   id: serial("id").primaryKey(),
@@ -537,6 +577,18 @@ export const insertSubscriptionPlanSchema = createInsertSchema(subscriptionPlans
   isActive: true,
 });
 
+export const insertBenefitsEligibilitySchema = createInsertSchema(benefitsEligibility).omit({
+  id: true,
+  calculatedAt: true,
+  lastUpdated: true,
+});
+
+export const insertBenefitsDatabaseSchema = createInsertSchema(benefitsDatabase).omit({
+  id: true,
+  isActive: true,
+  lastUpdated: true,
+});
+
 export const insertUserSubscriptionSchema = createInsertSchema(userSubscriptions).omit({
   id: true,
   createdAt: true,
@@ -666,6 +718,12 @@ export type InsertEducationModule = z.infer<typeof insertEducationModuleSchema>;
 export type EducationModule = typeof educationModules.$inferSelect;
 
 export type InsertConsultation = z.infer<typeof insertConsultationSchema>;
+
+export type InsertBenefitsEligibility = z.infer<typeof insertBenefitsEligibilitySchema>;
+export type BenefitsEligibility = typeof benefitsEligibility.$inferSelect;
+
+export type InsertBenefitsDatabase = z.infer<typeof insertBenefitsDatabaseSchema>;
+export type BenefitsDatabase = typeof benefitsDatabase.$inferSelect;
 export type Consultation = typeof consultations.$inferSelect;
 
 export type InsertLegalCase = z.infer<typeof insertLegalCaseSchema>;

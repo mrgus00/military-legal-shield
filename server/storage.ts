@@ -3,6 +3,7 @@ import {
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
+  benefitsEligibility, benefitsDatabase,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -23,7 +24,9 @@ import {
   type ScenarioAnalytics, type InsertScenarioAnalytics,
   type Story, type InsertStory,
   type DocumentTemplate, type InsertDocumentTemplate,
-  type GeneratedDocument, type InsertGeneratedDocument
+  type GeneratedDocument, type InsertGeneratedDocument,
+  type BenefitsEligibility, type InsertBenefitsEligibility,
+  type BenefitsDatabase, type InsertBenefitsDatabase
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -145,6 +148,13 @@ export interface IStorage {
   getDocumentTemplate(id: number): Promise<DocumentTemplate | undefined>;
   createDocumentTemplate(template: InsertDocumentTemplate): Promise<DocumentTemplate>;
   generateDocument(templateId: number, formData: any, userId?: string): Promise<GeneratedDocument>;
+
+  // Benefits eligibility operations
+  calculateBenefitsEligibility(eligibilityData: InsertBenefitsEligibility): Promise<BenefitsEligibility>;
+  getBenefitsEligibility(id: number): Promise<BenefitsEligibility | undefined>;
+  getBenefitsDatabase(): Promise<BenefitsDatabase[]>;
+  getBenefitsByType(benefitType: string): Promise<BenefitsDatabase[]>;
+  createBenefitsDatabase(benefit: InsertBenefitsDatabase): Promise<BenefitsDatabase>;
   getUserDocuments(userId: string): Promise<GeneratedDocument[]>;
   getGeneratedDocument(id: number): Promise<GeneratedDocument | undefined>;
   updateDocumentStatus(id: number, status: string): Promise<GeneratedDocument | undefined>;

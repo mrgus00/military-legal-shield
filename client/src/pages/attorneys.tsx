@@ -327,6 +327,63 @@ const militaryBaseAttorneys = {
       experience: "100+ years combined",
       rating: 4.7
     }
+  ],
+  6: [ // NAWS China Lake, California
+    {
+      id: "china-1",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "china-2",
+      name: "Kral Military Defense",
+      location: "California",
+      phone: "Contact via website",
+      website: "https://www.kralmilitarydefense.com",
+      specialties: ["Courts-martial", "Military discipline defense", "Military investigations", "Military sexual assault", "UCMJ crimes"],
+      description: "Attorneys Stephanie Kral and Abbigayle Hunter are military veterans with over 25 years of combined experience.",
+      experience: "25+ years combined",
+      rating: 4.8
+    },
+    {
+      id: "china-3",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "china-4",
+      name: "Military Law Center",
+      location: "California",
+      phone: "(760) 536-9038",
+      website: "https://www.militarylawcenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "NJP", "Corrections of military records"],
+      description: "Staffed by Marine veterans with extensive experience in military law.",
+      experience: "15+ years",
+      rating: 4.7
+    },
+    {
+      id: "china-5",
+      name: "Richard V. Stevens, Attorney at Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.militaryappealslawyer.com",
+      specialties: ["Court-martial defense", "Discharge upgrades", "Administrative actions"],
+      description: "Former active duty JAG defense lawyer with worldwide practice.",
+      experience: "22+ years",
+      rating: 4.8
+    }
   ]
 };
 

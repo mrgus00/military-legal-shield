@@ -19,7 +19,7 @@ const militaryBases = [
   { id: 7, name: "Fort Jonathan Wainwright", state: "Alaska", location: "Fort Wainwright, AK" },
   { id: 8, name: "Yuma Proving Ground", state: "Arizona", location: "Yuma, AZ" },
   { id: 9, name: "Fort Bliss", state: "Texas", location: "Fort Bliss, TX" },
-  { id: 10, name: "White Sands Missile Range", state: "New Mexico", location: "White Sands, NM" }
+  { id: 10, name: "Fort Shafter", state: "Hawaii", location: "Fort Shafter, HI" }
 ];
 
 const militaryBaseAttorneys = {
@@ -632,6 +632,63 @@ const militaryBaseAttorneys = {
       specialties: ["Court-martial defense", "Administrative separations", "NJP", "Corrections of military records"],
       description: "Staffed by Marine veterans with extensive experience in military law.",
       experience: "15+ years",
+      rating: 4.7
+    }
+  ],
+  10: [ // Fort Shafter, Hawaii
+    {
+      id: "shafter-1",
+      name: "Bilecki Law Group, PLLC",
+      location: "Honolulu, HI",
+      phone: "(808) 745-1041",
+      website: "https://www.bileckilaw.com",
+      specialties: ["Court-martial defense", "Administrative separations", "UCMJ violations"],
+      description: "Led by Timothy J. Bilecki, former Army JAG with extensive trial experience.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "shafter-2",
+      name: "Ganz & Bridges Law Office",
+      location: "Honolulu, HI",
+      phone: "(808) 358-7318",
+      website: "https://www.ganzbridges.com",
+      specialties: ["Court-martial defense", "GOMOR rebuttals", "Military sexual assault defense", "Administrative separations"],
+      description: "Led by COL (Ret.) Mark Bridges, former Army JAG.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "shafter-3",
+      name: "Court & Carpenter, PC",
+      location: "Serving Hawaii",
+      phone: "(202) 695-8499",
+      website: "https://www.courtcarpenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "UCMJ violations"],
+      description: "Military-only law firm with global experience.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "shafter-4",
+      name: "David S. Hendrickson",
+      location: "Honolulu, HI",
+      phone: "(808) 729-8937",
+      website: "https://www.hendricksonlaw.com",
+      specialties: ["Court-martial defense", "Military criminal defense", "Administrative actions"],
+      description: "Former Army JAG with a high success rate in courts-martial.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "shafter-5",
+      name: "Military Justice Attorneys",
+      location: "Serving Hawaii",
+      phone: "(843) 773-5501",
+      website: "https://www.militaryjusticeattorneys.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Discharge upgrades"],
+      description: "Team of former military officers with over 40 years of combined experience.",
+      experience: "40+ years combined",
       rating: 4.7
     }
   ]

@@ -1,5 +1,5 @@
 // Service Worker for Progressive Web App functionality
-const CACHE_NAME = 'soldier-on-fire-v1';
+const CACHE_NAME = 'militarylegalshield-v1';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',

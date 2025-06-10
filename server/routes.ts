@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { db } from "./db";
 import { sql } from "drizzle-orm";
-import { insertConsultationSchema } from "@shared/schema";
+import { insertConsultationSchema, insertEmergencyConsultationSchema } from "@shared/schema";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
 import Stripe from "stripe";
@@ -365,6 +365,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(consultations);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch consultations" });
+    }
+  });
+
+  // Emergency consultation endpoints
+  app.post("/api/emergency-consultations", async (req, res) => {
+    try {
+      const validatedData = insertEmergencyConsultationSchema.parse(req.body);
+      const consultation = await storage.createEmergencyConsultation(validatedData);
+      res.status(201).json(consultation);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      res.status(500).json({ message: "Failed to create emergency consultation" });
+    }
+  });
+
+  app.get("/api/emergency-consultations", async (req, res) => {
+    try {
+      const consultations = await storage.getEmergencyConsultations();
+      res.json(consultations);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch emergency consultations" });
+    }
+  });
+
+  app.get("/api/emergency-consultations/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid consultation ID" });
+      }
+      const consultation = await storage.getEmergencyConsultation(id);
+      if (!consultation) {
+        return res.status(404).json({ message: "Emergency consultation not found" });
+      }
+      res.json(consultation);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch emergency consultation" });
+    }
+  });
+
+  app.patch("/api/emergency-consultations/:id/status", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, attorneyResponse } = req.body;
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid consultation ID" });
+      }
+      
+      const updated = await storage.updateEmergencyConsultationStatus(id, status, attorneyResponse);
+      if (!updated) {
+        return res.status(404).json({ message: "Emergency consultation not found" });
+      }
+      
+      res.json(updated);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update emergency consultation status" });
+    }
+  });
+
+  app.get("/api/attorneys/emergency", async (req, res) => {
+    try {
+      const attorneys = await storage.getEmergencyAttorneys();
+      res.json(attorneys);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch emergency attorneys" });
     }
   });
 

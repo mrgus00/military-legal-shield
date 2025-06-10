@@ -798,6 +798,47 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
+  // Emergency consultation methods
+  async getEmergencyConsultations(): Promise<EmergencyConsultation[]> {
+    return this.db.select().from(emergencyConsultations).orderBy(desc(emergencyConsultations.createdAt));
+  }
+
+  async getEmergencyConsultation(id: number): Promise<EmergencyConsultation | undefined> {
+    const [consultation] = await this.db.select().from(emergencyConsultations)
+      .where(eq(emergencyConsultations.id, id));
+    return consultation;
+  }
+
+  async createEmergencyConsultation(consultation: InsertEmergencyConsultation): Promise<EmergencyConsultation> {
+    const [newConsultation] = await this.db.insert(emergencyConsultations)
+      .values(consultation)
+      .returning();
+    return newConsultation;
+  }
+
+  async updateEmergencyConsultationStatus(id: number, status: string, attorneyResponse?: string): Promise<EmergencyConsultation | undefined> {
+    const updateData: any = { status, updatedAt: new Date() };
+    if (attorneyResponse) {
+      updateData.attorneyResponse = attorneyResponse;
+    }
+    
+    const [updated] = await this.db.update(emergencyConsultations)
+      .set(updateData)
+      .where(eq(emergencyConsultations.id, id))
+      .returning();
+    return updated;
+  }
+
+  async getEmergencyAttorneys(): Promise<Attorney[]> {
+    return this.db.select().from(attorneys)
+      .where(and(
+        eq(attorneys.availableForEmergency, true),
+        eq(attorneys.isActive, true),
+        eq(attorneys.isVerified, true)
+      ))
+      .orderBy(attorneys.rating);
+  }
+
   // Legal case methods
   async getLegalCases(userId?: number): Promise<LegalCase[]> {
     if (userId) {

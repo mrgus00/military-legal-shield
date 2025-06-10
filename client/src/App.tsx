@@ -41,6 +41,7 @@ import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import DocumentGenerator from "@/pages/document-generator";
+import EmergencyConsultation from "@/pages/emergency-consultation";
 
 function Router() {
   return (

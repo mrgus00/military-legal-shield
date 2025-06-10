@@ -90,9 +90,10 @@ export default function EmergencyConsultation() {
     mutationFn: async (data: EmergencyFormData) => {
       const formattedData = {
         ...data,
-        preferredDateTime: new Date(data.preferredDateTime),
-        alternateDateTime: data.alternateDateTime ? new Date(data.alternateDateTime) : null,
-        deadlineDate: data.deadlineDate ? new Date(data.deadlineDate) : null,
+        preferredDateTime: new Date(data.preferredDateTime).toISOString(),
+        alternateDateTime: data.alternateDateTime ? new Date(data.alternateDateTime).toISOString() : null,
+        deadlineDate: data.deadlineDate ? new Date(data.deadlineDate).toISOString() : null,
+        assignedAttorneyId: selectedAttorney,
       };
       return apiRequest("POST", "/api/emergency-consultations", formattedData);
     },
@@ -103,11 +104,13 @@ export default function EmergencyConsultation() {
       });
       queryClient.invalidateQueries({ queryKey: ["/api/emergency-consultations"] });
       form.reset();
+      setSelectedAttorney(null);
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      console.error("Emergency consultation error:", error);
       toast({
         title: "Request Failed",
-        description: error.message,
+        description: error.message || "Please check your information and try again.",
         variant: "destructive",
       });
     },

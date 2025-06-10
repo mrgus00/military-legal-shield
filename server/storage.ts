@@ -1,5 +1,5 @@
 import { 
-  users, attorneys, legalResources, educationModules, consultations,
+  users, attorneys, legalResources, educationModules, consultations, emergencyConsultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
@@ -9,6 +9,7 @@ import {
   type LegalResource, type InsertLegalResource,
   type EducationModule, type InsertEducationModule,
   type Consultation, type InsertConsultation,
+  type EmergencyConsultation, type InsertEmergencyConsultation,
   type LegalCase, type InsertLegalCase,
   type EmergencyResource, type InsertEmergencyResource,
   type ForumQuestion, type InsertForumQuestion,
@@ -60,6 +61,13 @@ export interface IStorage {
   getConsultations(): Promise<Consultation[]>;
   getConsultation(id: number): Promise<Consultation | undefined>;
   createConsultation(consultation: InsertConsultation): Promise<Consultation>;
+
+  // Emergency consultation methods
+  getEmergencyConsultations(): Promise<EmergencyConsultation[]>;
+  getEmergencyConsultation(id: number): Promise<EmergencyConsultation | undefined>;
+  createEmergencyConsultation(consultation: InsertEmergencyConsultation): Promise<EmergencyConsultation>;
+  updateEmergencyConsultationStatus(id: number, status: string, attorneyResponse?: string): Promise<EmergencyConsultation | undefined>;
+  getEmergencyAttorneys(): Promise<Attorney[]>;
 
   // Legal case methods
   getLegalCases(userId?: number): Promise<LegalCase[]>;

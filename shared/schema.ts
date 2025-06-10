@@ -99,6 +99,34 @@ export const consultations = pgTable("consultations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const emergencyConsultations = pgTable("emergency_consultations", {
+  id: serial("id").primaryKey(),
+  attorneyId: integer("attorney_id").notNull(),
+  clientFirstName: text("client_first_name").notNull(),
+  clientLastName: text("client_last_name").notNull(),
+  clientEmail: text("client_email").notNull(),
+  clientPhone: text("client_phone"),
+  clientBranch: text("client_branch").notNull(),
+  clientRank: text("client_rank"),
+  urgencyLevel: text("urgency_level").notNull(), // critical, high, moderate
+  legalIssueType: text("legal_issue_type").notNull(),
+  incidentDescription: text("incident_description").notNull(),
+  preferredDateTime: timestamp("preferred_date_time"),
+  alternateDateTime: timestamp("alternate_date_time"),
+  timeZone: text("time_zone").notNull(),
+  consultationType: text("consultation_type").notNull(), // phone, video, in-person
+  hasDeadline: boolean("has_deadline").default(false),
+  deadlineDate: timestamp("deadline_date"),
+  additionalNotes: text("additional_notes"),
+  status: text("status").default("pending"), // pending, confirmed, completed, cancelled
+  attorneyResponse: text("attorney_response"),
+  scheduledDateTime: timestamp("scheduled_date_time"),
+  consultationNotes: text("consultation_notes"),
+  followUpRequired: boolean("follow_up_required").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Legal Cases for tracking
 export const legalCases = pgTable("legal_cases", {
   id: serial("id").primaryKey(),
@@ -541,6 +569,17 @@ export const insertConsultationSchema = createInsertSchema(consultations).omit({
   createdAt: true,
 });
 
+export const insertEmergencyConsultationSchema = createInsertSchema(emergencyConsultations).omit({
+  id: true,
+  status: true,
+  attorneyResponse: true,
+  scheduledDateTime: true,
+  consultationNotes: true,
+  followUpRequired: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertLegalCaseSchema = createInsertSchema(legalCases).omit({
   id: true,
   createdAt: true,
@@ -718,6 +757,10 @@ export type InsertEducationModule = z.infer<typeof insertEducationModuleSchema>;
 export type EducationModule = typeof educationModules.$inferSelect;
 
 export type InsertConsultation = z.infer<typeof insertConsultationSchema>;
+export type Consultation = typeof consultations.$inferSelect;
+
+export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
+export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
 
 export type InsertBenefitsEligibility = z.infer<typeof insertBenefitsEligibilitySchema>;
 export type BenefitsEligibility = typeof benefitsEligibility.$inferSelect;

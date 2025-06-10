@@ -498,6 +498,85 @@ const militaryBaseAttorneys = {
       experience: "15+ years",
       rating: 4.7
     }
+  ],
+  9: [ // Fort Bliss, Texas
+    {
+      id: "bliss-1",
+      name: "Capovilla & Williams",
+      location: "Nationwide",
+      phone: "(404) 496-7674",
+      website: "https://www.capovilla-williams.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations", "Sexual assault", "Domestic violence", "Drug offenses", "AWOL"],
+      description: "Nationwide military defense firm specializing in complex UCMJ cases.",
+      experience: "18+ years",
+      rating: 4.8
+    },
+    {
+      id: "bliss-2",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "bliss-3",
+      name: "Military Trial Defenders",
+      location: "El Paso, TX",
+      phone: "Contact via website",
+      website: "https://www.militarytrialdefenders.com",
+      specialties: ["Court-martial defense", "Administrative separations", "UCMJ violations"],
+      description: "Team of experienced military defense attorneys serving the El Paso area.",
+      experience: "15+ years",
+      rating: 4.7
+    },
+    {
+      id: "bliss-4",
+      name: "Aaron Meyer Law",
+      location: "California",
+      phone: "Contact via website",
+      website: "https://www.aaronmeyerlaw.com",
+      specialties: ["Military criminal defense", "UCMJ violations", "Administrative separations"],
+      description: "Former Marine Judge Advocate with extensive trial experience.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "bliss-5",
+      name: "R. Davis Younts, Esq.",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.yountslawfirm.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations"],
+      description: "Former Air Force JAG with extensive experience in military justice.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "bliss-6",
+      name: "Colby Vokey Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.colbyvokeylaw.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations"],
+      description: "Retired Marine Corps Lieutenant Colonel with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "bliss-7",
+      name: "Law Office of Abrar & Vergara",
+      location: "El Paso, TX",
+      phone: "(915) 444-6675",
+      website: "https://www.abrarvergara.com",
+      specialties: ["Military defense", "Court-martial representation", "Administrative actions"],
+      description: "Experienced legal team dedicated to defending service members in the El Paso area.",
+      experience: "12+ years",
+      rating: 4.6
+    }
   ]
 };
 

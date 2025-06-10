@@ -101,6 +101,85 @@ const militaryBaseAttorneys = {
       experience: "22+ years", 
       rating: 4.8
     }
+  ],
+  3: [ // Joint Base Lewis-McChord, Washington
+    {
+      id: "jblm-1",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "jblm-2",
+      name: "Mangan Law",
+      location: "Washington",
+      phone: "(360) 908-2203",
+      website: "https://www.manganlaw.com",
+      specialties: ["Criminal investigations", "Administrative investigations", "Military medical privileging/credentialing", "Adverse administrative actions", "Court-martial representation"],
+      description: "Led by Sean Mangan, a former military judge and law enforcement officer with over 30 years of experience.",
+      experience: "30+ years",
+      rating: 4.9
+    },
+    {
+      id: "jblm-3",
+      name: "Gagne, Scherer & Associates, LLC",
+      location: "Nationwide",
+      phone: "(800) 319-3134",
+      website: "https://www.gagnescherer.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "All attorneys are former military members who served in the Judge Advocate General's (JAG) Corps.",
+      experience: "25+ years",
+      rating: 4.8
+    },
+    {
+      id: "jblm-4",
+      name: "JAG Defense",
+      location: "Nationwide",
+      phone: "(877) 222-4199",
+      website: "https://www.jagdefense.com",
+      specialties: ["Military courts-martial", "Security clearance defense", "Administrative discharge boards", "Sex offenses", "Positive urinalysis tests", "Courts-martial appeals", "Non-judicial punishment/Article 15", "Flying evaluation boards", "Senior officer cases"],
+      description: "Led by Grover H. Baxley, a former U.S. Air Force Judge Advocate.",
+      experience: "22+ years",
+      rating: 4.7
+    },
+    {
+      id: "jblm-5",
+      name: "Guy L. Womack & Associates, P.C.",
+      location: "Nationwide",
+      phone: "(713) 364-9913",
+      website: "https://www.guywomack.com",
+      specialties: ["Court-martial defense", "Court-martial appeals", "Discharge hearings", "Drug crimes", "Fraud crimes", "Officer misconduct", "Sex offenses"],
+      description: "Led by Guy Womack, a former judge advocate and retired lieutenant colonel of the Marine Corps.",
+      experience: "25+ years",
+      rating: 4.8
+    },
+    {
+      id: "jblm-6",
+      name: "Beckwith Law Group",
+      location: "Tacoma & Seattle, WA",
+      phone: "(253) 238-8273",
+      website: "https://www.beckwithlaw.com",
+      specialties: ["Defense against civilian criminal charges", "DUI defense", "Domestic violence defense"],
+      description: "Defense against civilian criminal charges affecting military personnel. Offers a 10% discount for active-duty military members.",
+      experience: "15+ years",
+      rating: 4.6
+    },
+    {
+      id: "jblm-7",
+      name: "Federal Practice Group",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.federalpracticegroup.com",
+      specialties: ["Military criminal defense", "Administrative actions", "Security clearance issues"],
+      description: "Over 100 years of combined military law experience.",
+      experience: "100+ years combined",
+      rating: 4.7
+    }
   ]
 };
 

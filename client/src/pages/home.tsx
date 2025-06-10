@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/page-layout";
 import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
+import MilitaryBranchesBanner from "@/components/military-branches-banner";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -303,6 +304,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Military Branches Banner */}
+      <MilitaryBranchesBanner />
     </PageLayout>
   );
 }

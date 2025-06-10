@@ -539,10 +539,10 @@ export default function BenefitsCalculator() {
                       )}
                     </div>
                   )}
-                  </Tabs>
                 </CardContent>
               </Card>
             </div>
+          </div>
           </div>
         </div>
       </div>

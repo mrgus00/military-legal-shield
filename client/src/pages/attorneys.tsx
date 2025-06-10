@@ -259,6 +259,74 @@ const militaryBaseAttorneys = {
       experience: "12+ years",
       rating: 4.6
     }
+  ],
+  5: [ // 29 Palms Marine Corps Air Ground Combat Center, California
+    {
+      id: "palms-1",
+      name: "Law Office of Patrick J. McLain, PLLC",
+      location: "Nationwide",
+      phone: "(888) 606-3385",
+      website: "https://www.courtmartialdefenselawyer.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Appeals", "Security clearance issues"],
+      description: "Former Marine Corps military judge with over 20 years of experience.",
+      experience: "20+ years",
+      rating: 4.9
+    },
+    {
+      id: "palms-2",
+      name: "Military Law Center",
+      location: "California",
+      phone: "Contact via website",
+      website: "https://www.militarylawcenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "NJP", "Corrections of military records"],
+      description: "Staffed by Marine veterans with extensive experience in military law.",
+      experience: "15+ years",
+      rating: 4.7
+    },
+    {
+      id: "palms-3",
+      name: "Aaron Meyer Law",
+      location: "California",
+      phone: "Contact via website",
+      website: "https://www.aaronmeyerlaw.com",
+      specialties: ["Military criminal defense", "UCMJ violations", "Administrative separations"],
+      description: "Former Marine Judge Advocate with extensive trial experience.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "palms-4",
+      name: "JAG Defense",
+      location: "Nationwide",
+      phone: "(877) 222-4199",
+      website: "https://www.jagdefense.com",
+      specialties: ["Military courts-martial", "Security clearance defense", "Administrative discharge boards", "Sex offenses", "Positive urinalysis tests", "Courts-martial appeals", "Non-judicial punishment/Article 15", "Flying evaluation boards", "Senior officer cases"],
+      description: "Led by Grover H. Baxley, a former U.S. Air Force Judge Advocate.",
+      experience: "22+ years",
+      rating: 4.7
+    },
+    {
+      id: "palms-5",
+      name: "Richard V. Stevens, Attorney at Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.militaryappealslawyer.com",
+      specialties: ["Court-martial defense", "Discharge upgrades", "Administrative actions"],
+      description: "Former active duty JAG defense lawyer with worldwide practice.",
+      experience: "22+ years",
+      rating: 4.8
+    },
+    {
+      id: "palms-6",
+      name: "Military Justice Attorneys",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.militaryjusticeattorneys.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Security clearance issues"],
+      description: "Over 100 years of combined military law experience.",
+      experience: "100+ years combined",
+      rating: 4.7
+    }
   ]
 };
 

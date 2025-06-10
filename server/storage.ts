@@ -1477,39 +1477,38 @@ export class DatabaseStorage implements IStorage {
         if (this.checkBenefitEligibility(benefit, eligibilityData)) {
           eligibleBenefits.push({
             id: benefit.id,
-            benefitName: benefit.benefitName,
-            benefitType: benefit.benefitType,
+            benefitName: benefit.benefit_name,
+            benefitType: benefit.benefit_type,
             description: benefit.description,
-            benefitAmount: benefit.benefitAmount,
-            applicationProcess: benefit.applicationProcess,
-            processingTime: benefit.processingTime,
-            websiteUrl: benefit.websiteUrl,
-            phoneNumber: benefit.phoneNumber
+            benefitAmount: benefit.benefit_amount,
+            applicationProcess: benefit.application_process,
+            processingTime: benefit.processing_time,
+            websiteUrl: benefit.website_url,
+            phoneNumber: benefit.phone_number
           });
         }
       }
 
-      // Create eligibility record
-      const eligibilityRecord = {
-        serviceStatus: eligibilityData.serviceStatus,
-        branch: eligibilityData.branch,
-        yearsOfService: eligibilityData.serviceDates.totalYears,
-        dischargeType: eligibilityData.dischargeType,
-        disabilityRating: eligibilityData.disabilityRating,
-        combatVeteran: eligibilityData.combatVeteran,
-        purpleHeart: eligibilityData.purpleHeart,
-        prisonerOfWar: eligibilityData.prisonerOfWar,
-        hasSpouse: eligibilityData.dependents.spouse,
-        numberOfChildren: eligibilityData.dependents.children,
-        annualIncome: eligibilityData.income.annualIncome,
-        householdIncome: eligibilityData.income.householdIncome,
-        state: eligibilityData.location.state,
-        zipCode: eligibilityData.location.zipCode,
+      // Create eligibility record using direct SQL
+      const insertQuery = sql`
+        INSERT INTO benefits_eligibility (
+          service_status, branch, years_of_service, discharge_type, disability_rating,
+          combat_veteran, purple_heart, prisoner_of_war, has_spouse, number_of_children,
+          annual_income, household_income, state, zip_code, eligible_benefits
+        ) VALUES (
+          ${eligibilityData.serviceStatus}, ${eligibilityData.branch}, ${eligibilityData.serviceDates.totalYears},
+          ${eligibilityData.dischargeType}, ${eligibilityData.disabilityRating}, ${eligibilityData.combatVeteran},
+          ${eligibilityData.purpleHeart}, ${eligibilityData.prisonerOfWar}, ${eligibilityData.dependents.spouse},
+          ${eligibilityData.dependents.children}, ${eligibilityData.income.annualIncome}, ${eligibilityData.income.householdIncome},
+          ${eligibilityData.location.state}, ${eligibilityData.location.zipCode}, ${JSON.stringify(eligibleBenefits)}
+        ) RETURNING *
+      `;
+
+      const result = await this.db.execute(insertQuery);
+      return {
+        ...result.rows[0],
         eligibleBenefits: JSON.stringify(eligibleBenefits)
       };
-
-      const [record] = await this.db.insert(benefitsEligibility).values(eligibilityRecord).returning();
-      return record;
     } catch (error) {
       console.error("Error calculating benefits eligibility:", error);
       throw new Error("Failed to calculate benefits eligibility");
@@ -1552,15 +1551,17 @@ export class DatabaseStorage implements IStorage {
 
   async getBenefitsDatabase(): Promise<BenefitsDatabase[]> {
     try {
-      let benefits = await this.db.select().from(benefitsDatabase);
+      // Query the actual database table we created
+      const result = await this.db.execute(sql`SELECT * FROM benefits_database`);
       
       // If no benefits in database, populate with comprehensive federal and state benefits
-      if (benefits.length === 0) {
+      if (result.rows.length === 0) {
         await this.populateBenefitsDatabase();
-        benefits = await this.db.select().from(benefitsDatabase);
+        const newResult = await this.db.execute(sql`SELECT * FROM benefits_database`);
+        return newResult.rows as any[];
       }
       
-      return benefits;
+      return result.rows as any[];
     } catch (error) {
       console.error("Error fetching benefits database:", error);
       return [];

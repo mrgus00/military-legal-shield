@@ -224,29 +224,29 @@ export default function BenefitsCalculator() {
             </p>
           </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Form */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5" />
-                  Service Information
-                </CardTitle>
-                <CardDescription>
-                  Enter your military service details for personalized benefit calculations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Tabs defaultValue="basic" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="basic">Basic Info</TabsTrigger>
-                    <TabsTrigger value="service">Service Record</TabsTrigger>
-                    <TabsTrigger value="family">Family</TabsTrigger>
-                    <TabsTrigger value="financial">Financial</TabsTrigger>
-                  </TabsList>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left Column - Form */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Info className="h-5 w-5" />
+                    Service Information
+                  </CardTitle>
+                  <CardDescription>
+                    Enter your military service details for personalized benefit calculations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <Tabs defaultValue="basic" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="basic">Basic Info</TabsTrigger>
+                      <TabsTrigger value="service">Service Record</TabsTrigger>
+                      <TabsTrigger value="family">Family</TabsTrigger>
+                      <TabsTrigger value="financial">Financial</TabsTrigger>
+                    </TabsList>
 
-                  <TabsContent value="basic" className="space-y-4">
+                    <TabsContent value="basic" className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="serviceStatus">Service Status</Label>

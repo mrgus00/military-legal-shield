@@ -18,11 +18,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
   console.log("MilitaryLegalShield running in public access mode - all authentication disabled");
   
-  // Domain verification support
+  // Domain verification and routing support
   app.use((req, res, next) => {
     // Handle domain verification requests
-    if (req.hostname === 'militarylegalshield.com') {
+    if (req.hostname === 'militarylegalshield.com' || req.hostname === 'www.militarylegalshield.com') {
       res.setHeader('X-Domain-Verification', 'militarylegalshield-verified');
+      res.setHeader('X-Replit-Domain', 'custom');
     }
     next();
   });

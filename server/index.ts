@@ -7,6 +7,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Trust proxy for proper domain handling
+app.set('trust proxy', true);
+
+// Force HTTPS and handle custom domain
+app.use((req, res, next) => {
+  // Handle custom domain requests
+  if (req.hostname === 'militarylegalshield.com' || req.hostname === 'www.militarylegalshield.com') {
+    res.setHeader('X-Forwarded-Host', req.hostname);
+    res.setHeader('X-Custom-Domain', 'militarylegalshield.com');
+  }
+  next();
+});
+
 // Serve military branch emblems from attached_assets
 app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets')));
 

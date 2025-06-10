@@ -384,6 +384,63 @@ const militaryBaseAttorneys = {
       experience: "22+ years",
       rating: 4.8
     }
+  ],
+  7: [ // Fort Wainwright, Alaska
+    {
+      id: "wainwright-1",
+      name: "Mangan Law",
+      location: "Fort Wainwright, AK",
+      phone: "(360) 908-2203",
+      website: "https://www.manganlaw.com",
+      specialties: ["Court-martial defense", "Administrative actions", "Military medical privileging/credentialing", "Adverse administrative actions"],
+      description: "Led by LTC (Ret) Sean F. Mangan, a former military judge with over 30 years of experience.",
+      experience: "30+ years",
+      rating: 4.9
+    },
+    {
+      id: "wainwright-2",
+      name: "JAG Defense",
+      location: "Nationwide",
+      phone: "(877) 222-4199",
+      website: "https://www.jagdefense.com",
+      specialties: ["Military courts-martial", "Security clearance defense", "Administrative discharge boards", "Sex offenses", "Positive urinalysis tests", "Courts-martial appeals", "Non-judicial punishment/Article 15", "Flying evaluation boards", "Senior officer cases"],
+      description: "Led by Grover H. Baxley, a former U.S. Air Force Judge Advocate.",
+      experience: "22+ years",
+      rating: 4.7
+    },
+    {
+      id: "wainwright-3",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Nationwide",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm with nationwide practice.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "wainwright-4",
+      name: "Joseph L. Jordan, Attorney at Law",
+      location: "Nationwide",
+      phone: "Contact via website",
+      website: "https://www.jordanucmj.com",
+      specialties: ["UCMJ defense", "Article 120 cases", "Article 15 proceedings", "Administrative boards"],
+      description: "Former Army Judge Advocate with a strong track record.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "wainwright-5",
+      name: "Timothy J.L. FitzGibbon",
+      location: "Fairbanks, AK",
+      phone: "(617) 826-9306",
+      website: "https://www.fitzgibbonlaw.com",
+      specialties: ["Military law", "Administrative law", "Immigration law"],
+      description: "Offers video conferencing for remote consultations.",
+      experience: "15+ years",
+      rating: 4.6
+    }
   ]
 };
 

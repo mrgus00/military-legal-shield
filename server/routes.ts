@@ -18,11 +18,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
   console.log("MilitaryLegalShield running in public access mode - all authentication disabled");
   
+  // Domain verification support
+  app.use((req, res, next) => {
+    // Handle domain verification requests
+    if (req.hostname === 'militarylegalshield.com') {
+      res.setHeader('X-Domain-Verification', 'militarylegalshield-verified');
+    }
+    next();
+  });
+  
   // Override any potential authentication redirects
   app.get('/api/login', (req, res) => res.redirect('/'));
   app.get('/api/logout', (req, res) => res.redirect('/'));
   app.get('/api/callback', (req, res) => res.redirect('/'));
   app.get('/api/auth', (req, res) => res.redirect('/'));
+
+  // Domain verification endpoint
+  app.get('/api/verify-domain', (req, res) => {
+    res.json({
+      domain: req.hostname,
+      verified: true,
+      timestamp: new Date().toISOString(),
+      platform: 'MilitaryLegalShield'
+    });
+  });
 
   // Public API - always returns null (no authentication)
   app.get('/api/auth/user', (req, res) => {

@@ -205,23 +205,24 @@ export default function BenefitsCalculator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-blue-600 rounded-full">
-              <Calculator className="h-8 w-8 text-white" />
+    <PageLayout>
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-blue-600 rounded-full">
+                <Calculator className="h-8 w-8 text-white" />
+              </div>
             </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Real-Time Benefits Eligibility Calculator
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Instantly discover all federal, state, and local benefits you're eligible for based on your military service record. 
+              Results update automatically as you enter information.
+            </p>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Real-Time Benefits Eligibility Calculator
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Instantly discover all federal, state, and local benefits you're eligible for based on your military service record. 
-            Results update automatically as you enter information.
-          </p>
-        </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Form */}
@@ -544,6 +545,6 @@ export default function BenefitsCalculator() {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

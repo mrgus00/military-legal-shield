@@ -19,7 +19,8 @@ const militaryBases = [
   { id: 7, name: "Fort Jonathan Wainwright", state: "Alaska", location: "Fort Wainwright, AK" },
   { id: 8, name: "Yuma Proving Ground", state: "Arizona", location: "Yuma, AZ" },
   { id: 9, name: "Fort Bliss", state: "Texas", location: "Fort Bliss, TX" },
-  { id: 10, name: "Fort Shafter", state: "Hawaii", location: "Fort Shafter, HI" }
+  { id: 10, name: "Fort Shafter", state: "Hawaii", location: "Fort Shafter, HI" },
+  { id: 11, name: "U.S. Military Europe", state: "Europe", location: "Germany, Italy, UK" }
 ];
 
 const militaryBaseAttorneys = {
@@ -690,6 +691,96 @@ const militaryBaseAttorneys = {
       description: "Team of former military officers with over 40 years of combined experience.",
       experience: "40+ years combined",
       rating: 4.7
+    }
+  ],
+  11: [ // U.S. Military Europe
+    {
+      id: "europe-1",
+      name: "The Hanzel Law Firm",
+      location: "Europe",
+      phone: "(843) 202-4714",
+      website: "https://www.hanzellaw.com",
+      specialties: ["Military sexual offenses", "Urinalysis & drug crimes", "UCMJ offenses", "Officer misconduct", "Hazing", "Appeals", "Security clearances", "NJP/Article 15", "Administrative separation"],
+      description: "Led by Michael B. Hanzel, former U.S. Navy JAG officer with European litigation experience.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "europe-2",
+      name: "Bilecki Law Group, PLLC",
+      location: "Europe",
+      phone: "(813) 669-3500",
+      website: "https://www.bileckilaw.com",
+      specialties: ["Court-martial defense", "Administrative separations", "UCMJ violations"],
+      description: "Led by Timothy J. Bilecki, former Army JAG with extensive European trial experience.",
+      experience: "15+ years",
+      rating: 4.8
+    },
+    {
+      id: "europe-3",
+      name: "Court & Carpenter, PC",
+      location: "Kaiserslautern, Germany",
+      phone: "(202) 695-8499",
+      website: "https://www.courtcarpenter.com",
+      specialties: ["Court-martial defense", "Administrative separations", "UCMJ violations"],
+      description: "Military-only law firm with global experience and German presence.",
+      experience: "20+ years",
+      rating: 4.8
+    },
+    {
+      id: "europe-4",
+      name: "Law Office of Will M. Helixon",
+      location: "Vilseck & Wiesbaden, Germany",
+      phone: "Contact via website",
+      website: "https://www.helixonlaw.com",
+      specialties: ["Court-martial defense", "Administrative boards", "Adverse administrative actions", "GOMORs", "NJP", "QMP Boards"],
+      description: "Military lawyers residing in Germany with deep understanding of local legal landscape.",
+      experience: "12+ years",
+      rating: 4.7
+    },
+    {
+      id: "europe-5",
+      name: "Gonzalez & Waddington, LLC",
+      location: "Germany & United Kingdom",
+      phone: "(800) 921-8607",
+      website: "https://www.ucmjdefense.com",
+      specialties: ["Court-martial defense", "Sexual assault allegations", "Administrative actions", "Appeals"],
+      description: "Experienced military defense firm serving Germany and UK installations.",
+      experience: "25+ years",
+      rating: 4.9
+    },
+    {
+      id: "europe-6",
+      name: "Peter Kageleiry, Jr., Attorney at Law",
+      location: "Kaiserslautern, Germany & Italy",
+      phone: "Contact via website",
+      website: "https://www.kageleiry.com",
+      specialties: ["Court-martial defense", "Administrative actions", "UCMJ violations"],
+      description: "Experienced military defense lawyer focused on protecting service members' careers.",
+      experience: "18+ years",
+      rating: 4.7
+    },
+    {
+      id: "europe-7",
+      name: "Saccucci & Partners",
+      location: "Italy",
+      phone: "Contact via website",
+      website: "https://www.saccuccipartners.com",
+      specialties: ["Military personnel law", "Armed forces representation"],
+      description: "Well-established team of lawyers specializing in military law for Italian installations.",
+      experience: "15+ years",
+      rating: 4.6
+    },
+    {
+      id: "europe-8",
+      name: "Karns Law Firm",
+      location: "Germany",
+      phone: "Contact via website",
+      website: "https://www.karnslaw.com",
+      specialties: ["Court-martial defense", "Administrative adverse actions"],
+      description: "Represents service members across various U.S. military installations in Germany.",
+      experience: "14+ years",
+      rating: 4.6
     }
   ]
 };

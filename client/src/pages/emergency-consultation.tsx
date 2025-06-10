@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { insertEmergencyConsultationSchema } from "@shared/schema";
+import PageLayout from "@/components/page-layout";
 
 const emergencyFormSchema = insertEmergencyConsultationSchema.extend({
   preferredDateTime: z.string().min(1, "Preferred date/time is required"),
@@ -133,9 +134,10 @@ export default function EmergencyConsultation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 dark:from-red-950/20 dark:via-orange-950/20 dark:to-yellow-950/20 py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-8">
+    <PageLayout>
+      <div className="bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 dark:from-red-950/20 dark:via-orange-950/20 dark:to-yellow-950/20 py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <AlertTriangle className="h-8 w-8 text-red-600" />
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -575,7 +577,8 @@ export default function EmergencyConsultation() {
             </Form>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import PageLayout from "@/components/page-layout";
 
 interface BenefitResult {
   id: number;

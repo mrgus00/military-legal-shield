@@ -455,6 +455,100 @@ Respond in JSON format with: { "document": "full formatted document text", "sugg
   }
 }
 
+export interface LegalAssistantRequest {
+  message: string;
+  context: string;
+  userId: string;
+  conversationHistory?: Array<{
+    role: "user" | "assistant";
+    content: string;
+  }>;
+}
+
+export interface LegalAssistantResponse {
+  response: string;
+  suggestions: string[];
+  urgencyLevel: "low" | "medium" | "high";
+  category: string;
+  requiresHumanAttorney: boolean;
+}
+
+export async function getLegalAssistantResponse(request: LegalAssistantRequest): Promise<LegalAssistantResponse> {
+  const systemPrompt = `You are Sergeant Legal, a military legal assistant AI with extensive knowledge of military law, UCMJ, and military legal procedures. You have a professional, direct military personality with the following characteristics:
+
+PERSONALITY TRAITS:
+- Direct and professional communication style
+- Use appropriate military terminology and protocol
+- Supportive but authoritative tone
+- Address users as "service member" or by appropriate military terms
+- Use phrases like "Hooah," "Roger that," "Copy," when appropriate
+- Maintain military bearing while being helpful
+
+EXPERTISE AREAS:
+- Uniform Code of Military Justice (UCMJ)
+- Military administrative law
+- Security clearance issues
+- Court-martial procedures
+- Administrative separations
+- Article 15 proceedings
+- Military family law
+- Veterans benefits and rights
+- Military criminal law
+- Ethics and conduct standards
+
+RESPONSE GUIDELINES:
+1. Assess urgency level: low (general questions), medium (potential legal issues), high (immediate legal jeopardy)
+2. Provide clear, actionable guidance
+3. Always recommend consulting with a JAG officer or military attorney for serious legal matters
+4. Categorize the inquiry (administrative, criminal, family, benefits, etc.)
+5. Offer relevant follow-up suggestions
+6. Never provide specific legal advice - only general guidance and education
+
+FORMAT: Respond in JSON with: { "response": "your response", "suggestions": ["suggestion1", "suggestion2"], "urgencyLevel": "low/medium/high", "category": "category", "requiresHumanAttorney": boolean }`;
+
+  const conversationMessages = [
+    { role: "system" as const, content: systemPrompt },
+    ...(request.conversationHistory || []),
+    { role: "user" as const, content: request.message }
+  ];
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: conversationMessages,
+      response_format: { type: "json_object" },
+      max_tokens: 500,
+      temperature: 0.7,
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+
+    return {
+      response: result.response || "I'm here to help with your military legal questions, service member.",
+      suggestions: result.suggestions || ["Contact base legal office", "Review relevant regulations"],
+      urgencyLevel: result.urgencyLevel || "low",
+      category: result.category || "general",
+      requiresHumanAttorney: result.requiresHumanAttorney || false
+    };
+  } catch (error: any) {
+    console.error("Legal assistant response error:", error);
+    
+    // Fallback response for military legal assistant
+    return {
+      response: "Roger that, service member. I'm experiencing some technical difficulties right now. For immediate legal assistance, contact your base legal office or JAG. I'll be back online shortly to assist with your military legal questions.",
+      suggestions: [
+        "Contact base legal office",
+        "Speak with JAG officer",
+        "Review AR 27-26 for legal assistance",
+        "Call military legal helpline"
+      ],
+      urgencyLevel: "medium",
+      category: "technical",
+      requiresHumanAttorney: true
+    };
+  }
+}
+
 export async function generateVeteranResume(request: ResumeGenerationRequest): Promise<GeneratedResumeResponse> {
   const prompt = `Create a professional resume for a military veteran transitioning to civilian employment.
 

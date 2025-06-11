@@ -27,10 +27,10 @@ export default function MilitaryBranchesBanner() {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
           {branches.map((branch) => (
             <div key={branch.name} className="text-center group">
-              <div className="w-20 h-20 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
+              <div className="w-32 h-32 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
                 <img
                   src={branch.image}
                   alt={`${branch.name} military imagery`}

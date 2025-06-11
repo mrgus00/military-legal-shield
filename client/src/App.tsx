@@ -5,8 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BranchProvider } from "@/contexts/BranchContext";
 import { MoodProvider } from "@/contexts/MoodContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import BackToTop from "@/components/back-to-top";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
+import MilitaryLoadingScreen from "@/components/military-loading-screen";
+import { useLoading } from "@/contexts/LoadingContext";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Resources from "@/pages/resources";
@@ -45,6 +48,7 @@ import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
 import LegalChallenges from "@/pages/legal-challenges-basic";
+import LoadingDemoPage from "@/pages/loading-demo";
 
 function Router() {
   return (
@@ -95,17 +99,34 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <MoodProvider>
-        <BranchProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-            <BackToTop />
-            <LegalAssistantChatbot />
-          </TooltipProvider>
-        </BranchProvider>
-      </MoodProvider>
+      <LoadingProvider>
+        <MoodProvider>
+          <BranchProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+              <BackToTop />
+              <LegalAssistantChatbot />
+              <AppLoadingScreen />
+            </TooltipProvider>
+          </BranchProvider>
+        </MoodProvider>
+      </LoadingProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppLoadingScreen() {
+  const { loadingState } = useLoading();
+  
+  return (
+    <MilitaryLoadingScreen 
+      isLoading={loadingState.isLoading}
+      loadingText={loadingState.loadingText}
+      variant={loadingState.variant}
+      progress={loadingState.progress}
+      showProgress={loadingState.showProgress}
+    />
   );
 }
 

@@ -10,6 +10,7 @@ import { Search, Shield, MapPin, Users, Phone, Globe, Star, ExternalLink, Filter
 import { useState, useEffect } from "react";
 import { useSearch } from "wouter";
 import { useBranch } from "@/contexts/BranchContext";
+import { useSecurityLoading } from "@/hooks/useMilitaryLoading";
 import type { Attorney } from "@shared/schema";
 
 const militaryBases = [

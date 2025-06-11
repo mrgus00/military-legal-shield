@@ -83,6 +83,7 @@ function Router() {
       <Route path="/storytelling-corner" component={StorytellingCorner} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route path="/document-wizard" component={DocumentGenerator} />
+      <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />
       <Route path="/legal-challenges" component={LegalChallenges} />
       <Route component={NotFound} />

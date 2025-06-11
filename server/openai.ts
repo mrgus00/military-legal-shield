@@ -441,7 +441,7 @@ Respond in JSON format with: { "document": "full formatted document text", "sugg
       response_format: { type: "json_object" },
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    const result = JSON.parse(response.choices[0].message.content || "{}");
 
     return {
       document: result.document,
@@ -449,8 +449,9 @@ Respond in JSON format with: { "document": "full formatted document text", "sugg
       suggestions: result.suggestions || [],
       legalConsiderations: result.legalConsiderations || []
     };
-  } catch (error) {
-    throw new Error("Failed to generate legal document: " + error.message);
+  } catch (error: any) {
+    console.error("OpenAI document generation error:", error);
+    throw new Error("Failed to generate legal document: " + (error.message || "Unknown error"));
   }
 }
 

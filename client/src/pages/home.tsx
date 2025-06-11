@@ -55,54 +55,69 @@ export default function Home() {
   return (
     <PageLayout>
         {/* Hero Section */}
-        <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8" aria-labelledby="hero-heading">
+        <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden" aria-labelledby="hero-heading">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute top-40 right-20 w-24 h-24 bg-green-100 rounded-full opacity-30 animate-bounce" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute bottom-32 left-20 w-28 h-28 bg-yellow-100 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute bottom-20 right-10 w-20 h-20 bg-red-100 rounded-full opacity-25 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+          </div>
+
           <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-navy-100 rounded-full text-navy-800 text-sm font-medium mb-6">
-              <Shield className="w-4 h-4 mr-2" />
+            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-navy-100 to-blue-100 rounded-full text-navy-800 text-sm font-medium mb-6 shadow-lg animate-fade-in-up hover-scale">
+              <Shield className="w-4 h-4 mr-2 animate-military-pulse" />
               Trusted by 50,000+ Service Members
             </div>
             
-            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight">
-              Legal Support for
-              <span className="text-navy-600 block">Every {getTerminology('personnel').slice(0, -1)}</span>
+            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight animate-fade-in-up">
+              <span className="bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Legal Support for</span>
+              <span className="text-navy-600 block mt-2 animate-gradient bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent">Every {getTerminology('personnel').slice(0, -1)}</span>
             </h1>
             
-            <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Comprehensive legal assistance for {getTerminology('personnel').toLowerCase()}, veterans, and their families. 
-              From urgent defense to family matters, MilitaryLegalShield has you covered 24/7.
-              <span className="block mt-3 text-lg font-semibold" style={{ color: `hsl(${branchTheme.colors.primary})` }}>
-                "{getMotto()}" - Defending those who defend our freedom.
-              </span>
-            </p>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
+                Comprehensive legal assistance for {getTerminology('personnel').toLowerCase()}, veterans, and their families. 
+                From urgent defense to family matters, MilitaryLegalShield has you covered 24/7.
+              </p>
+              <div className="glass rounded-xl p-4 max-w-2xl mx-auto mb-8">
+                <p className="text-lg font-semibold text-navy-800" style={{ color: `hsl(${branchTheme.colors.primary})` }}>
+                  "{getMotto()}" - Defending those who defend our freedom.
+                </p>
+              </div>
+            </div>
 
             {/* Lead Capture Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mb-12 ios-form-fix">
-              <h3 id="signup-heading" className="text-2xl font-bold text-navy-900 mb-4">Get Instant Access</h3>
-              <p className="text-gray-600 mb-6">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
+            <div className="glass-dark backdrop-blur-lg p-8 rounded-3xl max-w-lg mx-auto mb-12 ios-form-fix animate-fade-in-up shadow-2xl border border-white/10" style={{ animationDelay: '0.5s' }}>
+              <h3 id="signup-heading" className="text-2xl font-bold text-white mb-4 text-center">Get Instant Access</h3>
+              <p className="text-gray-300 mb-6 text-center">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
               
               <form onSubmit={handleLeadCapture} className="space-y-4 ios-form-fix" role="form" aria-labelledby="signup-heading">
                 <div className="form-field">
-                  <label htmlFor="email-input" className="form-label">
+                  <label htmlFor="email-input" className="form-label text-white font-medium mb-2 block">
                     Email Address
                   </label>
-                  <Input
-                    id="email-input"
-                    type="email"
-                    placeholder="Enter your military email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-input w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                    style={{ fontSize: '16px', WebkitAppearance: 'none', borderRadius: '6px' }}
-                    required
-                    aria-describedby="email-description email-error"
-                    aria-invalid={!email && isSubmitting ? "true" : "false"}
-                  />
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      id="email-input"
+                      type="email"
+                      placeholder="Enter your military email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="glass w-full pl-12 pr-4 py-3 text-base text-white placeholder:text-gray-400 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                      style={{ fontSize: '16px', WebkitAppearance: 'none' }}
+                      required
+                      aria-describedby="email-description email-error"
+                      aria-invalid={!email && isSubmitting ? "true" : "false"}
+                    />
+                  </div>
                   <div id="email-description" className="sr-only">
                     Enter your valid military email address to get started
                   </div>
                   {!email && isSubmitting && (
-                    <div id="email-error" className="text-red-600 text-sm mt-1" role="alert">
+                    <div id="email-error" className="text-red-400 text-sm mt-1" role="alert">
                       Email address is required to continue
                     </div>
                   )}
@@ -111,10 +126,19 @@ export default function Home() {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="bg-navy-800 hover:bg-navy-900 px-8 py-3"
+                    className="military-gradient hover:shadow-lg px-8 py-3 rounded-xl text-white font-semibold transform transition hover:scale-105 animate-glow"
                   >
-                    {isSubmitting ? "Getting Started..." : "Get Started Free"}
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    {isSubmitting ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                        Getting Started...
+                      </div>
+                    ) : (
+                      <>
+                        Get Started Free
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500">
@@ -201,47 +225,70 @@ export default function Home() {
       </section>
 
       {/* Services Overview */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-navy-900 mb-4">Complete Legal Protection</h2>
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-40 h-40 bg-blue-200 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-32 h-32 bg-purple-200 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-green-200 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 animate-fade-in-up">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4 bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Complete Legal Protection</h2>
             <p className="text-xl text-gray-700">Everything you need for military legal matters</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center hover-lift transition-smooth">
-              <CardContent className="p-6">
-                <AlertTriangle className="w-12 h-12 text-red-600 mx-auto mb-4" />
-                <h3 className="font-semibold text-navy-900 mb-2">Emergency Defense</h3>
-                <p className="text-gray-600 text-sm">24/7 urgent legal matching for critical situations</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover-lift transition-smooth">
-              <CardContent className="p-6">
-                <Scale className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                <h3 className="font-semibold text-navy-900 mb-2">Military Justice</h3>
-                <p className="text-gray-600 text-sm">UCMJ expertise and court-martial defense</p>
-              </CardContent>
-            </Card>
-
-            <Link href="/document-prep">
-              <Card className="text-center hover-lift transition-smooth cursor-pointer">
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
                 <CardContent className="p-6">
-                  <FileText className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <h3 className="font-semibold text-navy-900 mb-2">Document Prep</h3>
-                  <p className="text-gray-600 text-sm">AI-powered legal document generation</p>
+                  <div className="emergency-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-military-pulse">
+                    <AlertTriangle className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Emergency Defense</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">24/7 urgent legal matching for critical situations</p>
                 </CardContent>
               </Card>
-            </Link>
+            </div>
 
-            <Card className="text-center hover-lift transition-smooth">
-              <CardContent className="p-6">
-                <Heart className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-semibold text-navy-900 mb-2">Injury Claims</h3>
-                <p className="text-gray-600 text-sm">VA disability and personal injury representation</p>
-              </CardContent>
-            </Card>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
+                <CardContent className="p-6">
+                  <div className="military-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Scale className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Military Justice</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">UCMJ expertise and court-martial defense</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <Link href="/document-prep">
+                <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
+                  <CardContent className="p-6">
+                    <div className="tactical-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-glow">
+                      <FileText className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-navy-900 mb-2 text-lg">Document Prep</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">AI-powered legal document generation</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
+                <CardContent className="p-6">
+                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Heart className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Injury Claims</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">VA disability and personal injury representation</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
@@ -295,6 +342,11 @@ export default function Home() {
             <Link href="/urgent-match">
               <Button size="lg" className="bg-red-600 hover:bg-red-700 px-8 py-4 text-lg">
                 Get Emergency Help Now
+              </Button>
+            </Link>
+            <Link href="/loading-demo">
+              <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-2">
+                View Military Loading System
               </Button>
             </Link>
             <Link href="/attorneys">

@@ -82,6 +82,36 @@ export default function LoadingDemo() {
       icon: Loader,
       color: "from-purple-600 to-purple-800",
       action: () => startApi(3000)
+    },
+    {
+      id: "tactical-overlay",
+      name: "Tactical Overlay",
+      description: "Advanced target acquisition system",
+      icon: Radio,
+      color: "from-green-600 to-green-800",
+      action: () => {
+        setActiveDemo("tactical-overlay");
+        setShowTacticalOverlay(true);
+        setTimeout(() => {
+          setShowTacticalOverlay(false);
+          setActiveDemo(null);
+        }, 5000);
+      }
+    },
+    {
+      id: "command-center",
+      name: "Command Center",
+      description: "Full military operations interface",
+      icon: Satellite,
+      color: "from-orange-600 to-orange-800",
+      action: () => {
+        setActiveDemo("command-center");
+        setShowCommandCenter(true);
+        setTimeout(() => {
+          setShowCommandCenter(false);
+          setActiveDemo(null);
+        }, 8000);
+      }
     }
   ];
 
@@ -207,6 +237,21 @@ export default function LoadingDemo() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Tactical Loading Overlay */}
+      <TacticalLoadingOverlay
+        isLoading={showTacticalOverlay}
+        operation="ATTORNEY ACQUISITION"
+        progress={75}
+        onComplete={() => setShowTacticalOverlay(false)}
+      />
+
+      {/* Command Center Interface */}
+      <CommandCenterInterface
+        isActive={showCommandCenter}
+        operation="LEGAL DEFENSE COORDINATION"
+        onComplete={() => setShowCommandCenter(false)}
+      />
     </div>
   );
 }

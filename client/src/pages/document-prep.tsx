@@ -35,21 +35,127 @@ const documentFormSchema = z.object({
 type DocumentFormData = z.infer<typeof documentFormSchema>;
 
 const documentTypes = [
+  // Essential Personal Legal Documents
+  {
+    id: "will-testament",
+    name: "Last Will and Testament",
+    description: "Comprehensive will with military-specific provisions",
+    category: "Estate Planning",
+    timeRequired: "45-60 minutes",
+    urgency: "high",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "general-power-of-attorney",
+    name: "General Power of Attorney",
+    description: "Broad authority for financial and legal matters",
+    category: "Estate Planning",
+    timeRequired: "30-45 minutes",
+    urgency: "high",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "specific-power-of-attorney",
+    name: "Specific Power of Attorney",
+    description: "Limited authority for specific transactions or matters",
+    category: "Estate Planning",
+    timeRequired: "20-30 minutes",
+    urgency: "medium",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "durable-power-of-attorney",
+    name: "Durable Power of Attorney",
+    description: "Authority that continues if principal becomes incapacitated",
+    category: "Estate Planning",
+    timeRequired: "30-45 minutes",
+    urgency: "high",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "healthcare-power-of-attorney",
+    name: "Healthcare Power of Attorney",
+    description: "Authority to make medical decisions on behalf of principal",
+    category: "Healthcare",
+    timeRequired: "25-35 minutes",
+    urgency: "high",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "living-will",
+    name: "Living Will/Advance Directive",
+    description: "Instructions for end-of-life medical care decisions",
+    category: "Healthcare",
+    timeRequired: "30-40 minutes",
+    urgency: "medium",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "revocable-trust",
+    name: "Revocable Living Trust",
+    description: "Flexible trust for asset management and distribution",
+    category: "Estate Planning",
+    timeRequired: "60-90 minutes",
+    urgency: "low",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "irrevocable-trust",
+    name: "Irrevocable Trust",
+    description: "Permanent trust for tax benefits and asset protection",
+    category: "Estate Planning",
+    timeRequired: "75-120 minutes",
+    urgency: "low",
+    notarization: true,
+    raisedSeal: true
+  },
+  {
+    id: "military-family-care-plan",
+    name: "Military Family Care Plan",
+    description: "Custody arrangements for deployment situations",
+    category: "Family Law",
+    timeRequired: "45-60 minutes",
+    urgency: "high",
+    notarization: true,
+    raisedSeal: false
+  },
+  {
+    id: "affidavit-of-support",
+    name: "Affidavit of Support",
+    description: "Financial support declaration for family members",
+    category: "Immigration/Family",
+    timeRequired: "20-30 minutes",
+    urgency: "medium",
+    notarization: true,
+    raisedSeal: true
+  },
+  // Military-Specific Administrative Documents
   {
     id: "article15-rebuttal",
     name: "Article 15 Rebuttal",
     description: "Response to non-judicial punishment",
-    category: "Administrative",
+    category: "Military Administrative",
     timeRequired: "30-45 minutes",
-    urgency: "high"
+    urgency: "high",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "request-for-redress",
     name: "Request for Redress",
     description: "Formal complaint against military decision",
-    category: "Administrative",
+    category: "Military Administrative",
     timeRequired: "45-60 minutes",
-    urgency: "medium"
+    urgency: "medium",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "clearance-appeal",
@@ -57,7 +163,9 @@ const documentTypes = [
     description: "Appeal denial or revocation of security clearance",
     category: "Security",
     timeRequired: "60-90 minutes",
-    urgency: "high"
+    urgency: "high",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "medical-board-response",
@@ -65,7 +173,9 @@ const documentTypes = [
     description: "Response to MEB findings and recommendations",
     category: "Medical",
     timeRequired: "45-75 minutes",
-    urgency: "high"
+    urgency: "high",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "discharge-upgrade-request",
@@ -73,15 +183,19 @@ const documentTypes = [
     description: "Request to upgrade discharge characterization",
     category: "Veterans Affairs",
     timeRequired: "90-120 minutes",
-    urgency: "low"
+    urgency: "low",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "ig-complaint",
     name: "Inspector General Complaint",
     description: "Formal complaint to Inspector General",
-    category: "Administrative",
+    category: "Military Administrative",
     timeRequired: "60-90 minutes",
-    urgency: "medium"
+    urgency: "medium",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "equal-opportunity-complaint",
@@ -89,7 +203,9 @@ const documentTypes = [
     description: "Complaint regarding discrimination or harassment",
     category: "EO/Civil Rights",
     timeRequired: "45-60 minutes",
-    urgency: "high"
+    urgency: "high",
+    notarization: false,
+    raisedSeal: false
   },
   {
     id: "financial-hardship-request",
@@ -97,7 +213,9 @@ const documentTypes = [
     description: "Request for financial assistance or hardship consideration",
     category: "Financial",
     timeRequired: "30-45 minutes",
-    urgency: "medium"
+    urgency: "medium",
+    notarization: false,
+    raisedSeal: false
   }
 ];
 
@@ -115,6 +233,7 @@ export default function DocumentPrep() {
   const [generatedDocument, setGeneratedDocument] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const { toast } = useToast();
 
   const form = useForm<DocumentFormData>({
@@ -183,6 +302,11 @@ export default function DocumentPrep() {
   };
 
   const selectedDoc = documentTypes.find(doc => doc.id === selectedDocumentType);
+  
+  const categories = Array.from(new Set(documentTypes.map(doc => doc.category)));
+  const filteredDocuments = selectedCategory === "all" 
+    ? documentTypes 
+    : documentTypes.filter(doc => doc.category === selectedCategory);
 
   return (
     <PageLayout className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-900 min-h-screen">
@@ -193,7 +317,7 @@ export default function DocumentPrep() {
             Legal Document Preparation
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Generate professional military legal documents with AI-powered assistance
+            Generate essential legal documents including Wills, Power of Attorney, Trusts, and military-specific forms with notarization support
           </p>
         </div>
 
@@ -212,7 +336,26 @@ export default function DocumentPrep() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {documentTypes.map((docType) => (
+                  {/* Category Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Filter by Category</label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Categories" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Document List */}
+                  {filteredDocuments.map((docType) => (
                     <Card
                       key={docType.id}
                       className={`cursor-pointer transition-all ${
@@ -246,6 +389,22 @@ export default function DocumentPrep() {
                             <span>{docType.timeRequired}</span>
                           </div>
                         </div>
+                        {(docType.notarization || docType.raisedSeal) && (
+                          <div className="flex gap-2 mt-2">
+                            {docType.notarization && (
+                              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Notarization Required
+                              </Badge>
+                            )}
+                            {docType.raisedSeal && (
+                              <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                <AlertCircle className="w-3 h-3 mr-1" />
+                                Raised Seal
+                              </Badge>
+                            )}
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
@@ -263,6 +422,22 @@ export default function DocumentPrep() {
                   <CardDescription>
                     {selectedDoc ? selectedDoc.description : "Choose a document type to get started"}
                   </CardDescription>
+                  {selectedDoc && (selectedDoc.notarization || selectedDoc.raisedSeal) && (
+                    <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                      <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">Notarization Requirements</h4>
+                      <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
+                        {selectedDoc.notarization && (
+                          <li>• Document must be signed in presence of a notary public</li>
+                        )}
+                        {selectedDoc.raisedSeal && (
+                          <li>• Requires official notary seal with raised impression</li>
+                        )}
+                        <li>• Two witnesses required for signature</li>
+                        <li>• Valid photo ID must be presented to notary</li>
+                        <li>• Contact base legal office for notarization assistance</li>
+                      </ul>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   {selectedDocumentType ? (

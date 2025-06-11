@@ -375,7 +375,14 @@ export interface GeneratedDocumentResponse {
 }
 
 export async function generateLegalDocument(request: DocumentGenerationRequest): Promise<GeneratedDocumentResponse> {
-  const prompt = `You are an expert military legal assistant specializing in creating professional military legal documents. Generate a comprehensive, properly formatted legal document based on the following information:
+  // Determine if this is an estate planning document requiring notarization
+  const estateDocuments = ['will-testament', 'general-power-of-attorney', 'specific-power-of-attorney', 
+                          'durable-power-of-attorney', 'healthcare-power-of-attorney', 'living-will', 
+                          'revocable-trust', 'irrevocable-trust', 'affidavit-of-support'];
+  
+  const requiresNotarization = estateDocuments.includes(request.documentType);
+  
+  let prompt = `You are an expert military legal assistant specializing in creating professional legal documents for military personnel. Generate a comprehensive, properly formatted legal document based on the following information:
 
 Document Type: ${request.documentType}
 Military Branch: ${request.branch}
@@ -390,13 +397,29 @@ Supporting Evidence: ${request.supportingEvidence || 'N/A'}
 Desired Outcome: ${request.desiredOutcome}
 Additional Details: ${request.additionalDetails || 'N/A'}
 
+SPECIAL INSTRUCTIONS FOR ESTATE PLANNING DOCUMENTS:
+${requiresNotarization ? `
+This document requires notarization. Include the following elements:
+- Proper witness signature lines (minimum 2 witnesses)
+- Notary acknowledgment section with raised seal area
+- State-specific language for legal validity
+- Self-proving affidavit if applicable (for wills)
+- Military-specific considerations (deployment, combat pay, survivor benefits)
+- SGLI (Servicemembers' Group Life Insurance) integration where relevant
+- Clear revocation clauses for previous documents
+- Military family care plan considerations where applicable
+` : ''}
+
 Please create a professional, legally sound document that:
-1. Uses proper military format and terminology
+1. Uses proper ${requiresNotarization ? 'estate planning' : 'military'} format and terminology
 2. Includes all relevant dates, names, and details
 3. Follows appropriate legal structure for this document type
 4. Uses formal, respectful language
 5. Includes proper headers, sections, and formatting
 6. Provides comprehensive coverage of the situation
+${requiresNotarization ? `7. Includes complete notarization block with witness signature lines
+8. Contains military-specific provisions and considerations
+9. Addresses deployment and combat-related contingencies` : ''}
 
 Also provide 3-5 specific suggestions for improving the document and 3-5 important legal considerations for this type of case.
 

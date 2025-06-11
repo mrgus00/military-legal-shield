@@ -931,6 +931,115 @@ export type GeneratedDocument = typeof generatedDocuments.$inferSelect;
 export type InsertStory = z.infer<typeof insertStorySchema>;
 export type Story = typeof stories.$inferSelect;
 
+// Gamified Legal Preparedness Challenges
+export const legalChallenges = pgTable("legal_challenges", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // ucmj, military-law, financial, family, emergency
+  difficulty: text("difficulty").notNull(), // beginner, intermediate, advanced
+  branch: text("branch"), // specific branch or null for all
+  questions: jsonb("questions").notNull(), // array of challenge questions
+  timeLimit: integer("time_limit"), // in minutes
+  passingScore: integer("passing_score").notNull(), // percentage required to pass
+  pointsReward: integer("points_reward").notNull(),
+  badgeId: integer("badge_id"), // references achievement_badges.id
+  prerequisites: text("prerequisites").array(), // challenge IDs that must be completed first
+  tags: text("tags").array(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Achievement Badges
+export const achievementBadges = pgTable("achievement_badges", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  iconName: text("icon_name").notNull(), // lucide icon name
+  iconColor: text("icon_color").notNull(), // hex color
+  badgeType: text("badge_type").notNull(), // challenge, streak, milestone, special
+  requirement: jsonb("requirement").notNull(), // conditions to earn the badge
+  pointsValue: integer("points_value").notNull(),
+  rarity: text("rarity").notNull(), // common, rare, epic, legendary
+  category: text("category"), // legal-expert, quick-learner, dedicated, etc.
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User Challenge Progress
+export const userChallengeProgress = pgTable("user_challenge_progress", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
+  challengeId: integer("challenge_id").references(() => legalChallenges.id),
+  status: text("status").default("not_started"), // not_started, in_progress, completed, failed
+  score: integer("score").default(0), // percentage score
+  attempts: integer("attempts").default(0),
+  bestScore: integer("best_score").default(0),
+  timeSpent: integer("time_spent").default(0), // in seconds
+  answersGiven: jsonb("answers_given"), // user's answers
+  completedAt: timestamp("completed_at"),
+  startedAt: timestamp("started_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User Earned Badges
+export const userBadges = pgTable("user_badges", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
+  badgeId: integer("badge_id").references(() => achievementBadges.id),
+  earnedAt: timestamp("earned_at").defaultNow(),
+  progress: integer("progress").default(0), // for badges that require multiple completions
+  isDisplayed: boolean("is_displayed").default(true), // whether user displays this badge
+});
+
+// User Gamification Stats
+export const userGameStats = pgTable("user_game_stats", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
+  totalPoints: integer("total_points").default(0),
+  level: integer("level").default(1),
+  experiencePoints: integer("experience_points").default(0),
+  challengesCompleted: integer("challenges_completed").default(0),
+  badgesEarned: integer("badges_earned").default(0),
+  currentStreak: integer("current_streak").default(0), // days
+  longestStreak: integer("longest_streak").default(0), // days
+  lastActivityDate: timestamp("last_activity_date"),
+  weeklyGoal: integer("weekly_goal").default(3), // challenges per week
+  weeklyProgress: integer("weekly_progress").default(0),
+  monthlyGoal: integer("monthly_goal").default(12), // challenges per month
+  monthlyProgress: integer("monthly_progress").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Challenge Leaderboard
+export const challengeLeaderboard = pgTable("challenge_leaderboard", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
+  period: text("period").notNull(), // weekly, monthly, all-time
+  rank: integer("rank").notNull(),
+  points: integer("points").notNull(),
+  challengesCompleted: integer("challenges_completed").notNull(),
+  averageScore: integer("average_score").notNull(),
+  periodStart: timestamp("period_start").notNull(),
+  periodEnd: timestamp("period_end").notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow(),
+});
+
 // User types for Replit Auth
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+
+// Gamification types
+export type LegalChallenge = typeof legalChallenges.$inferSelect;
+export type InsertLegalChallenge = typeof legalChallenges.$inferInsert;
+export type AchievementBadge = typeof achievementBadges.$inferSelect;
+export type InsertAchievementBadge = typeof achievementBadges.$inferInsert;
+export type UserChallengeProgress = typeof userChallengeProgress.$inferSelect;
+export type InsertUserChallengeProgress = typeof userChallengeProgress.$inferInsert;
+export type UserBadge = typeof userBadges.$inferSelect;
+export type InsertUserBadge = typeof userBadges.$inferInsert;
+export type UserGameStats = typeof userGameStats.$inferSelect;
+export type InsertUserGameStats = typeof userGameStats.$inferInsert;

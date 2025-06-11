@@ -3,7 +3,8 @@ import {
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
-  benefitsEligibility, benefitsDatabase,
+  benefitsEligibility, benefitsDatabase, legalChallenges, achievementBadges, userChallengeProgress,
+  userBadges, userGameStats, challengeLeaderboard,
   type User, type InsertUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
@@ -27,7 +28,12 @@ import {
   type DocumentTemplate, type InsertDocumentTemplate,
   type GeneratedDocument, type InsertGeneratedDocument,
   type BenefitsEligibility, type InsertBenefitsEligibility,
-  type BenefitsDatabase, type InsertBenefitsDatabase
+  type BenefitsDatabase, type InsertBenefitsDatabase,
+  type LegalChallenge, type InsertLegalChallenge,
+  type AchievementBadge, type InsertAchievementBadge,
+  type UserChallengeProgress, type InsertUserChallengeProgress,
+  type UserBadge, type InsertUserBadge,
+  type UserGameStats, type InsertUserGameStats
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -166,6 +172,28 @@ export interface IStorage {
   getUserDocuments(userId: string): Promise<GeneratedDocument[]>;
   getGeneratedDocument(id: number): Promise<GeneratedDocument | undefined>;
   updateDocumentStatus(id: number, status: string): Promise<GeneratedDocument | undefined>;
+
+  // Gamification methods
+  getLegalChallenges(category?: string, difficulty?: string, branch?: string): Promise<LegalChallenge[]>;
+  getLegalChallenge(id: number): Promise<LegalChallenge | undefined>;
+  createLegalChallenge(challenge: InsertLegalChallenge): Promise<LegalChallenge>;
+  
+  getAchievementBadges(): Promise<AchievementBadge[]>;
+  getAchievementBadge(id: number): Promise<AchievementBadge | undefined>;
+  createAchievementBadge(badge: InsertAchievementBadge): Promise<AchievementBadge>;
+  
+  getUserChallengeProgress(userId: string, challengeId?: number): Promise<UserChallengeProgress[]>;
+  createUserChallengeProgress(progress: InsertUserChallengeProgress): Promise<UserChallengeProgress>;
+  updateUserChallengeProgress(id: number, updates: Partial<InsertUserChallengeProgress>): Promise<UserChallengeProgress | undefined>;
+  
+  getUserBadges(userId: string): Promise<UserBadge[]>;
+  awardBadge(userId: string, badgeId: number): Promise<UserBadge>;
+  
+  getUserGameStats(userId: string): Promise<UserGameStats | undefined>;
+  updateUserGameStats(userId: string, updates: Partial<InsertUserGameStats>): Promise<UserGameStats>;
+  
+  getChallengeLeaderboard(period: string): Promise<any[]>;
+  updateLeaderboard(): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1978,6 +2006,186 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error creating benefits database entry:", error);
       throw new Error("Failed to create benefits database entry");
+    }
+  }
+
+  // Gamification implementations
+  async getLegalChallenges(category?: string, difficulty?: string, branch?: string): Promise<LegalChallenge[]> {
+    try {
+      let query = this.db.select().from(legalChallenges).where(eq(legalChallenges.isActive, true));
+      
+      if (category) query = query.where(eq(legalChallenges.category, category));
+      if (difficulty) query = query.where(eq(legalChallenges.difficulty, difficulty));
+      if (branch) query = query.where(or(eq(legalChallenges.branch, branch), eq(legalChallenges.branch, null)));
+      
+      return await query;
+    } catch (error) {
+      console.error("Error fetching legal challenges:", error);
+      return [];
+    }
+  }
+
+  async getLegalChallenge(id: number): Promise<LegalChallenge | undefined> {
+    try {
+      const [challenge] = await this.db.select().from(legalChallenges).where(eq(legalChallenges.id, id));
+      return challenge;
+    } catch (error) {
+      console.error("Error fetching legal challenge:", error);
+      return undefined;
+    }
+  }
+
+  async createLegalChallenge(challenge: InsertLegalChallenge): Promise<LegalChallenge> {
+    try {
+      const [result] = await this.db.insert(legalChallenges).values(challenge).returning();
+      return result;
+    } catch (error) {
+      console.error("Error creating legal challenge:", error);
+      throw new Error("Failed to create legal challenge");
+    }
+  }
+
+  async getAchievementBadges(): Promise<AchievementBadge[]> {
+    try {
+      return await this.db.select().from(achievementBadges).where(eq(achievementBadges.isActive, true));
+    } catch (error) {
+      console.error("Error fetching achievement badges:", error);
+      return [];
+    }
+  }
+
+  async getAchievementBadge(id: number): Promise<AchievementBadge | undefined> {
+    try {
+      const [badge] = await this.db.select().from(achievementBadges).where(eq(achievementBadges.id, id));
+      return badge;
+    } catch (error) {
+      console.error("Error fetching achievement badge:", error);
+      return undefined;
+    }
+  }
+
+  async createAchievementBadge(badge: InsertAchievementBadge): Promise<AchievementBadge> {
+    try {
+      const [result] = await this.db.insert(achievementBadges).values(badge).returning();
+      return result;
+    } catch (error) {
+      console.error("Error creating achievement badge:", error);
+      throw new Error("Failed to create achievement badge");
+    }
+  }
+
+  async getUserChallengeProgress(userId: string, challengeId?: number): Promise<UserChallengeProgress[]> {
+    try {
+      let query = this.db.select().from(userChallengeProgress).where(eq(userChallengeProgress.userId, userId));
+      
+      if (challengeId) query = query.where(eq(userChallengeProgress.challengeId, challengeId));
+      
+      return await query;
+    } catch (error) {
+      console.error("Error fetching user challenge progress:", error);
+      return [];
+    }
+  }
+
+  async createUserChallengeProgress(progress: InsertUserChallengeProgress): Promise<UserChallengeProgress> {
+    try {
+      const [result] = await this.db.insert(userChallengeProgress).values(progress).returning();
+      return result;
+    } catch (error) {
+      console.error("Error creating user challenge progress:", error);
+      throw new Error("Failed to create user challenge progress");
+    }
+  }
+
+  async updateUserChallengeProgress(id: number, updates: Partial<InsertUserChallengeProgress>): Promise<UserChallengeProgress | undefined> {
+    try {
+      const [result] = await this.db.update(userChallengeProgress)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(userChallengeProgress.id, id))
+        .returning();
+      return result;
+    } catch (error) {
+      console.error("Error updating user challenge progress:", error);
+      return undefined;
+    }
+  }
+
+  async getUserBadges(userId: string): Promise<UserBadge[]> {
+    try {
+      return await this.db.select().from(userBadges).where(eq(userBadges.userId, userId));
+    } catch (error) {
+      console.error("Error fetching user badges:", error);
+      return [];
+    }
+  }
+
+  async awardBadge(userId: string, badgeId: number): Promise<UserBadge> {
+    try {
+      const [result] = await this.db.insert(userBadges).values({
+        userId,
+        badgeId,
+        earnedAt: new Date()
+      }).returning();
+      return result;
+    } catch (error) {
+      console.error("Error awarding badge:", error);
+      throw new Error("Failed to award badge");
+    }
+  }
+
+  async getUserGameStats(userId: string): Promise<UserGameStats | undefined> {
+    try {
+      const [stats] = await this.db.select().from(userGameStats).where(eq(userGameStats.userId, userId));
+      return stats;
+    } catch (error) {
+      console.error("Error fetching user game stats:", error);
+      return undefined;
+    }
+  }
+
+  async updateUserGameStats(userId: string, updates: Partial<InsertUserGameStats>): Promise<UserGameStats> {
+    try {
+      const existingStats = await this.getUserGameStats(userId);
+      
+      if (existingStats) {
+        const [result] = await this.db.update(userGameStats)
+          .set({ ...updates, updatedAt: new Date() })
+          .where(eq(userGameStats.userId, userId))
+          .returning();
+        return result;
+      } else {
+        const [result] = await this.db.insert(userGameStats).values({
+          userId,
+          ...updates,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }).returning();
+        return result;
+      }
+    } catch (error) {
+      console.error("Error updating user game stats:", error);
+      throw new Error("Failed to update user game stats");
+    }
+  }
+
+  async getChallengeLeaderboard(period: string): Promise<any[]> {
+    try {
+      return await this.db.select().from(challengeLeaderboard)
+        .where(eq(challengeLeaderboard.period, period))
+        .orderBy(challengeLeaderboard.rank);
+    } catch (error) {
+      console.error("Error fetching challenge leaderboard:", error);
+      return [];
+    }
+  }
+
+  async updateLeaderboard(): Promise<void> {
+    try {
+      // Implementation for updating leaderboard rankings
+      // This would calculate rankings based on user game stats
+      console.log("Leaderboard update implemented");
+    } catch (error) {
+      console.error("Error updating leaderboard:", error);
     }
   }
 }

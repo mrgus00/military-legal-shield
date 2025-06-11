@@ -18,6 +18,84 @@ if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
+// VA Disability Compensation rates (2024)
+function calculateDisabilityCompensation(disabilityRating: number, dependents: number): number {
+  const baseRates: { [key: number]: number } = {
+    10: 171,
+    20: 338,
+    30: 524,
+    40: 755,
+    50: 1075,
+    60: 1361,
+    70: 1716,
+    80: 1995,
+    90: 2241,
+    100: 3737
+  };
+
+  let baseAmount = baseRates[disabilityRating] || 0;
+  
+  // Add dependent allowances for ratings 30% and above
+  if (disabilityRating >= 30 && dependents > 0) {
+    const dependentRates: { [key: number]: number } = {
+      30: 57,
+      40: 75,
+      50: 94,
+      60: 113,
+      70: 132,
+      80: 151,
+      90: 170,
+      100: 189
+    };
+    baseAmount += (dependentRates[disabilityRating] || 0) * dependents;
+  }
+
+  return Math.round(baseAmount);
+}
+
+function getStateBenefits(state: string): any[] {
+  const stateBenefits: { [key: string]: any[] } = {
+    texas: [{
+      id: "texas_property_tax",
+      name: "Texas Property Tax Exemption",
+      type: "housing",
+      description: "Property tax exemptions for disabled veterans",
+      eligibilityStatus: "potentially_eligible",
+      estimatedAmount: "Up to $12,000/year savings",
+      requirements: ["Disabled veteran", "Primary residence in Texas"],
+      nextSteps: ["Apply with county appraisal district"],
+      processingTime: "2-4 weeks",
+      priority: "medium"
+    }],
+    california: [{
+      id: "ca_property_tax",
+      name: "California Disabled Veterans Property Tax Exemption",
+      type: "housing",
+      description: "$196,109 exemption for disabled veterans",
+      eligibilityStatus: "potentially_eligible",
+      estimatedAmount: "Up to $2,000/year savings",
+      requirements: ["100% disabled veteran", "California resident"],
+      nextSteps: ["File with county assessor"],
+      processingTime: "1-2 months",
+      priority: "medium"
+    }],
+    florida: [{
+      id: "fl_property_tax",
+      name: "Florida Combat-Related Disability Exemption",
+      type: "housing",
+      description: "Additional homestead exemption for combat-disabled veterans",
+      eligibilityStatus: "potentially_eligible",
+      estimatedAmount: "Up to $1,500/year savings",
+      requirements: ["Combat-related disability", "Florida resident"],
+      nextSteps: ["Apply with property appraiser"],
+      processingTime: "3-6 weeks",
+      priority: "medium"
+    }]
+  };
+
+  return stateBenefits[state.toLowerCase()] || [];
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
 
@@ -904,6 +982,175 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error generating document:", error);
       res.status(500).json({ message: "Error generating document: " + error.message });
+    }
+  });
+
+  // Benefits Calculator route
+  app.post("/api/calculate-benefits", async (req, res) => {
+    try {
+      const {
+        branch,
+        rank,
+        yearsOfService,
+        disabilityRating,
+        maritalStatus,
+        dependents,
+        dischargeType,
+        combatVeteran,
+        purpleHeart,
+        povPercentage,
+        annualIncome,
+        state,
+        homelessRisk,
+        unemployed,
+        studentStatus
+      } = req.body;
+
+      // Calculate benefits based on eligibility criteria
+      const eligibleBenefits = [];
+      let totalEstimatedValue = 0;
+
+      // VA Disability Compensation
+      if (disabilityRating > 0 && dischargeType === "honorable") {
+        const monthlyCompensation = calculateDisabilityCompensation(disabilityRating, dependents);
+        eligibleBenefits.push({
+          id: "va_disability",
+          name: "VA Disability Compensation",
+          type: "disability",
+          description: "Monthly tax-free compensation for service-connected disabilities",
+          eligibilityStatus: "eligible",
+          estimatedAmount: `$${monthlyCompensation}/month ($${monthlyCompensation * 12}/year)`,
+          requirements: ["Service-connected disability rating", "Honorable discharge"],
+          nextSteps: ["File VA disability claim", "Schedule C&P exam"],
+          processingTime: "3-6 months",
+          priority: "high"
+        });
+        totalEstimatedValue += monthlyCompensation * 12;
+      }
+
+      // VA Healthcare
+      if (dischargeType === "honorable" || combatVeteran) {
+        eligibleBenefits.push({
+          id: "va_healthcare",
+          name: "VA Healthcare",
+          type: "healthcare", 
+          description: "Comprehensive healthcare through VA medical system",
+          eligibilityStatus: combatVeteran ? "eligible" : "potentially_eligible",
+          estimatedAmount: "Up to $15,000/year value",
+          requirements: ["Honorable discharge or combat service", "Enrollment in VA system"],
+          nextSteps: ["Apply for VA healthcare", "Schedule enrollment appointment"],
+          processingTime: "2-4 weeks",
+          priority: "high"
+        });
+        totalEstimatedValue += 8000; // Conservative estimate
+      }
+
+      // GI Bill Education Benefits
+      if (yearsOfService >= 3 && dischargeType === "honorable") {
+        eligibleBenefits.push({
+          id: "gi_bill",
+          name: "Post-9/11 GI Bill",
+          type: "education",
+          description: "Full tuition coverage plus housing allowance for education",
+          eligibilityStatus: "eligible",
+          estimatedAmount: "Up to $25,000/year for 4 years",
+          requirements: ["3+ years active duty", "Honorable discharge"],
+          nextSteps: ["Apply for education benefits", "Choose approved school"],
+          applicationUrl: "https://www.va.gov/education/how-to-apply/",
+          processingTime: "4-6 weeks",
+          priority: "medium"
+        });
+        if (studentStatus) {
+          totalEstimatedValue += 25000;
+        }
+      }
+
+      // VA Home Loan
+      if (dischargeType === "honorable") {
+        eligibleBenefits.push({
+          id: "va_home_loan",
+          name: "VA Home Loan Guarantee",
+          type: "housing",
+          description: "No down payment home loans with competitive rates",
+          eligibilityStatus: "eligible",
+          estimatedAmount: "Saves $10,000-50,000 in fees",
+          requirements: ["Honorable discharge", "Sufficient income", "Primary residence"],
+          nextSteps: ["Get Certificate of Eligibility", "Find VA-approved lender"],
+          processingTime: "2-3 weeks",
+          priority: "medium"
+        });
+      }
+
+      // Vocational Rehabilitation
+      if (disabilityRating >= 20 && unemployed) {
+        eligibleBenefits.push({
+          id: "voc_rehab",
+          name: "Vocational Rehabilitation & Employment",
+          type: "education",
+          description: "Training and education for employment with disability rating 20%+",
+          eligibilityStatus: "eligible",
+          estimatedAmount: "Up to $30,000 in training costs",
+          requirements: ["20%+ disability rating", "Employment handicap"],
+          nextSteps: ["Apply for VR&E benefits", "Meet with counselor"],
+          processingTime: "6-8 weeks",
+          priority: "high"
+        });
+        totalEstimatedValue += 15000;
+      }
+
+      // Dependency and Indemnity Compensation for survivors
+      if (disabilityRating >= 100) {
+        eligibleBenefits.push({
+          id: "dic_survivor",
+          name: "Dependency and Indemnity Compensation",
+          type: "disability",
+          description: "Monthly payments to eligible survivors of veterans who died from service-connected conditions",
+          eligibilityStatus: "potentially_eligible",
+          estimatedAmount: "$1,500+/month for survivors",
+          requirements: ["100% disability rating", "Death from service-connected condition"],
+          nextSteps: ["Document service connection", "Prepare survivor benefits"],
+          processingTime: "4-6 months",
+          priority: "medium"
+        });
+      }
+
+      // State-specific benefits
+      const stateBenefits = getStateBenefits(state);
+      eligibleBenefits.push(...stateBenefits);
+
+      // Calculate completion score
+      const maxPossibleBenefits = 8;
+      const completionScore = Math.round((eligibleBenefits.length / maxPossibleBenefits) * 100);
+
+      // Recommended actions
+      const recommendedActions = [
+        "Apply for VA disability compensation if not already rated",
+        "Enroll in VA healthcare system",
+        "Obtain Certificate of Eligibility for home loan",
+        "Consider education benefits for career advancement"
+      ];
+
+      // Urgent deadlines
+      const urgentDeadlines = [];
+      if (dischargeType === "honorable" && yearsOfService >= 0.5) {
+        urgentDeadlines.push({
+          benefit: "VA Healthcare Enrollment",
+          deadline: "Within 5 years of discharge for priority enrollment",
+          description: "Combat veterans have 5 years from discharge for enhanced benefits"
+        });
+      }
+
+      res.json({
+        totalEstimatedValue,
+        eligibleBenefits,
+        recommendedActions,
+        urgentDeadlines,
+        completionScore
+      });
+
+    } catch (error: any) {
+      console.error("Error calculating benefits:", error);
+      res.status(500).json({ message: "Error calculating benefits: " + error.message });
     }
   });
 

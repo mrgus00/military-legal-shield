@@ -1,551 +1,618 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
-import { 
-  Calculator, 
-  DollarSign, 
-  Heart, 
-  GraduationCap, 
-  Home, 
-  Briefcase, 
-  Shield, 
-  CheckCircle2, 
-  XCircle, 
-  Clock,
-  ExternalLink,
-  Phone,
-  Info
-} from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calculator, DollarSign, FileText, Clock, CheckCircle, AlertCircle, Users, Home, GraduationCap, Heart } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import PageLayout from "@/components/page-layout";
+import { useToast } from "@/hooks/use-toast";
+
+const benefitsCalculatorSchema = z.object({
+  branch: z.string().min(1, "Military branch is required"),
+  rank: z.string().min(1, "Rank is required"),
+  yearsOfService: z.number().min(0).max(50),
+  disabilityRating: z.number().min(0).max(100),
+  maritalStatus: z.string(),
+  dependents: z.number().min(0).max(20),
+  dischargeType: z.string(),
+  combatVeteran: z.boolean(),
+  purpleHeart: z.boolean(),
+  povPercentage: z.number().min(0).max(200),
+  annualIncome: z.number().min(0),
+  state: z.string().min(1, "State is required"),
+  homelessRisk: z.boolean(),
+  unemployed: z.boolean(),
+  studentStatus: z.boolean(),
+});
+
+type BenefitsFormData = z.infer<typeof benefitsCalculatorSchema>;
 
 interface BenefitResult {
-  id: number;
-  benefitName: string;
-  benefitType: string;
+  id: string;
+  name: string;
+  type: string;
   description: string;
-  benefitAmount?: string;
-  applicationProcess?: string;
-  processingTime?: string;
-  websiteUrl?: string;
-  phoneNumber?: string;
+  eligibilityStatus: "eligible" | "potentially_eligible" | "not_eligible";
+  estimatedAmount: string;
+  requirements: string[];
+  nextSteps: string[];
+  applicationUrl?: string;
+  processingTime: string;
+  priority: "high" | "medium" | "low";
 }
 
-interface EligibilityFormData {
-  serviceStatus: string;
-  branch: string;
-  serviceDates: {
-    startDate: string;
-    endDate: string;
-    totalYears: number;
-    totalMonths: number;
-  };
-  dischargeType: string;
-  disabilityRating: number;
-  combatVeteran: boolean;
-  prisonerOfWar: boolean;
-  purpleHeart: boolean;
-  dependents: {
-    spouse: boolean;
-    children: number;
-  };
-  income: {
-    annualIncome: number;
-    householdIncome: number;
-  };
-  location: {
-    state: string;
-    zipCode: string;
-  };
+interface CalculationResults {
+  totalEstimatedValue: number;
+  eligibleBenefits: BenefitResult[];
+  recommendedActions: string[];
+  urgentDeadlines: Array<{
+    benefit: string;
+    deadline: string;
+    description: string;
+  }>;
+  completionScore: number;
 }
+
+const militaryBranches = [
+  { value: "army", label: "U.S. Army" },
+  { value: "navy", label: "U.S. Navy" },
+  { value: "airforce", label: "U.S. Air Force" },
+  { value: "marines", label: "U.S. Marine Corps" },
+  { value: "coastguard", label: "U.S. Coast Guard" },
+  { value: "spaceforce", label: "U.S. Space Force" },
+];
+
+const states = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+  "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+  "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+  "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+  "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
+  "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+  "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+];
 
 export default function BenefitsCalculator() {
+  const [results, setResults] = useState<CalculationResults | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const { toast } = useToast();
-  const [formData, setFormData] = useState<EligibilityFormData>({
-    serviceStatus: "",
-    branch: "",
-    serviceDates: {
-      startDate: "",
-      endDate: "",
-      totalYears: 0,
-      totalMonths: 0
-    },
-    dischargeType: "",
-    disabilityRating: 0,
-    combatVeteran: false,
-    prisonerOfWar: false,
-    purpleHeart: false,
-    dependents: {
-      spouse: false,
-      children: 0
-    },
-    income: {
+
+  const form = useForm<BenefitsFormData>({
+    resolver: zodResolver(benefitsCalculatorSchema),
+    defaultValues: {
+      yearsOfService: 0,
+      disabilityRating: 0,
+      dependents: 0,
+      combatVeteran: false,
+      purpleHeart: false,
+      povPercentage: 100,
       annualIncome: 0,
-      householdIncome: 0
+      homelessRisk: false,
+      unemployed: false,
+      studentStatus: false,
     },
-    location: {
-      state: "",
-      zipCode: ""
-    }
   });
 
-  const [eligibleBenefits, setEligibleBenefits] = useState<BenefitResult[]>([]);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [hasCalculated, setHasCalculated] = useState(false);
-
-  const calculateMutation = useMutation({
-    mutationFn: async (data: EligibilityFormData) => {
-      const response = await apiRequest("POST", "/api/benefits/calculate", data);
+  const calculateBenefits = useMutation({
+    mutationFn: async (data: BenefitsFormData) => {
+      const response = await apiRequest("POST", "/api/calculate-benefits", data);
       return response.json();
     },
-    onSuccess: (result) => {
-      const benefits = JSON.parse(result.eligibleBenefits || "[]");
-      setEligibleBenefits(benefits);
-      setHasCalculated(true);
+    onSuccess: (data: CalculationResults) => {
+      setResults(data);
+      setIsCalculating(false);
       toast({
-        title: "Calculation Complete",
-        description: `Found ${benefits.length} benefits you may be eligible for.`,
+        title: "Benefits Calculated Successfully",
+        description: `Found ${data.eligibleBenefits.length} potential benefits with estimated value of $${data.totalEstimatedValue.toLocaleString()}`,
       });
     },
     onError: (error) => {
-      console.error("Benefits calculation error:", error);
+      setIsCalculating(false);
       toast({
         title: "Calculation Error",
-        description: "Unable to calculate benefits eligibility. Please try again.",
+        description: "Failed to calculate benefits. Please try again.",
         variant: "destructive",
       });
     },
   });
 
-  // Calculate service duration when dates change
-  useEffect(() => {
-    if (formData.serviceDates.startDate && formData.serviceDates.endDate) {
-      const start = new Date(formData.serviceDates.startDate);
-      const end = new Date(formData.serviceDates.endDate);
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      const totalMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30.44));
-      const totalYears = Math.floor(totalMonths / 12);
-
-      setFormData(prev => ({
-        ...prev,
-        serviceDates: {
-          ...prev.serviceDates,
-          totalYears,
-          totalMonths
-        }
-      }));
-    }
-  }, [formData.serviceDates.startDate, formData.serviceDates.endDate]);
-
-  // Real-time calculation trigger
-  useEffect(() => {
-    if (formData.serviceStatus && formData.branch && formData.serviceDates.totalYears > 0) {
-      const timeoutId = setTimeout(() => {
-        setIsCalculating(true);
-        calculateMutation.mutate(formData);
-        setTimeout(() => setIsCalculating(false), 500);
-      }, 1000);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [formData]);
-
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => {
-      const keys = field.split('.');
-      if (keys.length === 1) {
-        return { ...prev, [field]: value };
-      } else if (keys.length === 2) {
-        const [parentKey, childKey] = keys;
-        const parentValue = prev[parentKey as keyof EligibilityFormData];
-        
-        if (typeof parentValue === 'object' && parentValue !== null) {
-          return {
-            ...prev,
-            [parentKey]: {
-              ...parentValue,
-              [childKey]: value
-            }
-          };
-        }
-      }
-      return prev;
-    });
+  const onSubmit = (data: BenefitsFormData) => {
+    setIsCalculating(true);
+    calculateBenefits.mutate(data);
   };
 
   const getBenefitIcon = (type: string) => {
     switch (type) {
-      case 'healthcare': return <Heart className="h-5 w-5" />;
-      case 'education': return <GraduationCap className="h-5 w-5" />;
-      case 'housing': return <Home className="h-5 w-5" />;
-      case 'disability': return <Shield className="h-5 w-5" />;
-      case 'employment': return <Briefcase className="h-5 w-5" />;
+      case "healthcare": return <Heart className="h-5 w-5" />;
+      case "education": return <GraduationCap className="h-5 w-5" />;
+      case "housing": return <Home className="h-5 w-5" />;
+      case "disability": return <Users className="h-5 w-5" />;
       default: return <DollarSign className="h-5 w-5" />;
     }
   };
 
-  const getBenefitColor = (type: string) => {
-    switch (type) {
-      case 'healthcare': return 'bg-red-50 text-red-700 border-red-200';
-      case 'education': return 'bg-blue-50 text-blue-700 border-blue-200';
-      case 'housing': return 'bg-green-50 text-green-700 border-green-200';
-      case 'disability': return 'bg-orange-50 text-orange-700 border-orange-200';
-      case 'employment': return 'bg-purple-50 text-purple-700 border-purple-200';
-      default: return 'bg-gray-50 text-gray-700 border-gray-200';
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "eligible": return "bg-green-100 text-green-800 border-green-200";
+      case "potentially_eligible": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "not_eligible": return "bg-red-100 text-red-800 border-red-200";
+      default: return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high": return "bg-red-500";
+      case "medium": return "bg-yellow-500";
+      case "low": return "bg-green-500";
+      default: return "bg-gray-500";
     }
   };
 
   return (
-    <PageLayout>
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-blue-600 rounded-full">
-                <Calculator className="h-8 w-8 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Real-Time Benefits Eligibility Calculator
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Instantly discover all federal, state, and local benefits you're eligible for based on your military service record. 
-              Results update automatically as you enter information.
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <Calculator className="h-12 w-12 text-blue-600 mr-3" />
+            <h1 className="text-4xl font-bold text-gray-900">VA Benefits Calculator</h1>
           </div>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Get a comprehensive analysis of your eligibility for VA benefits and calculate your potential compensation
+          </p>
+        </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left Column - Form */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Info className="h-5 w-5" />
-                    Service Information
-                  </CardTitle>
-                  <CardDescription>
-                    Enter your military service details for personalized benefit calculations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <Tabs defaultValue="basic" className="w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Input Form */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <FileText className="h-5 w-5 mr-2" />
+                  Service Information
+                </CardTitle>
+                <CardDescription>
+                  Provide your military service details for accurate benefit calculations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Tabs defaultValue="service" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="basic">Basic Info</TabsTrigger>
-                      <TabsTrigger value="service">Service Record</TabsTrigger>
-                      <TabsTrigger value="family">Family</TabsTrigger>
+                      <TabsTrigger value="service">Service</TabsTrigger>
+                      <TabsTrigger value="personal">Personal</TabsTrigger>
                       <TabsTrigger value="financial">Financial</TabsTrigger>
+                      <TabsTrigger value="status">Status</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="basic" className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="serviceStatus">Service Status</Label>
-                          <Select value={formData.serviceStatus} onValueChange={(value) => handleInputChange('serviceStatus', value)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="active">Active Duty</SelectItem>
-                              <SelectItem value="veteran">Veteran</SelectItem>
-                              <SelectItem value="retired">Retired</SelectItem>
-                              <SelectItem value="discharged">Discharged</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
+                    <TabsContent value="service" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
                           <Label htmlFor="branch">Military Branch</Label>
-                          <Select value={formData.branch} onValueChange={(value) => handleInputChange('branch', value)}>
+                          <Select 
+                            value={form.watch("branch")} 
+                            onValueChange={(value) => form.setValue("branch", value)}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select branch" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Army">U.S. Army</SelectItem>
-                              <SelectItem value="Navy">U.S. Navy</SelectItem>
-                              <SelectItem value="Air Force">U.S. Air Force</SelectItem>
-                              <SelectItem value="Marines">U.S. Marine Corps</SelectItem>
-                              <SelectItem value="Coast Guard">U.S. Coast Guard</SelectItem>
-                              <SelectItem value="Space Force">U.S. Space Force</SelectItem>
+                              {militaryBranches.map((branch) => (
+                                <SelectItem key={branch.value} value={branch.value}>
+                                  {branch.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="rank">Military Rank</Label>
+                          <Input
+                            id="rank"
+                            placeholder="e.g., E-7, O-3, W-2"
+                            {...form.register("rank")}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="yearsOfService">Years of Service</Label>
+                          <Input
+                            id="yearsOfService"
+                            type="number"
+                            min="0"
+                            max="50"
+                            {...form.register("yearsOfService", { valueAsNumber: true })}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="dischargeType">Discharge Type</Label>
+                          <Select 
+                            value={form.watch("dischargeType")} 
+                            onValueChange={(value) => form.setValue("dischargeType", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select discharge type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="honorable">Honorable</SelectItem>
+                              <SelectItem value="general">General Under Honorable Conditions</SelectItem>
+                              <SelectItem value="other">Other Than Honorable</SelectItem>
+                              <SelectItem value="bad_conduct">Bad Conduct</SelectItem>
+                              <SelectItem value="dishonorable">Dishonorable</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="state">State</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="disabilityRating">Current VA Disability Rating (%)</Label>
                           <Input
-                            id="state"
-                            value={formData.location.state}
-                            onChange={(e) => handleInputChange('location.state', e.target.value)}
-                            placeholder="Enter your state"
+                            id="disabilityRating"
+                            type="number"
+                            min="0"
+                            max="100"
+                            placeholder="0-100"
+                            {...form.register("disabilityRating", { valueAsNumber: true })}
                           />
                         </div>
 
-                        <div>
-                          <Label htmlFor="zipCode">ZIP Code</Label>
+                        <div className="space-y-2">
+                          <Label htmlFor="state">State of Residence</Label>
+                          <Select 
+                            value={form.watch("state")} 
+                            onValueChange={(value) => form.setValue("state", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select state" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {states.map((state) => (
+                                <SelectItem key={state} value={state.toLowerCase().replace(" ", "_")}>
+                                  {state}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="combatVeteran"
+                            checked={form.watch("combatVeteran")}
+                            onCheckedChange={(checked) => form.setValue("combatVeteran", !!checked)}
+                          />
+                          <Label htmlFor="combatVeteran">Combat Veteran</Label>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="purpleHeart"
+                            checked={form.watch("purpleHeart")}
+                            onCheckedChange={(checked) => form.setValue("purpleHeart", !!checked)}
+                          />
+                          <Label htmlFor="purpleHeart">Purple Heart Recipient</Label>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="personal" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="maritalStatus">Marital Status</Label>
+                          <Select 
+                            value={form.watch("maritalStatus")} 
+                            onValueChange={(value) => form.setValue("maritalStatus", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="single">Single</SelectItem>
+                              <SelectItem value="married">Married</SelectItem>
+                              <SelectItem value="divorced">Divorced</SelectItem>
+                              <SelectItem value="widowed">Widowed</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="dependents">Number of Dependents</Label>
                           <Input
-                            id="zipCode"
-                            value={formData.location.zipCode}
-                            onChange={(e) => handleInputChange('location.zipCode', e.target.value)}
-                            placeholder="Enter ZIP code"
+                            id="dependents"
+                            type="number"
+                            min="0"
+                            max="20"
+                            {...form.register("dependents", { valueAsNumber: true })}
                           />
                         </div>
                       </div>
                     </TabsContent>
 
-                  <TabsContent value="service" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="startDate">Service Start Date</Label>
-                        <Input
-                          id="startDate"
-                          type="date"
-                          value={formData.serviceDates.startDate}
-                          onChange={(e) => handleInputChange('serviceDates.startDate', e.target.value)}
-                        />
-                      </div>
+                    <TabsContent value="financial" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="annualIncome">Annual Household Income</Label>
+                          <Input
+                            id="annualIncome"
+                            type="number"
+                            min="0"
+                            placeholder="$0"
+                            {...form.register("annualIncome", { valueAsNumber: true })}
+                          />
+                        </div>
 
-                      <div>
-                        <Label htmlFor="endDate">Service End Date</Label>
-                        <Input
-                          id="endDate"
-                          type="date"
-                          value={formData.serviceDates.endDate}
-                          onChange={(e) => handleInputChange('serviceDates.endDate', e.target.value)}
-                        />
+                        <div className="space-y-2">
+                          <Label htmlFor="povPercentage">Income vs Poverty Line (%)</Label>
+                          <Input
+                            id="povPercentage"
+                            type="number"
+                            min="0"
+                            max="200"
+                            placeholder="100 = at poverty line"
+                            {...form.register("povPercentage", { valueAsNumber: true })}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </TabsContent>
 
-                    {formData.serviceDates.totalYears > 0 && (
-                      <div className="p-3 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-700">
-                          Total Service: {formData.serviceDates.totalYears} years, {formData.serviceDates.totalMonths % 12} months
-                        </p>
+                    <TabsContent value="status" className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="unemployed"
+                            checked={form.watch("unemployed")}
+                            onCheckedChange={(checked) => form.setValue("unemployed", !!checked)}
+                          />
+                          <Label htmlFor="unemployed">Currently Unemployed</Label>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="studentStatus"
+                            checked={form.watch("studentStatus")}
+                            onCheckedChange={(checked) => form.setValue("studentStatus", !!checked)}
+                          />
+                          <Label htmlFor="studentStatus">Full-time Student</Label>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="homelessRisk"
+                            checked={form.watch("homelessRisk")}
+                            onCheckedChange={(checked) => form.setValue("homelessRisk", !!checked)}
+                          />
+                          <Label htmlFor="homelessRisk">At Risk of Homelessness</Label>
+                        </div>
                       </div>
+                    </TabsContent>
+                  </Tabs>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isCalculating}
+                    size="lg"
+                  >
+                    {isCalculating ? (
+                      <>
+                        <Clock className="h-4 w-4 mr-2 animate-spin" />
+                        Calculating Benefits...
+                      </>
+                    ) : (
+                      <>
+                        <Calculator className="h-4 w-4 mr-2" />
+                        Calculate My Benefits
+                      </>
                     )}
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="dischargeType">Discharge Type</Label>
-                        <Select value={formData.dischargeType} onValueChange={(value) => handleInputChange('dischargeType', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select discharge type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="honorable">Honorable</SelectItem>
-                            <SelectItem value="general">General</SelectItem>
-                            <SelectItem value="other_than_honorable">Other Than Honorable</SelectItem>
-                            <SelectItem value="dishonorable">Dishonorable</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="disabilityRating">VA Disability Rating (%)</Label>
-                        <Input
-                          id="disabilityRating"
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={formData.disabilityRating}
-                          onChange={(e) => handleInputChange('disabilityRating', parseInt(e.target.value) || 0)}
-                          placeholder="0-100"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Service Recognition</Label>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="combatVeteran"
-                            checked={formData.combatVeteran}
-                            onCheckedChange={(checked) => handleInputChange('combatVeteran', checked)}
-                          />
-                          <Label htmlFor="combatVeteran">Combat Veteran</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="purpleHeart"
-                            checked={formData.purpleHeart}
-                            onCheckedChange={(checked) => handleInputChange('purpleHeart', checked)}
-                          />
-                          <Label htmlFor="purpleHeart">Purple Heart Recipient</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="prisonerOfWar"
-                            checked={formData.prisonerOfWar}
-                            onCheckedChange={(checked) => handleInputChange('prisonerOfWar', checked)}
-                          />
-                          <Label htmlFor="prisonerOfWar">Former Prisoner of War</Label>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="family" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="spouse"
-                          checked={formData.dependents.spouse}
-                          onCheckedChange={(checked) => handleInputChange('dependents.spouse', checked)}
-                        />
-                        <Label htmlFor="spouse">Married/Spouse</Label>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="children">Number of Children</Label>
-                        <Input
-                          id="children"
-                          type="number"
-                          min="0"
-                          value={formData.dependents.children}
-                          onChange={(e) => handleInputChange('dependents.children', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="financial" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="annualIncome">Annual Personal Income</Label>
-                        <Input
-                          id="annualIncome"
-                          type="number"
-                          value={formData.income.annualIncome}
-                          onChange={(e) => handleInputChange('income.annualIncome', parseInt(e.target.value) || 0)}
-                          placeholder="$0"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="householdIncome">Total Household Income</Label>
-                        <Input
-                          id="householdIncome"
-                          type="number"
-                          value={formData.income.householdIncome}
-                          onChange={(e) => handleInputChange('income.householdIncome', parseInt(e.target.value) || 0)}
-                          placeholder="$0"
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Results */}
+          {/* Results Panel */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            {results ? (
+              <div className="space-y-6">
+                {/* Summary Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Benefits Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-green-600">
+                          ${results.totalEstimatedValue.toLocaleString()}
+                        </div>
+                        <div className="text-sm text-gray-600">Estimated Annual Value</div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Completion Score</span>
+                          <span className="text-sm font-medium">{results.completionScore}%</span>
+                        </div>
+                        <Progress value={results.completionScore} className="h-2" />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                          <div className="text-2xl font-bold text-blue-600">
+                            {results.eligibleBenefits.filter(b => b.eligibilityStatus === "eligible").length}
+                          </div>
+                          <div className="text-xs text-gray-600">Eligible</div>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-yellow-600">
+                            {results.eligibleBenefits.filter(b => b.eligibilityStatus === "potentially_eligible").length}
+                          </div>
+                          <div className="text-xs text-gray-600">Potential</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Urgent Deadlines */}
+                {results.urgentDeadlines.length > 0 && (
+                  <Card className="border-red-200">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-red-600">
+                        <AlertCircle className="h-5 w-5 mr-2" />
+                        Urgent Deadlines
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {results.urgentDeadlines.map((deadline, index) => (
+                          <Alert key={index} className="border-red-200">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                              <div className="font-medium">{deadline.benefit}</div>
+                              <div className="text-sm text-gray-600">{deadline.deadline}</div>
+                              <div className="text-sm">{deadline.description}</div>
+                            </AlertDescription>
+                          </Alert>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Quick Actions */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      Recommended Actions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {results.recommendedActions.map((action, index) => (
+                        <div key={index} className="flex items-start space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm">{action}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {isCalculating ? (
-                      <Clock className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    )}
-                    Eligible Benefits
-                  </CardTitle>
+                  <CardTitle>Ready to Calculate</CardTitle>
                   <CardDescription>
-                    {isCalculating ? "Calculating..." : `${eligibleBenefits.length} benefits found`}
+                    Complete the form to get your personalized benefits analysis
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {!hasCalculated && !isCalculating && (
-                    <div className="text-center text-gray-500 py-8">
-                      <Calculator className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>Fill out the form to see your eligible benefits</p>
-                    </div>
-                  )}
-
-                  {isCalculating && (
-                    <div className="text-center py-8">
-                      <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                      <p className="text-gray-600">Calculating eligibility...</p>
-                    </div>
-                  )}
-
-                  {hasCalculated && !isCalculating && (
-                    <div className="space-y-3">
-                      {eligibleBenefits.length === 0 ? (
-                        <div className="text-center text-gray-500 py-8">
-                          <XCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>No benefits found with current criteria</p>
-                        </div>
-                      ) : (
-                        eligibleBenefits.map((benefit, index) => (
-                          <Card key={index} className="border-l-4 border-l-blue-500">
-                            <CardContent className="p-4">
-                              <div className="flex items-start gap-3">
-                                <div className={`p-2 rounded-full ${getBenefitColor(benefit.benefitType)}`}>
-                                  {getBenefitIcon(benefit.benefitType)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="font-medium text-sm leading-tight">{benefit.benefitName}</h4>
-                                  <Badge variant="outline" className="mt-1 text-xs">
-                                    {benefit.benefitType}
-                                  </Badge>
-                                  {benefit.benefitAmount && (
-                                    <p className="text-sm font-medium text-green-600 mt-1">
-                                      {benefit.benefitAmount}
-                                    </p>
-                                  )}
-                                  {benefit.processingTime && (
-                                    <p className="text-xs text-gray-500 mt-1">
-                                      Processing: {benefit.processingTime}
-                                    </p>
-                                  )}
-                                  <div className="flex gap-2 mt-2">
-                                    {benefit.websiteUrl && (
-                                      <Button size="sm" variant="outline" className="h-6 text-xs" asChild>
-                                        <a href={benefit.websiteUrl} target="_blank" rel="noopener noreferrer">
-                                          <ExternalLink className="h-3 w-3 mr-1" />
-                                          Apply
-                                        </a>
-                                      </Button>
-                                    )}
-                                    {benefit.phoneNumber && (
-                                      <Button size="sm" variant="outline" className="h-6 text-xs" asChild>
-                                        <a href={`tel:${benefit.phoneNumber}`}>
-                                          <Phone className="h-3 w-3 mr-1" />
-                                          Call
-                                        </a>
-                                      </Button>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))
-                      )}
-                    </div>
-                  )}
+                  <div className="text-center py-8">
+                    <Calculator className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">
+                      Fill out your service information to see available benefits
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
-            </div>
-          </div>
+            )}
           </div>
         </div>
+
+        {/* Detailed Results */}
+        {results && (
+          <div className="mt-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Available Benefits</CardTitle>
+                <CardDescription>
+                  Detailed breakdown of your benefit eligibility
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {results.eligibleBenefits.map((benefit) => (
+                    <Card key={benefit.id} className="relative">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-2">
+                            {getBenefitIcon(benefit.type)}
+                            <CardTitle className="text-sm">{benefit.name}</CardTitle>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Badge 
+                              className={`text-xs ${getStatusColor(benefit.eligibilityStatus)}`}
+                              variant="outline"
+                            >
+                              {benefit.eligibilityStatus.replace("_", " ")}
+                            </Badge>
+                            <div 
+                              className={`w-2 h-2 rounded-full ${getPriorityColor(benefit.priority)}`}
+                              title={`${benefit.priority} priority`}
+                            />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-3">
+                          <p className="text-sm text-gray-600">{benefit.description}</p>
+                          
+                          <div className="text-lg font-bold text-green-600">
+                            {benefit.estimatedAmount}
+                          </div>
+
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-1">Requirements:</div>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              {benefit.requirements.slice(0, 3).map((req, index) => (
+                                <li key={index} className="flex items-start">
+                                  <span className="mr-1">•</span>
+                                  <span>{req}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-600">{benefit.processingTime}</span>
+                            {benefit.applicationUrl && (
+                              <Button variant="outline" size="sm" asChild>
+                                <a href={benefit.applicationUrl} target="_blank" rel="noopener noreferrer">
+                                  Apply
+                                </a>
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
-    </PageLayout>
+    </div>
   );
 }

@@ -767,7 +767,6 @@ export type BenefitsEligibility = typeof benefitsEligibility.$inferSelect;
 
 export type InsertBenefitsDatabase = z.infer<typeof insertBenefitsDatabaseSchema>;
 export type BenefitsDatabase = typeof benefitsDatabase.$inferSelect;
-export type Consultation = typeof consultations.$inferSelect;
 
 export type InsertLegalCase = z.infer<typeof insertLegalCaseSchema>;
 export type LegalCase = typeof legalCases.$inferSelect;
@@ -1044,30 +1043,4 @@ export type InsertUserBadge = typeof userBadges.$inferInsert;
 export type UserGameStats = typeof userGameStats.$inferSelect;
 export type InsertUserGameStats = typeof userGameStats.$inferInsert;
 
-// Generated Documents Schema
-export const generatedDocuments = pgTable("generated_documents", {
-  id: serial("id").primaryKey(),
-  documentType: text("document_type").notNull(),
-  branch: text("branch").notNull(),
-  rank: text("rank").notNull(),
-  fullName: text("full_name").notNull(),
-  unit: text("unit").notNull(),
-  serviceNumber: text("service_number"),
-  dateOfIncident: text("date_of_incident"),
-  circumstancesDescription: text("circumstances_description").notNull(),
-  witnessNames: text("witness_names"),
-  supportingEvidence: text("supporting_evidence"),
-  desiredOutcome: text("desired_outcome").notNull(),
-  additionalDetails: text("additional_details"),
-  generatedContent: text("generated_content").notNull(),
-  suggestions: text("suggestions").array(),
-  legalConsiderations: text("legal_considerations").array(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
 
-export const insertGeneratedDocumentSchema = createInsertSchema(generatedDocuments);
-export const insertEmergencyConsultationSchema = createInsertSchema(emergencyConsultations);
-
-export type GeneratedDocument = typeof generatedDocuments.$inferSelect;
-export type InsertGeneratedDocument = typeof generatedDocuments.$inferInsert;

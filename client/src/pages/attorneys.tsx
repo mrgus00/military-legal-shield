@@ -1016,37 +1016,83 @@ export default function Attorneys() {
     queryKey: ["/api/attorneys"],
   });
 
-  const filteredAttorneys = attorneys?.filter(attorney => {
+  // Convert static attorney data to a flat array for filtering
+  const allStaticAttorneys = Object.values(militaryBaseAttorneys).flat().map(attorney => ({
+    id: attorney.id,
+    firstName: attorney.name.split(' ')[0] || '',
+    lastName: attorney.name.split(' ').slice(1).join(' ') || '',
+    location: attorney.location,
+    specialties: attorney.specialties,
+    experience: attorney.experience,
+    rating: attorney.rating,
+    phone: attorney.phone,
+    website: attorney.website,
+    description: attorney.description,
+    // Add other required fields with defaults
+    title: 'Attorney',
+    state: attorney.location.split(',').pop()?.trim() || '',
+    city: attorney.location.split(',')[0]?.trim() || '',
+    email: '',
+    reviewCount: 0,
+    profileImage: null,
+    verified: true,
+    barNumber: null,
+    barState: null,
+    yearsActive: parseInt(attorney.experience) || 0,
+    languages: ['English'],
+    hourlyRate: null,
+    availability: 'Available',
+    caseTypes: attorney.specialties,
+    militaryAffiliation: null,
+    securityClearance: null,
+    courtExperience: null,
+    successRate: null,
+    consultationFee: null,
+    retainerFee: null,
+    paymentPlans: null,
+    emergencyAvailable: true,
+    virtualConsultation: true,
+    inPersonConsultation: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isActive: true
+  }));
+
+  // Use static data if database query returns empty, otherwise use database data
+  const attorneyData = (attorneys && attorneys.length > 0) ? attorneys : allStaticAttorneys;
+
+  const filteredAttorneys = attorneyData?.filter(attorney => {
     let matches = true;
     
     // Search query filter
     if (searchQuery !== "") {
       const query = searchQuery.toLowerCase();
+      const fullName = `${attorney.firstName} ${attorney.lastName}`.toLowerCase();
       matches = matches && (
-        attorney.firstName.toLowerCase().includes(query) ||
-        attorney.lastName.toLowerCase().includes(query) ||
+        fullName.includes(query) ||
         attorney.location.toLowerCase().includes(query) ||
         attorney.specialties.some(specialty => specialty.toLowerCase().includes(query))
       );
     }
     
-    // Branch filter
+    // Branch filter - show all military attorneys since most serve all branches
     if (selectedBranch !== "all") {
-      // Map branch IDs to branch names for filtering
-      const branchMapping = {
-        army: ["army", "soldier", "fort"],
-        navy: ["navy", "naval", "sailor"],
-        marines: ["marine", "corps", "semper"],
-        airforce: ["air force", "airman", "base"],
-        coastguard: ["coast guard", "coastie"],
-        spaceforce: ["space force", "guardian"]
-      };
+      // Military attorneys serve all branches, so we show them for any branch selection
+      // Only filter out if they explicitly don't handle military cases
+      const isMilitaryAttorney = attorney.specialties.some(specialty => {
+        const spec = specialty.toLowerCase();
+        return spec.includes("military") ||
+               spec.includes("ucmj") ||
+               spec.includes("court-martial") ||
+               spec.includes("defense") ||
+               spec.includes("administrative") ||
+               spec.includes("appeals") ||
+               spec.includes("security clearance") ||
+               spec.includes("jag") ||
+               spec.includes("discharge");
+      });
       
-      const branchKeywords = branchMapping[selectedBranch as keyof typeof branchMapping] || [];
-      matches = matches && branchKeywords.some(keyword => 
-        attorney.specialties.some(specialty => specialty.toLowerCase().includes(keyword)) ||
-        attorney.location.toLowerCase().includes(keyword)
-      );
+      matches = matches && isMilitaryAttorney;
     }
     
     return matches;
@@ -1327,7 +1373,75 @@ export default function Attorneys() {
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredAttorneys.map((attorney) => (
-                    <AttorneyCard key={attorney.id} attorney={attorney} />
+                    <Card key={attorney.id} className="hover:shadow-lg transition-shadow duration-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h4 className="font-bold text-navy-900 text-lg mb-2 leading-tight">
+                              {attorney.firstName} {attorney.lastName}
+                            </h4>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <MapPin className="w-4 h-4 text-gray-400" />
+                              <span className="text-sm text-gray-600">{attorney.location}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-sm font-medium text-gray-700">{attorney.rating}</span>
+                          </div>
+                        </div>
+
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                          {attorney.description}
+                        </p>
+
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {attorney.specialties.slice(0, 3).map((specialty, index) => (
+                              <span
+                                key={index}
+                                className="px-2 py-1 bg-navy-100 text-navy-800 text-xs rounded-full"
+                              >
+                                {specialty}
+                              </span>
+                            ))}
+                            {attorney.specialties.length > 3 && (
+                              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                                +{attorney.specialties.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center space-x-2 text-sm">
+                            <Phone className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-600">{attorney.phone || 'Contact via website'}</span>
+                          </div>
+                          {attorney.website && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Globe className="w-4 h-4 text-gray-400" />
+                              <a 
+                                href={attorney.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-yellow-600 hover:text-yellow-700 hover:underline"
+                              >
+                                Visit Website
+                              </a>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                          <span className="text-sm text-gray-500">{attorney.experience}</span>
+                          <Button size="sm" className="bg-navy-900 hover:bg-navy-800">
+                            Contact Attorney
+                            <ExternalLink className="w-4 h-4 ml-1" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
                 

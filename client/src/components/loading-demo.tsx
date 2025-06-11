@@ -84,7 +84,7 @@ export default function LoadingDemo() {
   const handleDemoClick = (demo: any) => {
     setActiveDemo(demo.id);
     demo.action();
-    setTimeout(() => setActiveDemo(null), 5000);
+    setTimeout(() => setActiveDemo(null), 6000);
   };
 
   return (

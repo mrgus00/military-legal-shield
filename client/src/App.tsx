@@ -91,6 +91,7 @@ function Router() {
       <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />
       <Route path="/legal-challenges" component={LegalChallenges} />
+      <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route component={NotFound} />
     </Switch>
   );

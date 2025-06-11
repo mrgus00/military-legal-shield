@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { insertEmergencyConsultationSchema } from "@shared/schema";
+import { useEmergencyLoading } from "@/hooks/useMilitaryLoading";
 import PageLayout from "@/components/page-layout";
 
 const emergencyFormSchema = insertEmergencyConsultationSchema.extend({
@@ -71,6 +72,7 @@ const timeZones = [
 export default function EmergencyConsultation() {
   const [selectedAttorney, setSelectedAttorney] = useState<number | null>(null);
   const { toast } = useToast();
+  const { startMilitarySequence } = useEmergencyLoading();
 
   const form = useForm<EmergencyFormData>({
     resolver: zodResolver(emergencyFormSchema),
@@ -89,6 +91,9 @@ export default function EmergencyConsultation() {
 
   const createConsultationMutation = useMutation({
     mutationFn: async (data: EmergencyFormData) => {
+      // Trigger emergency loading sequence
+      startMilitarySequence(4000);
+      
       const formattedData = {
         ...data,
         preferredDateTime: new Date(data.preferredDateTime).toISOString(),

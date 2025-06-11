@@ -9,6 +9,7 @@ import PageLayout from "@/components/page-layout";
 import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
+import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -307,6 +308,9 @@ export default function Home() {
 
       {/* Military Branches Banner */}
       <MilitaryBranchesBanner />
+      
+      {/* Legal Assistant Chatbot */}
+      <LegalAssistantChatbot />
     </PageLayout>
   );
 }

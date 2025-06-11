@@ -21,6 +21,27 @@ if (process.env.STRIPE_SECRET_KEY) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
 
+  // Domain verification and health check endpoints
+  app.get('/api/health', (req, res) => {
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      domain: req.hostname,
+      application: 'MilitaryLegalShield',
+      version: '1.0.0',
+      verified: true
+    });
+  });
+
+  app.get('/api/domain-verify', (req, res) => {
+    res.json({
+      verified: true,
+      domain: req.hostname,
+      timestamp: new Date().toISOString(),
+      verification_token: 'militarylegalshield-verified'
+    });
+  });
+
   // Serve static HTML version of Legal Challenges page at alternative path
   app.get('/challenges-html', (req, res) => {
     try {
@@ -35,13 +56,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   console.log("MilitaryLegalShield running in public access mode - all authentication disabled");
   
-  // Domain verification and routing support
+  // Custom domain support and verification
   app.use((req, res, next) => {
-    // Handle domain verification requests
-    if (req.hostname === 'militarylegalshield.com' || req.hostname === 'www.militarylegalshield.com') {
+    // Set CORS headers for custom domains
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Handle domain verification for multiple custom domains
+    const customDomains = [
+      'militarylegalshield.com',
+      'www.militarylegalshield.com',
+      'militarylegal.app',
+      'www.militarylegal.app'
+    ];
+    
+    if (customDomains.includes(req.hostname)) {
       res.setHeader('X-Domain-Verification', 'militarylegalshield-verified');
       res.setHeader('X-Replit-Domain', 'custom');
+      res.setHeader('X-Powered-By', 'MilitaryLegalShield');
     }
+    
+    // Force HTTPS redirect for custom domains
+    if (req.headers['x-forwarded-proto'] !== 'https' && req.hostname !== 'localhost') {
+      return res.redirect(301, `https://${req.hostname}${req.url}`);
+    }
+    
     next();
   });
   

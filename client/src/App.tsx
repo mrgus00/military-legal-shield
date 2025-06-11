@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BranchProvider } from "@/contexts/BranchContext";
 import { MoodProvider } from "@/contexts/MoodContext";
 import BackToTop from "@/components/back-to-top";
+import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Resources from "@/pages/resources";
@@ -100,6 +101,7 @@ function App() {
             <Toaster />
             <Router />
             <BackToTop />
+            <LegalAssistantChatbot />
           </TooltipProvider>
         </BranchProvider>
       </MoodProvider>

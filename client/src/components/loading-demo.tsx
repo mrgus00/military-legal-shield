@@ -3,10 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useMilitaryLoading, useApiLoading, useEmergencyLoading, useSecurityLoading, useLegalLoading } from "@/hooks/useMilitaryLoading";
-import { Shield, Target, Zap, Award, Compass, Play, Loader } from "lucide-react";
+import { Shield, Target, Zap, Award, Compass, Play, Loader, Radio, Satellite } from "lucide-react";
+import TacticalLoadingOverlay from "@/components/tactical-loading-overlay";
+import CommandCenterInterface from "@/components/command-center-interface";
 
 export default function LoadingDemo() {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
+  const [showTacticalOverlay, setShowTacticalOverlay] = useState(false);
+  const [showCommandCenter, setShowCommandCenter] = useState(false);
   
   const { startMilitarySequence: startDefault } = useMilitaryLoading({
     variant: "default",

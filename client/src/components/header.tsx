@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone, Award } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import GlobalSearch from "@/components/global-search";
@@ -174,6 +174,13 @@ export default function Header() {
                     <Link href="/storytelling-corner" className="flex items-center">
                       <BookOpen className="mr-2 h-4 w-4" />
                       Veterans Stories
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/legal-challenges" className="flex items-center">
+                      <Award className="mr-2 h-4 w-4" />
+                      Legal Challenges
+                      <span className="ml-auto bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full">New</span>
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

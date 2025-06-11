@@ -42,6 +42,7 @@ import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import DocumentGenerator from "@/pages/document-generator";
 import EmergencyConsultation from "@/pages/emergency-consultation";
+import LegalChallenges from "@/pages/legal-challenges";
 
 function Router() {
   return (
@@ -81,6 +82,7 @@ function Router() {
       <Route path="/storytelling-corner" component={StorytellingCorner} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route path="/document-wizard" component={DocumentGenerator} />
+      <Route path="/legal-challenges" component={LegalChallenges} />
       <Route component={NotFound} />
     </Switch>
   );

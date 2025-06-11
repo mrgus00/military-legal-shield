@@ -2125,6 +2125,153 @@ export async function registerRoutes(app: Express): Promise<Server> {
       handleLeaveCall(ws, { roomId, userId });
     }
   }
+
+  // Gamification API Routes
+  app.get("/api/challenges", async (req, res) => {
+    try {
+      const { category, difficulty, branch } = req.query;
+      const challenges = await storage.getLegalChallenges(
+        category as string,
+        difficulty as string,
+        branch as string
+      );
+      res.json(challenges);
+    } catch (error) {
+      console.error("Error fetching challenges:", error);
+      res.status(500).json({ message: "Failed to fetch challenges" });
+    }
+  });
+
+  app.get("/api/challenges/:id", async (req, res) => {
+    try {
+      const challenge = await storage.getLegalChallenge(parseInt(req.params.id));
+      if (!challenge) {
+        return res.status(404).json({ message: "Challenge not found" });
+      }
+      res.json(challenge);
+    } catch (error) {
+      console.error("Error fetching challenge:", error);
+      res.status(500).json({ message: "Failed to fetch challenge" });
+    }
+  });
+
+  app.post("/api/challenges", async (req, res) => {
+    try {
+      const challenge = await storage.createLegalChallenge(req.body);
+      res.status(201).json(challenge);
+    } catch (error) {
+      console.error("Error creating challenge:", error);
+      res.status(500).json({ message: "Failed to create challenge" });
+    }
+  });
+
+  app.get("/api/badges", async (req, res) => {
+    try {
+      const badges = await storage.getAchievementBadges();
+      res.json(badges);
+    } catch (error) {
+      console.error("Error fetching badges:", error);
+      res.status(500).json({ message: "Failed to fetch badges" });
+    }
+  });
+
+  app.get("/api/user/:userId/progress", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { challengeId } = req.query;
+      const progress = await storage.getUserChallengeProgress(
+        userId,
+        challengeId ? parseInt(challengeId as string) : undefined
+      );
+      res.json(progress);
+    } catch (error) {
+      console.error("Error fetching user progress:", error);
+      res.status(500).json({ message: "Failed to fetch user progress" });
+    }
+  });
+
+  app.post("/api/user/:userId/progress", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const progressData = { ...req.body, userId };
+      const progress = await storage.createUserChallengeProgress(progressData);
+      res.status(201).json(progress);
+    } catch (error) {
+      console.error("Error creating user progress:", error);
+      res.status(500).json({ message: "Failed to create user progress" });
+    }
+  });
+
+  app.patch("/api/progress/:id", async (req, res) => {
+    try {
+      const progress = await storage.updateUserChallengeProgress(
+        parseInt(req.params.id),
+        req.body
+      );
+      if (!progress) {
+        return res.status(404).json({ message: "Progress not found" });
+      }
+      res.json(progress);
+    } catch (error) {
+      console.error("Error updating user progress:", error);
+      res.status(500).json({ message: "Failed to update user progress" });
+    }
+  });
+
+  app.get("/api/user/:userId/badges", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const badges = await storage.getUserBadges(userId);
+      res.json(badges);
+    } catch (error) {
+      console.error("Error fetching user badges:", error);
+      res.status(500).json({ message: "Failed to fetch user badges" });
+    }
+  });
+
+  app.post("/api/user/:userId/badges/:badgeId", async (req, res) => {
+    try {
+      const { userId, badgeId } = req.params;
+      const badge = await storage.awardBadge(userId, parseInt(badgeId));
+      res.status(201).json(badge);
+    } catch (error) {
+      console.error("Error awarding badge:", error);
+      res.status(500).json({ message: "Failed to award badge" });
+    }
+  });
+
+  app.get("/api/user/:userId/stats", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const stats = await storage.getUserGameStats(userId);
+      res.json(stats || {});
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).json({ message: "Failed to fetch user stats" });
+    }
+  });
+
+  app.patch("/api/user/:userId/stats", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const stats = await storage.updateUserGameStats(userId, req.body);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error updating user stats:", error);
+      res.status(500).json({ message: "Failed to update user stats" });
+    }
+  });
+
+  app.get("/api/leaderboard/:period", async (req, res) => {
+    try {
+      const { period } = req.params;
+      const leaderboard = await storage.getChallengeLeaderboard(period);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboard" });
+    }
+  });
   
   return httpServer;
 }

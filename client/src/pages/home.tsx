@@ -338,19 +338,22 @@ export default function Home() {
             Join thousands of service members who trust Mil-Legal for their legal needs
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link href="/urgent-match">
-              <Button size="lg" className="bg-red-600 hover:bg-red-700 px-8 py-4 text-lg">
+              <Button size="lg" className="emergency-gradient hover:shadow-xl px-8 py-4 text-lg font-semibold rounded-xl transform transition hover:scale-105 animate-military-pulse">
+                <AlertTriangle className="w-5 h-5 mr-2" />
                 Get Emergency Help Now
               </Button>
             </Link>
             <Link href="/loading-demo">
-              <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-2">
+              <Button size="lg" variant="outline" className="glass-dark border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg border-2 rounded-xl transform transition hover:scale-105">
+                <Shield className="w-5 h-5 mr-2" />
                 View Military Loading System
               </Button>
             </Link>
             <Link href="/attorneys">
-              <Button variant="outline" size="lg" className="px-8 py-4 text-lg">
+              <Button variant="outline" size="lg" className="tactical-gradient border-0 text-white hover:shadow-lg px-8 py-4 text-lg rounded-xl transform transition hover:scale-105">
+                <Users className="w-5 h-5 mr-2" />
                 Browse Attorneys
               </Button>
             </Link>

@@ -6,7 +6,7 @@ import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { insertConsultationSchema, insertEmergencyConsultationSchema } from "@shared/schema";
 import { z } from "zod";
-import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
+import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1272,6 +1272,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error completing scenario session:", error);
       res.status(500).json({ message: "Error completing scenario session" });
+    }
+  });
+
+  // Legal Assistant Chatbot API
+  app.post("/api/legal-assistant/chat", async (req, res) => {
+    try {
+      const { message, context, userId, conversationHistory } = req.body;
+      
+      const assistantRequest: LegalAssistantRequest = {
+        message,
+        context: context || "military_legal",
+        userId: userId || "guest",
+        conversationHistory: conversationHistory || []
+      };
+      
+      const response = await getLegalAssistantResponse(assistantRequest);
+      res.json(response);
+    } catch (error: any) {
+      console.error("Legal assistant chat error:", error);
+      res.status(500).json({ 
+        message: "Legal assistant temporarily unavailable",
+        error: error.message 
+      });
     }
   });
 

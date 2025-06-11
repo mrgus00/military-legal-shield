@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import MobileContainer from "@/components/mobile-container";
+import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -20,6 +21,9 @@ export default function PageLayout({ children, className = "", showFooter = true
         </main>
 
         {showFooter && <Footer />}
+        
+        {/* Legal Assistant Chatbot - Available on all pages */}
+        <LegalAssistantChatbot />
       </div>
     </MobileContainer>
   );

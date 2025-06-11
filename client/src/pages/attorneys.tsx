@@ -5,8 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Shield, MapPin, Users, Phone, Globe, Star, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Shield, MapPin, Users, Phone, Globe, Star, ExternalLink, Filter } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearch } from "wouter";
+import { useBranch } from "@/contexts/BranchContext";
 import type { Attorney } from "@shared/schema";
 
 const militaryBases = [
@@ -993,18 +996,60 @@ export default function Attorneys() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedBase, setSelectedBase] = useState<number | null>(null);
   const [showMilitaryBases, setShowMilitaryBases] = useState<boolean>(true);
+  const [selectedBranch, setSelectedBranch] = useState<string>("all");
+  
+  const searchParams = useSearch();
+  const { setBranch } = useBranch();
+  
+  // Handle branch filtering from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    const branchParam = params.get('branch');
+    if (branchParam) {
+      setSelectedBranch(branchParam);
+      setBranch(branchParam);
+      setShowMilitaryBases(false); // Show attorneys directly when branch is selected
+    }
+  }, [searchParams, setBranch]);
   
   const { data: attorneys, isLoading } = useQuery<Attorney[]>({
     queryKey: ["/api/attorneys"],
   });
 
   const filteredAttorneys = attorneys?.filter(attorney => {
-    if (searchQuery === "") return true;
-    const query = searchQuery.toLowerCase();
-    return attorney.firstName.toLowerCase().includes(query) ||
-           attorney.lastName.toLowerCase().includes(query) ||
-           attorney.location.toLowerCase().includes(query) ||
-           attorney.specialties.some(specialty => specialty.toLowerCase().includes(query));
+    let matches = true;
+    
+    // Search query filter
+    if (searchQuery !== "") {
+      const query = searchQuery.toLowerCase();
+      matches = matches && (
+        attorney.firstName.toLowerCase().includes(query) ||
+        attorney.lastName.toLowerCase().includes(query) ||
+        attorney.location.toLowerCase().includes(query) ||
+        attorney.specialties.some(specialty => specialty.toLowerCase().includes(query))
+      );
+    }
+    
+    // Branch filter
+    if (selectedBranch !== "all") {
+      // Map branch IDs to branch names for filtering
+      const branchMapping = {
+        army: ["army", "soldier", "fort"],
+        navy: ["navy", "naval", "sailor"],
+        marines: ["marine", "corps", "semper"],
+        airforce: ["air force", "airman", "base"],
+        coastguard: ["coast guard", "coastie"],
+        spaceforce: ["space force", "guardian"]
+      };
+      
+      const branchKeywords = branchMapping[selectedBranch as keyof typeof branchMapping] || [];
+      matches = matches && branchKeywords.some(keyword => 
+        attorney.specialties.some(specialty => specialty.toLowerCase().includes(keyword)) ||
+        attorney.location.toLowerCase().includes(keyword)
+      );
+    }
+    
+    return matches;
   }) || [];
 
   return (
@@ -1021,8 +1066,8 @@ export default function Attorneys() {
             Connect with experienced military law attorneys
           </p>
           
-          {/* Simple Search */}
-          <div className="max-w-md mx-auto">
+          {/* Search and Branch Filter */}
+          <div className="max-w-2xl mx-auto space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
@@ -1032,6 +1077,35 @@ export default function Attorneys() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 py-3 text-lg"
               />
+            </div>
+            
+            <div className="flex items-center justify-center space-x-4">
+              <Filter className="w-5 h-5 text-gray-300" />
+              <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+                <SelectTrigger className="w-48 bg-white/10 border-gray-300 text-white">
+                  <SelectValue placeholder="Filter by branch" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Branches</SelectItem>
+                  <SelectItem value="army">U.S. Army</SelectItem>
+                  <SelectItem value="navy">U.S. Navy</SelectItem>
+                  <SelectItem value="marines">U.S. Marine Corps</SelectItem>
+                  <SelectItem value="airforce">U.S. Air Force</SelectItem>
+                  <SelectItem value="coastguard">U.S. Coast Guard</SelectItem>
+                  <SelectItem value="spaceforce">U.S. Space Force</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {selectedBranch !== "all" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedBranch("all")}
+                  className="bg-white/10 border-gray-300 text-white hover:bg-white hover:text-navy-900"
+                >
+                  Clear Filter
+                </Button>
+              )}
             </div>
           </div>
         </div>

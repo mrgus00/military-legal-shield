@@ -681,6 +681,12 @@ export class DatabaseStorage implements IStorage {
       ];
 
       await this.db.insert(forumAnswers).values(answerData).onConflictDoNothing();
+
+      // Seed legal challenges and achievement badges
+      await this.seedLegalChallenges();
+      await this.seedAchievementBadges();
+      
+      console.log("All data seeded successfully, including gamification content");
     } catch (error) {
       console.error("Error seeding data:", error);
     }
@@ -1889,6 +1895,196 @@ export class DatabaseStorage implements IStorage {
       console.log(`Populated benefits database with ${allBenefits.length} benefits`);
     } catch (error) {
       console.error("Error populating benefits database:", error);
+    }
+  }
+
+  private async seedLegalChallenges() {
+    try {
+      const existingChallenges = await this.db.select().from(legalChallenges).limit(1);
+      if (existingChallenges.length > 0) {
+        return; // Already seeded
+      }
+
+      const sampleChallenges = [
+        {
+          title: "UCMJ Article 86: Unauthorized Absence",
+          description: "Learn about Article 86 violations, defenses, and potential consequences. Master the legal framework governing unauthorized absence in military service.",
+          category: "military_law",
+          difficulty: "beginner",
+          branch: "army",
+          totalSteps: 5,
+          estimatedDuration: 15,
+          pointsReward: 100,
+          requirements: ["Basic military law knowledge"],
+          tags: ["UCMJ", "Article 86", "absence"],
+          isActive: true
+        },
+        {
+          title: "Court-Martial Procedures",
+          description: "Navigate the complex procedures of military court-martial proceedings. Understand the different types and procedural requirements.",
+          category: "court_martial",
+          difficulty: "intermediate",
+          branch: null,
+          totalSteps: 8,
+          estimatedDuration: 30,
+          pointsReward: 200,
+          requirements: ["Basic UCMJ knowledge", "Military justice fundamentals"],
+          tags: ["court-martial", "procedure", "military justice"],
+          isActive: true
+        },
+        {
+          title: "Administrative Separations",
+          description: "Master the administrative separation process, including characterization of service and appeal procedures.",
+          category: "administrative",
+          difficulty: "intermediate",
+          branch: null,
+          totalSteps: 6,
+          estimatedDuration: 25,
+          pointsReward: 150,
+          requirements: ["Military personnel law"],
+          tags: ["separation", "administrative", "discharge"],
+          isActive: true
+        },
+        {
+          title: "VA Disability Claims Process",
+          description: "Learn the complete VA disability claims process, from initial application to appeals. Understand rating schedules and evidence requirements.",
+          category: "benefits",
+          difficulty: "beginner",
+          branch: null,
+          totalSteps: 7,
+          estimatedDuration: 20,
+          pointsReward: 120,
+          requirements: ["Basic veterans benefits knowledge"],
+          tags: ["VA", "disability", "claims", "benefits"],
+          isActive: true
+        },
+        {
+          title: "Military Sexual Assault Cases",
+          description: "Understand the legal framework for military sexual assault cases, including prevention, reporting, and judicial procedures.",
+          category: "military_law",
+          difficulty: "advanced",
+          branch: null,
+          totalSteps: 10,
+          estimatedDuration: 45,
+          pointsReward: 300,
+          requirements: ["Intermediate military law", "Criminal law basics"],
+          tags: ["sexual assault", "victim rights", "SARC"],
+          isActive: true
+        },
+        {
+          title: "Security Clearance Investigations",
+          description: "Navigate security clearance procedures, adjudication guidelines, and appeal processes. Understand common issues and mitigation strategies.",
+          category: "administrative",
+          difficulty: "advanced",
+          branch: null,
+          totalSteps: 9,
+          estimatedDuration: 40,
+          pointsReward: 250,
+          requirements: ["Security procedures knowledge", "Administrative law"],
+          tags: ["security clearance", "investigation", "adjudication"],
+          isActive: true
+        }
+      ];
+
+      for (const challenge of sampleChallenges) {
+        await this.db.insert(legalChallenges).values(challenge);
+      }
+
+      console.log(`Seeded ${sampleChallenges.length} legal challenges`);
+    } catch (error) {
+      console.error("Error seeding legal challenges:", error);
+    }
+  }
+
+  private async seedAchievementBadges() {
+    try {
+      const existingBadges = await this.db.select().from(achievementBadges).limit(1);
+      if (existingBadges.length > 0) {
+        return; // Already seeded
+      }
+
+      const sampleBadges = [
+        {
+          name: "Military Law Novice",
+          description: "Complete your first military law challenge",
+          category: "military_law",
+          criteria: "Complete 1 military law challenge",
+          pointsReward: 50,
+          iconUrl: "/badges/novice.svg",
+          isActive: true
+        },
+        {
+          name: "Court-Martial Expert",
+          description: "Master all court-martial procedure challenges",
+          category: "court_martial",
+          criteria: "Complete 3 court-martial challenges with 90%+ accuracy",
+          pointsReward: 200,
+          iconUrl: "/badges/expert.svg",
+          isActive: true
+        },
+        {
+          name: "Benefits Navigator",
+          description: "Successfully complete all benefits-related challenges",
+          category: "benefits",
+          criteria: "Complete 5 benefits challenges",
+          pointsReward: 150,
+          iconUrl: "/badges/navigator.svg",
+          isActive: true
+        },
+        {
+          name: "UCMJ Scholar",
+          description: "Demonstrate comprehensive knowledge of the UCMJ",
+          category: "military_law",
+          criteria: "Complete 10 UCMJ-related challenges with 95%+ accuracy",
+          pointsReward: 300,
+          iconUrl: "/badges/scholar.svg",
+          isActive: true
+        },
+        {
+          name: "Quick Learner",
+          description: "Complete 3 challenges in a single day",
+          category: "achievement",
+          criteria: "Complete 3 challenges within 24 hours",
+          pointsReward: 100,
+          iconUrl: "/badges/quick.svg",
+          isActive: true
+        },
+        {
+          name: "Streak Master",
+          description: "Maintain a 7-day challenge completion streak",
+          category: "achievement",
+          criteria: "Complete at least 1 challenge daily for 7 consecutive days",
+          pointsReward: 250,
+          iconUrl: "/badges/streak.svg",
+          isActive: true
+        },
+        {
+          name: "Administrative Pro",
+          description: "Excel in administrative law challenges",
+          category: "administrative",
+          criteria: "Complete 5 administrative challenges with 90%+ accuracy",
+          pointsReward: 180,
+          iconUrl: "/badges/admin.svg",
+          isActive: true
+        },
+        {
+          name: "Perfect Score",
+          description: "Achieve 100% accuracy on any advanced challenge",
+          category: "achievement",
+          criteria: "Complete an advanced challenge with 100% accuracy",
+          pointsReward: 200,
+          iconUrl: "/badges/perfect.svg",
+          isActive: true
+        }
+      ];
+
+      for (const badge of sampleBadges) {
+        await this.db.insert(achievementBadges).values(badge);
+      }
+
+      console.log(`Seeded ${sampleBadges.length} achievement badges`);
+    } catch (error) {
+      console.error("Error seeding achievement badges:", error);
     }
   }
 

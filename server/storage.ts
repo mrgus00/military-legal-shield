@@ -531,7 +531,7 @@ export class DatabaseStorage implements IStorage {
           state: "DC",
           city: "Washington",
           experience: "Government DSO",
-          rating: 4.9,
+          rating: 5,
           reviewCount: 0,
           email: "dsonorthdefense1@us.navy.mil",
           phone: "(202) 685-5595",
@@ -539,8 +539,7 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "free",
           hourlyRate: "No cost - Government provided",
           availableForEmergency: true,
-          responseTime: "< 4 hours",
-          address: "1250 10th St. SE, Bldg 200, Suite 1200, Washington, DC 20374"
+          responseTime: "< 4 hours"
         },
         {
           firstName: "Defense Service Office",
@@ -551,7 +550,7 @@ export class DatabaseStorage implements IStorage {
           state: "VA",
           city: "Norfolk",
           experience: "Government DSO",
-          rating: 4.8,
+          rating: 5,
           reviewCount: 0,
           email: "dsose_persreps@navy.mil",
           phone: "(757) 341-4469",
@@ -559,8 +558,7 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "free",
           hourlyRate: "No cost - Government provided",
           availableForEmergency: true,
-          responseTime: "< 4 hours",
-          address: "9620 Maryland Ave., Suite 100, Norfolk, VA 23511"
+          responseTime: "< 4 hours"
         },
         {
           firstName: "Defense Service Office",
@@ -571,7 +569,7 @@ export class DatabaseStorage implements IStorage {
           state: "CA",
           city: "San Diego",
           experience: "Government DSO",
-          rating: 4.9,
+          rating: 5,
           reviewCount: 0,
           email: "navylegaldefensesw@navy.mil",
           phone: "(619) 556-7539",
@@ -579,8 +577,7 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "free",
           hourlyRate: "No cost - Government provided",
           availableForEmergency: true,
-          responseTime: "< 4 hours",
-          address: "3395 Sturtevant St., Suite 2, Bldg 56, San Diego, CA 92136-5072"
+          responseTime: "< 4 hours"
         },
         {
           firstName: "Defense Service Office",
@@ -591,7 +588,7 @@ export class DatabaseStorage implements IStorage {
           state: "HI",
           city: "Pearl Harbor",
           experience: "Government DSO",
-          rating: 4.8,
+          rating: 5,
           reviewCount: 0,
           email: "dsopacific_hawaii_walkins@us.navy.mil",
           phone: "(808) 473-1400",
@@ -599,8 +596,7 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "free",
           hourlyRate: "No cost - Government provided",
           availableForEmergency: true,
-          responseTime: "< 4 hours",
-          address: "850 Willamette St., Bldg 1746, Floor 2, Joint Base Pearl Harbor-Hickam, Pearl Harbor, HI 96860"
+          responseTime: "< 4 hours"
         },
         // Coast Guard Civilian Defense Law Firms
         {
@@ -612,7 +608,7 @@ export class DatabaseStorage implements IStorage {
           state: "VA",
           city: "Hampton",
           experience: "50+ years combined",
-          rating: 4.9,
+          rating: 5,
           reviewCount: 0,
           email: "Contact via website form",
           phone: "(757) 401-6365",
@@ -620,10 +616,7 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "premium",
           hourlyRate: "Contact for rates",
           availableForEmergency: true,
-          responseTime: "< 2 hours",
-          address: "4410 Claiborne Sq E, Hampton, VA 23666",
-          website: "mcmilitarylaw.com",
-          tollFreePhone: "(888) 401-6214"
+          responseTime: "< 2 hours"
         },
         {
           firstName: "Patrick J.",

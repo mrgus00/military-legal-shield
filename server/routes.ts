@@ -21,8 +21,8 @@ if (process.env.STRIPE_SECRET_KEY) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
 
-  // Serve static HTML version of Legal Challenges page
-  app.get('/legal-challenges', (req, res) => {
+  // Serve static HTML version of Legal Challenges page at alternative path
+  app.get('/challenges-html', (req, res) => {
     try {
       const htmlPath = path.join(process.cwd(), 'server', 'legal-challenges.html');
       const htmlContent = fs.readFileSync(htmlPath, 'utf8');

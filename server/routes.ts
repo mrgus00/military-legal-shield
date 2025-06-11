@@ -8,6 +8,8 @@ import { insertConsultationSchema, insertEmergencyConsultationSchema } from "@sh
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest } from "./openai";
 import Stripe from "stripe";
+import path from "path";
+import fs from "fs";
 // No authentication imports - completely public deployment
 
 // Initialize Stripe only if the secret key is available
@@ -18,6 +20,19 @@ if (process.env.STRIPE_SECRET_KEY) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Complete authentication bypass - no middleware setup at all
+
+  // Serve static HTML version of Legal Challenges page
+  app.get('/legal-challenges', (req, res) => {
+    try {
+      const htmlPath = path.join(process.cwd(), 'server', 'legal-challenges.html');
+      const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+      res.setHeader('Content-Type', 'text/html');
+      res.send(htmlContent);
+    } catch (error) {
+      console.error('Error serving legal challenges page:', error);
+      res.status(500).json({ error: 'Failed to load page' });
+    }
+  });
   console.log("MilitaryLegalShield running in public access mode - all authentication disabled");
   
   // Domain verification and routing support

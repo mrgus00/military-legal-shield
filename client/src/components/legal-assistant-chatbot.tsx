@@ -136,8 +136,29 @@ export default function LegalAssistantChatbot() {
   };
 
   const handleQuickAction = (action: string) => {
-    setInputMessage(action);
-    handleSendMessage();
+    const quickMessages: { [key: string]: string } = {
+      "Article 15 guidance": "I need guidance about Article 15 proceedings. What are my rights and options?",
+      "Security clearance help": "I'm having issues with my security clearance. Can you help me understand the process?",
+      "Court-martial defense": "I need information about court-martial proceedings and my legal rights.",
+      "Emergency consultation": "This is an urgent legal matter. I need immediate guidance on my situation."
+    };
+    
+    const message = quickMessages[action] || action;
+    setInputMessage(message);
+    
+    // Send the message immediately
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: message,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage("");
+    setIsTyping(true);
+
+    chatMutation.mutate(message);
   };
 
   const formatTime = (date: Date) => {

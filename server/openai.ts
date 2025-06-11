@@ -474,6 +474,105 @@ export interface LegalAssistantResponse {
 }
 
 export async function getLegalAssistantResponse(request: LegalAssistantRequest): Promise<LegalAssistantResponse> {
+  // Enhanced fallback system with military legal knowledge base
+  const generateFallbackResponse = (message: string): LegalAssistantResponse => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Article 15 responses
+    if (lowerMessage.includes('article 15') || lowerMessage.includes('nonjudicial punishment')) {
+      return {
+        response: "Roger that, service member. Article 15 proceedings are serious administrative actions. You have specific rights including the right to refuse Article 15 and demand court-martial instead. Key points: 1) You can consult with a legal assistance attorney, 2) You may present matters in defense/extenuation/mitigation, 3) You can appeal within reasonable time. This is not legal advice - consult with JAG immediately.",
+        suggestions: [
+          "Request legal assistance consultation",
+          "Review your statement of charges carefully", 
+          "Consider requesting witnesses",
+          "Document all communications"
+        ],
+        urgencyLevel: "high",
+        category: "administrative",
+        requiresHumanAttorney: true
+      };
+    }
+    
+    // Court-martial responses
+    if (lowerMessage.includes('court martial') || lowerMessage.includes('court-martial') || lowerMessage.includes('ucmj')) {
+      return {
+        response: "Hooah, service member. Court-martial proceedings require immediate legal representation. You have the right to military defense counsel at no cost, or you may hire civilian counsel at your own expense. Do NOT make any statements without legal counsel present. Key rights: 1) Right to remain silent, 2) Right to counsel, 3) Right to witnesses, 4) Right to cross-examine. Contact trial defense services immediately.",
+        suggestions: [
+          "Contact Trial Defense Service immediately",
+          "Exercise right to remain silent",
+          "Request military defense counsel",
+          "Do not discuss case with anyone except counsel"
+        ],
+        urgencyLevel: "high",
+        category: "criminal",
+        requiresHumanAttorney: true
+      };
+    }
+    
+    // Security clearance responses
+    if (lowerMessage.includes('security clearance') || lowerMessage.includes('clearance') || lowerMessage.includes('sf-86')) {
+      return {
+        response: "Copy that, service member. Security clearance issues can impact your career significantly. Be completely honest on all forms - omissions or false statements can result in denial or revocation. Common issues include financial problems, foreign contacts, or past conduct. If you receive a Statement of Reasons (SOR), you have rights to respond and request a hearing. Legal assistance can help with clearance paperwork and appeals.",
+        suggestions: [
+          "Review SF-86 thoroughly before submission",
+          "Gather all required documentation",
+          "Consider legal assistance consultation",
+          "Be completely honest - investigators will discover issues anyway"
+        ],
+        urgencyLevel: "medium",
+        category: "security",
+        requiresHumanAttorney: false
+      };
+    }
+    
+    // Family law responses
+    if (lowerMessage.includes('divorce') || lowerMessage.includes('custody') || lowerMessage.includes('family') || lowerMessage.includes('marriage')) {
+      return {
+        response: "Roger, service member. Military family law involves unique considerations including BAH, family separation allowance, and Servicemembers Civil Relief Act protections. For divorce, consider military pension division (need 10-year overlap rule for direct payments). Legal assistance offices provide excellent family law services at no cost. Don't navigate this alone - military families have special protections and benefits.",
+        suggestions: [
+          "Schedule legal assistance appointment",
+          "Gather financial documents (LES, W-2s, etc.)",
+          "Research state laws where filing",
+          "Consider impact on security clearance"
+        ],
+        urgencyLevel: "medium",
+        category: "family",
+        requiresHumanAttorney: true
+      };
+    }
+    
+    // Financial/debt responses
+    if (lowerMessage.includes('debt') || lowerMessage.includes('financial') || lowerMessage.includes('bankruptcy') || lowerMessage.includes('money')) {
+      return {
+        response: "Copy that, service member. Financial problems can affect your security clearance and military career. The Servicemembers Civil Relief Act provides protections including reduced interest rates and court stay provisions. Your command may offer financial counseling. Consider debt consolidation, payment plans, or in extreme cases, bankruptcy (requires command notification). Legal assistance can help navigate options.",
+        suggestions: [
+          "Contact Army Community Service financial counseling",
+          "Review Servicemembers Civil Relief Act protections",
+          "Notify creditors of military status",
+          "Consider debt management plan"
+        ],
+        urgencyLevel: "medium",
+        category: "financial",
+        requiresHumanAttorney: false
+      };
+    }
+    
+    // Default response for other military legal questions
+    return {
+      response: `Hooah, service member! I'm SGT Legal, your military legal assistant. While I'm experiencing some connectivity issues with my advanced systems, I can still provide basic guidance on military legal matters. Your question about "${message.substring(0, 50)}..." is important. For comprehensive assistance, I recommend contacting your base legal office - they have the full resources to help you properly. What specific area of military law can I help guide you toward?`,
+      suggestions: [
+        "Contact base legal assistance office",
+        "Speak with JAG officer for complex issues",
+        "Review applicable military regulations",
+        "Document your situation thoroughly"
+      ],
+      urgencyLevel: "low",
+      category: "general",
+      requiresHumanAttorney: false
+    };
+  };
+
   const systemPrompt = `You are Sergeant Legal, a military legal assistant AI with extensive knowledge of military law, UCMJ, and military legal procedures. You have a professional, direct military personality with the following characteristics:
 
 PERSONALITY TRAITS:
@@ -533,19 +632,8 @@ FORMAT: Respond in JSON with: { "response": "your response", "suggestions": ["su
   } catch (error: any) {
     console.error("Legal assistant response error:", error);
     
-    // Fallback response for military legal assistant
-    return {
-      response: "Roger that, service member. I'm experiencing some technical difficulties right now. For immediate legal assistance, contact your base legal office or JAG. I'll be back online shortly to assist with your military legal questions.",
-      suggestions: [
-        "Contact base legal office",
-        "Speak with JAG officer",
-        "Review AR 27-26 for legal assistance",
-        "Call military legal helpline"
-      ],
-      urgencyLevel: "medium",
-      category: "technical",
-      requiresHumanAttorney: true
-    };
+    // Use enhanced fallback system
+    return generateFallbackResponse(request.message);
   }
 }
 

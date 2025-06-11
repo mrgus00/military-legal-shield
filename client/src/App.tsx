@@ -42,7 +42,7 @@ import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import DocumentGenerator from "@/pages/document-generator";
 import EmergencyConsultation from "@/pages/emergency-consultation";
-import LegalChallenges from "@/pages/legal-challenges-simple";
+import LegalChallenges from "@/pages/legal-challenges-minimal";
 
 function Router() {
   return (

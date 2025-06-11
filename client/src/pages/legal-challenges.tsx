@@ -57,8 +57,7 @@ export default function LegalChallenges() {
       return apiRequest("POST", `/api/user/${userId}/progress`, {
         challengeId,
         status: "in_progress",
-        startedAt: new Date(),
-        currentStep: 1
+        startedAt: new Date()
       });
     },
     onSuccess: () => {
@@ -84,7 +83,8 @@ export default function LegalChallenges() {
 
   const getProgressPercentage = (challenge: ChallengeWithProgress) => {
     if (!challenge.userProgress) return 0;
-    return Math.round((challenge.userProgress.currentStep / challenge.totalSteps) * 100);
+    if (challenge.userProgress.status === "completed") return 100;
+    return challenge.userProgress.score || 0;
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -110,10 +110,10 @@ export default function LegalChallenges() {
     startChallengeMutation.mutate(challengeId);
   };
 
-  const handleContinueChallenge = (progressId: number, currentStep: number) => {
+  const handleContinueChallenge = (progressId: number) => {
     updateProgressMutation.mutate({
       progressId,
-      updates: { currentStep: currentStep + 1 }
+      updates: { status: "in_progress" }
     });
   };
 

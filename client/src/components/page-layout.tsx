@@ -15,20 +15,30 @@ interface PageLayoutProps {
 export default function PageLayout({ children, className = "", showFooter = true }: PageLayoutProps) {
   return (
     <MobileContainer>
-      <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 hw-accelerated safari-fix ${className}`}>
-        <EnhancedNavbar />
+      <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 hw-accelerated safari-fix relative overflow-hidden ${className}`}>
+        {/* Dynamic particle background */}
+        <ParticleBackground 
+          density={30} 
+          speed={0.3} 
+          colors={['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b']}
+          className="opacity-30"
+        />
         
-        <main id="main-content" role="main" className="hw-accelerated">
-          {children}
-        </main>
+        <div className="relative z-10">
+          <EnhancedNavbar />
+          
+          <main id="main-content" role="main" className="hw-accelerated">
+            {children}
+          </main>
 
-        {showFooter && <Footer />}
-        
-        {/* Legal Assistant Chatbot - Available on all pages */}
-        <LegalAssistantChatbot />
-        
-        {/* Floating Action Button for quick access */}
-        <FloatingActionButton />
+          {showFooter && <Footer />}
+          
+          {/* Legal Assistant Chatbot - Available on all pages */}
+          <LegalAssistantChatbot />
+          
+          {/* Floating Action Button for quick access */}
+          <FloatingActionButton />
+        </div>
       </div>
     </MobileContainer>
   );

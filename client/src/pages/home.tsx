@@ -10,6 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
+import InteractiveHeroSection from "@/components/interactive-hero-section";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -56,6 +57,9 @@ export default function Home() {
     <PageLayout>
         {/* Hero Section */}
         <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden" aria-labelledby="hero-heading">
+          {/* Interactive Hero Background */}
+          <InteractiveHeroSection />
+          
           {/* Animated background elements */}
           <div className="absolute inset-0 -z-10">
             <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-20 animate-pulse"></div>

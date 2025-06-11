@@ -12,13 +12,19 @@ import {
   Scale,
   Calculator,
   MessageSquare,
-  Zap
+  Zap,
+  ChevronDown,
+  Gavel,
+  BookOpen,
+  Award,
+  Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function EnhancedNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [location] = useLocation();
 
   useEffect(() => {
@@ -32,40 +38,68 @@ export default function EnhancedNavbar() {
 
   const navigationItems = [
     {
-      name: "Attorneys",
-      href: "/attorneys",
-      icon: Users,
-      description: "Find military legal experts"
+      name: "Legal Services",
+      hasDropdown: true,
+      items: [
+        {
+          name: "Find Attorneys",
+          href: "/attorneys",
+          icon: Users,
+          description: "Military legal experts"
+        },
+        {
+          name: "Emergency Help",
+          href: "/emergency-consultation",
+          icon: AlertTriangle,
+          description: "Urgent legal assistance"
+        },
+        {
+          name: "Document Prep",
+          href: "/document-prep",
+          icon: FileText,
+          description: "AI-powered legal documents"
+        },
+        {
+          name: "Video Consultation",
+          href: "/video-consultation",
+          icon: Phone,
+          description: "Secure virtual meetings"
+        }
+      ]
     },
     {
-      name: "Emergency",
-      href: "/emergency-consultation",
-      icon: AlertTriangle,
-      description: "Urgent legal assistance"
-    },
-    {
-      name: "Document Prep",
-      href: "/document-prep",
-      icon: FileText,
-      description: "AI-powered legal documents"
-    },
-    {
-      name: "Benefits Calculator",
-      href: "/benefits-calculator",
-      icon: Calculator,
-      description: "VA benefits estimation"
-    },
-    {
-      name: "Legal Challenges",
-      href: "/legal-challenges",
-      icon: Scale,
-      description: "Interactive legal scenarios"
-    },
-    {
-      name: "Video Consultation",
-      href: "/video-consultation",
-      icon: Phone,
-      description: "Secure virtual meetings"
+      name: "Resources",
+      hasDropdown: true,
+      items: [
+        {
+          name: "Benefits Calculator",
+          href: "/benefits-calculator",
+          icon: Calculator,
+          description: "VA benefits estimation"
+        },
+        {
+          name: "Legal Challenges",
+          href: "/legal-challenges",
+          icon: Scale,
+          description: "Interactive legal scenarios"
+        },
+        {
+          name: "Legal Assistant",
+          href: "#",
+          icon: MessageSquare,
+          description: "AI legal chatbot",
+          onClick: () => {
+            const chatButton = document.querySelector('[data-chatbot-trigger]');
+            if (chatButton) (chatButton as HTMLElement).click();
+          }
+        },
+        {
+          name: "Loading Demo",
+          href: "/loading-demo",
+          icon: Shield,
+          description: "Military loading system"
+        }
+      ]
     }
   ];
 
@@ -101,25 +135,86 @@ export default function EnhancedNavbar() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              {navigationItems.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <Link key={item.name} href={item.href}>
-                    <motion.div
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all cursor-pointer group ${
-                        isActive(item.href)
-                          ? "bg-blue-100 text-blue-700"
-                          : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      <span className="font-medium">{item.name}</span>
-                    </motion.div>
-                  </Link>
-                );
-              })}
+              {navigationItems.map((item) => (
+                <div 
+                  key={item.name} 
+                  className="relative"
+                  onMouseEnter={() => setOpenDropdown(item.name)}
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <motion.div
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all cursor-pointer group ${
+                      openDropdown === item.name
+                        ? "bg-blue-100 text-blue-700"
+                        : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="font-medium">{item.name}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${
+                      openDropdown === item.name ? "rotate-180" : ""
+                    }`} />
+                  </motion.div>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {openDropdown === item.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50"
+                      >
+                        {item.items.map((subItem, index) => {
+                          const IconComponent = subItem.icon;
+                          return (
+                            <motion.div
+                              key={subItem.name}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              {subItem.onClick ? (
+                                <button
+                                  onClick={() => {
+                                    subItem.onClick();
+                                    setOpenDropdown(null);
+                                  }}
+                                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-blue-50 transition-colors"
+                                >
+                                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                                    <IconComponent className="w-4 h-4 text-blue-600" />
+                                  </div>
+                                  <div>
+                                    <div className="font-medium text-gray-900">{subItem.name}</div>
+                                    <div className="text-sm text-gray-500">{subItem.description}</div>
+                                  </div>
+                                </button>
+                              ) : (
+                                <Link href={subItem.href}>
+                                  <div 
+                                    className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors"
+                                    onClick={() => setOpenDropdown(null)}
+                                  >
+                                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                                      <IconComponent className="w-4 h-4 text-blue-600" />
+                                    </div>
+                                    <div>
+                                      <div className="font-medium text-gray-900">{subItem.name}</div>
+                                      <div className="text-sm text-gray-500">{subItem.description}</div>
+                                    </div>
+                                  </div>
+                                </Link>
+                              )}
+                            </motion.div>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
 
             {/* CTA Buttons */}
@@ -159,38 +254,72 @@ export default function EnhancedNavbar() {
               className="lg:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200"
             >
               <div className="px-4 py-6 space-y-4">
-                {navigationItems.map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Link href={item.href}>
-                        <div 
-                          className={`flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer ${
-                            isActive(item.href)
-                              ? "bg-blue-100 text-blue-700"
-                              : "text-gray-700 hover:bg-gray-100"
-                          }`}
-                          onClick={() => setIsOpen(false)}
+                {navigationItems.map((category, categoryIndex) => (
+                  <motion.div
+                    key={category.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: categoryIndex * 0.1 }}
+                    className="space-y-2"
+                  >
+                    {/* Category Header */}
+                    <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide px-3">
+                      {category.name}
+                    </div>
+                    
+                    {/* Category Items */}
+                    {category.items.map((item, itemIndex) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <motion.div
+                          key={item.name}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: (categoryIndex * 0.1) + (itemIndex * 0.05) }}
                         >
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            isActive(item.href) ? "bg-blue-200" : "bg-gray-100"
-                          }`}>
-                            <IconComponent className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <div className="font-medium">{item.name}</div>
-                            <div className="text-sm text-gray-500">{item.description}</div>
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+                          {item.onClick ? (
+                            <button
+                              onClick={() => {
+                                item.onClick();
+                                setIsOpen(false);
+                              }}
+                              className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-gray-700 hover:bg-gray-100"
+                            >
+                              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                                <IconComponent className="w-5 h-5" />
+                              </div>
+                              <div className="text-left">
+                                <div className="font-medium">{item.name}</div>
+                                <div className="text-sm text-gray-500">{item.description}</div>
+                              </div>
+                            </button>
+                          ) : (
+                            <Link href={item.href}>
+                              <div 
+                                className={`flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer ${
+                                  isActive(item.href)
+                                    ? "bg-blue-100 text-blue-700"
+                                    : "text-gray-700 hover:bg-gray-100"
+                                }`}
+                                onClick={() => setIsOpen(false)}
+                              >
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                  isActive(item.href) ? "bg-blue-200" : "bg-gray-100"
+                                }`}>
+                                  <IconComponent className="w-5 h-5" />
+                                </div>
+                                <div>
+                                  <div className="font-medium">{item.name}</div>
+                                  <div className="text-sm text-gray-500">{item.description}</div>
+                                </div>
+                              </div>
+                            </Link>
+                          )}
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                ))}
 
                 {/* Mobile CTA Buttons */}
                 <div className="pt-4 border-t border-gray-200 space-y-3">

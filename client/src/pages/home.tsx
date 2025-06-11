@@ -224,12 +224,12 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Link href="/document-wizard">
+            <Link href="/document-prep">
               <Card className="text-center hover-lift transition-smooth cursor-pointer">
                 <CardContent className="p-6">
                   <FileText className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <h3 className="font-semibold text-navy-900 mb-2">Document Wizard</h3>
-                  <p className="text-gray-600 text-sm">One-click legal document preparation</p>
+                  <h3 className="font-semibold text-navy-900 mb-2">Document Prep</h3>
+                  <p className="text-gray-600 text-sm">AI-powered legal document generation</p>
                 </CardContent>
               </Card>
             </Link>

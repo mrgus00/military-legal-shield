@@ -894,6 +894,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Document Generation route
+  app.post("/api/generate-document", async (req, res) => {
+    try {
+      const documentRequest = req.body;
+      const { generateLegalDocument } = await import("./openai");
+      const generatedDocument = await generateLegalDocument(documentRequest);
+      res.json(generatedDocument);
+    } catch (error: any) {
+      console.error("Error generating document:", error);
+      res.status(500).json({ message: "Error generating document: " + error.message });
+    }
+  });
+
   // Scenario session routes
   app.get("/api/scenario-sessions", async (req, res) => {
     try {

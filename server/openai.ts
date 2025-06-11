@@ -352,6 +352,85 @@ export interface GeneratedResumeResponse {
   formattedResume: string;
 }
 
+export interface DocumentGenerationRequest {
+  documentType: string;
+  branch: string;
+  rank: string;
+  fullName: string;
+  unit: string;
+  serviceNumber?: string;
+  dateOfIncident?: string;
+  circumstancesDescription: string;
+  witnessNames?: string;
+  supportingEvidence?: string;
+  desiredOutcome: string;
+  additionalDetails?: string;
+}
+
+export interface GeneratedDocumentResponse {
+  document: string;
+  documentType: string;
+  suggestions: string[];
+  legalConsiderations: string[];
+}
+
+export async function generateLegalDocument(request: DocumentGenerationRequest): Promise<GeneratedDocumentResponse> {
+  const prompt = `You are an expert military legal assistant specializing in creating professional military legal documents. Generate a comprehensive, properly formatted legal document based on the following information:
+
+Document Type: ${request.documentType}
+Military Branch: ${request.branch}
+Rank: ${request.rank}
+Full Name: ${request.fullName}
+Unit: ${request.unit}
+Service Number: ${request.serviceNumber || 'N/A'}
+Date of Incident: ${request.dateOfIncident || 'N/A'}
+Circumstances: ${request.circumstancesDescription}
+Witnesses: ${request.witnessNames || 'N/A'}
+Supporting Evidence: ${request.supportingEvidence || 'N/A'}
+Desired Outcome: ${request.desiredOutcome}
+Additional Details: ${request.additionalDetails || 'N/A'}
+
+Please create a professional, legally sound document that:
+1. Uses proper military format and terminology
+2. Includes all relevant dates, names, and details
+3. Follows appropriate legal structure for this document type
+4. Uses formal, respectful language
+5. Includes proper headers, sections, and formatting
+6. Provides comprehensive coverage of the situation
+
+Also provide 3-5 specific suggestions for improving the document and 3-5 important legal considerations for this type of case.
+
+Respond in JSON format with: { "document": "full formatted document text", "suggestions": ["suggestion1", "suggestion2"], "legalConsiderations": ["consideration1", "consideration2"] }`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert military legal assistant with extensive knowledge of military law, UCMJ, and proper legal document formatting. Always provide professional, accurate, and properly formatted legal documents."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    const result = JSON.parse(response.choices[0].message.content);
+
+    return {
+      document: result.document,
+      documentType: request.documentType,
+      suggestions: result.suggestions || [],
+      legalConsiderations: result.legalConsiderations || []
+    };
+  } catch (error) {
+    throw new Error("Failed to generate legal document: " + error.message);
+  }
+}
+
 export async function generateVeteranResume(request: ResumeGenerationRequest): Promise<GeneratedResumeResponse> {
   const prompt = `Create a professional resume for a military veteran transitioning to civilian employment.
 

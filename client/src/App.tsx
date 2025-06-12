@@ -47,6 +47,9 @@ import BenefitsCalculator from "@/pages/benefits-calculator";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
+import EmergencyDefense from "@/pages/emergency-defense";
+import MilitaryJustice from "@/pages/military-justice";
+import InjuryClaims from "@/pages/injury-claims";
 import LegalChallenges from "@/pages/legal-challenges-basic";
 import LoadingDemoPage from "@/pages/loading-demo";
 
@@ -82,6 +85,9 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/consultation-booking" component={ConsultationBooking} />
       <Route path="/emergency-consultation" component={EmergencyConsultation} />
+      <Route path="/emergency-defense" component={EmergencyDefense} />
+      <Route path="/military-justice" component={MilitaryJustice} />
+      <Route path="/injury-claims" component={InjuryClaims} />
       <Route path="/video-consultation" component={VideoConsultation} />
       <Route path="/leave-review" component={LeaveReview} />
       <Route path="/financial-wizard" component={FinancialWizard} />

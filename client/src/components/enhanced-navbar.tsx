@@ -17,7 +17,8 @@ import {
   Gavel,
   BookOpen,
   Award,
-  Clock
+  Clock,
+  Heart
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -42,28 +43,28 @@ export default function EnhancedNavbar() {
       hasDropdown: true,
       items: [
         {
-          name: "Find Attorneys",
-          href: "/attorneys",
-          icon: Users,
-          description: "Military legal experts"
+          name: "Emergency Defense",
+          href: "/emergency-defense",
+          icon: AlertTriangle,
+          description: "24/7 urgent legal matching for critical situations"
         },
         {
-          name: "Emergency Help",
-          href: "/emergency-consultation",
-          icon: AlertTriangle,
-          description: "Urgent legal assistance"
+          name: "Military Justice",
+          href: "/military-justice",
+          icon: Scale,
+          description: "UCMJ expertise and court-martial defense"
         },
         {
           name: "Document Prep",
           href: "/document-prep",
           icon: FileText,
-          description: "AI-powered legal documents"
+          description: "AI-powered legal document generation"
         },
         {
-          name: "Video Consultation",
-          href: "/video-consultation",
-          icon: Phone,
-          description: "Secure virtual meetings"
+          name: "Injury Claims",
+          href: "/injury-claims",
+          icon: Heart,
+          description: "VA disability and personal injury representation"
         }
       ]
     },

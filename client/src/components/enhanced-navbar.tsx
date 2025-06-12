@@ -33,8 +33,20 @@ export default function EnhancedNavbar() {
       setScrolled(window.scrollY > 20);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.dropdown-container')) {
+        setOpenDropdown(null);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const navigationItems = [
@@ -73,6 +85,12 @@ export default function EnhancedNavbar() {
       hasDropdown: true,
       items: [
         {
+          name: "Find Attorneys",
+          href: "/attorneys",
+          icon: Users,
+          description: "Military legal experts directory"
+        },
+        {
           name: "Benefits Calculator",
           href: "/benefits-calculator",
           icon: Calculator,
@@ -85,6 +103,12 @@ export default function EnhancedNavbar() {
           description: "Interactive legal scenarios"
         },
         {
+          name: "Video Consultation",
+          href: "/video-consultation",
+          icon: Phone,
+          description: "Secure virtual meetings"
+        },
+        {
           name: "Legal Assistant",
           href: "#",
           icon: MessageSquare,
@@ -93,12 +117,6 @@ export default function EnhancedNavbar() {
             const chatButton = document.querySelector('[data-chatbot-trigger]');
             if (chatButton) (chatButton as HTMLElement).click();
           }
-        },
-        {
-          name: "Loading Demo",
-          href: "/loading-demo",
-          icon: Shield,
-          description: "Military loading system"
         }
       ]
     }
@@ -139,7 +157,7 @@ export default function EnhancedNavbar() {
               {navigationItems.map((item) => (
                 <div 
                   key={item.name} 
-                  className="relative"
+                  className="relative dropdown-container"
                   onMouseEnter={() => setOpenDropdown(item.name)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
@@ -151,6 +169,7 @@ export default function EnhancedNavbar() {
                     }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                   >
                     <span className="font-medium">{item.name}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${
@@ -165,7 +184,7 @@ export default function EnhancedNavbar() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50"
+                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[100]"
                       >
                         {item.items.map((subItem, index) => {
                           const IconComponent = subItem.icon;

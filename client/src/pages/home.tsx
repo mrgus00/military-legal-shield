@@ -9,7 +9,6 @@ import PageLayout from "@/components/page-layout";
 import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
-import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import InteractiveHeroSection from "@/components/interactive-hero-section";
 
 export default function Home() {
@@ -367,9 +366,6 @@ export default function Home() {
 
       {/* Military Branches Banner */}
       <MilitaryBranchesBanner />
-      
-      {/* Legal Assistant Chatbot */}
-      <LegalAssistantChatbot />
     </PageLayout>
   );
 }

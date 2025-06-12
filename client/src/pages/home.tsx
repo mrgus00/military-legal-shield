@@ -94,12 +94,12 @@ export default function Home() {
 
             {/* Lead Capture Form */}
             <div className="glass-dark backdrop-blur-lg p-8 rounded-3xl max-w-lg mx-auto mb-12 ios-form-fix animate-fade-in-up shadow-2xl border border-white/10" style={{ animationDelay: '0.5s' }}>
-              <h3 id="signup-heading" className="text-2xl font-bold text-white mb-4 text-center">Get Instant Access</h3>
-              <p className="text-gray-300 mb-6 text-center">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
+              <h3 id="signup-heading" className="text-2xl font-bold text-gray-900 mb-4 text-center">Get Instant Access</h3>
+              <p className="text-gray-700 mb-6 text-center">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
               
               <form onSubmit={handleLeadCapture} className="space-y-4 ios-form-fix" role="form" aria-labelledby="signup-heading">
                 <div className="form-field">
-                  <label htmlFor="email-input" className="form-label text-white font-medium mb-2 block">
+                  <label htmlFor="email-input" className="form-label text-gray-800 font-medium mb-2 block">
                     Email Address
                   </label>
                   <div className="relative">
@@ -110,7 +110,7 @@ export default function Home() {
                       placeholder="Enter your military email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="glass w-full pl-12 pr-4 py-3 text-base text-white placeholder:text-gray-400 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                      className="glass w-full pl-12 pr-4 py-3 text-base text-gray-900 placeholder:text-gray-600 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all bg-white/90"
                       style={{ fontSize: '16px', WebkitAppearance: 'none' }}
                       required
                       aria-describedby="email-description email-error"
@@ -145,7 +145,7 @@ export default function Home() {
                     )}
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-700">
                   No spam. Unsubscribe anytime. Secure and confidential.
                 </p>
               </form>

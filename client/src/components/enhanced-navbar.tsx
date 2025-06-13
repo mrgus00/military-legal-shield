@@ -85,6 +85,12 @@ export default function EnhancedNavbar() {
       hasDropdown: true,
       items: [
         {
+          name: "Legal Resource Hub",
+          href: "/legal-resources",
+          icon: BookOpen,
+          description: "Comprehensive guides, FAQs, and worldwide legal navigator"
+        },
+        {
           name: "Find Attorneys",
           href: "/attorneys",
           icon: Users,

@@ -158,6 +158,12 @@ export default function Home() {
                   Emergency Legal Help
                 </Button>
               </Link>
+              <Link href="/legal-resources">
+                <Button variant="outline" size="lg" className="bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Legal Resources
+                </Button>
+              </Link>
               <Link href="/video-consultation">
                 <Button variant="outline" size="lg" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">
                   <Video className="w-5 h-5 mr-2" />
@@ -238,8 +244,22 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4 bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Complete Legal Protection</h2>
-            <p className="text-xl text-gray-700">Everything you need for military legal matters</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4 bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Your Legal Support Network</h2>
+            <p className="text-xl text-gray-700 mb-6">Comprehensive legal resources and expert guidance for military personnel worldwide</p>
+            <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
+              <div className="flex items-center space-x-2">
+                <Globe className="h-4 w-4 text-blue-600" />
+                <span>Worldwide Coverage</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Languages className="h-4 w-4 text-purple-600" />
+                <span>6 Languages</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Clock className="h-4 w-4 text-green-600" />
+                <span>24/7 Emergency</span>
+              </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -268,14 +288,14 @@ export default function Home() {
             </div>
 
             <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <Link href="/document-prep">
+              <Link href="/legal-resources">
                 <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
                   <CardContent className="p-6">
-                    <div className="tactical-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-glow">
-                      <FileText className="w-8 h-8 text-white" />
+                    <div className="bg-gradient-to-r from-purple-600 to-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-glow">
+                      <BookOpen className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="font-bold text-navy-900 mb-2 text-lg">Document Prep</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">AI-powered legal document generation</p>
+                    <h3 className="font-bold text-navy-900 mb-2 text-lg">Legal Resource Hub</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">Comprehensive guides, FAQs, and worldwide legal navigator</p>
                   </CardContent>
                 </Card>
               </Link>

@@ -471,6 +471,10 @@ export interface LegalAssistantResponse {
   urgencyLevel: "low" | "medium" | "high";
   category: string;
   requiresHumanAttorney: boolean;
+  ucmjReferences?: string[];
+  timeline?: string;
+  militaryChannels?: string[];
+  emergencyContacts?: string[];
 }
 
 export async function getLegalAssistantResponse(request: LegalAssistantRequest): Promise<LegalAssistantResponse> {
@@ -478,19 +482,24 @@ export async function getLegalAssistantResponse(request: LegalAssistantRequest):
   const generateFallbackResponse = (message: string): LegalAssistantResponse => {
     const lowerMessage = message.toLowerCase();
     
-    // Article 15 responses
-    if (lowerMessage.includes('article 15') || lowerMessage.includes('nonjudicial punishment')) {
+    // Article 15 responses with comprehensive UCMJ knowledge
+    if (lowerMessage.includes('article 15') || lowerMessage.includes('nonjudicial punishment') || lowerMessage.includes('njp')) {
       return {
-        response: "Roger that, service member. Article 15 proceedings are serious administrative actions. You have specific rights including the right to refuse Article 15 and demand court-martial instead. Key points: 1) You can consult with a legal assistance attorney, 2) You may present matters in defense/extenuation/mitigation, 3) You can appeal within reasonable time. This is not legal advice - consult with JAG immediately.",
+        response: "Roger that, service member. Article 15 (Non-Judicial Punishment) proceedings are governed by UCMJ and require immediate attention. Your rights under Article 15: 1) Right to remain silent (Article 31), 2) Right to examine evidence, 3) Right to present matters in defense/mitigation, 4) Right to demand trial by court-martial instead, 5) Right to legal consultation. Timeline: You typically have 3 duty days to decide on court-martial demand. DO NOT admit guilt - consult legal counsel first.",
         suggestions: [
-          "Request legal assistance consultation",
-          "Review your statement of charges carefully", 
-          "Consider requesting witnesses",
-          "Document all communications"
+          "Contact Area Defense Counsel (ADC) or Trial Defense Service within 24 hours",
+          "Request to examine all evidence and witness statements", 
+          "Document any mitigating circumstances, character references, and achievements",
+          "Consider demanding trial by court-martial if evidence is weak or punishment severe",
+          "Review impact on security clearance, promotion eligibility, and retention"
         ],
         urgencyLevel: "high",
         category: "administrative",
-        requiresHumanAttorney: true
+        requiresHumanAttorney: true,
+        ucmjReferences: ["Article 15 (NJP authority)", "Article 31 (Rights warning)", "Manual for Courts-Martial Part V"],
+        timeline: "3 duty days to demand court-martial (if applicable)",
+        militaryChannels: ["Area Defense Counsel (ADC)", "Trial Defense Service", "Unit legal assistance"],
+        emergencyContacts: ["Base ADC duty officer", "Trial Defense Service hotline"]
       };
     }
     
@@ -573,31 +582,44 @@ export async function getLegalAssistantResponse(request: LegalAssistantRequest):
     };
   };
 
-  const systemPrompt = `You are Sergeant Legal, a military legal assistant AI with extensive knowledge of military law, UCMJ, and military legal procedures. You have a professional, direct military personality with the following characteristics:
+  const systemPrompt = `You are SGT Legal Ready, an expert military legal assistant with comprehensive knowledge of military law and the UCMJ. You maintain military bearing while providing authoritative legal guidance.
 
-PERSONALITY TRAITS:
-- Direct and professional communication style
-- Use appropriate military terminology and protocol
-- Supportive but authoritative tone
-- Address users as "service member" or by appropriate military terms
-- Use phrases like "Hooah," "Roger that," "Copy," when appropriate
-- Maintain military bearing while being helpful
+CORE MILITARY LAW EXPERTISE:
+- Complete UCMJ Articles 1-146 with detailed understanding
+- Manual for Courts-Martial (MCM) procedures and Military Rules of Evidence (MRE)
+- Administrative separation procedures (AR 635-200, SECNAVINST 1920.6C, AFI 36-3208)
+- Security clearance adjudication (SEAD 4, 32 CFR Part 154)
+- Article 15 (NJP) procedures and service member rights
+- Court-martial processes (Summary, Special, General) and appeals
+- Inspector General complaint processes and whistleblower protections
+- SHARP/SAPR programs and Equal Opportunity regulations
+- Military family law, benefits, and veteran disability claims
+- Branch-specific regulations for all service branches
 
-EXPERTISE AREAS:
-- Uniform Code of Military Justice (UCMJ)
-- Military administrative law
-- Security clearance issues
-- Court-martial procedures
-- Administrative separations
-- Article 15 proceedings
-- Military family law
-- Veterans benefits and rights
-- Military criminal law
-- Ethics and conduct standards
+SPECIALIZED KNOWLEDGE AREAS:
+- Military criminal defense strategies and precedents
+- Security clearance appeals and mitigation strategies
+- Administrative law and separation proceedings
+- Military justice procedural requirements and timelines
+- Service member rights under various UCMJ provisions
+- Emergency legal procedures and protective measures
+- Military ethics and standards of conduct
+- Transition assistance and post-service legal issues
 
-RESPONSE GUIDELINES:
-1. Assess urgency level: low (general questions), medium (potential legal issues), high (immediate legal jeopardy)
-2. Provide clear, actionable guidance
+COMMUNICATION PROTOCOL:
+- Direct, professional military bearing with appropriate terminology
+- Reference specific UCMJ articles and military regulations
+- Provide actionable guidance with clear timelines and procedures
+- Assess urgency levels and recommend immediate actions when required
+- Use military courtesies while maintaining accessibility
+- Balance authoritative guidance with empathetic support
+
+CRITICAL RESPONSE REQUIREMENTS:
+1. Identify specific UCMJ articles and regulations applicable to each situation
+2. Assess urgency level and provide timeline-specific guidance
+3. Determine when immediate human attorney consultation is essential
+4. Provide specific military channels and emergency contacts
+5. Reference applicable procedures, forms, and documentation requirements
 3. Always recommend consulting with a JAG officer or military attorney for serious legal matters
 4. Categorize the inquiry (administrative, criminal, family, benefits, etc.)
 5. Offer relevant follow-up suggestions
@@ -612,22 +634,63 @@ FORMAT: Respond in JSON with: { "response": "your response", "suggestions": ["su
   ];
 
   try {
+    const enhancedPrompt = `MILITARY LEGAL ASSISTANCE REQUEST
+
+Service Member Inquiry: ${request.message}
+Context: ${request.context}
+User ID: ${request.userId}
+
+Previous Conversation:
+${request.conversationHistory?.map(msg => `${msg.role}: ${msg.content}`).join('\n') || 'Initial contact with service member'}
+
+ANALYSIS REQUIREMENTS:
+1. Identify specific UCMJ articles and military regulations applicable
+2. Assess urgency and provide critical timeline information
+3. Determine necessity for immediate human attorney consultation
+4. Specify military channels, contacts, and required documentation
+5. Reference applicable procedures, forms, and protective measures
+
+Respond with comprehensive military legal guidance in JSON format:
+{
+  "response": "Detailed analysis with specific UCMJ references, rights explanation, procedures, and actionable guidance",
+  "suggestions": ["Action with timeline and authority", "Documentation requirement", "Military contact with office info"],
+  "urgencyLevel": "low|medium|high",
+  "category": "court-martial|administrative|article-15|security-clearance|family-law|benefits|whistleblower|sharp|equal-opportunity|finance|housing|transition|criminal|appeals|other",
+  "requiresHumanAttorney": true|false,
+  "ucmjReferences": ["Article 31 (Rights)", "Article 15 (NJP)", etc.],
+  "timeline": "Critical deadlines and action timeframes",
+  "militaryChannels": ["Unit legal office", "Base JAG", "Trial Defense Service"],
+  "emergencyContacts": ["Emergency legal hotlines if immediate action required"]
+}`;
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-      messages: conversationMessages,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: enhancedPrompt }
+      ],
       response_format: { type: "json_object" },
-      max_tokens: 500,
-      temperature: 0.7,
+      max_tokens: 2000,
+      temperature: 0.2,
     });
 
     const result = JSON.parse(response.choices[0].message.content || "{}");
 
     return {
-      response: result.response || "I'm here to help with your military legal questions, service member.",
-      suggestions: result.suggestions || ["Contact base legal office", "Review relevant regulations"],
-      urgencyLevel: result.urgencyLevel || "low",
+      response: result.response || "Roger that, service member. I understand you need military legal guidance. Please provide more specific details about your situation so I can reference the appropriate UCMJ articles and military regulations.",
+      suggestions: result.suggestions || [
+        "Contact your unit's legal assistance office within 24 hours",
+        "Review relevant UCMJ articles and service regulations", 
+        "Document all facts and gather supporting evidence",
+        "Consult with JAG officer for complex legal matters"
+      ],
+      urgencyLevel: result.urgencyLevel || "medium",
       category: result.category || "general",
-      requiresHumanAttorney: result.requiresHumanAttorney || false
+      requiresHumanAttorney: result.requiresHumanAttorney || false,
+      ucmjReferences: result.ucmjReferences || [],
+      timeline: result.timeline || "Seek guidance within 48 hours",
+      militaryChannels: result.militaryChannels || ["Unit legal assistance office", "Base JAG services"],
+      emergencyContacts: result.emergencyContacts || []
     };
   } catch (error: any) {
     console.error("Legal assistant response error:", error);

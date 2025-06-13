@@ -22,13 +22,22 @@ interface ChatResponse {
   suggestions?: string[];
   urgencyLevel?: "low" | "medium" | "high";
   category?: string;
+  requiresHumanAttorney?: boolean;
+  ucmjReferences?: string[];
+  timeline?: string;
+  militaryChannels?: string[];
+  emergencyContacts?: string[];
 }
 
 const militaryQuickActions = [
-  { text: "Article 15 guidance", icon: FileText, category: "administrative" },
-  { text: "Security clearance help", icon: Shield, category: "security" },
-  { text: "Court-martial defense", icon: Scale, category: "legal" },
-  { text: "Emergency consultation", icon: MessageCircle, category: "emergency" },
+  { text: "Article 15 (NJP) guidance", icon: FileText, category: "administrative", urgent: false },
+  { text: "Security clearance issues", icon: Shield, category: "security", urgent: false },
+  { text: "Court-martial defense", icon: Scale, category: "legal", urgent: true },
+  { text: "Administrative separation", icon: FileText, category: "administrative", urgent: false },
+  { text: "SHARP/EO complaint", icon: Shield, category: "sharp", urgent: true },
+  { text: "Inspector General", icon: Scale, category: "whistleblower", urgent: false },
+  { text: "Family law matters", icon: MessageCircle, category: "family", urgent: false },
+  { text: "Emergency legal help", icon: MessageCircle, category: "emergency", urgent: true },
 ];
 
 const assistantPersonality = {

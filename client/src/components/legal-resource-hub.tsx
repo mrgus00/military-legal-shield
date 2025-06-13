@@ -349,7 +349,7 @@ export default function LegalResourceHub() {
                 Chat with SGT Legal Ready
               </Button>
               <Button variant="outline" asChild>
-                <Link href="/find-attorneys">
+                <Link href="/attorneys">
                   <Scale className="mr-2 h-4 w-4" />
                   Find Defense Attorney
                 </Link>

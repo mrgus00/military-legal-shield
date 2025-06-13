@@ -52,6 +52,7 @@ import MilitaryJustice from "@/pages/military-justice";
 import InjuryClaims from "@/pages/injury-claims";
 import LegalChallenges from "@/pages/legal-challenges-basic";
 import LoadingDemoPage from "@/pages/loading-demo";
+import FindAttorneys from "@/pages/find-attorneys";
 
 function Router() {
   return (
@@ -62,7 +63,8 @@ function Router() {
       <Route path="/case-tracking" component={CaseTracking} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/resources" component={Resources} />
-      <Route path="/attorneys" component={Attorneys} />
+      <Route path="/attorneys" component={FindAttorneys} />
+      <Route path="/find-attorneys" component={FindAttorneys} />
       <Route path="/education" component={Education} />
       <Route path="/scenarios" component={Scenarios} />
       <Route path="/weekend-safety" component={WeekendSafety} />

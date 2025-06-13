@@ -156,15 +156,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Legal assistant endpoint
-  app.post("/api/legal-assistant", async (req, res) => {
+  // Legal Assistant Chatbot API
+  app.post("/api/legal-assistant/chat", async (req, res) => {
     try {
-      const { message, context, conversationHistory } = req.body;
+      const { message, context, userId, conversationHistory } = req.body;
       
       const assistantRequest: LegalAssistantRequest = {
         message,
-        context: context || "general inquiry",
-        userId: "anonymous", // Public access
+        context: context || "military_legal",
+        userId: userId || "guest",
         conversationHistory: conversationHistory || []
       };
       

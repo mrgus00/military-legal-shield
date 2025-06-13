@@ -63,10 +63,10 @@ export default function Home() {
             <img 
               src={courtImage} 
               alt="Supreme Court Building" 
-              className="w-full h-full object-cover opacity-5"
+              className="w-full h-full object-cover opacity-15"
               style={{ filter: 'blur(0.5px)' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/60 to-white/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-800/80 to-navy-900/85"></div>
           </div>
 
           {/* Interactive Hero Background */}
@@ -82,85 +82,62 @@ export default function Home() {
 
           <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-navy-100 to-blue-100 rounded-full text-navy-800 text-sm font-medium mb-6 shadow-lg animate-fade-in-up hover-scale">
-              <Shield className="w-4 h-4 mr-2 animate-military-pulse" />
-              Trusted by 50,000+ Service Members
+            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-red-800 text-sm font-medium mb-6 shadow-lg animate-fade-in-up hover-scale">
+              <AlertTriangle className="w-4 h-4 mr-2 animate-pulse" />
+              Veteran-Owned & Operated
             </div>
             
-            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight animate-fade-in-up">
-              <span className="bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Legal Support for</span>
-              <span className="text-navy-600 block mt-2 animate-gradient bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent">Every {getTerminology('personnel').slice(0, -1)}</span>
+            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
+              <span className="text-white drop-shadow-lg">Got Legal Trouble?</span>
+              <span className="text-orange-400 block mt-2 drop-shadow-lg">Get a Military Lawyer Now.</span>
             </h1>
             
             <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
-                Comprehensive legal assistance for {getTerminology('personnel').toLowerCase()}, veterans, and their families. 
-                From urgent defense to family matters, MilitaryLegalShield has you covered 24/7.
+              <p className="text-xl text-white mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+                Court-Martial? DUI? False Accusation? Legal Questions?<br/>
+                We connect you directly to military lawyers—fast.
               </p>
-              <div className="glass rounded-xl p-4 max-w-2xl mx-auto mb-8">
-                <p className="text-lg font-semibold text-navy-800" style={{ color: `hsl(${branchTheme.colors.primary})` }}>
-                  "{getMotto()}" - Defending those who defend our freedom.
-                </p>
+              
+              {/* Immediate CTA */}
+              <div className="mb-8">
+                <Link href="/urgent-match">
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-4 text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl">
+                    <Scale className="w-6 h-6 mr-3" />
+                    Connect with a Lawyer Now
+                  </Button>
+                </Link>
               </div>
             </div>
 
-            {/* Lead Capture Form */}
-            <div className="glass-dark backdrop-blur-lg p-8 rounded-3xl max-w-lg mx-auto mb-12 ios-form-fix animate-fade-in-up shadow-2xl border border-white/10" style={{ animationDelay: '0.5s' }}>
-              <h3 id="signup-heading" className="text-2xl font-bold text-gray-900 mb-4 text-center">Get Instant Access</h3>
-              <p className="text-gray-700 mb-6 text-center">Join thousands of {getTerminology('personnel').toLowerCase()} getting the legal help they need</p>
-              
-              <form onSubmit={handleLeadCapture} className="space-y-4 ios-form-fix" role="form" aria-labelledby="signup-heading">
-                <div className="form-field">
-                  <label htmlFor="email-input" className="form-label text-gray-800 font-medium mb-2 block">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="email-input"
-                      type="email"
-                      placeholder="Enter your military email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="glass w-full pl-12 pr-4 py-3 text-base text-gray-900 placeholder:text-gray-600 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all bg-white/90"
-                      style={{ fontSize: '16px', WebkitAppearance: 'none' }}
-                      required
-                      aria-describedby="email-description email-error"
-                      aria-invalid={!email && isSubmitting ? "true" : "false"}
-                    />
+            {/* Trust & Credibility Section */}
+            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+              <h2 className="text-2xl font-bold text-white mb-6 text-center">Why Trust Military Legal Shield?</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle className="w-8 h-8 text-white" />
                   </div>
-                  <div id="email-description" className="sr-only">
-                    Enter your valid military email address to get started
+                  <p className="text-white font-semibold">Veteran-Owned & Operated</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Globe className="w-8 h-8 text-white" />
                   </div>
-                  {!email && isSubmitting && (
-                    <div id="email-error" className="text-red-400 text-sm mt-1" role="alert">
-                      Email address is required to continue
-                    </div>
-                  )}
+                  <p className="text-white font-semibold">Fast Legal Access Worldwide</p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className="military-gradient hover:shadow-lg px-8 py-3 rounded-xl text-white font-semibold transform transition hover:scale-105 animate-glow"
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                        Getting Started...
-                      </div>
-                    ) : (
-                      <>
-                        Get Started Free
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </>
-                    )}
-                  </Button>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Shield className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-white font-semibold">Confidential & Secure</p>
                 </div>
-                <p className="text-xs text-gray-700">
-                  No spam. Unsubscribe anytime. Secure and confidential.
-                </p>
-              </form>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Users className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-white font-semibold">Recommended by Service Members</p>
+                </div>
+              </div>
             </div>
 
             {/* World Clock */}
@@ -168,30 +145,12 @@ export default function Home() {
               <WorldClock />
             </div>
 
-            {/* Quick Access Buttons */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/urgent-match">
-                <Button variant="outline" size="lg" className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100">
-                  <AlertTriangle className="w-5 h-5 mr-2" />
-                  Emergency Legal Help
-                </Button>
-              </Link>
-              <Link href="/legal-resources">
-                <Button variant="outline" size="lg" className="bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Legal Resources
-                </Button>
-              </Link>
-              <Link href="/video-consultation">
-                <Button variant="outline" size="lg" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">
-                  <Video className="w-5 h-5 mr-2" />
-                  Video Consultation
-                </Button>
-              </Link>
-              <Link href="/attorneys">
-                <Button variant="outline" size="lg" className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100">
-                  <Users className="w-5 h-5 mr-2" />
-                  Find Attorneys
+            {/* Secondary CTA */}
+            <div className="text-center">
+              <Link href="/consultation-booking">
+                <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Start Now
                 </Button>
               </Link>
             </div>
@@ -199,137 +158,223 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Mission, Vision, Goal Section */}
+      {/* How It Works - 3-Step Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">Getting Legal Help is Simple:</h2>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-navy-200 hover-lift transition-smooth card-interactive touch-optimized">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-navy-600" />
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
+              <CardHeader>
+                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="text-3xl font-bold text-orange-600">1</div>
                 </div>
-                <CardTitle className="text-2xl text-navy-900">Our Mission</CardTitle>
+                <CardTitle className="text-xl text-navy-900">Choose Your Legal Issue</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 text-center leading-relaxed">
-                  Assist all service members in accessing essential legal services with dignity, 
-                  expertise, and unwavering support when they need it most.
+                <p className="text-gray-700 leading-relaxed">
+                  Select from court-martial defense, DUI, false accusations, POA, or other legal matters
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-navy-200 hover-lift transition-smooth card-interactive touch-optimized">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-8 h-8 text-blue-600" />
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
+              <CardHeader>
+                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="text-3xl font-bold text-orange-600">2</div>
                 </div>
-                <CardTitle className="text-2xl text-navy-900">Our Vision</CardTitle>
+                <CardTitle className="text-xl text-navy-900">Connect With a Vetted Lawyer</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 text-center leading-relaxed">
-                  Ensure all service members, veterans, and their families have comprehensive legal support—
-                  whether for defense, injury representation, wills, powers of attorney, or other legal matters.
+                <p className="text-gray-700 leading-relaxed">
+                  Get matched with military law specialists who understand your unique situation
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-navy-200 hover-lift transition-smooth card-interactive touch-optimized">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-green-600" />
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
+              <CardHeader>
+                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="text-3xl font-bold text-orange-600">3</div>
                 </div>
-                <CardTitle className="text-2xl text-navy-900">Our Goal</CardTitle>
+                <CardTitle className="text-xl text-navy-900">Get Legal Advice or Representation Fast</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 text-center leading-relaxed">
-                  Ensure every military service member, veteran, and their families have easy access 
-                  to the Mil-Legal app and the justice they deserve.
+                <p className="text-gray-700 leading-relaxed">
+                  Receive immediate consultation or ongoing representation for your case
                 </p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link href="/consultation-booking">
+              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 text-lg font-semibold rounded-xl">
+                Start Now
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Use Case Scenarios / Quick Answers */}
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-orange-50 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">If This Is You, We're Your Legal Shield:</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="border-red-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Gavel className="w-8 h-8 text-red-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Got Court Martialed?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Get a Lawyer</p>
+                <Link href="/urgent-match">
+                  <Button className="bg-red-600 hover:bg-red-700 text-white w-full">
+                    Connect Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <AlertTriangle className="w-8 h-8 text-orange-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Got a DUI?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Get a Lawyer</p>
+                <Link href="/urgent-match">
+                  <Button className="bg-orange-600 hover:bg-orange-700 text-white w-full">
+                    Connect Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-blue-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Shield className="w-8 h-8 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Falsely Accused?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Get a Lawyer</p>
+                <Link href="/urgent-match">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+                    Connect Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-purple-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <FileText className="w-8 h-8 text-purple-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Need POA?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Find a Lawyer</p>
+                <Link href="/attorneys">
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
+                    Find Attorney
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-green-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <HelpCircle className="w-8 h-8 text-green-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Have Questions?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Consult a Lawyer</p>
+                <Link href="/video-consultation">
+                  <Button className="bg-green-600 hover:bg-green-700 text-white w-full">
+                    Consult Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200 hover-lift transition-smooth card-interactive touch-optimized bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <MessageSquare className="w-8 h-8 text-slate-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Emergency Help?</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ 24/7 Support</p>
+                <Link href="/emergency-defense">
+                  <Button className="bg-slate-600 hover:bg-slate-700 text-white w-full">
+                    Get Help Now
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Services Overview */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-40 h-40 bg-blue-200 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-32 h-32 bg-purple-200 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-green-200 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-12 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4 bg-gradient-to-r from-navy-900 to-blue-800 bg-clip-text text-transparent">Your Legal Support Network</h2>
-            <p className="text-xl text-gray-700 mb-6">Comprehensive legal resources and expert guidance for military personnel worldwide</p>
-            <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <Globe className="h-4 w-4 text-blue-600" />
-                <span>Worldwide Coverage</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Languages className="h-4 w-4 text-purple-600" />
-                <span>6 Languages</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-green-600" />
-                <span>24/7 Emergency</span>
-              </div>
-            </div>
+      {/* Testimonials Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">Trusted by Those Who Serve</h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
-                <CardContent className="p-6">
-                  <div className="emergency-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-military-pulse">
-                    <AlertTriangle className="w-8 h-8 text-white" />
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="border-yellow-200 hover-lift transition-smooth card-interactive touch-optimized bg-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
                   </div>
-                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Emergency Defense</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">24/7 urgent legal matching for critical situations</p>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+                <p className="text-gray-700 italic mb-4">"Quick, easy, and professional! Got me connected with a lawyer within hours during my deployment crisis."</p>
+                <p className="text-navy-900 font-semibold">- SGT Walker</p>
+              </CardContent>
+            </Card>
 
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
-                <CardContent className="p-6">
-                  <div className="military-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Scale className="w-8 h-8 text-white" />
+            <Card className="border-yellow-200 hover-lift transition-smooth card-interactive touch-optimized bg-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
                   </div>
-                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Military Justice</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">UCMJ expertise and court-martial defense</p>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+                <p className="text-gray-700 italic mb-4">"Helped me navigate false charges overseas. The attorney understood military law and got results fast."</p>
+                <p className="text-navy-900 font-semibold">- CPT Martinez</p>
+              </CardContent>
+            </Card>
 
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <Link href="/legal-resources">
-                <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
-                  <CardContent className="p-6">
-                    <div className="bg-gradient-to-r from-purple-600 to-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform animate-glow">
-                      <BookOpen className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-navy-900 mb-2 text-lg">Legal Resource Hub</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">Comprehensive guides, FAQs, and worldwide legal navigator</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <Card className="text-center hover-lift transition-all duration-300 group cursor-pointer bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl">
-                <CardContent className="p-6">
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Heart className="w-8 h-8 text-white" />
+            <Card className="border-yellow-200 hover-lift transition-smooth card-interactive touch-optimized bg-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
                   </div>
-                  <h3 className="font-bold text-navy-900 mb-2 text-lg">Injury Claims</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">VA disability and personal injury representation</p>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+                <p className="text-gray-700 italic mb-4">"Finally got the POA documents I needed for deployment. Service was excellent and confidential."</p>
+                <p className="text-navy-900 font-semibold">- PFC Johnson</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

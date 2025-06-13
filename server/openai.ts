@@ -503,82 +503,178 @@ export async function getLegalAssistantResponse(request: LegalAssistantRequest):
       };
     }
     
-    // Court-martial responses
-    if (lowerMessage.includes('court martial') || lowerMessage.includes('court-martial') || lowerMessage.includes('ucmj')) {
+    // Court-martial responses with enhanced UCMJ knowledge
+    if (lowerMessage.includes('court martial') || lowerMessage.includes('court-martial') || lowerMessage.includes('charges') || lowerMessage.includes('criminal')) {
       return {
-        response: "Hooah, service member. Court-martial proceedings require immediate legal representation. You have the right to military defense counsel at no cost, or you may hire civilian counsel at your own expense. Do NOT make any statements without legal counsel present. Key rights: 1) Right to remain silent, 2) Right to counsel, 3) Right to witnesses, 4) Right to cross-examine. Contact trial defense services immediately.",
+        response: "Hooah, service member. Court-martial proceedings are the most serious military legal matters requiring IMMEDIATE legal representation. Your fundamental rights under Articles 31-46 UCMJ: 1) Right to remain silent (Article 31), 2) Right to detailed military defense counsel at no cost (Article 38), 3) Right to hire civilian counsel at own expense, 4) Right to witnesses and evidence (Article 46), 5) Right to speedy trial. CRITICAL: Do NOT make ANY statements without counsel present. Exercise Article 31 rights immediately.",
         suggestions: [
-          "Contact Trial Defense Service immediately",
-          "Exercise right to remain silent",
-          "Request military defense counsel",
-          "Do not discuss case with anyone except counsel"
+          "Contact Trial Defense Service or Area Defense Counsel immediately - within hours",
+          "Exercise Article 31 rights - remain silent until counsel present",
+          "Request detailed military defense counsel assignment",
+          "Do not discuss case with ANYONE except attorney-client privileged communications",
+          "Preserve all evidence, documents, and witness contact information",
+          "Understand charges: Summary (minor), Special (intermediate), General (felony-level)"
         ],
         urgencyLevel: "high",
-        category: "criminal",
-        requiresHumanAttorney: true
+        category: "court-martial",
+        requiresHumanAttorney: true,
+        ucmjReferences: ["Article 31 (Compulsory self-incrimination)", "Article 38 (Duties of trial counsel and defense counsel)", "Article 46 (Opportunity to obtain witnesses and evidence)", "Rule for Courts-Martial 506"],
+        timeline: "Contact defense counsel immediately - preferably within hours of notification",
+        militaryChannels: ["Trial Defense Service (TDS)", "Area Defense Counsel (ADC)", "Senior Defense Counsel"],
+        emergencyContacts: ["TDS 24-hour duty officer", "Base ADC emergency line", "Command duty officer if in pretrial confinement"]
       };
     }
     
-    // Security clearance responses
-    if (lowerMessage.includes('security clearance') || lowerMessage.includes('clearance') || lowerMessage.includes('sf-86')) {
+    // Security clearance responses with enhanced procedural knowledge
+    if (lowerMessage.includes('security clearance') || lowerMessage.includes('clearance') || lowerMessage.includes('sf-86') || lowerMessage.includes('sead 4')) {
       return {
-        response: "Copy that, service member. Security clearance issues can impact your career significantly. Be completely honest on all forms - omissions or false statements can result in denial or revocation. Common issues include financial problems, foreign contacts, or past conduct. If you receive a Statement of Reasons (SOR), you have rights to respond and request a hearing. Legal assistance can help with clearance paperwork and appeals.",
+        response: "Copy that, service member. Security clearance adjudication follows SEAD 4 guidelines and can significantly impact your military career. Complete honesty is MANDATORY - false statements or omissions violate Article 86 UCMJ and can result in criminal charges. Common adjudication concerns: financial issues (Guideline F), foreign influence (Guideline B), personal conduct (Guideline E), criminal conduct (Guideline J). If you receive a Statement of Reasons (SOR), you have 30 days to respond and can request a hearing before an administrative judge.",
         suggestions: [
-          "Review SF-86 thoroughly before submission",
-          "Gather all required documentation",
-          "Consider legal assistance consultation",
-          "Be completely honest - investigators will discover issues anyway"
+          "Complete SF-86 with absolute honesty - omissions are worse than disclosed issues",
+          "Gather supporting documentation for any reportable incidents",
+          "Consult security manager or legal assistance before submission if concerns exist",
+          "For SOR response: engage qualified security clearance attorney within 15 days",
+          "Document mitigation efforts: financial counseling, character references, rehabilitation",
+          "Understand adjudicative guidelines and whole-person concept"
         ],
         urgencyLevel: "medium",
-        category: "security",
-        requiresHumanAttorney: false
+        category: "security-clearance",
+        requiresHumanAttorney: false,
+        ucmjReferences: ["Article 86 (Absence without leave - false official statements)", "SEAD 4 (National Security Adjudicative Guidelines)", "32 CFR Part 154"],
+        timeline: "SOR response due within 30 days if received",
+        militaryChannels: ["Unit security manager", "Base legal assistance", "Personnel security office"],
+        emergencyContacts: []
       };
     }
     
+    // SHARP/Sexual Assault/Equal Opportunity responses
+    if (lowerMessage.includes('sharp') || lowerMessage.includes('sexual assault') || lowerMessage.includes('harassment') || lowerMessage.includes('equal opportunity') || lowerMessage.includes('discrimination')) {
+      return {
+        response: "Copy that, service member. SHARP (Sexual Harassment/Assault Response and Prevention) and Equal Opportunity matters are taken extremely seriously. You have multiple reporting options: 1) Unrestricted report (triggers investigation), 2) Restricted report (confidential support). For sexual assault, you have Article 32 hearing rights if charges are preferred. EO complaints follow AR 600-20. Your safety and rights are protected - retaliation is prohibited and punishable under UCMJ.",
+        suggestions: [
+          "Contact SHARP/SARC representative immediately for sexual assault",
+          "File EO complaint with unit EO advisor or IG for discrimination",
+          "Understand reporting options: restricted vs unrestricted for sexual assault",
+          "Document all incidents with dates, witnesses, and evidence",
+          "Contact Special Victims Counsel (SVC) for legal representation",
+          "Know that retaliation is a separate punishable offense under Article 92"
+        ],
+        urgencyLevel: "high",
+        category: "sharp",
+        requiresHumanAttorney: true,
+        ucmjReferences: ["Article 120 (Sexual assault)", "Article 92 (Failure to obey order - anti-retaliation)", "AR 600-20 (Army Command Policy)", "Article 32 (Investigation)"],
+        timeline: "Report immediately - time-sensitive evidence preservation critical",
+        militaryChannels: ["SHARP representative", "Sexual Assault Response Coordinator (SARC)", "Equal Opportunity advisor", "Inspector General"],
+        emergencyContacts: ["DoD Safe Helpline: 877-995-5247", "Base SARC 24-hour hotline", "Military Crisis Line: 1-800-273-8255"]
+      };
+    }
+
+    // Administrative separation responses
+    if (lowerMessage.includes('separation') || lowerMessage.includes('chapter') || lowerMessage.includes('administrative discharge') || lowerMessage.includes('adsep')) {
+      return {
+        response: "Roger that, service member. Administrative separation proceedings can significantly impact your military career and veteran benefits. You have rights during separation processing: 1) Right to consult counsel, 2) Right to submit statements in your behalf, 3) Right to request retention (depending on chapter), 4) Right to administrative board hearing for certain chapters. Characterization of service (Honorable, General, OTH) affects veteran benefits. Critical to understand basis for separation and your response options.",
+        suggestions: [
+          "Contact legal assistance immediately to review separation packet",
+          "Understand specific chapter basis for separation (misconduct, performance, etc.)",
+          "Submit comprehensive rebuttal statement addressing separation basis",
+          "Request administrative separation board hearing if eligible",
+          "Gather character references, awards, performance evaluations",
+          "Consider impact on veteran benefits, GI Bill, disability compensation"
+        ],
+        urgencyLevel: "high",
+        category: "administrative",
+        requiresHumanAttorney: true,
+        ucmjReferences: ["AR 635-200 (Army separations)", "SECNAVINST 1920.6C (Navy separations)", "AFI 36-3208 (Air Force separations)"],
+        timeline: "Typically 5-15 duty days to respond depending on chapter",
+        militaryChannels: ["Legal assistance office", "Area Defense Counsel", "Administrative separation board"],
+        emergencyContacts: []
+      };
+    }
+
     // Family law responses
     if (lowerMessage.includes('divorce') || lowerMessage.includes('custody') || lowerMessage.includes('family') || lowerMessage.includes('marriage')) {
       return {
-        response: "Roger, service member. Military family law involves unique considerations including BAH, family separation allowance, and Servicemembers Civil Relief Act protections. For divorce, consider military pension division (need 10-year overlap rule for direct payments). Legal assistance offices provide excellent family law services at no cost. Don't navigate this alone - military families have special protections and benefits.",
+        response: "Roger, service member. Military family law involves unique considerations including BAH, family separation allowance, and Servicemembers Civil Relief Act protections. For divorce, consider military pension division (10-year overlap rule for direct payments), survivor benefit plan decisions, and jurisdiction issues with frequent PCS moves. Legal assistance offices provide excellent family law services at no cost. Military families have special protections and benefits.",
         suggestions: [
-          "Schedule legal assistance appointment",
-          "Gather financial documents (LES, W-2s, etc.)",
-          "Research state laws where filing",
-          "Consider impact on security clearance"
+          "Schedule legal assistance appointment within 48 hours",
+          "Gather financial documents (LES, W-2s, TSP statements, etc.)",
+          "Research state laws where filing - consider favorable jurisdiction",
+          "Understand military pension division requirements and survivor benefits",
+          "Consider impact on security clearance and command notification requirements",
+          "Document any family care plan issues if single parent"
         ],
         urgencyLevel: "medium",
-        category: "family",
-        requiresHumanAttorney: true
+        category: "family-law",
+        requiresHumanAttorney: true,
+        ucmjReferences: ["Servicemembers Civil Relief Act", "Uniformed Services Former Spouses Protection Act"],
+        timeline: "Consult legal assistance before taking any legal action",
+        militaryChannels: ["Base legal assistance office", "Family life chaplain", "Army Community Service"],
+        emergencyContacts: []
       };
     }
     
     // Financial/debt responses
-    if (lowerMessage.includes('debt') || lowerMessage.includes('financial') || lowerMessage.includes('bankruptcy') || lowerMessage.includes('money')) {
+    if (lowerMessage.includes('debt') || lowerMessage.includes('financial') || lowerMessage.includes('bankruptcy') || lowerMessage.includes('money') || lowerMessage.includes('scra')) {
       return {
-        response: "Copy that, service member. Financial problems can affect your security clearance and military career. The Servicemembers Civil Relief Act provides protections including reduced interest rates and court stay provisions. Your command may offer financial counseling. Consider debt consolidation, payment plans, or in extreme cases, bankruptcy (requires command notification). Legal assistance can help navigate options.",
+        response: "Copy that, service member. Financial problems can significantly affect your security clearance and military career. The Servicemembers Civil Relief Act (SCRA) provides substantial protections: 6% interest rate cap on pre-service debts, foreclosure protections, lease termination rights for PCS/deployment, and court stay provisions. Financial irresponsibility can lead to administrative action under Article 92 for failure to pay debts. Command notification may be required for bankruptcy filing.",
         suggestions: [
-          "Contact Army Community Service financial counseling",
-          "Review Servicemembers Civil Relief Act protections",
-          "Notify creditors of military status",
-          "Consider debt management plan"
+          "Contact Military Family Life Counselor or financial counselor immediately",
+          "Review and invoke Servicemembers Civil Relief Act protections",
+          "Notify creditors in writing of military status with copy of orders",
+          "Consider debt management plan through non-profit credit counseling",
+          "Consult legal assistance before bankruptcy filing - command notification required",
+          "Document all financial hardship related to military service for SCRA benefits"
         ],
         urgencyLevel: "medium",
         category: "financial",
-        requiresHumanAttorney: false
+        requiresHumanAttorney: false,
+        ucmjReferences: ["Article 92 (Failure to obey order - paying debts)", "Servicemembers Civil Relief Act (50 USC 3901)"],
+        timeline: "Address financial issues before security clearance review",
+        militaryChannels: ["Base legal assistance", "Army Community Service financial counseling", "Military Family Life Counselor"],
+        emergencyContacts: []
+      };
+    }
+
+    // Inspector General and whistleblower responses
+    if (lowerMessage.includes('inspector general') || lowerMessage.includes('whistleblower') || lowerMessage.includes('fraud') || lowerMessage.includes('waste') || lowerMessage.includes('abuse')) {
+      return {
+        response: "Roger that, service member. Inspector General complaints address fraud, waste, abuse, and violations of law or regulation. You have whistleblower protections under various federal statutes. IG investigations are confidential and retaliation is prohibited. You can file complaints at unit level, installation level, or higher headquarters. For serious criminal matters, consider contacting CID/NCIS/OSI. Document everything thoroughly and maintain copies of all evidence.",
+        suggestions: [
+          "Contact Installation Inspector General office",
+          "Document all evidence of fraud, waste, or abuse thoroughly",
+          "File written complaint with specific dates, names, and incidents",
+          "Understand whistleblower protections under applicable federal statutes",
+          "Consider anonymous hotlines for serious criminal matters",
+          "Keep detailed records and copies of all communications"
+        ],
+        urgencyLevel: "medium",
+        category: "whistleblower",
+        requiresHumanAttorney: false,
+        ucmjReferences: ["Article 92 (Failure to obey order)", "Inspector General Act", "Whistleblower Protection Enhancement Act"],
+        timeline: "File complaint promptly while evidence is available",
+        militaryChannels: ["Installation Inspector General", "Army Inspector General", "Department of Defense Inspector General"],
+        emergencyContacts: ["DoD Inspector General Hotline: 1-800-424-9098"]
       };
     }
     
-    // Default response for other military legal questions
+    // Default response for comprehensive military legal guidance
     return {
-      response: `Hooah, service member! I'm SGT Legal, your military legal assistant. While I'm experiencing some connectivity issues with my advanced systems, I can still provide basic guidance on military legal matters. Your question about "${message.substring(0, 50)}..." is important. For comprehensive assistance, I recommend contacting your base legal office - they have the full resources to help you properly. What specific area of military law can I help guide you toward?`,
+      response: `Hooah, service member! I'm SGT Legal Ready, your military legal assistant with comprehensive knowledge of UCMJ and military law. While I'm operating on enhanced fallback systems, I can provide detailed guidance on military legal matters. Your inquiry about "${message.substring(0, 50)}..." requires proper attention. I can assist with Article 15 proceedings, court-martial defense, security clearances, administrative separations, SHARP matters, family law, financial issues, and more. What specific military legal situation can I help you navigate?`,
       suggestions: [
-        "Contact base legal assistance office",
-        "Speak with JAG officer for complex issues",
-        "Review applicable military regulations",
-        "Document your situation thoroughly"
+        "Contact base legal assistance office within 24-48 hours",
+        "Speak with JAG officer for complex legal matters",
+        "Review applicable UCMJ articles and military regulations",
+        "Document your situation with dates, witnesses, and evidence",
+        "Understand your rights under relevant UCMJ provisions",
+        "Consider urgency level and timeline for required actions"
       ],
       urgencyLevel: "low",
       category: "general",
-      requiresHumanAttorney: false
+      requiresHumanAttorney: false,
+      ucmjReferences: ["Review applicable UCMJ articles for your situation"],
+      timeline: "Seek appropriate military legal guidance within 48 hours",
+      militaryChannels: ["Unit legal assistance office", "Base JAG services", "Trial Defense Service (if criminal matters)"],
+      emergencyContacts: []
     };
   };
 

@@ -41,15 +41,25 @@ const militaryQuickActions = [
 ];
 
 const assistantPersonality = {
-  name: "Sergeant Legal",
+  name: "SGT Legal Ready",
   rank: "SGT",
-  branch: "Legal Corps",
+  branch: "Military Legal Corps",
   avatar: "⚖️",
+  expertise: [
+    "UCMJ Articles 1-146 comprehensive knowledge",
+    "Court-martial procedures and defense strategies", 
+    "Administrative law and separation proceedings",
+    "Security clearance adjudication and appeals",
+    "SHARP/EO complaint procedures",
+    "Military family law and benefits",
+    "Inspector General processes",
+    "Emergency legal procedures"
+  ],
   traits: [
-    "Direct and professional",
-    "Military protocol awareness", 
-    "UCMJ expertise",
-    "Supportive but authoritative"
+    "Direct military bearing with professional guidance",
+    "Comprehensive UCMJ and regulatory knowledge",
+    "Timeline-focused actionable recommendations",
+    "Multi-channel military resource coordination"
   ]
 };
 
@@ -59,7 +69,7 @@ export default function LegalAssistantChatbot() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
-      content: `Hooah! I'm ${assistantPersonality.name}, your military legal assistant. I'm here to provide guidance on military legal matters, UCMJ questions, and connect you with appropriate resources. How can I assist you today, service member?`,
+      content: `Hooah! I'm ${assistantPersonality.name}, your expert military legal assistant with comprehensive knowledge of UCMJ Articles 1-146, court-martial procedures, administrative law, security clearances, SHARP/EO matters, and military family law. I provide detailed guidance with specific UCMJ references, critical timelines, and actionable military channels. Ready to serve with professional military legal expertise, service member!`,
       sender: "assistant",
       timestamp: new Date(),
       type: "text"
@@ -95,16 +105,81 @@ export default function LegalAssistantChatbot() {
       
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Add suggestions if provided
+      // Add UCMJ references if provided
+      if (data.ucmjReferences && data.ucmjReferences.length > 0) {
+        const ucmjMessage: ChatMessage = {
+          id: Date.now() + "-ucmj",
+          content: `📖 **Relevant UCMJ Articles:**\n${data.ucmjReferences.join('\n')}`,
+          sender: "assistant",
+          timestamp: new Date(),
+          type: "suggestion"
+        };
+        setMessages(prev => [...prev, ucmjMessage]);
+      }
+
+      // Add timeline information if critical
+      if (data.timeline) {
+        const timelineMessage: ChatMessage = {
+          id: Date.now() + "-timeline",
+          content: `⏰ **Critical Timeline:** ${data.timeline}`,
+          sender: "assistant",
+          timestamp: new Date(),
+          type: data.urgencyLevel === "high" ? "emergency" : "suggestion"
+        };
+        setMessages(prev => [...prev, timelineMessage]);
+      }
+
+      // Add military channels
+      if (data.militaryChannels && data.militaryChannels.length > 0) {
+        const channelsMessage: ChatMessage = {
+          id: Date.now() + "-channels",
+          content: `🏛️ **Military Channels:**\n${data.militaryChannels.map((channel, i) => `${i + 1}. ${channel}`).join('\n')}`,
+          sender: "assistant",
+          timestamp: new Date(),
+          type: "suggestion"
+        };
+        setMessages(prev => [...prev, channelsMessage]);
+      }
+
+      // Add emergency contacts if provided
+      if (data.emergencyContacts && data.emergencyContacts.length > 0) {
+        const emergencyMessage: ChatMessage = {
+          id: Date.now() + "-emergency",
+          content: `🚨 **Emergency Contacts:**\n${data.emergencyContacts.map((contact, i) => `${i + 1}. ${contact}`).join('\n')}`,
+          sender: "assistant",
+          timestamp: new Date(),
+          type: "emergency"
+        };
+        setMessages(prev => [...prev, emergencyMessage]);
+      }
+      
+      // Add suggestions as actionable steps
       if (data.suggestions && data.suggestions.length > 0) {
         const suggestionMessage: ChatMessage = {
           id: Date.now() + "-suggestions",
-          content: data.suggestions.join(" | "),
+          content: `📋 **Recommended Actions:**\n${data.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}`,
           sender: "assistant",
           timestamp: new Date(),
           type: "suggestion"
         };
         setMessages(prev => [...prev, suggestionMessage]);
+      }
+
+      // Show urgent notifications
+      if (data.urgencyLevel === "high") {
+        toast({
+          title: "High Priority Legal Matter",
+          description: data.timeline || "This situation requires immediate attention. Contact military legal services immediately.",
+          variant: "destructive",
+        });
+      }
+
+      if (data.requiresHumanAttorney) {
+        toast({
+          title: "Attorney Consultation Required",
+          description: "This situation requires immediate consultation with a qualified military attorney.",
+          variant: "destructive",
+        });
       }
       
       setIsTyping(false);
@@ -146,10 +221,14 @@ export default function LegalAssistantChatbot() {
 
   const handleQuickAction = (action: string) => {
     const quickMessages: { [key: string]: string } = {
-      "Article 15 guidance": "I need guidance about Article 15 proceedings. What are my rights and options?",
-      "Security clearance help": "I'm having issues with my security clearance. Can you help me understand the process?",
+      "Article 15 (NJP) guidance": "I need guidance about Article 15 proceedings. What are my rights and options?",
+      "Security clearance issues": "I'm having issues with my security clearance. Can you help me understand the process?",
       "Court-martial defense": "I need information about court-martial proceedings and my legal rights.",
-      "Emergency consultation": "This is an urgent legal matter. I need immediate guidance on my situation."
+      "Administrative separation": "I'm facing administrative separation. What are my rights and options?",
+      "SHARP/EO complaint": "I need to report sexual harassment or discrimination. What are my options?",
+      "Inspector General": "I want to report fraud, waste, or abuse. How do I file an IG complaint?",
+      "Family law matters": "I need help with military family law issues including divorce or custody.",
+      "Emergency legal help": "This is an urgent legal matter. I need immediate guidance on my situation."
     };
     
     const message = quickMessages[action] || action;

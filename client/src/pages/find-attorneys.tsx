@@ -66,21 +66,17 @@ export default function FindAttorneys() {
   const [emergencyOnly, setEmergencyOnly] = useState(false);
   const [sortBy, setSortBy] = useState("rating");
 
-  const { data: attorneys = [], isLoading, error } = useQuery({
+  const { data: attorneys = [], isLoading, error } = useQuery<Attorney[]>({
     queryKey: ["/api/attorneys", {
       search: searchTerm || undefined,
       state: selectedState !== "All States" ? selectedState : undefined,
-      militaryBranch: selectedBranch !== "All Branches" ? selectedBranch : undefined,
-      attorneyType: selectedType !== "All Types" ? selectedType : undefined,
-      specialty: selectedSpecialty !== "All Specialties" ? selectedSpecialty : undefined,
-      emergencyOnly: emergencyOnly,
-      sortBy: sortBy
+      emergencyOnly: emergencyOnly
     }],
     enabled: true
   });
 
-  const { data: emergencyAttorneys = [] } = useQuery({
-    queryKey: ["/api/attorneys/search/emergency"],
+  const { data: emergencyAttorneys = [] } = useQuery<Attorney[]>({
+    queryKey: ["/api/attorneys", { emergencyOnly: true }],
     enabled: true
   });
 

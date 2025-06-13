@@ -366,13 +366,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const conditions = [eq(attorneys.isActive, true)];
       
       if (search) {
-        const searchConditions = [];
-        searchConditions.push(ilike(attorneys.firstName, `%${search}%`));
-        searchConditions.push(ilike(attorneys.lastName, `%${search}%`));
-        if (attorneys.firmName) {
-          searchConditions.push(ilike(attorneys.firmName, `%${search}%`));
-        }
-        conditions.push(or(...searchConditions));
+        conditions.push(
+          or(
+            ilike(attorneys.firstName, `%${search}%`),
+            ilike(attorneys.lastName, `%${search}%`)
+          )
+        );
       }
       
       if (state && state !== "All States") {

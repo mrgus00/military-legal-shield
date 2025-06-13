@@ -81,8 +81,8 @@ function getStateBenefits(state: string): any[] {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Public access - no authentication
   
-  // Health check endpoint
-  app.get('/health', (req, res) => {
+  // Health check endpoint - add explicit API prefix
+  app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'MilitaryLegalShield' });
   });
   

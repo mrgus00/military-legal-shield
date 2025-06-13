@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "wouter";
-import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart } from "lucide-react";
+import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart, Globe, BookOpen, Gavel, MapPin, Search, HelpCircle, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/page-layout";
 import { apiRequest } from "@/lib/queryClient";

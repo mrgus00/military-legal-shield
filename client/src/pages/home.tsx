@@ -10,6 +10,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useBranch } from "@/contexts/BranchContext";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
 import InteractiveHeroSection from "@/components/interactive-hero-section";
+import WorldClock from "@/components/world-clock";
+import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -56,6 +58,17 @@ export default function Home() {
     <PageLayout>
         {/* Hero Section */}
         <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden" aria-labelledby="hero-heading">
+          {/* Justice Background Image */}
+          <div className="absolute inset-0 -z-20">
+            <img 
+              src={courtImage} 
+              alt="Supreme Court Building" 
+              className="w-full h-full object-cover opacity-5"
+              style={{ filter: 'blur(0.5px)' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/60 to-white/40"></div>
+          </div>
+
           {/* Interactive Hero Background */}
           <InteractiveHeroSection />
           
@@ -148,6 +161,11 @@ export default function Home() {
                   No spam. Unsubscribe anytime. Secure and confidential.
                 </p>
               </form>
+            </div>
+
+            {/* World Clock */}
+            <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+              <WorldClock />
             </div>
 
             {/* Quick Access Buttons */}

@@ -11,6 +11,7 @@ import { useBranch } from "@/contexts/BranchContext";
 import MilitaryBranchesBanner from "@/components/military-branches-banner";
 import InteractiveHeroSection from "@/components/interactive-hero-section";
 import WorldClock from "@/components/world-clock";
+import FAQAccordion from "@/components/faq-accordion";
 import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {
@@ -416,34 +417,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-16 bg-white">
+      {/* FAQ Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-gray-700">Get answers to common questions about our legal services</p>
+          </div>
+          <FAQAccordion />
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-16 bg-slate-900 text-white">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-navy-900 mb-4">Ready to Get Legal Support?</h2>
-          <p className="text-xl text-gray-700 mb-8">
-            Join thousands of service members who trust Mil-Legal for their legal needs
+          <h2 className="text-3xl font-bold mb-4">Don't Wait—Your Legal Issue Can't Wait.</h2>
+          <p className="text-xl mb-8 text-slate-300">
+            All services are confidential. Available worldwide to active duty, veterans, and families.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link href="/urgent-match">
-              <Button size="lg" className="emergency-gradient hover:shadow-xl px-8 py-4 text-lg font-semibold rounded-xl transform transition hover:scale-105 animate-military-pulse">
-                <AlertTriangle className="w-5 h-5 mr-2" />
-                Get Emergency Help Now
-              </Button>
-            </Link>
-            <Link href="/loading-demo">
-              <Button size="lg" variant="outline" className="glass-dark border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg border-2 rounded-xl transform transition hover:scale-105">
-                <Shield className="w-5 h-5 mr-2" />
-                View Military Loading System
-              </Button>
-            </Link>
-            <Link href="/attorneys">
-              <Button variant="outline" size="lg" className="tactical-gradient border-0 text-white hover:shadow-lg px-8 py-4 text-lg rounded-xl transform transition hover:scale-105">
-                <Users className="w-5 h-5 mr-2" />
-                Browse Attorneys
-              </Button>
-            </Link>
-          </div>
+          <Link href="/urgent-match">
+            <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-4 text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl">
+              <Scale className="w-6 h-6 mr-3" />
+              Connect with a Lawyer Now
+            </Button>
+          </Link>
+          
+          <p className="text-sm text-slate-400 mt-6">
+            Available 24/7 for emergency legal situations
+          </p>
         </div>
       </section>
 

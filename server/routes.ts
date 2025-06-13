@@ -156,7 +156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Legal Assistant Chatbot API
+  // Legal Assistant Chatbot API - Multiple endpoints for fallback
   app.post("/api/legal-assistant/chat", async (req, res) => {
     try {
       const { message, context, userId, conversationHistory } = req.body;
@@ -170,9 +170,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const response = await getLegalAssistantResponse(assistantRequest);
       res.json(response);
-    } catch (error) {
-      console.error("Error with legal assistant:", error);
-      res.status(500).json({ message: "Failed to get legal assistant response" });
+    } catch (error: any) {
+      console.error("Legal assistant chat error:", error);
+      res.status(500).json({ 
+        message: "Legal assistant temporarily unavailable",
+        error: error.message 
+      });
+    }
+  });
+
+  // Fallback endpoint for legal assistant
+  app.post("/api/legal-assistant", async (req, res) => {
+    try {
+      const { message, context, conversationHistory } = req.body;
+      
+      const assistantRequest: LegalAssistantRequest = {
+        message,
+        context: context || "military_legal",
+        userId: "guest",
+        conversationHistory: conversationHistory || []
+      };
+      
+      const response = await getLegalAssistantResponse(assistantRequest);
+      res.json(response);
+    } catch (error: any) {
+      console.error("Legal assistant error:", error);
+      res.status(500).json({ 
+        message: "Legal assistant temporarily unavailable",
+        error: error.message 
+      });
     }
   });
 

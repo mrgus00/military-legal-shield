@@ -232,12 +232,28 @@ export default function WorldwideLegalNavigator() {
 
   const getCurrentTime = (timeZone: string) => {
     const now = new Date();
-    return now.toLocaleTimeString('en-US', { 
-      timeZone: timeZone.split(' ')[0], 
-      hour12: true,
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      // Extract timezone from format like "CET (UTC+1)" or "JST (UTC+9)"
+      const tzMap: { [key: string]: string } = {
+        'CET': 'Europe/Berlin',
+        'JST': 'Asia/Tokyo',
+        'KST': 'Asia/Seoul',
+        'EST': 'America/New_York',
+        'PST': 'America/Los_Angeles'
+      };
+      
+      const tz = timeZone.split(' ')[0];
+      const mappedTz = tzMap[tz] || 'UTC';
+      
+      return now.toLocaleTimeString('en-US', { 
+        timeZone: mappedTz, 
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return now.toLocaleTimeString('en-US', { hour12: true });
+    }
   };
 
   return (

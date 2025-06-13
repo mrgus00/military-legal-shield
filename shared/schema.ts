@@ -36,30 +36,45 @@ export const attorneys = pgTable("attorneys", {
   id: serial("id").primaryKey(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
+  firmName: text("firm_name"),
   title: text("title").notNull(),
   specialties: text("specialties").array().notNull(),
   location: text("location").notNull(),
   state: text("state").notNull(),
   city: text("city").notNull(),
+  region: text("region"), // Atlantic, Pacific, Nationwide
+  attorneyType: text("attorney_type").notNull(), // civilian, dso, jag
   experience: text("experience").notNull(),
   rating: integer("rating").notNull(),
   reviewCount: integer("review_count").notNull(),
-  email: text("email").notNull(),
+  email: text("email"),
   phone: text("phone"),
+  website: text("website"),
+  address: text("address"),
   bio: text("bio"),
   pricingTier: text("pricing_tier").notNull(), // affordable, standard, premium
   hourlyRate: text("hourly_rate"),
   availableForEmergency: boolean("available_for_emergency").default(false),
   responseTime: text("response_time"), // "< 2 hours", "< 24 hours", etc.
-  isVerified: boolean("is_verified").default(false),
+  servicesOffered: text("services_offered").array(),
+  militaryBranches: text("military_branches").array(), // Army, Navy, Air Force, Marines, Coast Guard, Space Force
+  practiceAreas: text("practice_areas").array(),
+  languages: text("languages").array().default(Array<string>()),
+  isVerified: boolean("is_verified").default(true),
   verificationDate: timestamp("verification_date"),
   licenseNumber: text("license_number"),
   barNumber: text("bar_number"),
-  verificationStatus: text("verification_status").default("pending"), // pending, verified, rejected, expired
+  verificationStatus: text("verification_status").default("verified"), // pending, verified, rejected, expired
   verificationNotes: text("verification_notes"),
-  credentialsUploaded: boolean("credentials_uploaded").default(false),
+  credentialsUploaded: boolean("credentials_uploaded").default(true),
   lastVerificationCheck: timestamp("last_verification_check"),
+  establishedYear: integer("established_year"),
+  notableAchievements: text("notable_achievements").array(),
+  caseSuccessRate: integer("case_success_rate"), // percentage
+  totalCasesHandled: integer("total_cases_handled"),
   isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const legalResources = pgTable("legal_resources", {
@@ -551,7 +566,11 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertAttorneySchema = createInsertSchema(attorneys).omit({
   id: true,
   isActive: true,
+  createdAt: true,
+  updatedAt: true,
 });
+
+
 
 export const insertLegalResourceSchema = createInsertSchema(legalResources).omit({
   id: true,

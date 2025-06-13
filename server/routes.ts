@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { db } from "./db";
+import { db, pool } from "./db";
 import { sql } from "drizzle-orm";
 import { insertConsultationSchema, insertEmergencyConsultationSchema, attorneys } from "@shared/schema";
 import { eq, ilike, and, or } from "drizzle-orm";
@@ -382,8 +382,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conditions.push(eq(attorneys.availableForEmergency, true));
       }
 
-      const results = await db.select().from(attorneys).where(and(...conditions));
-      res.json(results);
+      // Use direct SQL query to fetch attorneys
+      let query = `
+        SELECT * FROM attorneys 
+        WHERE is_active = true
+      `;
+      const params: any[] = [];
+      let paramCount = 1;
+
+      if (search) {
+        query += ` AND (first_name ILIKE $${paramCount} OR last_name ILIKE $${paramCount})`;
+        params.push(`%${search}%`);
+        paramCount++;
+      }
+      
+      if (state && state !== "All States") {
+        query += ` AND state = $${paramCount}`;
+        params.push(state);
+        paramCount++;
+      }
+      
+      if (emergencyOnly === 'true') {
+        query += ` AND available_for_emergency = true`;
+      }
+
+      query += ` ORDER BY rating DESC, review_count DESC`;
+
+      const result = await pool.query(query, params);
+      res.json(result.rows);
     } catch (error) {
       console.error("Error fetching attorneys:", error);
       res.status(500).json({ message: "Failed to fetch attorneys" });

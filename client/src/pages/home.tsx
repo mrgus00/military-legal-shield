@@ -462,14 +462,14 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-10 h-10 text-green-600" />
+                <Shield className="w-10 h-10 text-green-600" />
               </div>
               <h4 className="text-xl font-bold text-gray-900 mb-3">100% Confidential</h4>
               <p className="text-gray-600">Attorney-client privilege protects all communications. Your privacy is guaranteed by law.</p>
             </div>
             <div className="text-center p-6">
               <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-10 h-10 text-blue-600" />
+                <CheckCircle className="w-10 h-10 text-blue-600" />
               </div>
               <h4 className="text-xl font-bold text-gray-900 mb-3">No Hidden Fees</h4>
               <p className="text-gray-600">Transparent pricing with no surprise charges. What you see is what you pay.</p>

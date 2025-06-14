@@ -155,7 +155,7 @@ export default function HeaderLegalShield() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center space-x-2">
                       <User className="w-4 h-4" />
-                      <span className="hidden sm:inline">{user?.firstName || "Account"}</span>
+                      <span className="hidden sm:inline">Account</span>
                       <ChevronDown className="w-3 h-3" />
                     </Button>
                   </DropdownMenuTrigger>

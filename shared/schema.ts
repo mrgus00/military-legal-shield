@@ -595,9 +595,7 @@ export const insertEmergencyConsultationSchema = createInsertSchema(emergencyCon
   updatedAt: true,
 });
 
-// Type exports for emergency consultations
-export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
-export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
+// Type exports for emergency consultations (moved to end of file to avoid duplicates)
 
 export const insertLegalCaseSchema = createInsertSchema(legalCases).omit({
   id: true,
@@ -778,8 +776,7 @@ export type EducationModule = typeof educationModules.$inferSelect;
 export type InsertConsultation = z.infer<typeof insertConsultationSchema>;
 export type Consultation = typeof consultations.$inferSelect;
 
-export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
-export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
+
 
 export type InsertBenefitsEligibility = z.infer<typeof insertBenefitsEligibilitySchema>;
 export type BenefitsEligibility = typeof benefitsEligibility.$inferSelect;

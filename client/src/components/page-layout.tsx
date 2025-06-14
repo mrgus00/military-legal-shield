@@ -25,7 +25,7 @@ export default function PageLayout({ children, className = "", showFooter = true
         />
         
         <div className="relative z-10 w-full max-w-full overflow-hidden">
-          <EnhancedNavbar />
+          <HeaderLegalShield />
           
           <main id="main-content" role="main" className="hw-accelerated w-full max-w-full overflow-hidden">
             {children}

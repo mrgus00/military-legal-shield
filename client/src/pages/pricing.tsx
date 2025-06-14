@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Shield, Users, FileText, MessageSquare, Calendar, Clock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Pricing() {
   const { user, isAuthenticated } = useAuth();
+  const { isPremium, isLoading: subscriptionLoading } = useSubscription();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-
-  const { data: subscriptionStatus } = useQuery({
-    queryKey: ["/api/subscription-status"],
-    enabled: isAuthenticated,
-    retry: false,
-  });
 
   const handleUpgrade = async () => {
     if (!isAuthenticated) {
@@ -46,8 +41,6 @@ export default function Pricing() {
       setIsLoading(false);
     }
   };
-
-  const isPremium = subscriptionStatus?.isPremium;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">

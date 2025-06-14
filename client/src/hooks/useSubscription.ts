@@ -11,10 +11,13 @@ export function useSubscription() {
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
+  const isPremium = subscriptionData?.subscription_status === 'premium' || subscriptionData?.subscription_status === 'active';
+
   return {
-    isPremium: subscriptionData?.isPremium || false,
-    subscriptionStatus: subscriptionData?.status || 'free',
+    isPremium,
+    subscriptionStatus: subscriptionData?.subscription_status || 'free',
     isLoading,
-    canAccessPremiumFeatures: subscriptionData?.isPremium || false,
+    canAccessPremiumFeatures: isPremium,
+    subscriptionData,
   };
 }

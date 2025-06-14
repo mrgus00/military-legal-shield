@@ -26,10 +26,14 @@ import {
   Loader2,
   AlertTriangle,
   User,
-  Users
+  Users,
+  Crown
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useAuth } from "@/hooks/useAuth";
+import PremiumUpgradePrompt from "@/components/premium-upgrade-prompt";
 
 interface TimeSlot {
   id: string;
@@ -72,6 +76,8 @@ interface BookingRequest {
 }
 
 export default function ConsultationBooking() {
+  const { isAuthenticated } = useAuth();
+  const { isPremium, canAccessPremiumFeatures } = useSubscription();
   const [attorneys, setAttorneys] = useState<AttorneyAvailability[]>([]);
   const [selectedAttorney, setSelectedAttorney] = useState<AttorneyAvailability | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -96,6 +102,24 @@ export default function ConsultationBooking() {
     preferredContact: "email"
   });
   const { toast } = useToast();
+
+  // Show upgrade prompt for non-premium users
+  if (isAuthenticated && !canAccessPremiumFeatures) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+        <Header />
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto">
+            <PremiumUpgradePrompt 
+              feature="Attorney Consultations"
+              description="Direct consultations with verified military defense attorneys are available with Premium membership. Upgrade now to book your consultation and get personalized legal guidance."
+            />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   // Load attorneys with real-time availability
   useEffect(() => {

@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
@@ -8,6 +9,7 @@ import { insertConsultationSchema, insertEmergencyConsultationSchema, attorneys 
 import { eq, ilike, and, or } from "drizzle-orm";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -251,9 +253,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Book consultation endpoint
-  app.post("/api/consultations/book", async (req, res) => {
+  // PREMIUM FEATURE: Book consultation endpoint
+  app.post("/api/consultations/book", isAuthenticated, async (req: any, res) => {
     try {
+      // Check if user has premium access
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user || user.subscriptionTier === 'free') {
+        return res.status(403).json({ 
+          message: "This is a premium feature. Please upgrade your subscription to book consultations.",
+          requiresUpgrade: true
+        });
+      }
+
       const { booking } = req.body;
       
       if (!booking || !booking.attorneyId || !booking.clientName || !booking.clientEmail) {
@@ -275,6 +288,156 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error booking consultation:", error);
       res.status(500).json({ message: "Failed to book consultation" });
+    }
+  });
+
+  // Stripe subscription management endpoints
+  
+  // Create subscription checkout session
+  app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user || !user.email) {
+        return res.status(400).json({ message: "User email required for subscription" });
+      }
+
+      // Create or retrieve Stripe customer
+      let customerId = user.stripeCustomerId;
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: user.email,
+          metadata: { userId: userId }
+        });
+        customerId = customer.id;
+        await storage.updateUserStripeInfo(userId, customerId, null);
+      }
+
+      // Create checkout session for premium subscription
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'MilitaryLegalShield Premium',
+                description: 'Access to attorney consultations, document review, case tracking, and priority support'
+              },
+              recurring: {
+                interval: 'month'
+              },
+              unit_amount: 2999 // $29.99/month
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${req.protocol}://${req.hostname}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.protocol}://${req.hostname}/pricing`,
+        metadata: {
+          userId: userId
+        }
+      });
+
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      res.status(500).json({ message: "Failed to create subscription" });
+    }
+  });
+
+  // Handle Stripe webhooks
+  app.post("/api/stripe-webhook", express.raw({type: 'application/json'}), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET || 'dummy');
+    } catch (err) {
+      console.error('Webhook signature verification failed:', err);
+      return res.status(400).send(`Webhook Error: ${err}`);
+    }
+
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed':
+          const session = event.data.object;
+          const userId = session.metadata?.userId;
+          if (userId && session.subscription) {
+            await storage.updateUserSubscription(userId, 'premium', 'active', session.subscription as string);
+          }
+          break;
+
+        case 'invoice.payment_succeeded':
+          const invoice = event.data.object;
+          if (invoice.subscription && invoice.customer) {
+            const invoiceCustomer = await stripe.customers.retrieve(invoice.customer as string);
+            const invoiceUserId = invoiceCustomer.metadata?.userId;
+            if (invoiceUserId) {
+              await storage.updateUserSubscription(invoiceUserId, 'premium', 'active', invoice.subscription as string);
+            }
+          }
+          break;
+
+        case 'customer.subscription.deleted':
+          const subscription = event.data.object;
+          const subscriptionCustomer = await stripe.customers.retrieve(subscription.customer as string);
+          const subscriptionUserId = subscriptionCustomer.metadata?.userId;
+          if (subscriptionUserId) {
+            await storage.updateUserSubscription(subscriptionUserId, 'free', 'cancelled', null);
+          }
+          break;
+      }
+
+      res.json({received: true});
+    } catch (error) {
+      console.error('Webhook processing error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  // Get user subscription status
+  app.get("/api/subscription-status", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({
+        subscriptionTier: user.subscriptionTier,
+        subscriptionStatus: user.subscriptionStatus,
+        isPremium: user.subscriptionTier === 'premium' && user.subscriptionStatus === 'active'
+      });
+    } catch (error) {
+      console.error("Error fetching subscription status:", error);
+      res.status(500).json({ message: "Failed to fetch subscription status" });
+    }
+  });
+
+  // Cancel subscription
+  app.post("/api/cancel-subscription", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user || !user.stripeSubscriptionId) {
+        return res.status(404).json({ message: "No active subscription found" });
+      }
+
+      await stripe.subscriptions.update(user.stripeSubscriptionId, {
+        cancel_at_period_end: true
+      });
+
+      res.json({ message: "Subscription will be cancelled at period end" });
+    } catch (error) {
+      console.error("Error cancelling subscription:", error);
+      res.status(500).json({ message: "Failed to cancel subscription" });
     }
   });
 

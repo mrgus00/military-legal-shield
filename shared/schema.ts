@@ -26,6 +26,8 @@ export const users = pgTable("users", {
   subscriptionStatus: text("subscription_status").default("active"), // active, cancelled, expired
   subscriptionStartDate: timestamp("subscription_start_date"),
   subscriptionEndDate: timestamp("subscription_end_date"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
   emergencyCredits: integer("emergency_credits").default(0), // For emergency response usage
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),

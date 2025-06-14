@@ -1,0 +1,66 @@
+🎯 Project Overview
+MilitaryLegalShield.com is a freemium platform designed to provide legal support for service members. The website must clearly differentiate between free and premium content, maintain a seamless user experience, and ensure secure, reliable Stripe payment integration across all premium features.
+________________________________________
+✅ Core Objectives
+1.	Maintain consistent freemium standards across all content and features.
+2.	Enable seamless Stripe integration for all premium interactions.
+3.	Provide a clear upgrade path from free to premium services.
+4.	Ensure full functionality across mobile and desktop.
+5.	Prioritize speed, clarity, and trust.
+________________________________________
+🗂️ Freemium Content Structure
+✔ Free Features (Always Accessible)
+•	General legal FAQ
+•	Access to blog or resource center
+•	Introductory legal guidance articles
+•	Newsletter sign-up
+•	Basic contact form
+🔐 Premium Features (Stripe Required)
+•	1-on-1 Legal Consultations
+•	Document Review Services (e.g., POAs, legal letters)
+•	Access to a database of verified attorneys
+•	Case tracking dashboard
+•	Priority support or hotline access
+🔁 Dev Task: Ensure all premium pages prompt account upgrade or payment flow if not subscribed.
+________________________________________
+💳 Stripe Integration Checklist
+•	Stripe account connected with correct API keys (test & live modes)
+•	Payment flow tested: sign-up → plan selection → payment → access granted
+•	Monthly/annual subscription plans clearly labeled and integrated
+•	Webhooks set up to manage:
+o	Payment success/failure
+o	Subscription status changes (cancelled, paused, renewed)
+•	Secure checkout using HTTPS and Stripe best practices
+•	Stripe customer portal access (if applicable)
+•	Receipts/invoices emailed or downloadable
+________________________________________
+📌 User Interface/UX Requirements
+•	Clear visual distinction between free and premium content
+•	CTA buttons that guide users toward signup or payment when trying to access premium features
+•	Locked content visuals (blurred or icon overlays) to tease premium sections
+•	Responsive and mobile-friendly layout for all pages
+•	Informational tooltip or modal: “This is a premium feature. Upgrade to access.”
+________________________________________
+🛡️ Security & Access Control
+•	Role-based access: Free User, Premium Subscriber, Admin
+•	Backend logic that prevents direct access to premium content without verification
+•	Secure storage of user data and billing details via Stripe (never stored on-site)
+•	Terms of Use and Privacy Policy clearly displayed
+________________________________________
+🧪 Testing Requirements
+•	End-to-end flow from free access to premium upgrade
+•	Stripe test mode scenarios: successful, failed, refunded
+•	Mobile browser performance
+•	Page speed optimization (under 3 seconds load time)
+•	User session management (login persistence, logout flows)
+________________________________________
+📥 Admin Dashboard Capabilities
+•	View active/inactive users
+•	Track Stripe payments and subscriptions
+•	Manually upgrade/downgrade user roles
+•	Flag misuse or fraud attempts
+•	Export subscriber reports
+________________________________________
+📍 Developer Notes
+Please comment the code clearly around Stripe logic and freemium access points. Future features may include multi-tier subscriptions, so modular and scalable architecture is preferred.
+

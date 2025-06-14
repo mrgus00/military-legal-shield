@@ -929,6 +929,40 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
+  // Stripe subscription management methods
+  async updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string | null): Promise<User> {
+    const result = await this.db
+      .update(users)
+      .set({
+        stripeCustomerId: customerId,
+        stripeSubscriptionId: subscriptionId,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  async updateUserSubscription(userId: string, tier: string, status: string, subscriptionId: string | null): Promise<User> {
+    const updates: any = {
+      subscriptionTier: tier,
+      subscriptionStatus: status,
+      stripeSubscriptionId: subscriptionId,
+      updatedAt: new Date(),
+    };
+
+    if (tier === 'premium' && status === 'active') {
+      updates.subscriptionStartDate = new Date();
+    }
+
+    const result = await this.db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
   // Attorney methods
   async getAttorneys(): Promise<Attorney[]> {
     return await this.db.select().from(attorneys).where(eq(attorneys.isActive, true));

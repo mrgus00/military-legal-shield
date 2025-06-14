@@ -48,6 +48,7 @@ import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
 import EmergencyDefense from "@/pages/emergency-defense";
+import MobileLanding from "@/pages/mobile-landing";
 import LegalResources from "@/pages/legal-resources";
 import MilitaryJustice from "@/pages/military-justice";
 import InjuryClaims from "@/pages/injury-claims";
@@ -103,6 +104,7 @@ function Router() {
       <Route path="/document-prep" component={DocumentPrep} />
       <Route path="/legal-resources" component={LegalResources} />
       <Route path="/legal-challenges" component={LegalChallenges} />
+      <Route path="/mobile" component={MobileLanding} />
       <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route component={NotFound} />
     </Switch>

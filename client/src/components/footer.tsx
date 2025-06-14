@@ -8,9 +8,9 @@ export default function Footer() {
   const supportContact = formatSupportContact();
 
   return (
-    <footer className="bg-navy-900 text-white" role="contentinfo">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+    <footer className="bg-navy-900 text-white overflow-hidden" role="contentinfo">
+      <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           
           {/* Company Info */}
           <div className="space-y-4">

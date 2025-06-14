@@ -65,13 +65,15 @@ export default function Header() {
         Skip to main content
       </a>
       
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 w-full">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 w-full overflow-hidden">
+        <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex justify-between items-center h-14 sm:h-16">
             
             {/* Logo */}
-            <div className="flex items-center">
-              <Logo width={140} height={50} />
+            <div className="flex items-center flex-shrink-0">
+              <div className="w-28 sm:w-32 lg:w-36">
+                <Logo width={140} height={50} />
+              </div>
             </div>
 
             {/* Desktop Navigation */}
@@ -298,23 +300,23 @@ export default function Header() {
             </nav>
 
             {/* Right Side - Emergency Contact, Search, User Menu, Mobile Menu */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
               
               {/* Emergency Contact - Mobile Optimized */}
-              <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="flex items-center space-x-1">
                 <a 
                   href={emergencyContact.callLink}
                   onClick={() => trackMobileInteraction('emergency_call', 'header_button')}
-                  className="flex items-center justify-center min-h-[40px] min-w-[40px] sm:min-h-[36px] sm:min-w-[36px] bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
                   aria-label="Emergency Legal Call - 24/7 Support"
                   title="Call Emergency Legal Support: 1-800-645-4357"
                 >
-                  <Phone className="w-4 h-4" />
+                  <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </a>
                 <a 
                   href={emergencyContact.emailLink}
                   onClick={() => trackMobileInteraction('emergency_email', 'header_button')}
-                  className="hidden sm:flex items-center justify-center min-h-[36px] min-w-[36px] bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="hidden sm:flex items-center justify-center w-9 h-9 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   aria-label="Emergency Legal Email"
                   title="Email Emergency Legal Support"
                 >
@@ -377,7 +379,7 @@ export default function Header() {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent side="right" className="w-[280px] sm:w-[320px] max-w-[85vw]">
                   <div className="flex flex-col space-y-4 mt-6">
                     
                     {/* Mobile Search */}

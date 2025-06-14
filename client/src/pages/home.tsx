@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <PageLayout>
         {/* Hero Section */}
-        <section className="relative pt-16 sm:pt-20 pb-12 sm:pb-16 px-3 sm:px-4 lg:px-6 overflow-hidden w-full" aria-labelledby="hero-heading">
+        <section className="relative pt-16 sm:pt-20 pb-12 sm:pb-16 px-3 sm:px-4 lg:px-6 overflow-hidden w-full max-w-full mobile-section no-scroll-x" aria-labelledby="hero-heading">
           {/* Justice Background Image */}
           <div className="absolute inset-0 -z-20">
             <img 
@@ -81,62 +81,62 @@ export default function Home() {
             <div className="absolute bottom-20 right-10 w-20 h-20 bg-red-100 rounded-full opacity-25 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
           </div>
 
-          <div className="w-full max-w-full mx-auto">
+          <div className="w-full max-w-full mx-auto mobile-form-container">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-red-800 text-xs sm:text-sm font-medium mb-4 sm:mb-6 shadow-lg animate-fade-in-up">
-              <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-pulse" />
-              Veteran-Owned & Operated
+            <div className="inline-flex items-center px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-red-800 text-xs sm:text-sm font-medium mb-4 sm:mb-6 shadow-lg animate-fade-in-up max-w-full">
+              <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-pulse flex-shrink-0" />
+              <span className="text-overflow-safe">Veteran-Owned & Operated</span>
             </div>
             
-            <h1 id="hero-heading" className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-2">
-              <span className="text-white drop-shadow-lg">Got Legal Trouble?</span>
+            <h1 id="hero-heading" className="text-xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-1 sm:px-2 text-overflow-safe">
+              <span className="text-white drop-shadow-lg block">Got Legal Trouble?</span>
               <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">Get a Military Lawyer Now.</span>
             </h1>
             
-            <div className="animate-fade-in-up px-2" style={{ animationDelay: '0.3s' }}>
-              <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+            <div className="animate-fade-in-up px-1 sm:px-2 max-w-full" style={{ animationDelay: '0.3s' }}>
+              <p className="text-sm sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md responsive-text text-overflow-safe">
                 Court-Martial? DUI? False Accusation? Legal Questions?<br className="hidden sm:block"/>
                 <span className="sm:hidden"> </span>We connect you directly to military lawyers—fast.
               </p>
               
               {/* Immediate CTA */}
-              <div className="mb-6 sm:mb-8 px-2">
+              <div className="mb-6 sm:mb-8 px-1 sm:px-2 w-full max-w-full">
                 <Link href="/urgent-match">
-                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full sm:w-auto max-w-sm sm:max-w-none mx-auto">
-                    <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3" />
-                    Connect with a Lawyer Now
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button">
+                    <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 flex-shrink-0" />
+                    <span className="text-overflow-safe">Connect with a Lawyer Now</span>
                   </Button>
                 </Link>
               </div>
             </div>
 
             {/* Trust & Credibility Section */}
-            <div className="mb-8 sm:mb-12 animate-fade-in-up px-2" style={{ animationDelay: '0.5s' }}>
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Why Trust Military Legal Shield?</h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto">
-                <div className="text-center">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                    <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+            <div className="mb-8 sm:mb-12 animate-fade-in-up px-1 sm:px-2 w-full max-w-full mobile-form-container" style={{ animationDelay: '0.5s' }}>
+              <h2 className="text-base sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center responsive-text text-overflow-safe">Why Trust Military Legal Shield?</h2>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 max-w-full mx-auto no-scroll-x">
+                <div className="text-center mobile-card">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
+                    <CheckCircle className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Veteran-Owned & Operated</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Veteran-Owned & Operated</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                    <Globe className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                <div className="text-center mobile-card">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
+                    <Globe className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Fast Legal Access Worldwide</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Fast Legal Access Worldwide</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                    <Shield className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                <div className="text-center mobile-card">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
+                    <Shield className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Confidential & Secure</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Confidential & Secure</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                    <Users className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                <div className="text-center mobile-card">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
+                    <Users className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Recommended by Service Members</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Recommended by Service Members</p>
                 </div>
               </div>
             </div>

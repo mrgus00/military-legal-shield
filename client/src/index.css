@@ -25,10 +25,17 @@ body {
 .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl {
   width: 100%;
   max-width: 100vw;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Ensure no element can exceed viewport width */
+*, *::before, *::after {
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
@@ -95,6 +102,142 @@ img {
   border-radius: 8px;
   font-size: 16px;
   line-height: 1.5;
+}
+
+/* Mobile-friendly card layouts */
+.mobile-card {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Grid system fixes for mobile */
+.grid {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Responsive grid columns */
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media (max-width: 640px) {
+  .sm\:grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:grid-cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Banner and hero section fixes */
+.hero-section {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+/* Button responsive fixes */
+.responsive-button {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .responsive-button {
+    width: auto;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Text responsive fixes */
+.responsive-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+@media (min-width: 640px) {
+  .responsive-text {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Image responsive fixes */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Prevent horizontal scroll in all scenarios */
+.no-scroll-x {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile-optimized sections */
+.mobile-section {
+  width: 100%;
+  max-width: 100vw;
+  padding: 1rem 0.75rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .mobile-section {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Fix for absolute positioned elements */
+.absolute-mobile-safe {
+  position: absolute;
+  max-width: calc(100vw - 2rem);
+  left: 1rem;
+  right: 1rem;
+  box-sizing: border-box;
+}
+
+/* Mobile-friendly forms */
+.mobile-form-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Card hover effects mobile optimization */
+@media (hover: none) and (pointer: coarse) {
+  .hover-lift:hover {
+    transform: none;
+  }
+  
+  .hover-lift:active {
+    transform: scale(0.98);
+  }
 }
 
 /* Mobile-friendly card layouts */

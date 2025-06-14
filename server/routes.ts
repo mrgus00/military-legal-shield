@@ -101,37 +101,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Attorney search endpoint - returns authentic military defense attorneys
   app.get("/api/attorneys", async (req, res) => {
     try {
+      res.setHeader('Content-Type', 'application/json');
       const { search, state, emergencyOnly } = req.query;
       
-      let query = `
-        SELECT * FROM attorneys 
-        WHERE is_active = true
-      `;
-      const params: any[] = [];
-      let paramCount = 1;
+      const attorneys = await storage.getAttorneys();
+      let filteredAttorneys = attorneys;
 
       if (search) {
-        query += ` AND (first_name ILIKE $${paramCount} OR last_name ILIKE $${paramCount})`;
-        params.push(`%${search}%`);
-        paramCount++;
+        const searchTerm = (search as string).toLowerCase();
+        filteredAttorneys = filteredAttorneys.filter(attorney => 
+          attorney.firstName.toLowerCase().includes(searchTerm) ||
+          attorney.lastName.toLowerCase().includes(searchTerm) ||
+          (attorney.firmName && attorney.firmName.toLowerCase().includes(searchTerm))
+        );
       }
       
       if (state && state !== "All States") {
-        query += ` AND state = $${paramCount}`;
-        params.push(state);
-        paramCount++;
+        filteredAttorneys = filteredAttorneys.filter(attorney => attorney.state === state);
       }
       
       if (emergencyOnly === 'true') {
-        query += ` AND available_for_emergency = true`;
+        filteredAttorneys = filteredAttorneys.filter(attorney => attorney.availableForEmergency);
       }
 
-      query += ` ORDER BY rating DESC, review_count DESC`;
+      // Sort by rating and review count
+      filteredAttorneys.sort((a, b) => {
+        if (b.rating !== a.rating) return b.rating - a.rating;
+        return b.reviewCount - a.reviewCount;
+      });
 
-      const result = await pool.query(query, params);
-      res.json(result.rows);
+      res.status(200).json(filteredAttorneys);
     } catch (error) {
       console.error("Error fetching attorneys:", error);
+      res.setHeader('Content-Type', 'application/json');
       res.status(500).json({ message: "Failed to fetch attorneys" });
     }
   });

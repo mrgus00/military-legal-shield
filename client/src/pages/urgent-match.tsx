@@ -1,210 +1,435 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import { useState, useEffect } from "react";
-import { useMood, useMoodDetection } from "@/contexts/MoodContext";
-import MoodIndicator from "@/components/mood-indicator";
-import MoodAwareCard from "@/components/mood-aware-card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Clock, Phone, Shield, MapPin, User } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import PageLayout from "@/components/page-layout";
+import { AlertTriangle, Clock, Shield, Phone, MessageSquare, CheckCircle, Zap, Scale, Users } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useMutation } from "@tanstack/react-query";
+
+interface EmergencyConsultationRequest {
+  fullName: string;
+  rank: string;
+  branch: string;
+  unit: string;
+  email: string;
+  phone: string;
+  legalIssue: string;
+  urgencyLevel: string;
+  description: string;
+  availableTimeSlots: string[];
+  preferredContactMethod: string;
+}
 
 export default function UrgentMatch() {
-  const { setMood, colors, currentMood, detectMoodFromContent } = useMood();
+  const [formData, setFormData] = useState<EmergencyConsultationRequest>({
+    fullName: "",
+    rank: "",
+    branch: "",
+    unit: "",
+    email: "",
+    phone: "",
+    legalIssue: "",
+    urgencyLevel: "",
+    description: "",
+    availableTimeSlots: [],
+    preferredContactMethod: ""
+  });
+
   const { toast } = useToast();
-  
-  // Set urgent mood when entering this page
-  useEffect(() => {
-    setMood("urgent");
-  }, [setMood]);
 
-  const [isMatching, setIsMatching] = useState(false);
-
-  const handleUrgentMatch = () => {
-    setIsMatching(true);
-    
-    // Simulate urgent matching process
-    setTimeout(() => {
-      setIsMatching(false);
+  const emergencyConsultationMutation = useMutation({
+    mutationFn: async (data: EmergencyConsultationRequest) => {
+      return await apiRequest("POST", "/api/emergency-consultation", data);
+    },
+    onSuccess: () => {
       toast({
-        title: "Attorney Match Found",
-        description: "Emergency legal counsel has been notified and will contact you within 15 minutes.",
-        variant: "default",
+        title: "Emergency Consultation Requested",
+        description: "An attorney will contact you within 30 minutes. Check your email for confirmation.",
       });
-    }, 3000);
+      // Reset form
+      setFormData({
+        fullName: "",
+        rank: "",
+        branch: "",
+        unit: "",
+        email: "",
+        phone: "",
+        legalIssue: "",
+        urgencyLevel: "",
+        description: "",
+        availableTimeSlots: [],
+        preferredContactMethod: ""
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Request Failed",
+        description: "Unable to submit emergency consultation request. Please try again or call our emergency line.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.legalIssue || !formData.urgencyLevel) {
+      toast({
+        title: "Required Fields Missing",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    emergencyConsultationMutation.mutate(formData);
   };
 
-  const urgentAttorneys = [
-    {
-      id: 1,
-      name: "Col. Sarah Mitchell (Ret.)",
-      specialty: "Court-Martial Defense",
-      location: "Available 24/7",
-      responseTime: "< 15 minutes",
-      rating: 4.9,
-      cases: 150,
-      status: "online"
-    },
-    {
-      id: 2,
-      name: "Maj. Robert Chen (Ret.)",
-      specialty: "Emergency Legal Aid",
-      location: "Available Now",
-      responseTime: "< 10 minutes",
-      rating: 4.8,
-      cases: 89,
-      status: "online"
-    }
+  const handleTimeSlotToggle = (timeSlot: string) => {
+    setFormData(prev => ({
+      ...prev,
+      availableTimeSlots: prev.availableTimeSlots.includes(timeSlot)
+        ? prev.availableTimeSlots.filter(slot => slot !== timeSlot)
+        : [...prev.availableTimeSlots, timeSlot]
+    }));
+  };
+
+  const legalIssues = [
+    "Court-Martial Defense",
+    "Article 15 (Non-Judicial Punishment)",
+    "DUI/DWI",
+    "False Accusations",
+    "Military Sexual Trauma (MST)",
+    "Discharge Upgrade",
+    "Security Clearance Issues",
+    "Family Law/Divorce",
+    "Criminal Defense",
+    "Administrative Separation",
+    "Other"
+  ];
+
+  const urgencyLevels = [
+    { value: "immediate", label: "Immediate (Within 1 hour)", color: "text-red-600" },
+    { value: "urgent", label: "Urgent (Within 24 hours)", color: "text-orange-600" },
+    { value: "priority", label: "Priority (Within 48 hours)", color: "text-yellow-600" }
+  ];
+
+  const timeSlots = [
+    "Now (Available immediately)",
+    "Morning (8 AM - 12 PM)",
+    "Afternoon (12 PM - 5 PM)",
+    "Evening (5 PM - 8 PM)",
+    "Weekend availability"
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
-      <Header />
-      
-      {/* Mood Indicator */}
-      <div className="fixed top-4 right-4 z-50">
-        <MoodIndicator />
-      </div>
-
+    <PageLayout>
       {/* Emergency Header */}
-      <div className="py-8" style={{ backgroundColor: colors.primary }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-white">
-            <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="w-12 h-12 mr-3" />
-              <h1 className="text-4xl font-bold">Emergency Legal Support</h1>
+      <section className="bg-gradient-to-r from-red-600 to-orange-600 text-white py-12 sm:py-16">
+        <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="text-center">
+            <div className="inline-flex items-center px-4 py-2 bg-red-500 rounded-full text-white text-sm font-medium mb-4 animate-pulse">
+              <AlertTriangle className="w-4 h-4 mr-2" />
+              Emergency Legal Support
             </div>
-            <p className="text-xl opacity-90">
-              Immediate connection to experienced military legal counsel
+            
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+              Immediate Legal Consultation
+            </h1>
+            
+            <p className="text-lg sm:text-xl text-red-100 mb-6 max-w-3xl mx-auto">
+              Get connected with a military attorney within 30 minutes. Available 24/7 for urgent legal matters.
             </p>
-            <div className="flex items-center justify-center mt-4">
-              <Badge className="bg-white text-red-600 px-4 py-2">
-                <Clock className="w-4 h-4 mr-2" />
-                24/7 Emergency Response
-              </Badge>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+              <div className="bg-red-500/20 rounded-lg p-3 sm:p-4">
+                <Clock className="w-6 h-6 mx-auto mb-2" />
+                <p className="text-sm font-semibold">Response in 30 min</p>
+              </div>
+              <div className="bg-red-500/20 rounded-lg p-3 sm:p-4">
+                <Shield className="w-6 h-6 mx-auto mb-2" />
+                <p className="text-sm font-semibold">Confidential & Secure</p>
+              </div>
+              <div className="bg-red-500/20 rounded-lg p-3 sm:p-4">
+                <Users className="w-6 h-6 mx-auto mb-2" />
+                <p className="text-sm font-semibold">Military Specialists</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Emergency Action Button */}
-        <div className="mb-12 text-center">
-          <MoodAwareCard priority="critical" className="max-w-2xl mx-auto">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4">Need Immediate Legal Help?</h3>
-              <p className="text-lg mb-6">
-                Connect with emergency legal counsel within minutes. Available 24/7 for urgent military legal matters.
-              </p>
-              <Button 
-                size="lg" 
-                onClick={handleUrgentMatch}
-                disabled={isMatching}
-                className="w-full max-w-md text-lg py-6"
-                style={{ backgroundColor: colors.primary }}
-              >
-                {isMatching ? (
-                  <>
-                    <div className="animate-spin w-5 h-5 mr-3 border-2 border-white border-t-transparent rounded-full" />
-                    Finding Attorney...
-                  </>
-                ) : (
-                  <>
-                    <Phone className="w-5 h-5 mr-3" />
-                    Get Emergency Legal Help Now
-                  </>
-                )}
-              </Button>
-            </div>
-          </MoodAwareCard>
-        </div>
-
-        {/* Available Emergency Attorneys */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
-            Available Emergency Attorneys
-          </h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            {urgentAttorneys.map((attorney) => (
-              <MoodAwareCard key={attorney.id} priority="high">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-gray-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <h4 className="font-semibold text-lg">{attorney.name}</h4>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+      {/* Emergency Consultation Form */}
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-red-200 shadow-xl">
+              <CardHeader className="bg-red-50 border-b border-red-200">
+                <CardTitle className="text-xl sm:text-2xl text-red-800 flex items-center">
+                  <Zap className="w-6 h-6 mr-2" />
+                  Emergency Consultation Request
+                </CardTitle>
+                <CardDescription className="text-red-600">
+                  Complete this form to connect with an available military attorney immediately.
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="p-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Personal Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="fullName" className="text-sm font-medium">
+                        Full Name *
+                      </Label>
+                      <Input
+                        id="fullName"
+                        type="text"
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        placeholder="Enter your full name"
+                        className="mt-1"
+                        required
+                      />
                     </div>
-                    <p className="text-sm opacity-75 mb-2">{attorney.specialty}</p>
-                    <div className="flex items-center space-x-4 text-sm opacity-75 mb-4">
-                      <div className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        {attorney.location}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {attorney.responseTime}
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs">
-                          ⭐ {attorney.rating}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {attorney.cases} cases
-                        </Badge>
-                      </div>
-                      <Button 
-                        size="sm"
-                        style={{ 
-                          backgroundColor: colors.accent,
-                          color: "white"
-                        }}
-                      >
-                        Contact Now
-                      </Button>
+                    
+                    <div>
+                      <Label htmlFor="rank" className="text-sm font-medium">
+                        Rank
+                      </Label>
+                      <Input
+                        id="rank"
+                        type="text"
+                        value={formData.rank}
+                        onChange={(e) => setFormData({ ...formData, rank: e.target.value })}
+                        placeholder="e.g., E-5, O-3, W-2"
+                        className="mt-1"
+                      />
                     </div>
                   </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="branch" className="text-sm font-medium">
+                        Military Branch
+                      </Label>
+                      <Select value={formData.branch} onValueChange={(value) => setFormData({ ...formData, branch: value })}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select your branch" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="army">U.S. Army</SelectItem>
+                          <SelectItem value="navy">U.S. Navy</SelectItem>
+                          <SelectItem value="marines">U.S. Marine Corps</SelectItem>
+                          <SelectItem value="airforce">U.S. Air Force</SelectItem>
+                          <SelectItem value="spaceforce">U.S. Space Force</SelectItem>
+                          <SelectItem value="coastguard">U.S. Coast Guard</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="unit" className="text-sm font-medium">
+                        Unit/Installation
+                      </Label>
+                      <Input
+                        id="unit"
+                        type="text"
+                        value={formData.unit}
+                        onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                        placeholder="e.g., Fort Bragg, USS Enterprise"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="email" className="text-sm font-medium">
+                        Email Address *
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="your.email@example.com"
+                        className="mt-1"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="phone" className="text-sm font-medium">
+                        Phone Number *
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="(555) 123-4567"
+                        className="mt-1"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Legal Issue Details */}
+                  <div>
+                    <Label htmlFor="legalIssue" className="text-sm font-medium">
+                      Type of Legal Issue *
+                    </Label>
+                    <Select value={formData.legalIssue} onValueChange={(value) => setFormData({ ...formData, legalIssue: value })}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Select the type of legal issue" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {legalIssues.map((issue) => (
+                          <SelectItem key={issue} value={issue}>{issue}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="urgencyLevel" className="text-sm font-medium">
+                      Urgency Level *
+                    </Label>
+                    <Select value={formData.urgencyLevel} onValueChange={(value) => setFormData({ ...formData, urgencyLevel: value })}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="How urgent is your situation?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {urgencyLevels.map((level) => (
+                          <SelectItem key={level.value} value={level.value}>
+                            <span className={level.color}>{level.label}</span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="description" className="text-sm font-medium">
+                      Brief Description of Your Situation
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Provide a brief overview of your legal situation (confidential)"
+                      className="mt-1 h-24"
+                    />
+                  </div>
+
+                  {/* Availability */}
+                  <div>
+                    <Label className="text-sm font-medium mb-3 block">
+                      When are you available for consultation?
+                    </Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {timeSlots.map((slot) => (
+                        <label key={slot} className="flex items-center space-x-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+                          <input
+                            type="checkbox"
+                            checked={formData.availableTimeSlots.includes(slot)}
+                            onChange={() => handleTimeSlotToggle(slot)}
+                            className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                          />
+                          <span className="text-sm">{slot}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="contactMethod" className="text-sm font-medium">
+                      Preferred Contact Method
+                    </Label>
+                    <Select value={formData.preferredContactMethod} onValueChange={(value) => setFormData({ ...formData, preferredContactMethod: value })}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="How should we contact you?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="phone">Phone Call</SelectItem>
+                        <SelectItem value="email">Email</SelectItem>
+                        <SelectItem value="video">Video Call</SelectItem>
+                        <SelectItem value="text">Text Message</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-4 border-t">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={emergencyConsultationMutation.isPending}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 text-lg"
+                    >
+                      {emergencyConsultationMutation.isPending ? (
+                        <>
+                          <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                          Connecting You to an Attorney...
+                        </>
+                      ) : (
+                        <>
+                          <Scale className="w-5 h-5 mr-2" />
+                          Request Emergency Consultation
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Emergency Contact Information */}
+            <Card className="mt-6 border-orange-200">
+              <CardHeader className="bg-orange-50">
+                <CardTitle className="text-lg text-orange-800 flex items-center">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Alternative Emergency Contact
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="text-center">
+                  <p className="text-gray-600 mb-2">
+                    If this is an immediate emergency or you need to speak with someone right now:
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <a
+                      href="tel:+1-800-MILITARY"
+                      className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Emergency Line: 1-800-MILITARY
+                    </a>
+                    <span className="text-gray-400">or</span>
+                    <a
+                      href="sms:+18008888888"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Text: 1-800-888-8888
+                    </a>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Available 24/7 for emergency military legal situations
+                  </p>
                 </div>
-              </MoodAwareCard>
-            ))}
+              </CardContent>
+            </Card>
           </div>
         </div>
-
-        {/* Emergency Resources */}
-        <div>
-          <h3 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
-            Emergency Legal Resources
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <MoodAwareCard priority="high" title="Emergency Rights Card">
-              <p className="text-sm mb-4">Know your rights during emergency situations</p>
-              <Button variant="outline" size="sm" className="w-full">
-                Download Card
-              </Button>
-            </MoodAwareCard>
-            
-            <MoodAwareCard priority="normal" title="Crisis Hotlines">
-              <p className="text-sm mb-4">24/7 support hotlines for immediate assistance</p>
-              <Button variant="outline" size="sm" className="w-full">
-                View Numbers
-              </Button>
-            </MoodAwareCard>
-            
-            <MoodAwareCard priority="normal" title="Emergency Contacts">
-              <p className="text-sm mb-4">Key contacts for urgent legal situations</p>
-              <Button variant="outline" size="sm" className="w-full">
-                Access List
-              </Button>
-            </MoodAwareCard>
-          </div>
-        </div>
-      </div>
-      
-      <Footer />
-    </div>
+      </section>
+    </PageLayout>
   );
 }

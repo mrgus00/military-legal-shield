@@ -118,28 +118,22 @@ export const consultations = pgTable("consultations", {
 
 export const emergencyConsultations = pgTable("emergency_consultations", {
   id: serial("id").primaryKey(),
-  attorneyId: integer("attorney_id").notNull(),
-  clientFirstName: text("client_first_name").notNull(),
-  clientLastName: text("client_last_name").notNull(),
-  clientEmail: text("client_email").notNull(),
-  clientPhone: text("client_phone"),
-  clientBranch: text("client_branch").notNull(),
-  clientRank: text("client_rank"),
-  urgencyLevel: text("urgency_level").notNull(), // critical, high, moderate
-  legalIssueType: text("legal_issue_type").notNull(),
-  incidentDescription: text("incident_description").notNull(),
-  preferredDateTime: timestamp("preferred_date_time"),
-  alternateDateTime: timestamp("alternate_date_time"),
-  timeZone: text("time_zone").notNull(),
-  consultationType: text("consultation_type").notNull(), // phone, video, in-person
-  hasDeadline: boolean("has_deadline").default(false),
-  deadlineDate: timestamp("deadline_date"),
-  additionalNotes: text("additional_notes"),
-  status: text("status").default("pending"), // pending, confirmed, completed, cancelled
-  attorneyResponse: text("attorney_response"),
-  scheduledDateTime: timestamp("scheduled_date_time"),
-  consultationNotes: text("consultation_notes"),
-  followUpRequired: boolean("follow_up_required").default(false),
+  fullName: text("full_name").notNull(),
+  rank: text("rank"),
+  branch: text("branch"),
+  unit: text("unit"),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  legalIssue: text("legal_issue").notNull(),
+  urgencyLevel: text("urgency_level").notNull(), // immediate, urgent, priority
+  description: text("description"),
+  availableTimeSlots: text("available_time_slots").array(),
+  preferredContactMethod: text("preferred_contact_method"),
+  status: text("status").default("pending"), // pending, assigned, contacted, resolved
+  assignedAttorneyId: integer("assigned_attorney_id"),
+  contactedAt: timestamp("contacted_at"),
+  resolvedAt: timestamp("resolved_at"),
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -593,13 +587,17 @@ export const insertConsultationSchema = createInsertSchema(consultations).omit({
 export const insertEmergencyConsultationSchema = createInsertSchema(emergencyConsultations).omit({
   id: true,
   status: true,
-  attorneyResponse: true,
-  scheduledDateTime: true,
-  consultationNotes: true,
-  followUpRequired: true,
+  assignedAttorneyId: true,
+  contactedAt: true,
+  resolvedAt: true,
+  notes: true,
   createdAt: true,
   updatedAt: true,
 });
+
+// Type exports for emergency consultations
+export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
+export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
 
 export const insertLegalCaseSchema = createInsertSchema(legalCases).omit({
   id: true,

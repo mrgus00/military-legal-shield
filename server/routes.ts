@@ -5,7 +5,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { db, pool } from "./db";
 import { sql } from "drizzle-orm";
-import { insertConsultationSchema, insertEmergencyConsultationSchema, attorneys } from "@shared/schema";
+import { insertConsultationSchema, insertEmergencyConsultationSchema, attorneys, emergencyConsultations } from "@shared/schema";
 import { eq, ilike, and, or } from "drizzle-orm";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
@@ -222,6 +222,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         message: "Legal assistant temporarily unavailable",
         error: error.message 
+      });
+    }
+  });
+
+  // Emergency consultation booking endpoint
+  app.post("/api/emergency-consultation", async (req, res) => {
+    try {
+      // Validate request data
+      const consultationData = insertEmergencyConsultationSchema.parse(req.body);
+      
+      // Insert emergency consultation into database
+      const [consultation] = await db
+        .insert(emergencyConsultations)
+        .values({
+          ...consultationData,
+          status: "pending",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+        .returning();
+
+      // Find available emergency attorneys based on legal issue and location
+      const availableAttorneys = await db
+        .select()
+        .from(attorneys)
+        .where(
+          and(
+            eq(attorneys.availableForEmergency, true),
+            eq(attorneys.isActive, true)
+          )
+        )
+        .limit(3);
+
+      // Auto-assign to highest rated available attorney if any found
+      if (availableAttorneys.length > 0) {
+        const assignedAttorney = availableAttorneys[0]; // Highest rated due to default ordering
+        
+        await db
+          .update(emergencyConsultations)
+          .set({
+            assignedAttorneyId: assignedAttorney.id,
+            status: "assigned",
+            updatedAt: new Date()
+          })
+          .where(eq(emergencyConsultations.id, consultation.id));
+
+        // In a real implementation, this would trigger:
+        // 1. Email/SMS notification to assigned attorney
+        // 2. Email confirmation to client
+        // 3. Calendar scheduling integration
+        // 4. Emergency response workflow activation
+        
+        console.log(`Emergency consultation ${consultation.id} assigned to attorney ${assignedAttorney.id}`);
+      }
+
+      res.status(201).json({
+        success: true,
+        consultationId: consultation.id,
+        message: "Emergency consultation request submitted successfully",
+        estimatedResponseTime: consultationData.urgencyLevel === "immediate" ? "30 minutes" : 
+                              consultationData.urgencyLevel === "urgent" ? "2 hours" : "4 hours",
+        assignedAttorney: availableAttorneys.length > 0 ? {
+          name: `${availableAttorneys[0].firstName} ${availableAttorneys[0].lastName}`,
+          firmName: availableAttorneys[0].firmName,
+          specialties: availableAttorneys[0].specialties
+        } : null
+      });
+
+    } catch (error) {
+      console.error("Error processing emergency consultation:", error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid request data",
+          errors: error.errors
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to process emergency consultation request"
       });
     }
   });

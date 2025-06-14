@@ -424,10 +424,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
+      const isPremium = (user.subscriptionTier === 'premium' && user.subscriptionStatus === 'active') ||
+                       user.subscriptionStatus === 'premium' ||
+                       (user.stripeSubscriptionId && user.subscriptionStatus !== 'cancelled');
+
       res.json({
-        subscriptionTier: user.subscriptionTier,
-        subscriptionStatus: user.subscriptionStatus,
-        isPremium: user.subscriptionTier === 'premium' && user.subscriptionStatus === 'active'
+        subscriptionTier: user.subscriptionTier || 'free',
+        subscriptionStatus: user.subscriptionStatus || 'free',
+        subscription_status: user.subscriptionStatus || 'free',
+        status: user.subscriptionStatus || 'free',
+        isPremium,
+        stripeCustomerId: user.stripeCustomerId,
+        stripeSubscriptionId: user.stripeSubscriptionId,
+        plan: isPremium ? 'premium' : 'free'
       });
     } catch (error) {
       console.error("Error fetching subscription status:", error);

@@ -11,11 +11,13 @@ export function useSubscription() {
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
-  const isPremium = subscriptionData?.subscription_status === 'premium' || subscriptionData?.subscription_status === 'active';
+  const isPremium = subscriptionData?.subscription_status === 'premium' || 
+                   subscriptionData?.subscription_status === 'active' ||
+                   subscriptionData?.isPremium === true;
 
   return {
     isPremium,
-    subscriptionStatus: subscriptionData?.subscription_status || 'free',
+    subscriptionStatus: subscriptionData?.subscription_status || subscriptionData?.status || 'free',
     isLoading,
     canAccessPremiumFeatures: isPremium,
     subscriptionData,

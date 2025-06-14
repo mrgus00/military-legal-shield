@@ -97,14 +97,14 @@ export default function Home() {
             </div>
             
             <h1 id="hero-heading" className="text-xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-1 sm:px-2 text-overflow-safe">
-              <span className="text-white drop-shadow-lg block">Got Legal Trouble?</span>
-              <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">Get Military Legal Help Now.</span>
+              <span className="text-white drop-shadow-lg block">When Legal Issues Strike,</span>
+              <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">We've Got Your Six.</span>
             </h1>
             
             <div className="animate-fade-in-up px-1 sm:px-2 max-w-full" style={{ animationDelay: '0.3s' }}>
               <p className="text-sm sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md responsive-text text-overflow-safe">
-                Court-Martial? DUI? False Accusation? Legal Questions?<br className="hidden sm:block"/>
-                <span className="sm:hidden"> </span>We connect you directly to military lawyers—fast.
+                Professional legal protection for active duty, veterans, and military families worldwide.<br className="hidden sm:block"/>
+                <span className="sm:hidden"> </span>From emergency defense to everyday legal needs—we're here 24/7.
               </p>
               
               {/* Immediate CTA */}
@@ -388,39 +388,268 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-16 bg-navy-900 text-white">
+      {/* Enhanced Services Grid - LegalShield Style */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold mb-8">Trusted by Service Members Everywhere</h2>
-            
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div>
-                <div className="text-4xl font-bold text-navy-300 mb-2">50,000+</div>
-                <div className="text-navy-200">Service Members Helped</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-navy-300 mb-2">98%</div>
-                <div className="text-navy-200">Success Rate</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-navy-300 mb-2">24/7</div>
-                <div className="text-navy-200">Emergency Support</div>
-              </div>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Complete Legal Coverage for Military Life</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Professional legal services designed specifically for the unique challenges facing military families.
+            </p>
+          </div>
 
-            <div className="bg-navy-800 p-8 rounded-2xl max-w-4xl mx-auto">
-              <div className="flex items-center justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <blockquote className="text-xl italic mb-4">
-                "Mil-Legal saved my career. When I faced an Article 15, their attorney helped me navigate 
-                the process and achieve the best possible outcome. I can't thank them enough."
-              </blockquote>
-              <div className="text-navy-300">— SSG Martinez, U.S. Army</div>
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+            <Card className="border-2 border-red-100 hover:border-red-300 transition-all duration-300 hover:shadow-xl">
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-red-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Emergency Defense</CardTitle>
+                <div className="text-sm text-red-600 font-semibold bg-red-50 px-3 py-1 rounded-full inline-block">
+                  URGENT RESPONSE
+                </div>
+              </CardHeader>
+              <CardContent className="text-center">
+                <ul className="text-gray-600 space-y-2 mb-6">
+                  <li>• Court-Martial Defense</li>
+                  <li>• Article 15 Proceedings</li>
+                  <li>• Administrative Separations</li>
+                  <li>• Security Clearance Issues</li>
+                </ul>
+                <Link href="/urgent-match">
+                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-medium">
+                    Get Emergency Help
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-blue-100 hover:border-blue-300 transition-all duration-300 hover:shadow-xl">
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Family Legal Services</CardTitle>
+                <div className="text-sm text-blue-600 font-semibold bg-blue-50 px-3 py-1 rounded-full inline-block">
+                  MOST POPULAR
+                </div>
+              </CardHeader>
+              <CardContent className="text-center">
+                <ul className="text-gray-600 space-y-2 mb-6">
+                  <li>• Wills & Powers of Attorney</li>
+                  <li>• Divorce & Custody</li>
+                  <li>• PCS Legal Support</li>
+                  <li>• Family Care Plans</li>
+                </ul>
+                <Link href="/family-legal">
+                  <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
+                    Explore Services
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-green-100 hover:border-green-300 transition-all duration-300 hover:shadow-xl">
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-green-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Benefits & Claims</CardTitle>
+                <div className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1 rounded-full inline-block">
+                  HIGH SUCCESS
+                </div>
+              </CardHeader>
+              <CardContent className="text-center">
+                <ul className="text-gray-600 space-y-2 mb-6">
+                  <li>• VA Disability Claims</li>
+                  <li>• Benefits Appeals</li>
+                  <li>• Discharge Upgrades</li>
+                  <li>• Medical Board Reviews</li>
+                </ul>
+                <Link href="/benefits-calculator">
+                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                    Calculate Benefits
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Professional Trust Section */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Proven Results for Military Families</h2>
+            <p className="text-xl text-gray-300">Professional legal representation with a track record of success</p>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-400 mb-2">25,000+</div>
+              <div className="text-gray-300">Cases Handled</div>
             </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-400 mb-2">96%</div>
+              <div className="text-gray-300">Client Satisfaction</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-400 mb-2">24/7</div>
+              <div className="text-gray-300">Emergency Access</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-400 mb-2">50</div>
+              <div className="text-gray-300">States Covered</div>
+            </div>
+          </div>
+
+          <div className="bg-gray-800 p-8 rounded-xl max-w-4xl mx-auto">
+            <div className="flex items-center justify-center mb-6">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
+              ))}
+            </div>
+            <blockquote className="text-xl italic text-center mb-4">
+              "Military Legal Shield connected me with an experienced attorney when I needed it most. 
+              Their support during my court-martial proceedings was exceptional and professional."
+            </blockquote>
+            <div className="text-center text-gray-400">— Staff Sergeant, U.S. Air Force</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-orange-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Choose Your Legal Protection Plan</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Affordable legal coverage that fits your military lifestyle and budget.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card className="border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
+              <CardHeader className="text-center pb-6">
+                <CardTitle className="text-2xl text-gray-900 mb-2">Basic</CardTitle>
+                <div className="text-3xl font-bold text-gray-900">FREE</div>
+                <p className="text-gray-600 mt-2">Essential legal resources</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Legal Q&A Database</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Document Templates</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Benefits Calculator</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Community Forum Access</span>
+                  </li>
+                </ul>
+                <Button variant="outline" className="w-full">
+                  Get Started Free
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-orange-300 bg-orange-50 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-orange-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  MOST POPULAR
+                </span>
+              </div>
+              <CardHeader className="text-center pb-6">
+                <CardTitle className="text-2xl text-gray-900 mb-2">Premium</CardTitle>
+                <div className="text-3xl font-bold text-gray-900">$29.99<span className="text-lg text-gray-600">/month</span></div>
+                <p className="text-gray-600 mt-2">Complete legal protection</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Everything in Basic</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>24/7 Attorney Hotline</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Document Review</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Legal Consultations</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Emergency Legal Assistance</span>
+                  </li>
+                </ul>
+                <Link href="/pricing">
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                    Start Premium Plan
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-gray-200 hover:border-purple-300 transition-all duration-300">
+              <CardHeader className="text-center pb-6">
+                <CardTitle className="text-2xl text-gray-900 mb-2">Family</CardTitle>
+                <div className="text-3xl font-bold text-gray-900">$49.99<span className="text-lg text-gray-600">/month</span></div>
+                <p className="text-gray-600 mt-2">Protection for your whole family</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Everything in Premium</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Family Legal Coverage</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Multiple Consultations</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Priority Attorney Matching</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Worldwide Coverage</span>
+                  </li>
+                </ul>
+                <Link href="/pricing">
+                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+                    Choose Family Plan
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-4">
+              All plans include secure communication and confidential case handling.
+            </p>
+            <Link href="/pricing">
+              <Button variant="outline" className="font-medium">
+                Compare All Plans & Features
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

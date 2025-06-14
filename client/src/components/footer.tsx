@@ -35,23 +35,38 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Services */}
+          {/* Legal Services */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Services</h3>
+            <h3 className="font-semibold text-lg mb-4">Legal Services</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/urgent-match" className="text-gray-300 hover:text-white transition-colors text-sm">
-                  Emergency Legal Support
+                <Link href="/urgent-match" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Court-Martial Defense
                 </Link>
               </li>
               <li>
-                <Link href="/attorneys" className="text-gray-300 hover:text-white transition-colors text-sm">
-                  Attorney Matching
+                <Link href="/family-legal" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Family Law & POAs
                 </Link>
               </li>
               <li>
-                <Link href="/consultation-booking" className="text-gray-300 hover:text-white transition-colors text-sm">
-                  Legal Consultations
+                <Link href="/military-justice" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  UCMJ Support
+                </Link>
+              </li>
+              <li>
+                <Link href="/benefits-calculator" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  VA Benefits & Claims
+                </Link>
+              </li>
+              <li>
+                <Link href="/document-generator" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Legal Documents
+                </Link>
+              </li>
+              <li>
+                <Link href="/consultation-booking" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Attorney Consultations
                 </Link>
               </li>
               <li>

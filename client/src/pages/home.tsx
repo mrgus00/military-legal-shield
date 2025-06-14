@@ -665,47 +665,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-16 bg-slate-900 text-white mobile-section no-scroll-x">
-        <div className="max-w-4xl mx-auto text-center mobile-form-container">
-          <h2 className="text-xl sm:text-3xl font-bold mb-4 responsive-text text-overflow-safe">Don't Wait—Your Legal Issue Can't Wait.</h2>
-          <p className="text-base sm:text-xl mb-8 text-slate-300 responsive-text text-overflow-safe">
-            All services are confidential. Available worldwide to active duty, veterans, and families.
-          </p>
-          
-          <div className="space-y-4 mb-8">
-            <Link href="/urgent-match">
-              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-12 py-3 sm:py-4 text-base sm:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full sm:w-auto responsive-button">
-                <Scale className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 flex-shrink-0" />
-                <span className="text-overflow-safe">Connect with a Lawyer Now</span>
-              </Button>
-            </Link>
-            
-            {/* Emergency Contact Options */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <a 
-                href={primaryContact.href}
-                className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors w-full sm:w-auto responsive-button"
-                onClick={() => console.log('Emergency call initiated')}
-              >
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
-                <span className="text-overflow-safe">{primaryContact.display}</span>
-              </a>
+      {/* Final CTA Section - LegalShield Style */}
+      <section className="py-20 bg-gradient-to-r from-gray-900 to-navy-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-6">Ready to Get the Legal Protection You Deserve?</h2>
+              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                Join thousands of military families who trust Military Legal Shield for their legal needs. 
+                From emergency defense to everyday legal matters—we're here for you 24/7.
+              </p>
               
-              <a 
-                href={emergencyEmail.href}
-                className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors w-full sm:w-auto responsive-button"
-                onClick={() => console.log('Emergency email initiated')}
-              >
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
-                <span className="text-overflow-safe">Email Emergency</span>
-              </a>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-300">No long-term contracts</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-300">Cancel anytime</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-300">Worldwide coverage</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-300">Attorney-client privilege protected</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-8 rounded-2xl shadow-2xl">
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Start Your Protection Today</h3>
+                <p className="text-gray-600">Choose the plan that's right for you</p>
+              </div>
+              
+              <div className="space-y-4">
+                <Link href="/urgent-match">
+                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold">
+                    <Shield className="w-5 h-5 mr-3" />
+                    Emergency Legal Help
+                  </Button>
+                </Link>
+                
+                <Link href="/pricing">
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold">
+                    View All Plans & Pricing
+                  </Button>
+                </Link>
+                
+                <Button variant="outline" className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50">
+                  Start Free Trial
+                </Button>
+              </div>
+              
+              <div className="text-center mt-6">
+                <p className="text-sm text-gray-500">
+                  ✓ Free consultation included • ✓ 30-day money-back guarantee
+                </p>
+              </div>
             </div>
           </div>
-          
-          <p className="text-xs sm:text-sm text-slate-400 responsive-text text-overflow-safe">
-            Available 24/7 for emergency legal situations • All calls and emails are confidential
-          </p>
         </div>
       </section>
 

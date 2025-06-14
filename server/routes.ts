@@ -231,6 +231,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get attorneys with availability for consultation booking
+  app.get("/api/availability/attorneys", async (req, res) => {
+    try {
+      const { date, specialty, consultationType } = req.query;
+      const attorneys = await storage.getAttorneysWithAvailability(
+        date as string || new Date().toISOString().split('T')[0],
+        specialty as string,
+        consultationType as string
+      );
+      res.json(attorneys);
+    } catch (error) {
+      console.error("Error fetching attorney availability:", error);
+      res.status(500).json({ message: "Failed to fetch attorney availability" });
+    }
+  });
+
+  // Book consultation endpoint
+  app.post("/api/consultations/book", async (req, res) => {
+    try {
+      const { booking } = req.body;
+      
+      if (!booking || !booking.attorneyId || !booking.clientName || !booking.clientEmail) {
+        return res.status(400).json({ message: "Missing required booking information" });
+      }
+
+      const consultation = await storage.createConsultationBooking(booking);
+      
+      // Update time slot availability
+      if (booking.timeSlotId) {
+        await storage.updateTimeSlotAvailability(booking.timeSlotId, false);
+      }
+
+      res.json({
+        success: true,
+        consultationId: consultation.id,
+        message: "Consultation booked successfully"
+      });
+    } catch (error) {
+      console.error("Error booking consultation:", error);
+      res.status(500).json({ message: "Failed to book consultation" });
+    }
+  });
+
   // WebSocket server for video consultation
   const httpServer = createServer(app);
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });

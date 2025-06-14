@@ -1049,19 +1049,149 @@ button[aria-expanded="true"] {
   
   /* Warm supporting colors */
   --warm-gray-50: 30 8% 96%;
-  --warm-gray-100: 30 10% 90%;
-  --warm-gray-200: 30 12% 82%;
-  --warm-gray-300: 30 15% 70%;
-  --warm-gray-400: 30 18% 58%;
-  --warm-gray-500: 30 20% 46%;
+  --warm-gray-100: 30 8% 92%;
+  --warm-gray-200: 30 8% 85%;
+  --warm-gray-300: 30 8% 75%;
+  --warm-gray-400: 30 8% 65%;
+  --warm-gray-500: 30 8% 55%;
+}
+
+/* Enhanced Mobile Layout Optimization */
+/* Critical mobile overflow fixes */
+@media screen and (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    position: relative;
+  }
   
-  /* Mood-based color variables */
-  --mood-primary: #1E40AF;
-  --mood-secondary: #EFF6FF;
-  --mood-accent: #3B82F6;
-  --mood-background: #F8FAFC;
-  --mood-text: #1E293B;
-  --mood-border: #CBD5E1;
+  /* Prevent all content from overflowing horizontally */
+  *, *::before, *::after {
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Fix container widths */
+  .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl {
+    max-width: 100vw !important;
+    width: 100% !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Fix grid layouts */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Mobile button optimization */
+  .mobile-button, button[size="lg"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Mobile text scaling */
+  .text-4xl, .text-5xl, .text-6xl {
+    font-size: 1.875rem !important;
+    line-height: 2.25rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  /* Mobile spacing optimization */
+  .py-16 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  .py-12 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  .mb-12 {
+    margin-bottom: 2rem !important;
+  }
+  
+  .mb-8 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mb-6 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Mobile padding fixes */
+  .px-4, .px-6, .px-8 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Mobile card spacing */
+  .gap-8 {
+    gap: 1rem !important;
+  }
+  
+  .gap-6 {
+    gap: 0.75rem !important;
+  }
+  
+  .gap-4 {
+    gap: 0.5rem !important;
+  }
+
+  /* Mobile hero section fixes */
+  .hero-section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Mobile navigation sheet */
+  .mobile-sheet {
+    width: 280px !important;
+    max-width: 85vw !important;
+  }
+
+  /* Mobile footer optimization */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
 }
 
 .dark {

@@ -181,38 +181,38 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
-              <CardHeader>
-                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="text-3xl font-bold text-orange-600">2</div>
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center mx-2 md:mx-0">
+              <CardHeader className="pb-3">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600">2</div>
                 </div>
-                <CardTitle className="text-xl text-navy-900">Connect With a Vetted Lawyer</CardTitle>
+                <CardTitle className="text-lg sm:text-xl text-navy-900 px-2">Connect With a Vetted Lawyer</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">
+              <CardContent className="pt-0">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base px-2">
                   Get matched with military law specialists who understand your unique situation
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
-              <CardHeader>
-                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="text-3xl font-bold text-orange-600">3</div>
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center mx-2 md:mx-0">
+              <CardHeader className="pb-3">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600">3</div>
                 </div>
-                <CardTitle className="text-xl text-navy-900">Get Legal Advice or Representation Fast</CardTitle>
+                <CardTitle className="text-lg sm:text-xl text-navy-900 px-2">Get Legal Advice or Representation Fast</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">
+              <CardContent className="pt-0">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base px-2">
                   Receive immediate consultation or ongoing representation for your case
                 </p>
               </CardContent>
             </Card>
           </div>
           
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 sm:mt-12 px-2">
             <Link href="/consultation-booking">
-              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 text-lg font-semibold rounded-xl">
+              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-8 py-3 text-base sm:text-lg font-semibold rounded-xl w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
                 Start Now
               </Button>
             </Link>

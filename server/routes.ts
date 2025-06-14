@@ -79,6 +79,18 @@ function getStateBenefits(state: string): any[] {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Domain verification endpoint
+  app.get('/api/health', (req, res) => {
+    res.json({
+      status: "healthy",
+      domain: req.hostname,
+      application: "MilitaryLegalShield",
+      verified: true,
+      timestamp: new Date().toISOString(),
+      version: "2.0.0",
+      features: ["high-converting-landing", "world-clock", "faq-accordion"]
+    });
+  });
   // Public access - no authentication
   
   // Health check endpoint - add explicit API prefix

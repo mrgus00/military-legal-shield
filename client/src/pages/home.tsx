@@ -12,6 +12,8 @@ import MilitaryBranchesBanner from "@/components/military-branches-banner";
 import InteractiveHeroSection from "@/components/interactive-hero-section";
 import WorldClock from "@/components/world-clock";
 import FAQAccordion from "@/components/faq-accordion";
+import MobileSEOHead, { SEO_CONFIGS } from "@/components/mobile-seo-head";
+import { getMobileEmergencyContacts, createClickablePhone, createClickableEmail } from "@/lib/mobile-contact";
 import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {
@@ -19,6 +21,11 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { getTerminology, branchTheme, getMotto } = useBranch();
+  
+  // Get mobile-optimized emergency contacts
+  const emergencyContacts = getMobileEmergencyContacts();
+  const primaryContact = createClickablePhone("+1-800-555-0123", "Call Now: (800) 555-0123");
+  const emergencyEmail = createClickableEmail("emergency@militarylegalshield.com", "Emergency Legal Assistance", "I need immediate legal assistance. Please contact me as soon as possible.");
 
   const handleLeadCapture = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +64,7 @@ export default function Home() {
 
   return (
     <PageLayout>
+      <MobileSEOHead {...SEO_CONFIGS.home} />
         {/* Hero Section */}
         <section className="relative pt-16 sm:pt-20 pb-12 sm:pb-16 px-3 sm:px-4 lg:px-6 overflow-hidden w-full max-w-full mobile-section no-scroll-x" aria-labelledby="hero-heading">
           {/* Justice Background Image */}
@@ -429,22 +437,45 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 bg-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-4">Don't Wait—Your Legal Issue Can't Wait.</h2>
-          <p className="text-xl mb-8 text-slate-300">
+      <section className="py-16 bg-slate-900 text-white mobile-section no-scroll-x">
+        <div className="max-w-4xl mx-auto text-center mobile-form-container">
+          <h2 className="text-xl sm:text-3xl font-bold mb-4 responsive-text text-overflow-safe">Don't Wait—Your Legal Issue Can't Wait.</h2>
+          <p className="text-base sm:text-xl mb-8 text-slate-300 responsive-text text-overflow-safe">
             All services are confidential. Available worldwide to active duty, veterans, and families.
           </p>
           
-          <Link href="/urgent-match">
-            <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-4 text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl">
-              <Scale className="w-6 h-6 mr-3" />
-              Connect with a Lawyer Now
-            </Button>
-          </Link>
+          <div className="space-y-4 mb-8">
+            <Link href="/urgent-match">
+              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-12 py-3 sm:py-4 text-base sm:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full sm:w-auto responsive-button">
+                <Scale className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 flex-shrink-0" />
+                <span className="text-overflow-safe">Connect with a Lawyer Now</span>
+              </Button>
+            </Link>
+            
+            {/* Emergency Contact Options */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+              <a 
+                href={primaryContact.href}
+                className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors w-full sm:w-auto responsive-button"
+                onClick={() => console.log('Emergency call initiated')}
+              >
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                <span className="text-overflow-safe">{primaryContact.display}</span>
+              </a>
+              
+              <a 
+                href={emergencyEmail.href}
+                className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors w-full sm:w-auto responsive-button"
+                onClick={() => console.log('Emergency email initiated')}
+              >
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                <span className="text-overflow-safe">Email Emergency</span>
+              </a>
+            </div>
+          </div>
           
-          <p className="text-sm text-slate-400 mt-6">
-            Available 24/7 for emergency legal situations
+          <p className="text-xs sm:text-sm text-slate-400 responsive-text text-overflow-safe">
+            Available 24/7 for emergency legal situations • All calls and emails are confidential
           </p>
         </div>
       </section>

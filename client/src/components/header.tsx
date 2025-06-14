@@ -7,11 +7,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone, Award } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone, Award, Mail } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import GlobalSearch from "@/components/global-search";
 import { useAuth } from "@/hooks/useAuth";
+import { formatEmergencyContact, mobileButtonClasses, trackMobileInteraction } from "@/lib/mobile-optimization";
 
 interface MenuItem {
   name: string;

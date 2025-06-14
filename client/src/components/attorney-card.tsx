@@ -8,6 +8,7 @@ import AttorneyVerificationBadge from "./attorney-verification-badge";
 import SocialShare, { SharePresets } from "./social-share";
 import VideoCall from "./video-call";
 import { formatAttorneyContact, mobileButtonClasses, trackMobileInteraction } from "@/lib/mobile-optimization";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 import type { Attorney } from "@shared/schema";
 
 interface AttorneyCardProps {
@@ -15,6 +16,7 @@ interface AttorneyCardProps {
 }
 
 export default function AttorneyCard({ attorney }: AttorneyCardProps) {
+  const { isMobile, isTouchDevice } = useMobileDetection();
   const { data: attorneyImages } = useQuery({
     queryKey: ["attorney-images"],
     queryFn: () => imageService.getAttorneyImages(),

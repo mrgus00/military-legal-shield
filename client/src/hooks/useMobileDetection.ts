@@ -1,104 +1,69 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-interface MobileCapabilities {
+interface MobileDetectionResult {
   isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+  isTouchDevice: boolean;
+  orientation: 'portrait' | 'landscape';
+  screenWidth: number;
+  screenHeight: number;
   isIOS: boolean;
   isAndroid: boolean;
-  isTablet: boolean;
-  hasTouch: boolean;
-  orientation: "portrait" | "landscape";
-  screenSize: {
-    width: number;
-    height: number;
-  };
-  devicePixelRatio: number;
-  isStandalone: boolean; // PWA mode
-  canInstall: boolean;
 }
 
-export function useMobileDetection(): MobileCapabilities {
-  const [capabilities, setCapabilities] = useState<MobileCapabilities>({
+export function useMobileDetection(): MobileDetectionResult {
+  const [detection, setDetection] = useState<MobileDetectionResult>({
     isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    isTouchDevice: false,
+    orientation: 'landscape',
+    screenWidth: 1024,
+    screenHeight: 768,
     isIOS: false,
     isAndroid: false,
-    isTablet: false,
-    hasTouch: false,
-    orientation: "portrait",
-    screenSize: { width: 0, height: 0 },
-    devicePixelRatio: 1,
-    isStandalone: false,
-    canInstall: false,
   });
 
   useEffect(() => {
-    const detectCapabilities = () => {
+    const detectDevice = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       const userAgent = navigator.userAgent;
       
-      // Device detection
+      const isMobile = width < 768;
+      const isTablet = width >= 768 && width < 1024;
+      const isDesktop = width >= 1024;
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const orientation = height > width ? 'portrait' : 'landscape';
       const isIOS = /iPad|iPhone|iPod/.test(userAgent);
       const isAndroid = /Android/.test(userAgent);
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-      const isTablet = /iPad/.test(userAgent) || (isAndroid && !/Mobile/.test(userAgent));
-      
-      // Touch capability
-      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      
-      // Screen orientation
-      const orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
-      
-      // Screen size
-      const screenSize = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-      
-      // Device pixel ratio
-      const devicePixelRatio = window.devicePixelRatio || 1;
-      
-      // PWA standalone mode detection
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                          (window.navigator as any).standalone === true;
-      
-      // PWA install capability
-      const canInstall = 'serviceWorker' in navigator && 
-                        'PushManager' in window &&
-                        'Notification' in window;
 
-      setCapabilities({
+      setDetection({
         isMobile,
+        isTablet,
+        isDesktop,
+        isTouchDevice,
+        orientation,
+        screenWidth: width,
+        screenHeight: height,
         isIOS,
         isAndroid,
-        isTablet,
-        hasTouch,
-        orientation,
-        screenSize,
-        devicePixelRatio,
-        isStandalone,
-        canInstall,
       });
     };
 
     // Initial detection
-    detectCapabilities();
-
-    // Listen for orientation changes
-    const handleOrientationChange = () => {
-      setTimeout(detectCapabilities, 100); // Small delay for accurate measurements
-    };
+    detectDevice();
 
     // Listen for resize events
-    const handleResize = () => {
-      detectCapabilities();
-    };
-
-    window.addEventListener('orientationchange', handleOrientationChange);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', detectDevice);
+    window.addEventListener('orientationchange', detectDevice);
 
     return () => {
-      window.removeEventListener('orientationchange', handleOrientationChange);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', detectDevice);
+      window.removeEventListener('orientationchange', detectDevice);
     };
   }, []);
 
-  return capabilities;
+  return detection;
 }

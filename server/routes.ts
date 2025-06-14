@@ -234,15 +234,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get attorneys with availability for consultation booking
   app.get("/api/availability/attorneys", async (req, res) => {
     try {
+      res.setHeader('Content-Type', 'application/json');
       const { date, specialty, consultationType } = req.query;
       const attorneys = await storage.getAttorneysWithAvailability(
         date as string || new Date().toISOString().split('T')[0],
         specialty as string,
         consultationType as string
       );
-      res.json(attorneys);
+      res.status(200).json(attorneys);
     } catch (error) {
       console.error("Error fetching attorney availability:", error);
+      res.setHeader('Content-Type', 'application/json');
       res.status(500).json({ message: "Failed to fetch attorney availability" });
     }
   });

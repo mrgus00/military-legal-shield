@@ -220,11 +220,14 @@ export class DatabaseStorage implements IStorage {
         {
           firstName: "R. Davis",
           lastName: "Younts",
+          firmName: "Younts Law Firm",
           title: "R. Davis Younts",
           specialties: ["Court-martial defense", "Military criminal law"],
           location: "Fayetteville, NC",
           state: "NC",
           city: "Fayetteville",
+          region: "Atlantic",
+          attorneyType: "civilian",
           experience: "15+ years",
           rating: 5,
           reviewCount: 0,
@@ -234,16 +237,23 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "standard",
           hourlyRate: "Contact for rates",
           availableForEmergency: true,
-          responseTime: "< 24 hours"
+          responseTime: "< 24 hours",
+          servicesOffered: ["Court-martial defense", "Military criminal law"],
+          militaryBranches: ["Army", "Marines", "Air Force", "Navy"],
+          practiceAreas: ["Criminal Defense", "Military Law"],
+          languages: ["English"]
         },
         {
           firstName: "Philip D.",
           lastName: "Cave",
+          firmName: "Cave & Associates",
           title: "Philip D. Cave",
           specialties: ["Global military law", "Courts-martial", "Administrative actions"],
           location: "Serves NC statewide",
           state: "NC",
           city: "Statewide",
+          region: "Atlantic",
+          attorneyType: "civilian",
           experience: "25+ years",
           rating: 5,
           reviewCount: 0,
@@ -253,7 +263,11 @@ export class DatabaseStorage implements IStorage {
           pricingTier: "premium",
           hourlyRate: "Contact for rates",
           availableForEmergency: true,
-          responseTime: "< 4 hours"
+          responseTime: "< 4 hours",
+          servicesOffered: ["Courts-martial", "Administrative actions", "Appeals"],
+          militaryBranches: ["Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"],
+          practiceAreas: ["Military Law", "Criminal Defense", "Administrative Law"],
+          languages: ["English"]
         },
         {
           firstName: "Elizabeth Fowler",

@@ -81,6 +81,9 @@ function getStateBenefits(state: string): any[] {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication middleware
+  await setupAuth(app);
+  
   // Domain verification endpoint
   app.get('/api/health', (req, res) => {
     res.json({
@@ -296,6 +299,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create subscription checkout session
   app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
     try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Payment processing not available" });
+      }
+
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       
@@ -351,7 +358,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Handle Stripe webhooks
   app.post("/api/stripe-webhook", express.raw({type: 'application/json'}), async (req, res) => {
+    if (!stripe) {
+      return res.status(500).json({ error: "Payment processing not available" });
+    }
+
     const sig = req.headers['stripe-signature'];
+    if (!sig) {
+      return res.status(400).send('Missing stripe signature');
+    }
+
     let event;
 
     try {
@@ -372,10 +387,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
 
         case 'invoice.payment_succeeded':
-          const invoice = event.data.object;
+          const invoice = event.data.object as any;
           if (invoice.subscription && invoice.customer) {
             const invoiceCustomer = await stripe.customers.retrieve(invoice.customer as string);
-            const invoiceUserId = invoiceCustomer.metadata?.userId;
+            const invoiceUserId = (invoiceCustomer as any).metadata?.userId;
             if (invoiceUserId) {
               await storage.updateUserSubscription(invoiceUserId, 'premium', 'active', invoice.subscription as string);
             }
@@ -383,9 +398,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
 
         case 'customer.subscription.deleted':
-          const subscription = event.data.object;
+          const subscription = event.data.object as any;
           const subscriptionCustomer = await stripe.customers.retrieve(subscription.customer as string);
-          const subscriptionUserId = subscriptionCustomer.metadata?.userId;
+          const subscriptionUserId = (subscriptionCustomer as any).metadata?.userId;
           if (subscriptionUserId) {
             await storage.updateUserSubscription(subscriptionUserId, 'free', 'cancelled', null);
           }
@@ -423,6 +438,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Cancel subscription
   app.post("/api/cancel-subscription", isAuthenticated, async (req: any, res) => {
     try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Payment processing not available" });
+      }
+
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       

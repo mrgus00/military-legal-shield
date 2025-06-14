@@ -56,35 +56,35 @@ export default function MilitaryBranchesBanner() {
   ];
 
   return (
-    <section className="bg-gray-50 py-12 border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+    <section className="bg-gray-50 py-8 sm:py-12 border-t border-gray-200 w-full overflow-hidden">
+      <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 px-2">
             Serving All Branches of the U.S. Military
           </h3>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600 px-2">
             Dedicated legal support for every service member, across all branches of our armed forces
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 items-center justify-items-center w-full">
           {branches.map((branch) => (
             <Link key={branch.name} href={branch.route}>
               <button 
-                className={`text-center group w-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded-lg p-4 ${
+                className={`text-center group w-full max-w-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded-lg p-2 sm:p-3 md:p-4 ${
                   selectedBranch === branch.branchId ? 'bg-navy-50 ring-2 ring-navy-300' : 'hover:bg-gray-50'
                 }`}
                 onClick={() => setBranch(branch.branchId)}
                 aria-label={`View ${branch.name} legal resources and attorneys`}
               >
-                <div className="w-24 h-24 mx-auto mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto mb-2 sm:mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow">
                   <img
                     src={branch.image}
                     alt={`${branch.name} emblem`}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 leading-tight">
                   {branch.name}
                 </h4>
                 <p className="text-xs text-gray-500">

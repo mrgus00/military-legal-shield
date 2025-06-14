@@ -1,0 +1,23 @@
+PROJECT OVERVIEW:
+ Developer Brief: MilitaryLegalShield.com
+ MilitaryLegalShield.com is a freemium legal support platform designed for service members. The site must
+ clearly distinguish between free and premium features, function seamlessly on all devices, and be optimized
+ for search engines. It must also fully integrate with Stripe for payment processing.
+ CORE OBJECTIVES:
+ 1. Align all features with freemium standards.
+ 2. Ensure complete Stripe integration for premium access.
+ 3. Optimize all components for mobile and SEO.
+ 4. Deliver a smooth, responsive user experience across all platforms.
+ FREEMIUM CONTENT STRUCTURE:
+ Free Features:- Legal FAQs- Blog or resource center- Intro articles- Newsletter sign-up- Basic contact form
+ Premium Features:- 1-on-1 legal consults- POA and document support- Attorney database access- Priority legal support- Case tracking dashboard
+Action: All premium content must trigger upgrade/payment flows.
+ STRIPE INTEGRATION CHECKLIST:- Connect with valid API keys (test & live)- Setup checkout and subscription flows- Configure webhooks for payment updates- Enable receipts and customer management- Secure data handling and HTTPS enforcement
+ UI/UX REQUIREMENTS:- Clear differentiation between free and premium- Locked content visuals and tooltips- Clear CTAs for sign-up and upgrade- Fully responsive design (desktop/mobile/tablet)
+ MOBILE OPTIMIZATION & SEO:- Ensure full mobile responsiveness- Link all phone numbers for click-to-call- Link all emails for tap-to-email- Implement on-page SEO (meta tags, keywords, alt text)- Use high-quality backlinks for domain authority- Fast loading speeds (under 3 seconds)
+ QA & MOBILE OPTIMIZATION CHECKLIST:
+ User Feedback:- The app is currently not functioning well on mobile devices.- Banners and key content are running off-screen, causing layout issues.- This makes the app feel clunky and inconsistent with user expectations.
+ Action Items:
+- Conduct a full mobile optimization audit.- Ensure all banners, buttons, and content elements are responsive and properly scaled on all screen sizes.- Use flexbox or grid-based layouts for adaptive content rendering.- Verify no horizontal scrolling is necessary on mobile views.- Optimize image and banner scaling within container limits.- Test across multiple devices (iOS/Android) and browsers.
+ Goal:- The app should function smoothly and intuitively, with performance and usability comparable to LegalShield,
+ while being fully tailored to military service members across all branches

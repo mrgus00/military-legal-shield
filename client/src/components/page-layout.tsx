@@ -15,7 +15,7 @@ interface PageLayoutProps {
 export default function PageLayout({ children, className = "", showFooter = true }: PageLayoutProps) {
   return (
     <MobileContainer>
-      <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 hw-accelerated safari-fix relative overflow-hidden ${className}`}>
+      <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 hw-accelerated safari-fix relative overflow-hidden w-full max-w-full ${className}`}>
         {/* Dynamic particle background */}
         <ParticleBackground 
           density={30} 
@@ -24,10 +24,10 @@ export default function PageLayout({ children, className = "", showFooter = true
           className="opacity-30"
         />
         
-        <div className="relative z-10">
+        <div className="relative z-10 w-full max-w-full overflow-hidden">
           <EnhancedNavbar />
           
-          <main id="main-content" role="main" className="hw-accelerated">
+          <main id="main-content" role="main" className="hw-accelerated w-full max-w-full overflow-hidden">
             {children}
           </main>
 

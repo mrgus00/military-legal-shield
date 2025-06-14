@@ -63,7 +63,7 @@ export default function MobileContainer({
   }, [isMobile]);
 
   const containerClasses = cn(
-    "min-h-screen w-full overflow-x-hidden no-bounce",
+    "min-h-screen w-full max-w-full overflow-x-hidden no-bounce",
     {
       "ios-safe-area ios-scroll-fix": enableSafeArea && isIOS,
       "android-viewport": isAndroid,

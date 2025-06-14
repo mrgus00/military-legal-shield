@@ -1056,74 +1056,130 @@ button[aria-expanded="true"] {
   --warm-gray-500: 30 8% 55%;
 }
 
-/* Enhanced Mobile Layout Optimization */
-/* Critical mobile overflow fixes */
+/* CRITICAL MOBILE LAYOUT FIXES */
+/* Force all content to respect viewport boundaries */
+html {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* Universal container fixes */
+* {
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
+/* Mobile-first responsive design */
 @media screen and (max-width: 768px) {
-  html, body {
+  /* Force viewport compliance */
+  html, body, #root, main {
     overflow-x: hidden !important;
     width: 100vw !important;
     max-width: 100vw !important;
-    position: relative;
+    position: relative !important;
   }
   
-  /* Prevent all content from overflowing horizontally */
+  /* Universal content containment */
   *, *::before, *::after {
     max-width: 100vw !important;
     box-sizing: border-box !important;
   }
 
-  /* Fix container widths */
-  .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl {
+  /* Container width enforcement */
+  .container, 
+  .max-w-7xl, 
+  .max-w-6xl, 
+  .max-w-5xl, 
+  .max-w-4xl, 
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl,
+  .w-full,
+  section,
+  div[class*="max-w"] {
     max-width: 100vw !important;
     width: 100% !important;
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
     margin-left: auto !important;
     margin-right: auto !important;
   }
 
-  /* Fix grid layouts */
-  .grid {
+  /* Grid system mobile overrides */
+  .grid,
+  .grid-cols-1,
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .md\\:grid-cols-2,
+  .md\\:grid-cols-3,
+  .lg\\:grid-cols-4 {
+    display: grid !important;
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
+    width: 100% !important;
   }
   
+  /* Special case for 2-column mobile layouts */
   .grid-cols-2 {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
+    gap: 0.5rem !important;
   }
 
-  /* Mobile button optimization */
-  .mobile-button, button[size="lg"] {
+  /* Button mobile optimization */
+  button,
+  .btn,
+  .button,
+  a[role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  /* Large button mobile fixes */
+  button[size="lg"],
+  .btn-lg,
+  .button-lg {
     width: 100% !important;
     max-width: 100% !important;
     font-size: 1rem !important;
-    padding: 0.75rem 1rem !important;
+    padding: 1rem !important;
   }
 
-  /* Mobile text scaling */
-  .text-4xl, .text-5xl, .text-6xl {
+  /* Typography mobile scaling */
+  h1, .text-6xl, .text-5xl, .text-4xl {
     font-size: 1.875rem !important;
     line-height: 2.25rem !important;
   }
   
-  .text-3xl {
+  h2, .text-3xl {
     font-size: 1.5rem !important;
     line-height: 2rem !important;
   }
   
-  .text-2xl {
+  h3, .text-2xl {
     font-size: 1.25rem !important;
     line-height: 1.75rem !important;
   }
   
-  .text-xl {
+  h4, .text-xl {
     font-size: 1.125rem !important;
     line-height: 1.75rem !important;
   }
 
-  /* Mobile spacing optimization */
-  .py-16 {
+  /* Spacing mobile optimization */
+  .py-20, .py-16 {
     padding-top: 2rem !important;
     padding-bottom: 2rem !important;
   }
@@ -1138,25 +1194,38 @@ button[aria-expanded="true"] {
     padding-bottom: 1rem !important;
   }
   
-  .mb-12 {
-    margin-bottom: 2rem !important;
+  .pt-20, .pt-16 {
+    padding-top: 1rem !important;
   }
   
-  .mb-8 {
+  .pb-16, .pb-12 {
+    padding-bottom: 1.5rem !important;
+  }
+  
+  .mb-12 {
     margin-bottom: 1.5rem !important;
   }
   
-  .mb-6 {
+  .mb-8 {
     margin-bottom: 1rem !important;
   }
-
-  /* Mobile padding fixes */
-  .px-4, .px-6, .px-8 {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+  
+  .mb-6 {
+    margin-bottom: 0.75rem !important;
   }
 
-  /* Mobile card spacing */
+  /* Horizontal spacing fixes */
+  .px-8, .px-6, .px-4, .px-3 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Gap and spacing mobile fixes */
   .gap-8 {
     gap: 1rem !important;
   }
@@ -1168,29 +1237,75 @@ button[aria-expanded="true"] {
   .gap-4 {
     gap: 0.5rem !important;
   }
-
-  /* Mobile hero section fixes */
-  .hero-section {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
+  
+  .space-x-4 > * + * {
+    margin-left: 0.5rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
   }
 
-  /* Ensure images don't overflow */
-  img {
+  /* Image and media mobile fixes */
+  img, video, iframe, svg {
     max-width: 100% !important;
     height: auto !important;
+    width: auto !important;
   }
 
-  /* Mobile navigation sheet */
-  .mobile-sheet {
+  /* Card and component mobile fixes */
+  .card, .rounded, .border, .shadow, [class*="bg-"] {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Navigation mobile fixes */
+  nav, header, .navbar {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Mobile sheet/drawer optimization */
+  .sheet, .drawer, .modal {
     width: 280px !important;
     max-width: 85vw !important;
   }
 
-  /* Mobile footer optimization */
+  /* Footer mobile optimization */
+  footer, .footer {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  
   .footer-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
+  }
+
+  /* Flexbox mobile fixes */
+  .flex, .inline-flex {
+    flex-wrap: wrap !important;
+  }
+  
+  .flex-nowrap {
+    flex-wrap: nowrap !important;
+  }
+
+  /* Remove any transforms that might cause overflow */
+  .transform, .translate-x-1, .translate-x-2 {
+    transform: none !important;
+  }
+
+  /* Banner and hero mobile fixes */
+  .banner, .hero, .hero-section {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }
 

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import HeaderLegalShield from "@/components/header-legalshield";
+import Header from "@/components/header";
 import Footer from "@/components/footer";
 import MobileContainer from "@/components/mobile-container";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
@@ -25,7 +25,7 @@ export default function PageLayout({ children, className = "", showFooter = true
         />
         
         <div className="relative z-10 w-full max-w-full overflow-hidden">
-          <HeaderLegalShield />
+          <Header />
           
           <main id="main-content" role="main" className="hw-accelerated w-full max-w-full overflow-hidden">
             {children}

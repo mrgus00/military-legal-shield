@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <PageLayout>
         {/* Hero Section */}
-        <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden" aria-labelledby="hero-heading">
+        <section className="relative pt-16 sm:pt-20 pb-12 sm:pb-16 px-3 sm:px-4 lg:px-6 overflow-hidden w-full" aria-labelledby="hero-heading">
           {/* Justice Background Image */}
           <div className="absolute inset-0 -z-20">
             <img 
@@ -81,29 +81,29 @@ export default function Home() {
             <div className="absolute bottom-20 right-10 w-20 h-20 bg-red-100 rounded-full opacity-25 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
           </div>
 
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full max-w-full mx-auto">
           <div className="text-center">
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-red-800 text-sm font-medium mb-6 shadow-lg animate-fade-in-up hover-scale">
-              <AlertTriangle className="w-4 h-4 mr-2 animate-pulse" />
+            <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-red-800 text-xs sm:text-sm font-medium mb-4 sm:mb-6 shadow-lg animate-fade-in-up">
+              <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-pulse" />
               Veteran-Owned & Operated
             </div>
             
-            <h1 id="hero-heading" className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
+            <h1 id="hero-heading" className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-2">
               <span className="text-white drop-shadow-lg">Got Legal Trouble?</span>
-              <span className="text-orange-400 block mt-2 drop-shadow-lg">Get a Military Lawyer Now.</span>
+              <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">Get a Military Lawyer Now.</span>
             </h1>
             
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <p className="text-xl text-white mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-                Court-Martial? DUI? False Accusation? Legal Questions?<br/>
-                We connect you directly to military lawyers—fast.
+            <div className="animate-fade-in-up px-2" style={{ animationDelay: '0.3s' }}>
+              <p className="text-base sm:text-lg md:text-xl text-white mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+                Court-Martial? DUI? False Accusation? Legal Questions?<br className="hidden sm:block"/>
+                <span className="sm:hidden"> </span>We connect you directly to military lawyers—fast.
               </p>
               
               {/* Immediate CTA */}
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8 px-2">
                 <Link href="/urgent-match">
-                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-4 text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl">
-                    <Scale className="w-6 h-6 mr-3" />
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full sm:w-auto max-w-sm sm:max-w-none mx-auto">
+                    <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3" />
                     Connect with a Lawyer Now
                   </Button>
                 </Link>
@@ -111,32 +111,32 @@ export default function Home() {
             </div>
 
             {/* Trust & Credibility Section */}
-            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-              <h2 className="text-2xl font-bold text-white mb-6 text-center">Why Trust Military Legal Shield?</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="mb-8 sm:mb-12 animate-fade-in-up px-2" style={{ animationDelay: '0.5s' }}>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Why Trust Military Legal Shield?</h2>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold">Veteran-Owned & Operated</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Veteran-Owned & Operated</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Globe className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Globe className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold">Fast Legal Access Worldwide</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Fast Legal Access Worldwide</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Shield className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Shield className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold">Confidential & Secure</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Confidential & Secure</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-8 h-8 text-white" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Users className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold">Recommended by Service Members</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base">Recommended by Service Members</p>
                 </div>
               </div>
             </div>
@@ -160,22 +160,22 @@ export default function Home() {
       </section>
 
       {/* How It Works - 3-Step Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-navy-900 mb-4">Getting Legal Help is Simple:</h2>
+      <section className="py-12 sm:py-16 bg-white overflow-hidden">
+        <div className="w-full max-w-full mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy-900 mb-3 sm:mb-4 px-2">Getting Legal Help is Simple:</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center">
-              <CardHeader>
-                <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="text-3xl font-bold text-orange-600">1</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <Card className="border-orange-200 hover-lift transition-smooth card-interactive touch-optimized text-center mx-2 md:mx-0">
+              <CardHeader className="pb-3">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-600">1</div>
                 </div>
-                <CardTitle className="text-xl text-navy-900">Choose Your Legal Issue</CardTitle>
+                <CardTitle className="text-lg sm:text-xl text-navy-900 px-2">Choose Your Legal Issue</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">
+              <CardContent className="pt-0">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base px-2">
                   Select from court-martial defense, DUI, false accusations, POA, or other legal matters
                 </p>
               </CardContent>

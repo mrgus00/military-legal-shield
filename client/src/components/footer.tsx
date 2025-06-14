@@ -15,7 +15,9 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <Logo width={180} height={80} className="" />
+              <div className="w-32 sm:w-40 lg:w-44">
+                <Logo width={180} height={80} className="" />
+              </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Comprehensive legal support for military personnel and veterans. 

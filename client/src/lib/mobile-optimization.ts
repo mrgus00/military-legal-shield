@@ -96,13 +96,22 @@ export function formatAttorneyContact(attorney: {
 
 // Emergency contact formatting
 export function formatEmergencyContact(): {
+  phone: string;
+  email: string;
+  display: string;
   callLink: string;
   emailLink: string;
 } {
+  const emergencyPhone = '+1-800-645-4357';
+  const emergencyEmail = 'emergency@militarylegalshield.com';
+  
   return {
-    callLink: formatPhoneForCall('+1-800-645-4357'),
+    phone: emergencyPhone,
+    email: emergencyEmail,
+    display: emergencyPhone,
+    callLink: formatPhoneForCall(emergencyPhone),
     emailLink: formatEmailForTap(
-      'emergency@militarylegalshield.com',
+      emergencyEmail,
       'URGENT: Emergency Legal Assistance Required',
       'This is an urgent request for legal assistance. Please contact me immediately.\n\n[Please provide brief description of your situation]\n\nContact Information:\nName: [Your Name]\nRank/Branch: [Your Rank and Branch]\nPhone: [Your Phone Number]\nLocation: [Your Current Location]'
     )

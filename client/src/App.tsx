@@ -54,6 +54,7 @@ import InjuryClaims from "@/pages/injury-claims";
 import LegalChallenges from "@/pages/legal-challenges-basic";
 import LoadingDemoPage from "@/pages/loading-demo";
 import FindAttorneys from "@/pages/find-attorneys";
+import SubscriptionSuccess from "@/pages/subscription-success";
 
 function Router() {
   return (
@@ -63,6 +64,7 @@ function Router() {
       <Route path="/messages" component={Messages} />
       <Route path="/case-tracking" component={CaseTracking} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/subscription-success" component={SubscriptionSuccess} />
       <Route path="/resources" component={Resources} />
       <Route path="/attorneys" component={FindAttorneys} />
       <Route path="/find-attorneys" component={FindAttorneys} />

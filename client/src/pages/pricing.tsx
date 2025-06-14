@@ -16,7 +16,22 @@ export default function Pricing() {
 
   const handleUpgrade = async () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to upgrade to Premium.",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 1500);
+      return;
+    }
+
+    if (isPremium) {
+      toast({
+        title: "Already Premium",
+        description: "You already have an active Premium subscription.",
+      });
       return;
     }
 
@@ -25,16 +40,22 @@ export default function Pricing() {
       const response = await apiRequest("POST", "/api/create-subscription");
       const data = await response.json();
       
-      if (data.url) {
-        window.location.href = data.url;
+      if (response.ok && data.url) {
+        toast({
+          title: "Redirecting to Checkout",
+          description: "Taking you to secure payment processing...",
+        });
+        setTimeout(() => {
+          window.location.href = data.url;
+        }, 1000);
       } else {
-        throw new Error("No checkout URL received");
+        throw new Error(data.message || "Failed to create subscription session");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Subscription error:", error);
       toast({
-        title: "Error",
-        description: "Failed to start subscription process. Please try again.",
+        title: "Upgrade Failed",
+        description: error.message || "Failed to start subscription process. Please try again.",
         variant: "destructive",
       });
     } finally {

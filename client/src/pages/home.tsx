@@ -98,7 +98,7 @@ export default function Home() {
             
             <h1 id="hero-heading" className="text-xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-1 sm:px-2 text-overflow-safe">
               <span className="text-white drop-shadow-lg block">Got Legal Trouble?</span>
-              <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">Get a Military Lawyer Now.</span>
+              <span className="text-orange-400 block mt-1 sm:mt-2 drop-shadow-lg">Get Military Legal Help Now.</span>
             </h1>
             
             <div className="animate-fade-in-up px-1 sm:px-2 max-w-full" style={{ animationDelay: '0.3s' }}>
@@ -118,33 +118,33 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Trust & Credibility Section */}
+            {/* Trust Section - LegalShield Style */}
             <div className="mb-8 sm:mb-12 animate-fade-in-up px-1 sm:px-2 w-full max-w-full mobile-form-container" style={{ animationDelay: '0.5s' }}>
-              <h2 className="text-base sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center responsive-text text-overflow-safe">Why Trust Military Legal Shield?</h2>
+              <h2 className="text-base sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center responsive-text text-overflow-safe">"Trusted by Those Who Serve"</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 max-w-full mx-auto no-scroll-x">
                 <div className="text-center mobile-card">
                   <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
                     <CheckCircle className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Veteran-Owned & Operated</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Veteran-Owned</p>
                 </div>
                 <div className="text-center mobile-card">
                   <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
-                    <Globe className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                    <Shield className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Fast Legal Access Worldwide</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Secure</p>
                 </div>
                 <div className="text-center mobile-card">
                   <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
-                    <Shield className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                    <Clock className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Confidential & Secure</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Fast Access</p>
                 </div>
                 <div className="text-center mobile-card">
                   <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 flex-shrink-0">
                     <Users className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                   </div>
-                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Recommended by Service Members</p>
+                  <p className="text-white font-semibold text-xs sm:text-sm md:text-base responsive-text text-overflow-safe">Military-Focused</p>
                 </div>
               </div>
             </div>

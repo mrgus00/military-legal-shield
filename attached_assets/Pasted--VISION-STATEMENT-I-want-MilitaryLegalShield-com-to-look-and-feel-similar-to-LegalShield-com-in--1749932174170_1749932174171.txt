@@ -1,0 +1,32 @@
+ VISION STATEMENT:
+ "I want MilitaryLegalShield.com to look and feel similar to LegalShield.com in terms of design, layout, and
+ user experience-but fully tailored to serve the six branches of the U.S. military, veterans, and their families.
+ The goal is to create a near mirror image in functionality and polish, but with a military-first focus that reflects
+ the needs, language, and culture of our service members. The result should not only match LegalShield's
+ user interface but exceed it in relevance, simplicity, and trust for the military community."
+ DESIGN PRIORITIES:
+ 1. Visual Style:- Clean, professional layout like LegalShield- Military-themed palette (navy blue, black, white, camouflage accents)- Authentic imagery of real service members, veterans, and families
+ 2. Navigation & Layout:- Top menu: Home, Services, Plans, How It Works, FAQ, Contact- Clear hero section with CTA (e.g., "Connect with a Lawyer Now")- Tiered feature boxes (Free | Premium)
+ 3. Content & Messaging:- Military-specific legal terms and scenarios- Pages tailored for Army, Navy, Marines, Air Force, Space Force, Coast Guard- Dedicated sections for veterans and family legal support
+ 4. Core Features:- Seamless lawyer connection- Responsive mobile design
+- Stripe payment integration- Secure login/dashboard access
+ HOMEPAGE MOCKUP LAYOUT (TEXT WIREFRAME):
+ HEADER:
+ [LOGO]   [Home] [Services] [Plans] [How It Works] [FAQ] [Contact]   [Login/Sign Up]
+ HERO SECTION:
+ "Got Legal Trouble? Get Military Legal Help Now."
+ CTA Button: [Connect with a Lawyer]
+ Background Image: Confident service member
+ TRUST SECTION:
+ "Trusted by Those Who Serve"- Veteran-Owned - Secure - Fast Access - Military-Focused
+ HOW IT WORKS:
+ 1. Choose Your Legal Need
+ 2. Connect With a Military Lawyer
+ 3. Get Answers Fast
+ SERVICES SNAPSHOT:- Court-Martial Defense- DUI/DWI Assistance- POAs & Family Docs- UCMJ Support- PCS & Deployment Legal
+PLANS:
+ [Free Plan] [Premium Plan] - Comparison Chart + CTA Buttons
+ TESTIMONIALS:
+ Star ratings + Quotes from real service members
+ FOOTER:
+ Quick Links | Terms | Privacy | Social Media Icons | © 2025 MilitaryLegalShield

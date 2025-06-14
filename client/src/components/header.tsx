@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone, Award, Mail } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Home, Shield, Scale, BookOpen, Users, Phone, Award, Mail, FileText } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import GlobalSearch from "@/components/global-search";
@@ -76,121 +76,105 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - LegalShield Style */}
             <nav className="hidden lg:flex items-center space-x-1">
               <Link
                 href="/"
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
                   isActive("/")
-                    ? "bg-navy-800 text-white"
-                    : "text-gray-700 hover:text-navy-800 hover:bg-gray-50"
+                    ? "text-navy-800 border-b-2 border-navy-800"
+                    : "text-gray-700 hover:text-navy-800"
                 }`}
               >
                 Home
               </Link>
               
-              {/* Legal Services Dropdown */}
+              {/* Services Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover:bg-gray-50 flex items-center">
-                    Legal Services
+                  <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 flex items-center">
+                    Services
                     <ChevronDown className="ml-1 h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuContent align="start" className="w-64">
                   <DropdownMenuItem asChild>
                     <Link href="/urgent-match" className="flex items-center text-red-600 font-medium">
                       <Shield className="mr-2 h-4 w-4" />
-                      Emergency Consultation
-                      <span className="ml-auto bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">24/7</span>
+                      Court-Martial Defense
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/emergency-consultation" className="flex items-center">
                       <Phone className="mr-2 h-4 w-4" />
-                      One-Click Emergency Booking
+                      DUI/DWI Assistance
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/document-generator" className="flex items-center">
+                      <FileText className="mr-2 h-4 w-4" />
+                      POAs & Family Docs
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/military-justice" className="flex items-center">
+                      <Scale className="mr-2 h-4 w-4" />
+                      UCMJ Support
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/consultation-booking" className="flex items-center">
-                      <Phone className="mr-2 h-4 w-4" />
-                      Schedule Consultation
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/video-consultation" className="flex items-center">
                       <Users className="mr-2 h-4 w-4" />
-                      Video Consultation
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/attorneys" className="flex items-center">
-                      <Scale className="mr-2 h-4 w-4" />
-                      Find Attorneys
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/case-tracking" className="flex items-center">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Track Your Case
+                      PCS & Deployment Legal
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Resources Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-navy-800 hover:bg-gray-50 flex items-center">
-                    Resources
-                    <ChevronDown className="ml-1 h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuItem asChild>
-                    <Link href="/resources" className="flex items-center">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Legal Resources Library
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/document-generator" className="flex items-center">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Document Generator
-                      <span className="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">AI</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/benefits-calculator" className="flex items-center">
-                      <Users className="mr-2 h-4 w-4" />
-                      Benefits Calculator
-                      <span className="ml-auto bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">Live</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/forum" className="flex items-center">
-                      <Users className="mr-2 h-4 w-4" />
-                      Community Forum
-                      <span className="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">Active</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/storytelling-corner" className="flex items-center">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Veterans Stories
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/legal-challenges" className="flex items-center">
-                      <Award className="mr-2 h-4 w-4" />
-                      Legal Challenges
-                      <span className="ml-auto bg-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full">New</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link
+                href="/pricing"
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive("/pricing")
+                    ? "text-navy-800 border-b-2 border-navy-800"
+                    : "text-gray-700 hover:text-navy-800"
+                }`}
+              >
+                Plans
+              </Link>
+
+              <Link
+                href="/education"
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive("/education")
+                    ? "text-navy-800 border-b-2 border-navy-800"
+                    : "text-gray-700 hover:text-navy-800"
+                }`}
+              >
+                How It Works
+              </Link>
+
+              <Link
+                href="/help-center"
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive("/help-center")
+                    ? "text-navy-800 border-b-2 border-navy-800"
+                    : "text-gray-700 hover:text-navy-800"
+                }`}
+              >
+                FAQ
+              </Link>
+
+              <Link
+                href="/contact-support"
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive("/contact-support")
+                    ? "text-navy-800 border-b-2 border-navy-800"
+                    : "text-gray-700 hover:text-navy-800"
+                }`}
+              >
+                Contact
+              </Link>
+            </nav>
 
               {/* Education Dropdown */}
               <DropdownMenu>

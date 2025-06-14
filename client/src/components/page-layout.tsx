@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import EnhancedNavbar from "@/components/enhanced-navbar";
+import HeaderLegalShield from "@/components/header-legalshield";
 import Footer from "@/components/footer";
 import MobileContainer from "@/components/mobile-container";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";

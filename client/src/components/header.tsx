@@ -24,6 +24,9 @@ interface MenuItem {
 export default function Header() {
   const [location] = useLocation();
   const { isAuthenticated, user, isLoading } = useAuth();
+  
+  // Emergency contact links
+  const emergencyContact = formatEmergencyContact();
 
   const menuItems: MenuItem[] = [
     { name: "Home", href: "/", icon: Home },
@@ -294,8 +297,30 @@ export default function Header() {
               </Link>
             </nav>
 
-            {/* Right Side - Search, User Menu, Mobile Menu */}
-            <div className="flex items-center space-x-4">
+            {/* Right Side - Emergency Contact, Search, User Menu, Mobile Menu */}
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              
+              {/* Emergency Contact - Mobile Optimized */}
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <a 
+                  href={emergencyContact.callLink}
+                  onClick={() => trackMobileInteraction('emergency_call', 'header_button')}
+                  className="flex items-center justify-center min-h-[40px] min-w-[40px] sm:min-h-[36px] sm:min-w-[36px] bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  aria-label="Emergency Legal Call - 24/7 Support"
+                  title="Call Emergency Legal Support: 1-800-645-4357"
+                >
+                  <Phone className="w-4 h-4" />
+                </a>
+                <a 
+                  href={emergencyContact.emailLink}
+                  onClick={() => trackMobileInteraction('emergency_email', 'header_button')}
+                  className="hidden sm:flex items-center justify-center min-h-[36px] min-w-[36px] bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all duration-200 touch-manipulation focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label="Emergency Legal Email"
+                  title="Email Emergency Legal Support"
+                >
+                  <Mail className="w-4 h-4" />
+                </a>
+              </div>
               
               {/* Global Search - Hidden on mobile */}
               <div className="hidden md:block">

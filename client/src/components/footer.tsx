@@ -1,12 +1,16 @@
 import { Link } from "wouter";
 import { Mail, Phone, MapPin, Shield, Scale, Users, BookOpen } from "lucide-react";
 import Logo from "@/components/logo";
+import { formatEmergencyContact, formatSupportContact, mobileButtonClasses, trackMobileInteraction } from "@/lib/mobile-optimization";
 
 export default function Footer() {
+  const emergencyContact = formatEmergencyContact();
+  const supportContact = formatSupportContact();
+
   return (
     <footer className="bg-navy-900 text-white" role="contentinfo">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           
           {/* Company Info */}
           <div className="space-y-4">
@@ -103,22 +107,57 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact - Mobile Optimized */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-sm text-gray-300">
-                <Phone className="w-4 h-4 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-white">24/7 Emergency</p>
-                  <p>1-800-MIL-HELP</p>
+            <div className="space-y-4">
+              {/* Emergency Contact - Click to Call */}
+              <div className="space-y-2">
+                <p className="font-medium text-white text-sm">24/7 Emergency Legal Support</p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <a 
+                    href={emergencyContact.callLink}
+                    onClick={() => trackMobileInteraction('emergency_call', 'footer_button')}
+                    className={`${mobileButtonClasses.call} text-sm bg-red-600 hover:bg-red-700 focus:ring-red-500`}
+                    aria-label="Call Emergency Legal Support"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Call Now</span>
+                  </a>
+                  <a 
+                    href={emergencyContact.emailLink}
+                    onClick={() => trackMobileInteraction('emergency_email', 'footer_button')}
+                    className={`${mobileButtonClasses.email} text-sm focus:ring-blue-500`}
+                    aria-label="Email Emergency Legal Support"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>Email</span>
+                  </a>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-300">
-                <Mail className="w-4 h-4 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-white">Support Email</p>
-                  <p>support@militarylegalshield.com</p>
+              
+              {/* Support Contact */}
+              <div className="space-y-2">
+                <p className="font-medium text-white text-sm">General Support</p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <a 
+                    href={supportContact.callLink}
+                    onClick={() => trackMobileInteraction('support_call', 'footer_button')}
+                    className={`${mobileButtonClasses.secondary} border-gray-500 text-gray-300 hover:bg-gray-800 hover:text-white focus:ring-gray-500 text-sm`}
+                    aria-label="Call Support"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Support</span>
+                  </a>
+                  <a 
+                    href={supportContact.emailLink}
+                    onClick={() => trackMobileInteraction('support_email', 'footer_button')}
+                    className={`${mobileButtonClasses.secondary} border-gray-500 text-gray-300 hover:bg-gray-800 hover:text-white focus:ring-gray-500 text-sm`}
+                    aria-label="Email Support"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>Email</span>
+                  </a>
                 </div>
               </div>
               <div className="flex items-start space-x-3 text-sm text-gray-300">

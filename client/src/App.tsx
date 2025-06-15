@@ -58,6 +58,7 @@ import LoadingDemoPage from "@/pages/loading-demo";
 import FindAttorneys from "@/pages/find-attorneys";
 import SubscriptionSuccess from "@/pages/subscription-success";
 import SMSCenter from "@/pages/sms-center";
+import CDNDashboard from "@/pages/cdn-dashboard";
 
 function Router() {
   return (
@@ -110,6 +111,7 @@ function Router() {
       <Route path="/mobile-test" component={MobileTestDashboard} />
       <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route path="/sms-center" component={SMSCenter} />
+      <Route path="/cdn-dashboard" component={CDNDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

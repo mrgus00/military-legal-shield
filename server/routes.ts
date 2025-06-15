@@ -12,6 +12,7 @@ import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistan
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { handleRSSFeed, handleJSONFeed } from "./rss";
 import { twilioService, type EmergencyAlert } from "./twilio";
+import { cdnService, cacheMiddleware } from "./cdn";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -100,6 +101,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   // Public access - no authentication
   
+  // Apply CDN cache headers to static assets
+  app.use('/assets', cacheMiddleware);
+  app.use('/images', cacheMiddleware);
+  app.use('/fonts', cacheMiddleware);
+
   // RSS Feed routes
   app.get('/rss.xml', handleRSSFeed);
   app.get('/feed.xml', handleRSSFeed);
@@ -727,6 +733,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Welcome SMS error:', error);
       res.status(500).json({ error: 'Failed to send welcome SMS' });
+    }
+  });
+
+  // CDN and Cloudflare management endpoints
+  app.post('/api/cdn/purge-cache', async (req, res) => {
+    try {
+      const { urls } = req.body;
+      if (!urls || !Array.isArray(urls)) {
+        return res.status(400).json({ error: 'URLs array required' });
+      }
+
+      const success = await cdnService.purgeCache(urls);
+      res.json({ success, purgedUrls: urls.length });
+    } catch (error) {
+      console.error('Cache purge error:', error);
+      res.status(500).json({ error: 'Failed to purge cache' });
+    }
+  });
+
+  // Get CDN asset URL with optimization
+  app.post('/api/cdn/asset-url', async (req, res) => {
+    try {
+      const { assetPath, optimization } = req.body;
+      if (!assetPath) {
+        return res.status(400).json({ error: 'Asset path required' });
+      }
+
+      let url;
+      if (optimization && (optimization.width || optimization.height)) {
+        url = cdnService.getResponsiveImageUrl(assetPath, optimization);
+      } else {
+        url = cdnService.getAssetUrl(assetPath);
+      }
+
+      res.json({ url, original: assetPath });
+    } catch (error) {
+      console.error('Asset URL generation error:', error);
+      res.status(500).json({ error: 'Failed to generate asset URL' });
+    }
+  });
+
+  // CDN performance metrics endpoint
+  app.get('/api/cdn/metrics', async (req, res) => {
+    try {
+      const metrics = {
+        cdnEnabled: !!process.env.CDN_DOMAIN,
+        cloudflareEnabled: !!(process.env.CLOUDFLARE_ZONE_ID && process.env.CLOUDFLARE_API_TOKEN),
+        cdnDomain: process.env.CDN_DOMAIN || 'Not configured',
+        cacheHeaders: {
+          images: '1 year',
+          fonts: '1 year',
+          css: '1 year (immutable)',
+          js: '1 year (immutable)',
+          html: '1 hour'
+        },
+        features: {
+          imageOptimization: true,
+          autoMinify: true,
+          brotliCompression: true,
+          http2Push: true,
+          preloadHeaders: true,
+          securityHeaders: true
+        }
+      };
+
+      res.json(metrics);
+    } catch (error) {
+      console.error('CDN metrics error:', error);
+      res.status(500).json({ error: 'Failed to get CDN metrics' });
     }
   });
 

@@ -298,6 +298,24 @@ img {
   }
 }
 
+/* Accessible color utilities - WCAG 2.1 AA compliant */
+.bg-orange-accessible {
+  background-color: #c2410c !important; /* Orange-700 - meets 4.5:1 contrast with white text */
+}
+
+.hover\:bg-orange-accessible:hover {
+  background-color: #9a3412 !important; /* Orange-800 - darker hover state */
+}
+
+/* Override Tailwind orange-600 with accessible colors */
+.bg-orange-600 {
+  background-color: #c2410c !important; /* Orange-700 for better contrast */
+}
+
+.hover\:bg-orange-700:hover {
+  background-color: #9a3412 !important; /* Orange-800 for hover state */
+}
+
 /* Mobile-friendly hover states */
 @media (hover: hover) and (pointer: fine) {
   /* Desktop hover effects */

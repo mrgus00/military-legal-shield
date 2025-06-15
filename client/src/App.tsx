@@ -57,6 +57,7 @@ import LegalChallenges from "@/pages/legal-challenges-basic";
 import LoadingDemoPage from "@/pages/loading-demo";
 import FindAttorneys from "@/pages/find-attorneys";
 import SubscriptionSuccess from "@/pages/subscription-success";
+import SMSCenter from "@/pages/sms-center";
 
 function Router() {
   return (

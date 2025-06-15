@@ -278,13 +278,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Send SMS notification to assigned attorney and client
         const emergencyAlert: EmergencyAlert = {
           fullName: consultationData.fullName,
-          rank: consultationData.rank,
-          branch: consultationData.branch,
-          phoneNumber: consultationData.phoneNumber,
+          rank: consultationData.rank || 'Unknown',
+          branch: consultationData.branch || 'Unknown',
+          phoneNumber: consultationData.phone,
           legalIssue: consultationData.legalIssue,
           urgencyLevel: consultationData.urgencyLevel as 'critical' | 'high' | 'medium',
-          location: consultationData.location,
-          additionalDetails: consultationData.description
+          location: consultationData.preferredContactMethod,
+          additionalDetails: consultationData.description || ''
         };
 
         // Send emergency alert via SMS
@@ -673,6 +673,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         });
       }
+    }
+  });
+
+  // Twilio SMS webhook for incoming messages
+  app.post('/api/sms/webhook', express.urlencoded({ extended: false }), async (req, res) => {
+    try {
+      const { From, Body } = req.body;
+      const response = await twilioService.handleIncomingSMS(From, Body);
+      
+      // Send TwiML response
+      res.type('text/xml');
+      res.send(`<?xml version="1.0" encoding="UTF-8"?>
+        <Response>
+          <Message>${response}</Message>
+        </Response>`);
+    } catch (error) {
+      console.error('SMS webhook error:', error);
+      res.status(500).send('Error processing SMS');
+    }
+  });
+
+  // Send appointment reminder SMS
+  app.post('/api/sms/appointment-reminder', async (req, res) => {
+    try {
+      const { phoneNumber, appointmentDetails } = req.body;
+      const success = await twilioService.sendAppointmentReminder(phoneNumber, appointmentDetails);
+      res.json({ success });
+    } catch (error) {
+      console.error('Appointment reminder error:', error);
+      res.status(500).json({ error: 'Failed to send appointment reminder' });
+    }
+  });
+
+  // Send case update SMS
+  app.post('/api/sms/case-update', async (req, res) => {
+    try {
+      const { phoneNumber, caseUpdate } = req.body;
+      const success = await twilioService.sendCaseUpdate(phoneNumber, caseUpdate);
+      res.json({ success });
+    } catch (error) {
+      console.error('Case update SMS error:', error);
+      res.status(500).json({ error: 'Failed to send case update' });
+    }
+  });
+
+  // Send welcome SMS for new users
+  app.post('/api/sms/welcome', async (req, res) => {
+    try {
+      const { phoneNumber, serviceMemberName } = req.body;
+      const success = await twilioService.sendWelcomeSMS(phoneNumber, serviceMemberName);
+      res.json({ success });
+    } catch (error) {
+      console.error('Welcome SMS error:', error);
+      res.status(500).json({ error: 'Failed to send welcome SMS' });
     }
   });
 

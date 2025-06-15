@@ -109,6 +109,7 @@ function Router() {
       <Route path="/mobile" component={MobileLanding} />
       <Route path="/mobile-test" component={MobileTestDashboard} />
       <Route path="/loading-demo" component={LoadingDemoPage} />
+      <Route path="/sms-center" component={SMSCenter} />
       <Route component={NotFound} />
     </Switch>
   );

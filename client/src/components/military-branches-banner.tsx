@@ -87,7 +87,7 @@ export default function MilitaryBranchesBanner() {
                 <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 leading-tight responsive-text text-overflow-safe">
                   {branch.name}
                 </h4>
-                <p className="text-xs text-gray-500 responsive-text text-overflow-safe">
+                <p className="text-xs text-gray-600 responsive-text text-overflow-safe">
                   Est. {branch.established}
                 </p>
               </button>
@@ -96,7 +96,7 @@ export default function MilitaryBranchesBanner() {
         </div>
         
         <div className="mt-6 sm:mt-8 text-center">
-          <p className="text-xs sm:text-sm text-gray-500 responsive-text text-overflow-safe px-1 sm:px-2">
+          <p className="text-xs sm:text-sm text-gray-600 responsive-text text-overflow-safe px-1 sm:px-2">
             Honoring the service and sacrifice of all who serve our nation
           </p>
         </div>

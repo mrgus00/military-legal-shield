@@ -316,6 +316,17 @@ img {
   background-color: #9a3412 !important; /* Orange-800 for hover state */
 }
 
+/* Fix gray text contrast for WCAG 2.1 AA compliance */
+.text-gray-500 {
+  color: #4b5563 !important; /* gray-600 - meets 4.5:1 contrast on white/light backgrounds */
+}
+
+/* Ensure sufficient contrast for all gray text variants */
+.text-xs.text-gray-500,
+.text-sm.text-gray-500 {
+  color: #4b5563 !important; /* gray-600 for better accessibility */
+}
+
 /* Mobile-friendly hover states */
 @media (hover: hover) and (pointer: fine) {
   /* Desktop hover effects */

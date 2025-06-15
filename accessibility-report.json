@@ -1,0 +1,948 @@
+{
+  "summary": {
+    "filesChecked": 192,
+    "elementsScanned": 71,
+    "totalIssues": 116,
+    "criticalIssues": 0,
+    "majorIssues": 48,
+    "minorIssues": 68,
+    "complianceScore": 0
+  },
+  "issues": [
+    {
+      "file": "/home/runner/workspace/client/src/components/achievement-badge.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/attorney-card.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/attorney-reviews.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/benefits-eligibility-calculator.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/command-center-interface.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/contact-form.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/footer.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/footer.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/global-search.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/hero.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/interactive-branch-selector.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/learning-path-card.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-assistant-chatbot.tsx",
+      "element": "link",
+      "issue": "Missing accessible name",
+      "code": "<action.icon className=\"w-3 h-3 mr-1\" />",
+      "wcag": "WCAG 2.1 AA - 2.4.4 Link Purpose",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-assistant-chatbot.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-faq-hub.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-faq-hub.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-faq-hub.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-resource-hub.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/legal-resource-hub.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/loading-demo.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/meditation-player.tsx",
+      "element": "input",
+      "issue": "Missing form label association",
+      "code": "<input\n            type=\"range\"\n            min=\"0\"\n            max=\"1\"\n            step=\"0.1\"\n            value={volume}\n            onChange={(e) =>",
+      "wcag": "WCAG 2.1 AA - 3.3.2 Labels or Instructions",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/mobile-test-dashboard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/mobile-test-dashboard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/premium-gate.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/quick-actions.tsx",
+      "element": "link",
+      "issue": "Missing accessible name",
+      "code": "<action.icon className={`${action.iconColor} w-6 h-6`} />",
+      "wcag": "WCAG 2.1 AA - 2.4.4 Link Purpose",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/resource-card.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/retirement-calculator-animation.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/scenario-simulator.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/search-bar.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/simple-branch-selector.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/skill-translation-widget.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/skill-translation-widget.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/subscription-plans.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/tactical-loading-overlay.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/ui/input.tsx",
+      "element": "input",
+      "issue": "Missing form label association",
+      "code": "<input\n        type={type}\n        className={cn(\n          \"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\",\n          className\n        )}\n        ref={ref}\n        {...props}\n      />",
+      "wcag": "WCAG 2.1 AA - 3.3.2 Labels or Instructions",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/ui/pagination.tsx",
+      "element": "link",
+      "issue": "Missing accessible name",
+      "code": "<a\n    aria-current={isActive ? \"page\" : undefined}\n    className={cn(\n      buttonVariants({\n        variant: isActive ? \"outline\" : \"ghost\",\n        size,\n      }),\n      className\n    )}\n    {...props}\n  />",
+      "wcag": "WCAG 2.1 AA - 2.4.4 Link Purpose",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/video-call.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/video-call.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/worldwide-legal-navigator.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/components/worldwide-legal-navigator.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/accessibility-audit.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/attorneys.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/attorneys.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/attorneys.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/benefits-calculator.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/career-assessment.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/career-assessment.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/career-assessment.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/cdn-dashboard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/cdn-dashboard.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/checkout.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/consultation-booking.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/consultation-booking.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-generator.tsx",
+      "element": "input",
+      "issue": "Missing form label association",
+      "code": "<input\n                        type=\"text\"\n                        onchange=\"updateField('${field}', this.value)\"\n                        placeholder=\"Enter ${formatFieldName(field).toLowerCase()}\"\n                        style=\"\n                          width: 100%; \n                          padding: 8px 12px; \n                          border: 1px solid #d1d5db; \n                          border-radius: 6px; \n                          font-size: 14px;\n                        \"\n                      />",
+      "wcag": "WCAG 2.1 AA - 3.3.2 Labels or Instructions",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-prep.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-prep.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-prep.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard-basic.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard-simple.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard-simple.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard-simple.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/document-wizard.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/emergency-consultation.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/emergency-consultation.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/emergency-consultation.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/emergency-defense.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/emotional-support.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/financial-planning.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/financial-planning.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/find-attorneys.tsx",
+      "element": "input",
+      "issue": "Missing form label association",
+      "code": "<input\n                    type=\"checkbox\"\n                    checked={emergencyOnly}\n                    onChange={(e) =>",
+      "wcag": "WCAG 2.1 AA - 3.3.2 Labels or Instructions",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/find-attorneys.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/find-attorneys.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/find-attorneys.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/forum.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/forum.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/help-center.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/home.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/home.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/injury-claims.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/learning-dashboard.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/leave-review.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/leave-review.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-challenges-minimal.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-challenges-simple.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-challenges-standalone.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-challenges.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-disclaimers.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/legal-resources.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/messages.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/messages.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/micro-challenges.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/micro-challenges.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/military-justice.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/mobile-landing.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/mobile-landing.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/mobile-landing.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/networking-hub.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/networking-hub.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/privacy-policy.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/resources.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/resources.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/resume-builder.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/resume-builder.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/skill-translation.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/storytelling-corner.tsx",
+      "element": "link",
+      "issue": "Missing accessible name",
+      "code": "<audio ref={audioRef} controls className=\"w-full\" />",
+      "wcag": "WCAG 2.1 AA - 2.4.4 Link Purpose",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/storytelling-corner.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/subscription-success.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/terminology-demo.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/terms-of-service.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/urgent-match.tsx",
+      "element": "input",
+      "issue": "Missing form label association",
+      "code": "<input\n                            type=\"checkbox\"\n                            checked={formData.availableTimeSlots.includes(slot)}\n                            onChange={() =>",
+      "wcag": "WCAG 2.1 AA - 3.3.2 Labels or Instructions",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/urgent-match.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/veteran-services.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h2 to h4",
+      "code": "h4",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/video-consultation.tsx",
+      "element": "color",
+      "issue": "Potential low color contrast",
+      "code": "Color combination may not meet 4.5:1 ratio",
+      "wcag": "WCAG 2.1 AA - 1.4.3 Contrast (Minimum)",
+      "severity": "minor"
+    },
+    {
+      "file": "/home/runner/workspace/client/src/pages/video-consultation.tsx",
+      "element": "heading",
+      "issue": "Heading hierarchy skip from h1 to h3",
+      "code": "h3",
+      "wcag": "WCAG 2.1 AA - 1.3.1 Info and Relationships",
+      "severity": "major"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "medium",
+      "action": "Review color combinations for sufficient contrast",
+      "example": "Use tools like WebAIM Contrast Checker"
+    }
+  ]
+}

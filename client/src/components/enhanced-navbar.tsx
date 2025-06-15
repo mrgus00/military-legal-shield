@@ -145,9 +145,11 @@ export default function EnhancedNavbar() {
                 className="flex items-center gap-3 cursor-pointer group"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="MilitaryLegalShield - Home"
+                role="link"
               >
-                <div className="military-gradient w-10 h-10 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-                  <Shield className="w-6 h-6 text-white" />
+                <div className="military-gradient w-10 h-10 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow" role="presentation" aria-hidden="true">
+                  <Shield className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
                 <div className="hidden sm:block">
                   <h1 className="text-xl font-bold text-navy-900 group-hover:text-blue-600 transition-colors">

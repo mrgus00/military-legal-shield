@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # Selenium Hub - Central coordination point for all browsers
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+      - "4442:4442"
+      - "4443:4443"
+    environment:
+      - GRID_MAX_SESSION=16
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+      - GRID_NEW_SESSION_WAIT_TIMEOUT=60
+    networks:
+      - selenium-grid
+
+  # Chrome Node - Multiple instances for parallel testing
+  chrome-node-1:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-1
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=4
+      - NODE_MAX_SESSION=4
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  chrome-node-2:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-2
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=4
+      - NODE_MAX_SESSION=4
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Firefox Node
+  firefox-node:
+    image: selenium/node-firefox:4.15.0
+    container_name: firefox-node
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Edge Node
+  edge-node:
+    image: selenium/node-edge:4.15.0
+    container_name: edge-node
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Video recording for test sessions
+  video-recorder:
+    image: selenium/video:ffmpeg-4.3.1-20231025
+    container_name: video-recorder
+    depends_on:
+      - selenium-hub
+    environment:
+      - DISPLAY_CONTAINER_NAME=chrome-node-1
+      - FILE_NAME=military-legal-shield-test
+    volumes:
+      - ./test-recordings:/videos
+    networks:
+      - selenium-grid
+
+networks:
+  selenium-grid:
+    driver: bridge
+
+volumes:
+  test-recordings:

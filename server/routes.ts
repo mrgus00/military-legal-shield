@@ -10,6 +10,7 @@ import { eq, ilike, and, or } from "drizzle-orm";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { handleRSSFeed, handleJSONFeed } from "./rss";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -98,6 +99,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   // Public access - no authentication
   
+  // RSS Feed routes
+  app.get('/rss.xml', handleRSSFeed);
+  app.get('/feed.xml', handleRSSFeed);
+  app.get('/feed.json', handleJSONFeed);
+
   // Health check endpoint - add explicit API prefix
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'MilitaryLegalShield' });

@@ -14,6 +14,7 @@ import WorldClock from "@/components/world-clock";
 import FAQAccordion from "@/components/faq-accordion";
 import MobileSEOHead, { SEO_CONFIGS } from "@/components/mobile-seo-head";
 import { getMobileEmergencyContacts, createClickablePhone, createClickableEmail } from "@/lib/mobile-contact";
+import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
 import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {
@@ -513,11 +514,17 @@ export default function Home() {
                   <li>• Administrative Separations</li>
                   <li>• Security Clearance Issues</li>
                 </ul>
-                <Link href="/urgent-match">
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-medium">
-                    Get Emergency Help
-                  </Button>
-                </Link>
+                <MilitaryTooltip 
+                  content={MILITARY_TOOLTIPS.COURT_MARTIAL}
+                  type="warning"
+                  position="bottom"
+                >
+                  <Link href="/urgent-match">
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-medium">
+                      Get Emergency Help
+                    </Button>
+                  </Link>
+                </MilitaryTooltip>
               </CardContent>
             </Card>
 
@@ -533,10 +540,18 @@ export default function Home() {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="text-gray-600 space-y-2 mb-6">
-                  <li>• Wills & Powers of Attorney</li>
+                  <li>
+                    <MilitaryTooltip content={MILITARY_TOOLTIPS.WILL_TESTAMENT} type="info" position="right">
+                      <span className="cursor-help border-b border-dotted border-gray-400">• Wills & Powers of Attorney</span>
+                    </MilitaryTooltip>
+                  </li>
                   <li>• Divorce & Custody</li>
                   <li>• PCS Legal Support</li>
-                  <li>• Family Care Plans</li>
+                  <li>
+                    <MilitaryTooltip content={MILITARY_TOOLTIPS.FAMILY_CARE_PLAN} type="warning" position="right">
+                      <span className="cursor-help border-b border-dotted border-gray-400">• Family Care Plans</span>
+                    </MilitaryTooltip>
+                  </li>
                 </ul>
                 <Link href="/family-legal">
                   <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
@@ -558,9 +573,17 @@ export default function Home() {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="text-gray-600 space-y-2 mb-6">
-                  <li>• VA Disability Claims</li>
+                  <li>
+                    <MilitaryTooltip content={MILITARY_TOOLTIPS.VA_BENEFITS} type="success" position="left">
+                      <span className="cursor-help border-b border-dotted border-gray-400">• VA Disability Claims</span>
+                    </MilitaryTooltip>
+                  </li>
                   <li>• Benefits Appeals</li>
-                  <li>• Discharge Upgrades</li>
+                  <li>
+                    <MilitaryTooltip content={MILITARY_TOOLTIPS.DISCHARGE_UPGRADE} type="warning" position="left">
+                      <span className="cursor-help border-b border-dotted border-gray-400">• Discharge Upgrades</span>
+                    </MilitaryTooltip>
+                  </li>
                   <li>• Medical Board Reviews</li>
                 </ul>
                 <Link href="/benefits-calculator">
@@ -800,12 +823,18 @@ export default function Home() {
               </div>
               
               <div className="space-y-4">
-                <Link href="/urgent-match">
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold">
-                    <Shield className="w-5 h-5 mr-3" />
-                    Emergency Legal Help
-                  </Button>
-                </Link>
+                <MilitaryTooltip 
+                  content={MILITARY_TOOLTIPS.EMERGENCY_CONTACT}
+                  type="warning"
+                  position="left"
+                >
+                  <Link href="/urgent-match">
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold">
+                      <Shield className="w-5 h-5 mr-3" />
+                      Emergency Legal Help
+                    </Button>
+                  </Link>
+                </MilitaryTooltip>
                 
                 <Link href="/pricing">
                   <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold">
@@ -813,9 +842,15 @@ export default function Home() {
                   </Button>
                 </Link>
                 
-                <Button variant="outline" className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50">
-                  Start Free Trial
-                </Button>
+                <MilitaryTooltip 
+                  content="📋 TRIAL PERIOD: 14-day free access to all legal services. No commitment required. Cancel anytime during trial period."
+                  type="success"
+                  position="left"
+                >
+                  <Button variant="outline" className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50">
+                    Start Free Trial
+                  </Button>
+                </MilitaryTooltip>
               </div>
               
               <div className="text-center mt-6">

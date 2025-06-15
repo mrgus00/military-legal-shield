@@ -45,7 +45,7 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Legal Resource Platform</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Legal Resource Platform</h3>
                   <p className="text-gray-700">
                     MilLegal Defense provides a platform connecting military personnel with qualified attorneys 
                     and legal resources. We facilitate communication and provide educational materials but do not 
@@ -54,7 +54,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Attorney Network</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Attorney Network</h3>
                   <p className="text-gray-700">
                     Our platform connects you with independent attorneys who are solely responsible for their 
                     legal advice and representation. MilLegal Defense does not practice law and is not responsible 
@@ -63,7 +63,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Educational Resources</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Educational Resources</h3>
                   <p className="text-gray-700">
                     Educational modules, scenarios, and resources are provided for informational purposes only. 
                     They do not constitute legal advice and should not be used as a substitute for consultation 
@@ -82,7 +82,7 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Account Security</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Account Security</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     <li>Maintain confidentiality of your account credentials</li>
                     <li>Notify us immediately of any unauthorized access</li>
@@ -92,7 +92,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Prohibited Uses</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Prohibited Uses</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     <li>Violating any applicable laws or military regulations</li>
                     <li>Sharing false or misleading information</li>

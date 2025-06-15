@@ -339,7 +339,7 @@ export default function BenefitsEligibilityCalculator() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           {getBenefitIcon(benefit.eligible, benefit.eligibilityPercentage)}
-                          <h4 className="font-semibold">{benefit.benefitType}</h4>
+                          <h3 className="font-semibold text-base">{benefit.benefitType}</h3>
                         </div>
                         <Badge 
                           variant={benefit.eligible ? "default" : "secondary"}

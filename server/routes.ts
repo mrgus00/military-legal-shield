@@ -24,7 +24,7 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 // VA Disability Compensation rates (2024)
-function calculateDisabilityCompensation(disabilityRating: number, dependents: number): number {
+function calculateDisabilityCompensation(disabilityRating: number, dependents: { spouse: boolean; children: number }): number {
   const baseRates: { [key: number]: number } = {
     10: 171,
     20: 338,
@@ -41,8 +41,8 @@ function calculateDisabilityCompensation(disabilityRating: number, dependents: n
   let compensation = baseRates[disabilityRating] || 0;
   
   // Add dependent compensation for ratings 30% and above
-  if (disabilityRating >= 30 && dependents > 0) {
-    const dependentRates: { [key: number]: number } = {
+  if (disabilityRating >= 30) {
+    const dependentRates: { [key: number]: { spouse: number; child: number } } = {
       30: { spouse: 62, child: 32 },
       40: { spouse: 83, child: 42 },
       50: { spouse: 103, child: 52 },
@@ -55,8 +55,10 @@ function calculateDisabilityCompensation(disabilityRating: number, dependents: n
     
     const rates = dependentRates[disabilityRating];
     if (rates) {
-      compensation += rates.spouse; // Assume one spouse
-      compensation += rates.child * Math.max(0, dependents - 1); // Additional dependents as children
+      if (dependents.spouse) {
+        compensation += rates.spouse;
+      }
+      compensation += rates.child * dependents.children;
     }
   }
   
@@ -80,7 +82,80 @@ function getStateBenefits(state: string): any[] {
     ]
   };
   
-  return stateBenefits[state] || [];
+  return stateBenefits[state as keyof typeof stateBenefits] || [];
+}
+
+// Comprehensive benefits calculation function
+function calculateComprehensiveBenefits(eligibilityData: any) {
+  const { personalInfo, disabilityInfo } = eligibilityData;
+  
+  // Calculate VA Disability Compensation
+  const vaDisabilityEligible = disabilityInfo.rating > 0;
+  const monthlyDisability = vaDisabilityEligible ? 
+    calculateDisabilityCompensation(disabilityInfo.rating, personalInfo.dependents) : 0;
+  const dependentAllowance = vaDisabilityEligible && disabilityInfo.rating >= 30 ? 
+    (personalInfo.dependents.spouse ? 62 : 0) + (personalInfo.dependents.children * 32) : 0;
+  
+  // Calculate Retirement Eligibility
+  const retirementEligible = personalInfo.yearsOfService >= 20 || 
+    (personalInfo.activeStatus === 'veteran' && personalInfo.yearsOfService >= 20);
+  const monthlyRetirement = retirementEligible ? 
+    Math.round(2500 * (personalInfo.yearsOfService * 0.025)) : 0; // Simplified calculation
+  
+  // Calculate Education Benefits (GI Bill)
+  const giEligible = personalInfo.yearsOfService >= 2 || personalInfo.activeStatus === 'veteran';
+  const educationMonths = Math.min(36, personalInfo.yearsOfService * 3); // Up to 36 months
+  const housingAllowance = giEligible ? 2200 : 0; // Average BAH
+  const bookStipend = giEligible ? 1200 : 0; // Annual
+  const transferable = personalInfo.yearsOfService >= 6;
+  
+  // Calculate Healthcare Eligibility
+  const vaHealthcareEligible = personalInfo.yearsOfService >= 2 || disabilityInfo.rating > 0;
+  const tricareEligible = personalInfo.activeStatus === 'active' || personalInfo.activeStatus === 'retired';
+  const priorityGroup = disabilityInfo.rating >= 50 ? 1 : 
+    (disabilityInfo.rating >= 30 ? 2 : 
+    (disabilityInfo.combatRelated ? 3 : 5));
+  
+  // Calculate Other Benefits
+  const lifeInsurance = personalInfo.activeStatus === 'active' ? 400000 : 0; // SGLI
+  const homeLoansEligible = personalInfo.yearsOfService >= 2 || personalInfo.activeStatus === 'veteran';
+  const vocationalRehab = disabilityInfo.rating >= 30;
+  const dependentEducation = personalInfo.yearsOfService >= 10 && personalInfo.dependents.children > 0;
+  
+  return {
+    vaDisability: {
+      monthlyPayment: monthlyDisability,
+      eligible: vaDisabilityEligible,
+      dependentAllowance: dependentAllowance,
+      totalMonthly: monthlyDisability + dependentAllowance
+    },
+    retirement: {
+      eligible: retirementEligible,
+      monthlyPension: monthlyRetirement,
+      lumpSum: retirementEligible ? monthlyRetirement * 12 * 5 : 0, // 5 year equivalent
+      survivorBenefits: retirementEligible ? monthlyRetirement * 0.55 : 0
+    },
+    education: {
+      giEligible: giEligible,
+      months: educationMonths,
+      housingAllowance: housingAllowance,
+      bookStipend: bookStipend,
+      transferable: transferable
+    },
+    healthcare: {
+      vaHealthcare: vaHealthcareEligible,
+      tricare: tricareEligible,
+      dental: tricareEligible || disabilityInfo.rating >= 100,
+      vision: disabilityInfo.rating >= 100,
+      priorityGroup: priorityGroup
+    },
+    other: {
+      lifeInsurance: lifeInsurance,
+      homeLoans: homeLoansEligible,
+      vocationalRehab: vocationalRehab,
+      dependentEducation: dependentEducation
+    }
+  };
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -397,6 +472,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error booking consultation:", error);
       res.status(500).json({ message: "Failed to book consultation" });
+    }
+  });
+
+  // Benefits eligibility calculation endpoint
+  app.post("/api/calculate-benefits-eligibility", async (req, res) => {
+    try {
+      const eligibilityData = req.body;
+      const calculations = calculateComprehensiveBenefits(eligibilityData);
+      res.json(calculations);
+    } catch (error) {
+      console.error("Benefits calculation error:", error);
+      res.status(500).json({ message: "Failed to calculate benefits eligibility" });
     }
   });
 

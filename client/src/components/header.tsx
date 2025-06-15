@@ -88,6 +88,13 @@ export default function Header() {
                       PCS & Deployment Legal
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/benefits-eligibility" className="flex items-center">
+                      <FileText className="mr-3 h-4 w-4" />
+                      Benefits Calculator
+                    </Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 

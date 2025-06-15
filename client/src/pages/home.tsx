@@ -668,7 +668,9 @@ export default function Home() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Benefits Calculator</span>
+                    <Link href="/benefits-eligibility" className="text-blue-600 hover:text-blue-800 underline">
+                      Benefits Eligibility Calculator
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />

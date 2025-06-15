@@ -44,6 +44,7 @@ import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
+import BenefitsEligibility from "@/pages/benefits-eligibility";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
@@ -103,6 +104,7 @@ function Router() {
       <Route path="/financial-wizard" component={FinancialWizard} />
       <Route path="/storytelling-corner" component={StorytellingCorner} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
+      <Route path="/benefits-eligibility" component={BenefitsEligibility} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />

@@ -11,6 +11,7 @@ import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { handleRSSFeed, handleJSONFeed } from "./rss";
+import { twilioService, type EmergencyAlert } from "./twilio";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -274,9 +275,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           })
           .where(eq(emergencyConsultations.id, consultation.id));
 
-        // In a real implementation, this would trigger:
-        // 1. Email/SMS notification to assigned attorney
-        // 2. Email confirmation to client
+        // Send SMS notification to assigned attorney and client
+        const emergencyAlert: EmergencyAlert = {
+          fullName: consultationData.fullName,
+          rank: consultationData.rank,
+          branch: consultationData.branch,
+          phoneNumber: consultationData.phoneNumber,
+          legalIssue: consultationData.legalIssue,
+          urgencyLevel: consultationData.urgencyLevel as 'critical' | 'high' | 'medium',
+          location: consultationData.location,
+          additionalDetails: consultationData.description
+        };
+
+        // Send emergency alert via SMS
+        await twilioService.sendEmergencyAlert(emergencyAlert);
         // 3. Calendar scheduling integration
         // 4. Emergency response workflow activation
         

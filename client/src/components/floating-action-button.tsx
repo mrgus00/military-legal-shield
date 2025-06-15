@@ -107,17 +107,23 @@ export default function FloatingActionButton() {
                         item.onClick();
                         setIsOpen(false);
                       }}
+                      aria-label={`${item.name} - ${item.description}`}
+                      title={item.description}
                       className={`w-12 h-12 rounded-full ${item.color} text-white shadow-lg hover:shadow-xl transform transition hover:scale-110 flex items-center justify-center`}
                     >
-                      <IconComponent className="w-6 h-6" />
+                      <IconComponent className="w-6 h-6" aria-hidden="true" />
+                      <span className="sr-only">{item.name}</span>
                     </button>
                   ) : (
                     <Link href={item.href}>
                       <button
                         onClick={() => setIsOpen(false)}
+                        aria-label={`${item.name} - ${item.description}`}
+                        title={item.description}
                         className={`w-12 h-12 rounded-full ${item.color} text-white shadow-lg hover:shadow-xl transform transition hover:scale-110 flex items-center justify-center`}
                       >
-                        <IconComponent className="w-6 h-6" />
+                        <IconComponent className="w-6 h-6" aria-hidden="true" />
+                        <span className="sr-only">{item.name}</span>
                       </button>
                     </Link>
                   )}
@@ -131,6 +137,9 @@ export default function FloatingActionButton() {
       {/* Main FAB */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Close quick actions menu" : "Open quick actions menu - Emergency, Chat, Attorneys, Documents"}
+        aria-expanded={isOpen}
+        title="Quick Actions Menu"
         className="w-14 h-14 military-gradient rounded-full shadow-lg hover:shadow-xl text-white flex items-center justify-center transform transition hover:scale-110 animate-military-pulse"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -142,8 +151,15 @@ export default function FloatingActionButton() {
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+          {isOpen ? (
+            <X className="w-6 h-6" aria-hidden="true" />
+          ) : (
+            <Plus className="w-6 h-6" aria-hidden="true" />
+          )}
         </motion.div>
+        <span className="sr-only">
+          {isOpen ? "Close menu" : "Open quick actions"}
+        </span>
       </motion.button>
     </div>
   );

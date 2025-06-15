@@ -365,13 +365,16 @@ export default function LegalAssistantChatbot() {
         <Button
           onClick={() => setIsOpen(true)}
           data-chatbot-trigger
+          aria-label="Open Military Legal Assistant chat - Get instant help with UCMJ, court-martial, and military legal matters"
+          title="SGT Legal Ready - Military Legal Assistant"
           className="h-16 w-16 rounded-full bg-blue-600 hover:bg-blue-700 shadow-2xl animate-bounce hover:animate-none transition-all duration-300 hover:scale-110 border-4 border-yellow-400"
           style={{ 
             background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
             boxShadow: '0 10px 25px rgba(30, 64, 175, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.1)'
           }}
         >
-          <MessageCircle className="w-8 h-8 text-white animate-pulse" />
+          <MessageCircle className="w-8 h-8 text-white animate-pulse" aria-hidden="true" />
+          <span className="sr-only">Open Military Legal Assistant</span>
         </Button>
         
         {/* Military Badge Indicator */}

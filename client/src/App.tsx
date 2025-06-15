@@ -59,6 +59,7 @@ import FindAttorneys from "@/pages/find-attorneys";
 import SubscriptionSuccess from "@/pages/subscription-success";
 import SMSCenter from "@/pages/sms-center";
 import CDNDashboard from "@/pages/cdn-dashboard";
+import AccessibilityAudit from "@/pages/accessibility-audit";
 
 function Router() {
   return (
@@ -112,6 +113,7 @@ function Router() {
       <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route path="/sms-center" component={SMSCenter} />
       <Route path="/cdn-dashboard" component={CDNDashboard} />
+      <Route path="/accessibility-audit" component={AccessibilityAudit} />
       <Route component={NotFound} />
     </Switch>
   );

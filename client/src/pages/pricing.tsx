@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Shield, Users, FileText, MessageSquare, Calendar, Clock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
 
 export default function Pricing() {
   const { user, isAuthenticated } = useAuth();

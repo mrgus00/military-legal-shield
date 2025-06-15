@@ -10,6 +10,7 @@ import PageLayout from "@/components/page-layout";
 import { AlertTriangle, Clock, Shield, Phone, MessageSquare, CheckCircle, Zap, Scale, Users } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
+import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
 
 interface EmergencyConsultationRequest {
   fullName: string;

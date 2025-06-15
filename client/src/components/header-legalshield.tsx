@@ -11,6 +11,7 @@ import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone,
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import { useAuth } from "@/hooks/useAuth";
+import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
 
 export default function HeaderLegalShield() {
   const [location] = useLocation();
@@ -143,11 +144,17 @@ export default function HeaderLegalShield() {
             {/* Right side actions */}
             <div className="flex items-center space-x-4">
               {/* Emergency CTA */}
-              <Link href="/urgent-match">
-                <Button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 font-medium hidden sm:inline-flex">
-                  Connect with a Lawyer
-                </Button>
-              </Link>
+              <MilitaryTooltip 
+                content={MILITARY_TOOLTIPS.EMERGENCY_CONTACT}
+                type="warning"
+                position="bottom"
+              >
+                <Link href="/urgent-match">
+                  <Button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 font-medium hidden sm:inline-flex">
+                    Connect with a Lawyer
+                  </Button>
+                </Link>
+              </MilitaryTooltip>
 
               {/* Login/User Menu */}
               {isAuthenticated ? (

@@ -103,7 +103,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Content Standards</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Content Standards</h3>
                   <p className="text-gray-700">
                     All user-generated content must be appropriate, lawful, and respectful. Content that is 
                     discriminatory, harassing, or violates military standards of conduct will be removed and 
@@ -122,7 +122,7 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">No Attorney-Client Relationship</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">No Attorney-Client Relationship</h3>
                   <p className="text-gray-700">
                     Use of this platform does not create an attorney-client relationship between you and 
                     MilLegal Defense. Attorney-client relationships are established only with individual 
@@ -131,7 +131,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">No Guarantee of Outcomes</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">No Guarantee of Outcomes</h3>
                   <p className="text-gray-700">
                     We cannot guarantee legal outcomes, attorney availability, or case resolution times. 
                     Legal proceedings are inherently uncertain and depend on many factors beyond our control.
@@ -139,7 +139,7 @@ export default function TermsOfService() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Military Regulations</h4>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-base">Military Regulations</h3>
                   <p className="text-gray-700">
                     Users remain subject to all applicable military regulations and chain of command requirements. 
                     This platform does not supersede military legal procedures or reporting requirements.

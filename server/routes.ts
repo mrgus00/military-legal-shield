@@ -196,11 +196,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // SEO and Search Engine routes
   app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public/sitemap.xml'));
+    res.type('application/xml');
+    res.sendFile(path.resolve(__dirname, '../client/public/sitemap.xml'));
   });
 
   app.get('/robots.txt', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public/robots.txt'));
+    res.type('text/plain');
+    res.sendFile(path.resolve(__dirname, '../client/public/robots.txt'));
   });
 
   // Search engine verification files

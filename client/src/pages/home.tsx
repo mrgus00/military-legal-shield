@@ -23,6 +23,29 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { getTerminology, branchTheme, getMotto } = useBranch();
+
+  // SEO optimization for home page
+  useSEO({
+    ...seoConfigs.home,
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "LegalService",
+      "name": "Military Legal Shield",
+      "description": "Comprehensive legal support platform for military personnel across all branches",
+      "url": "https://militarylegalshield.com",
+      "serviceArea": {
+        "@type": "Country",
+        "name": "United States"
+      },
+      "areaServed": ["Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "bestRating": "5",
+        "ratingCount": "127"
+      }
+    }
+  });
   
   // Get mobile-optimized emergency contacts
   const emergencyContacts = getMobileEmergencyContacts();

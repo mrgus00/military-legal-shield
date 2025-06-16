@@ -297,10 +297,10 @@ router.get("/api/daily-challenge", async (req, res) => {
 });
 
 // Start a challenge
-router.post("/api/legal-challenges/:id/start", isAuthenticated, async (req, res) => {
+router.post("/api/legal-challenges/:id/start", isAuthenticated, async (req: any, res) => {
   try {
     const challengeId = parseInt(req.params.id);
-    const userId = req.user?.claims?.sub;
+    const userId = (req.user as any)?.claims?.sub;
     
     if (!challengeId || challengeId > sampleChallenges.length) {
       return res.status(404).json({ message: "Challenge not found" });
@@ -323,11 +323,11 @@ router.post("/api/legal-challenges/:id/start", isAuthenticated, async (req, res)
 });
 
 // Submit challenge answers
-router.post("/api/legal-challenges/:id/submit", isAuthenticated, async (req, res) => {
+router.post("/api/legal-challenges/:id/submit", isAuthenticated, async (req: any, res) => {
   try {
     const challengeId = parseInt(req.params.id);
     const { answers, timeSpent } = req.body;
-    const userId = req.user?.claims?.sub;
+    const userId = (req.user as any)?.claims?.sub;
     
     if (!challengeId || challengeId > sampleChallenges.length) {
       return res.status(404).json({ message: "Challenge not found" });

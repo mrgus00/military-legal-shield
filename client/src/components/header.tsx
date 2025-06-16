@@ -96,6 +96,12 @@ export default function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link href="/legal-challenges" className="flex items-center">
+                      <BookOpen className="mr-3 h-4 w-4" />
+                      Legal Challenges
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/lawyer-database" className="flex items-center">
                       <Users className="mr-3 h-4 w-4" />
                       Find Military Attorneys

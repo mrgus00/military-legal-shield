@@ -1,0 +1,41 @@
+# Robots.txt for MilitaryLegalShield.com
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://militarylegalshield.com/sitemap.xml
+
+# Specific crawl directives for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Disallow private admin areas (if any exist in future)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.well-known/
+
+# Allow RSS feeds
+Allow: /rss.xml
+Allow: /feed.xml
+Allow: /feed.json

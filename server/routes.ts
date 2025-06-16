@@ -14,6 +14,13 @@ import { handleRSSFeed, handleJSONFeed } from "./rss";
 import { twilioService, type EmergencyAlert } from "./twilio";
 import { cdnService, cacheMiddleware } from "./cdn";
 import gamificationRoutes from "./gamification-routes";
+import { 
+  generateStructuredData, 
+  generateMetaTags, 
+  handleSearchEngineVerification,
+  generateBreadcrumbs,
+  generateFAQStructuredData
+} from "./seo";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -186,6 +193,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/rss.xml', handleRSSFeed);
   app.get('/feed.xml', handleRSSFeed);
   app.get('/feed.json', handleJSONFeed);
+
+  // SEO and Search Engine routes
+  app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/public/sitemap.xml'));
+  });
+
+  app.get('/robots.txt', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/public/robots.txt'));
+  });
+
+  // Search engine verification files
+  app.get('/:filename(google.*\\.html|BingSiteAuth\\.xml|yahoo.*\\.html|yandex.*\\.html)', handleSearchEngineVerification);
+
+  // Structured data endpoints for enhanced search visibility
+  app.get('/api/seo/structured-data/:page', (req, res) => {
+    const { page } = req.params;
+    const structuredData = generateStructuredData(page);
+    res.json(structuredData);
+  });
+
+  app.get('/api/seo/meta-tags/:page', (req, res) => {
+    const { page } = req.params;
+    const metaTags = generateMetaTags(page);
+    res.json(metaTags);
+  });
+
+  app.get('/api/seo/breadcrumbs', (req, res) => {
+    const path = req.query.path as string || '/';
+    const breadcrumbs = generateBreadcrumbs(path);
+    res.json(breadcrumbs);
+  });
+
+  app.get('/api/seo/faq', (req, res) => {
+    const faqData = generateFAQStructuredData();
+    res.json(faqData);
+  });
 
   // Gamification routes
   app.use(gamificationRoutes);

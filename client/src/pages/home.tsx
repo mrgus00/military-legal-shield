@@ -13,6 +13,7 @@ import InteractiveHeroSection from "@/components/interactive-hero-section";
 import WorldClock from "@/components/world-clock";
 import FAQAccordion from "@/components/faq-accordion";
 import MobileSEOHead, { SEO_CONFIGS } from "@/components/mobile-seo-head";
+import { useSEO, seoConfigs } from "@/hooks/useSEO";
 import { getMobileEmergencyContacts, createClickablePhone, createClickableEmail } from "@/lib/mobile-contact";
 import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
 import courtImage from "@assets/court_1749846710218.png";

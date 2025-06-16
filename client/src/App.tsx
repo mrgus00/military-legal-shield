@@ -46,6 +46,11 @@ import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import BenefitsEligibility from "@/pages/benefits-eligibility";
 import LawyerDatabase from "@/pages/lawyer-database-simple";
+import CourtMartialDefense from "@/pages/court-martial-defense";
+import FamilyLawPOAs from "@/pages/family-law-poas";
+import UCMJSupport from "@/pages/ucmj-support";
+import VABenefitsClaims from "@/pages/va-benefits-claims";
+import LegalDocuments from "@/pages/legal-documents";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
@@ -107,6 +112,11 @@ function Router() {
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route path="/benefits-eligibility" component={BenefitsEligibility} />
       <Route path="/lawyer-database" component={LawyerDatabase} />
+      <Route path="/court-martial-defense" component={CourtMartialDefense} />
+      <Route path="/family-law-poas" component={FamilyLawPOAs} />
+      <Route path="/ucmj-support" component={UCMJSupport} />
+      <Route path="/va-benefits-claims" component={VABenefitsClaims} />
+      <Route path="/legal-documents" component={LegalDocuments} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />

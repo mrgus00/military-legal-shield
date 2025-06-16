@@ -95,6 +95,12 @@ export default function Header() {
                       Benefits Calculator
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/lawyer-database" className="flex items-center">
+                      <Users className="mr-3 h-4 w-4" />
+                      Find Military Attorneys
+                    </Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 

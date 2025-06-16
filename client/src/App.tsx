@@ -45,6 +45,7 @@ import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import BenefitsEligibility from "@/pages/benefits-eligibility";
+import LawyerDatabase from "@/pages/lawyer-database";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
@@ -105,6 +106,7 @@ function Router() {
       <Route path="/storytelling-corner" component={StorytellingCorner} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route path="/benefits-eligibility" component={BenefitsEligibility} />
+      <Route path="/lawyer-database" component={LawyerDatabase} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />

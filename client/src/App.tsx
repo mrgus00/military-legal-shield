@@ -51,6 +51,8 @@ import FamilyLawPOAs from "@/pages/family-law-poas";
 import UCMJSupport from "@/pages/ucmj-support";
 import VABenefitsClaims from "@/pages/va-benefits-claims";
 import LegalDocuments from "@/pages/legal-documents";
+import CommunityForum from "@/pages/community-forum";
+import EducationCenter from "@/pages/education-center";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
@@ -117,6 +119,10 @@ function Router() {
       <Route path="/ucmj-support" component={UCMJSupport} />
       <Route path="/va-benefits-claims" component={VABenefitsClaims} />
       <Route path="/legal-documents" component={LegalDocuments} />
+      <Route path="/help-center" component={HelpCenter} />
+      <Route path="/community-forum" component={CommunityForum} />
+      <Route path="/contact-support" component={ContactSupport} />
+      <Route path="/education-center" component={EducationCenter} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />
       <Route path="/document-prep" component={DocumentPrep} />

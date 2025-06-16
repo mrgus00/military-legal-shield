@@ -52,6 +52,8 @@ import UCMJSupport from "@/pages/ucmj-support";
 import VABenefitsClaims from "@/pages/va-benefits-claims";
 import LegalDocuments from "@/pages/legal-documents";
 import CommunityForum from "@/pages/community-forum";
+import ForumCategory from "@/pages/forum-category";
+import ForumTopic from "@/pages/forum-topic";
 import EducationCenter from "@/pages/education-center";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
@@ -121,6 +123,13 @@ function Router() {
       <Route path="/legal-documents" component={LegalDocuments} />
       <Route path="/help-center" component={HelpCenter} />
       <Route path="/community-forum" component={CommunityForum} />
+      <Route path="/forum/category/:category" component={ForumCategory} />
+      <Route path="/forum/topic/:topicId" component={ForumTopic} />
+      <Route path="/forum/new-topic" component={CommunityForum} />
+      <Route path="/forum/all-topics" component={CommunityForum} />
+      <Route path="/forum/guidelines" component={CommunityForum} />
+      <Route path="/forum/expert/:expertName" component={CommunityForum} />
+      <Route path="/forum/register" component={CommunityForum} />
       <Route path="/contact-support" component={ContactSupport} />
       <Route path="/education-center" component={EducationCenter} />
       <Route path="/document-wizard" component={DocumentGenerator} />

@@ -24,6 +24,7 @@ import {
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
+// Note: Using CommonJS-style __dirname for this TypeScript compilation
 
 // Initialize Stripe only if the secret key is available
 let stripe: Stripe | null = null;
@@ -197,12 +198,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // SEO and Search Engine routes
   app.get('/sitemap.xml', (req, res) => {
     res.type('application/xml');
-    res.sendFile(path.resolve(__dirname, '../client/public/sitemap.xml'));
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://militarylegalshield.com/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/urgent-match</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/lawyer-database</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/legal-challenges</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/emergency-consultation</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/document-generator</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/military-justice</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/consultation-booking</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/benefits-eligibility</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://militarylegalshield.com/rss.xml</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>`;
+    res.send(sitemap);
   });
 
   app.get('/robots.txt', (req, res) => {
     res.type('text/plain');
-    res.sendFile(path.resolve(__dirname, '../client/public/robots.txt'));
+    const robots = `User-agent: *
+Allow: /
+
+Sitemap: https://militarylegalshield.com/sitemap.xml
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+Disallow: /admin/
+Disallow: /api/
+Allow: /rss.xml
+Allow: /feed.xml`;
+    res.send(robots);
   });
 
   // Search engine verification files

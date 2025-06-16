@@ -13,6 +13,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { handleRSSFeed, handleJSONFeed } from "./rss";
 import { twilioService, type EmergencyAlert } from "./twilio";
 import { cdnService, cacheMiddleware } from "./cdn";
+import gamificationRoutes from "./gamification-routes";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -185,6 +186,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/rss.xml', handleRSSFeed);
   app.get('/feed.xml', handleRSSFeed);
   app.get('/feed.json', handleJSONFeed);
+
+  // Gamification routes
+  app.use(gamificationRoutes);
 
   // Health check endpoint - add explicit API prefix
   app.get('/api/health', (req, res) => {

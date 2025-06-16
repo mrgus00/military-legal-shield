@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
+import WhatsAppConnector from "@/components/whatsapp-connector";
 
 export default function ContactSupport() {
   const [formData, setFormData] = useState({
@@ -199,6 +200,30 @@ export default function ContactSupport() {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* WhatsApp Support */}
+      <section className="py-16 bg-green-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">WhatsApp Support</h2>
+            <p className="text-xl text-gray-600">Get instant help through secure WhatsApp messaging</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            <WhatsAppConnector variant="emergency" />
+            <WhatsAppConnector variant="support" />
+            <WhatsAppConnector variant="consultation" />
+          </div>
+
+          <div className="text-center mt-8">
+            <Link href="/whatsapp-support">
+              <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                View All WhatsApp Options
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

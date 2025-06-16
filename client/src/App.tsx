@@ -162,6 +162,7 @@ function App() {
               <Router />
               <BackToTop />
               <LegalAssistantChatbot />
+              <FloatingWhatsAppButton />
               <AppLoadingScreen />
             </TooltipProvider>
           </BranchProvider>

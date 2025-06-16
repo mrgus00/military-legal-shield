@@ -107,6 +107,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/whatsapp-support" className="text-gray-300 hover:text-white transition-colors text-sm">
+                  WhatsApp Support
+                </Link>
+              </li>
+              <li>
                 <Link href="/education-center" className="text-gray-300 hover:text-white transition-colors text-sm">
                   Education Center
                 </Link>

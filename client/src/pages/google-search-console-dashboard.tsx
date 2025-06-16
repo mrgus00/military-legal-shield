@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageLayout from "@/components/page-layout";
+import { SEOStatusMonitor } from "@/components/seo-status-monitor";
 import { 
   Search, 
   ExternalLink, 
@@ -144,6 +145,12 @@ export default function GoogleSearchConsoleDashboard() {
     <PageLayout>
       <div className="max-w-7xl mx-auto space-y-8">
         
+        {/* Page Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-gray-900">Google Search Console Setup</h1>
+          <p className="text-xl text-gray-600">Connect MilitaryLegalShield.com with Google's search ecosystem for maximum visibility and tracking</p>
+        </div>
+        
         {/* Quick Actions */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action, index) => {
@@ -174,6 +181,9 @@ export default function GoogleSearchConsoleDashboard() {
             );
           })}
         </div>
+
+        {/* SEO Status Monitor */}
+        <SEOStatusMonitor />
 
         <Tabs defaultValue="submission" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
@@ -389,7 +399,7 @@ export default function GoogleSearchConsoleDashboard() {
                     <div>
                       <h4 className="font-semibold mb-2">Important URLs to Monitor</h4>
                       <div className="space-y-2">
-                        {indexingStatus.urls?.map((url: string, index: number) => (
+                        {(indexingStatus as any)?.urls?.map((url: string, index: number) => (
                           <div key={index} className="flex items-center justify-between p-2 border rounded">
                             <code className="text-sm">{url}</code>
                             <Button

@@ -1,0 +1,54 @@
+# Manually input the second batch of lawyer data for Twentynine Palms area
+twentynine_palms_data = {
+    "Attorney/Firm Name": [
+        "Law Office of Patrick J. McLain, PLLC",
+        "Military Law Center",
+        "Aaron Meyer Law",
+        "JAG Defense",
+        "Richard V. Stevens, Attorney at Law",
+        "Military Justice Attorneys",
+        "Shewmaker & Shewmaker",
+        "Gonzalez & Waddington"
+    ],
+    "Location": [
+        "Nationwide",
+        "California",
+        "California",
+        "Nationwide",
+        "Nationwide",
+        "Nationwide",
+        "Serves Fort Stewart",
+        "Serves Fort Stewart"
+    ],
+    "Contact Info": [
+        "(888) 606-3385",
+        "Website",
+        "Website",
+        "(877) 222-4199",
+        "Website",
+        "Website",
+        "(770) 939-1939",
+        "(800) 921-8607"
+    ],
+    "Specialties": [
+        "Court-martial defense, administrative actions, appeals, security clearance issues. Former Marine Corps military judge with over 20 years of experience.",
+        "Court-martial defense, administrative separations, NJP, corrections of military records. Staffed by Marine veterans with extensive experience in military law.",
+        "Military criminal defense, UCMJ violations, administrative separations. Former Marine Judge Advocate with extensive trial experience.",
+        "Military courts-martial, security clearance defense, administrative discharge boards, sex offenses, positive urinalysis tests, courts-martial appeals, non-judicial punishment/Article 15, flying evaluation boards, senior officer cases. Led by Grover H. Baxley, a former U.S. Air Force Judge Advocate.",
+        "Court-martial defense, discharge upgrades, administrative actions. Former active duty JAG defense lawyer with worldwide practice.",
+        "Court-martial defense, administrative actions, security clearance issues. Over 100 years of combined military law experience.",
+        "UCMJ offenses, administrative hearings, sexual assault defense",
+        "Court-martial defense, UCMJ actions, administrative separation boards, Article 120 offenses"
+    ]
+}
+
+# Convert to DataFrame
+twentynine_palms_df = pd.DataFrame(twentynine_palms_data)
+
+# Combine with the North Carolina lawyer dataset
+combined_lawyer_df = pd.concat([lawyer_df, twentynine_palms_df], ignore_index=True)
+
+# Export the combined data to CSV
+combined_csv_path = "/mnt/data/combined_lawyer_data.csv"
+combined_lawyer_df.to_csv(combined_csv_path, index=False)
+combined_csv_path

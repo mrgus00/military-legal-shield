@@ -53,6 +53,9 @@ export function useSEO(config: SEOConfig) {
     // Update robots meta tag
     updateMetaTag('robots', 'index, follow');
 
+    // Google Search Console verification
+    updateMetaTag('google-site-verification', 'Q85aT0P23qZ2zCKZHOIHSzE6ve727hMw5mBqlsect6k');
+
   }, [config, location]);
 }
 

@@ -337,7 +337,7 @@ router.post("/api/legal-challenges/:id/submit", isAuthenticated, async (req: any
     
     // Calculate score
     let correctAnswers = 0;
-    const feedback = [];
+    const feedback: any[] = [];
     
     answers.forEach((answer: number, index: number) => {
       const question = challenge.questions[index];

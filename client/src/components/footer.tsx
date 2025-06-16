@@ -40,27 +40,27 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Legal Services</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/urgent-match" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                <Link href="/court-martial-defense" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   Court-Martial Defense
                 </Link>
               </li>
               <li>
-                <Link href="/family-legal" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                <Link href="/family-law-poas" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   Family Law & POAs
                 </Link>
               </li>
               <li>
-                <Link href="/military-justice" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                <Link href="/ucmj-support" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   UCMJ Support
                 </Link>
               </li>
               <li>
-                <Link href="/benefits-calculator" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                <Link href="/va-benefits-claims" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   VA Benefits & Claims
                 </Link>
               </li>
               <li>
-                <Link href="/document-generator" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                <Link href="/legal-documents" className="text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   Legal Documents
                 </Link>
               </li>
@@ -70,12 +70,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="text-gray-300 hover:text-white transition-colors text-sm">
+                <Link href="/legal-resources" className="text-gray-300 hover:text-white transition-colors text-sm">
                   Legal Resources
                 </Link>
               </li>
               <li>
-                <Link href="/scenarios" className="text-gray-300 hover:text-white transition-colors text-sm">
+                <Link href="/legal-challenges" className="text-gray-300 hover:text-white transition-colors text-sm">
                   AI Training Scenarios
                 </Link>
               </li>
@@ -97,7 +97,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/forum" className="text-gray-300 hover:text-white transition-colors text-sm">
+                <Link href="/community-forum" className="text-gray-300 hover:text-white transition-colors text-sm">
                   Community Forum
                 </Link>
               </li>
@@ -107,7 +107,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/education" className="text-gray-300 hover:text-white transition-colors text-sm">
+                <Link href="/education-center" className="text-gray-300 hover:text-white transition-colors text-sm">
                   Education Center
                 </Link>
               </li>

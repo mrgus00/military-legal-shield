@@ -1,0 +1,42 @@
+from io import BytesIO
+import pandas as pd
+
+# Manually create the lawyer data from your screenshot
+lawyer_dict = {
+    "Attorney/Firm Name": [
+        "R. Davis Younts", "Philip D. Cave", "Elizabeth Fowler Lunn", "Virginia A. Noble", "Sarah Gerow",
+        "Danny Earl Britt Jr.", "Adam Banks", "Ryan A. Spencer", "Matthew James Thomas", "Robert C. Slaughter III",
+        "Brendan Bernard Garcia", "Shawn Ferguson", "Matthew C. Vinton", "Joseph Aaron Morman", "Military Justice Attorneys",
+        "Capovilla & Williams", "Center for Military Law", "The Military Justice Center", "Hutchens Law Firm",
+        "The Hanzel Law Firm", "Richard V. Stevens", "W. James Payne Law Firm", "Matthew Thomas Law, PLLC"
+    ],
+    "Location": [
+        "Fayetteville, NC", "Serves NC statewide", "Raleigh, NC", "Durham, NC", "Durham, NC",
+        "Lumberton, NC", "Raleigh, NC", "Louisburg, NC", "Jacksonville, NC", "Edenton, NC",
+        "Winston-Salem, NC", "Wilmington, NC", "Fort Bragg, NC", "Fort Bragg, NC", "Serves NC statewide",
+        "Fort Bragg, NC", "Fayetteville & Jacksonville, NC", "Fayetteville, NC", "Fayetteville, NC",
+        "Serves NC statewide", "Serves NC statewide", "Wilmington, NC", "Jacksonville, NC"
+    ],
+    "Contact Info": [
+        "Website", "(800) 401-1583", "(866) 257-2106", "(919) 493-8876", "(919) 688-9400",
+        "(910) 671-4500", "(919) 694-0001", "(919) 539-0159", "(910) 939-0263", "(252) 439-0070",
+        "(336) 355-8387", "Contact via website", "(910) 432-9979", "(910) 432-1706", "Website",
+        "Website", "(855) UCMJ–LAW", "(910) 965-5484", "Website",
+        "(843) 202-4714", "Website", "(910) 754-4389", "Website"
+    ],
+    "Specialties": [
+        "Court-martial defense, military criminal law", "Global military law, courts-martial, administrative actions",
+        "Veterans benefits, Social Security Disability", "Veterans law, Social Security Disability", "Military law, family law",
+        "Criminal defense, military law", "Military law, business law", "Veterans disability claims",
+        "Court-martial defense, military investigations", "Military law, criminal defense",
+        "Military law", "Military law", "Military law", "Military law, criminal defense",
+        "Court-martial defense, administrative actions", "Courts-martial, administrative matters",
+        "Courts-martial, administrative separations", "Military law, criminal defense", "Appeals, administrative actions",
+        "UCMJ offenses, administrative actions", "Court-martial defense, administrative actions",
+        "Court-martial defense, UCMJ offenses", "Military defense, security clearance issues"
+    ]
+}
+
+# Convert to DataFrame
+lawyer_df = pd.DataFrame(lawyer_dict)
+lawyer_df.head()

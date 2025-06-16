@@ -301,12 +301,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   <HelpCircle className="w-8 h-8 text-green-600 mr-3" />
-                  <h3 className="text-lg font-bold text-navy-900">Have Questions?</h3>
+                  <h3 className="text-lg font-bold text-navy-900">Need an Attorney?</h3>
                 </div>
-                <p className="text-gray-700 mb-4">→ Consult a Lawyer</p>
-                <Link href="/video-consultation">
+                <p className="text-gray-700 mb-4">→ Browse Our Database</p>
+                <Link href="/lawyer-database">
                   <Button className="bg-green-600 hover:bg-green-700 text-white w-full">
-                    Consult Now
+                    Find Attorneys
                   </Button>
                 </Link>
               </CardContent>
@@ -326,6 +326,110 @@ export default function Home() {
                 </Link>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Attorney Database Section */}
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-navy-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy-900 mb-4">Military Attorney Database</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Connect with experienced military defense attorneys and Defense Service Offices nationwide. 
+              Our comprehensive database includes vetted attorneys with proven track records in military law.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy-900 mb-2">500+ Attorneys</h3>
+              <p className="text-gray-600">Civilian attorneys and Defense Service Offices across all 50 states</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy-900 mb-2">All Military Branches</h3>
+              <p className="text-gray-600">Attorneys experienced with Army, Navy, Air Force, Marines, Coast Guard, and Space Force</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy-900 mb-2">Advanced Search</h3>
+              <p className="text-gray-600">Filter by location, specialty, pricing, emergency availability, and military branch experience</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-navy-900 mb-4">Find the Right Attorney for Your Case</h3>
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Court-martial defense specialists</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Administrative separation board experts</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Security clearance defense attorneys</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Emergency 24/7 availability</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Detailed attorney profiles with success rates</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                    <span>Direct contact information and scheduling</span>
+                  </li>
+                </ul>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/lawyer-database">
+                    <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
+                      Browse Attorney Database
+                    </Button>
+                  </Link>
+                  <Link href="/emergency-consultation">
+                    <Button size="lg" variant="outline">
+                      Emergency Legal Help
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-orange-600">92%</div>
+                  <div className="text-sm text-gray-600">Average Success Rate</div>
+                </div>
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-blue-600">{"< 4hrs"}</div>
+                  <div className="text-sm text-gray-600">Average Response Time</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-green-600">15+</div>
+                  <div className="text-sm text-gray-600">Years Experience</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-purple-600">24/7</div>
+                  <div className="text-sm text-gray-600">Emergency Access</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

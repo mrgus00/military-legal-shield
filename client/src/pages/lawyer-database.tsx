@@ -25,7 +25,7 @@ import {
 import { Link } from "wouter";
 
 interface Attorney {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   firmName: string;
@@ -71,18 +71,20 @@ export default function LawyerDatabase() {
   });
 
   const filteredAndSortedAttorneys = useMemo(() => {
+    if (!attorneys || attorneys.length === 0) return [];
+    
     let filtered = attorneys.filter((attorney) => {
       const matchesSearch = 
-        attorney.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        attorney.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        attorney.firmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        attorney.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        attorney.specialties.some(s => s.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        attorney.practiceAreas.some(p => p.toLowerCase().includes(searchTerm.toLowerCase()));
+        attorney.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        attorney.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        attorney.firmName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        attorney.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        attorney.specialties?.some(s => s.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        attorney.practiceAreas?.some(p => p.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesState = !selectedState || attorney.state === selectedState;
-      const matchesBranch = !selectedBranch || attorney.militaryBranches.includes(selectedBranch);
-      const matchesSpecialty = !selectedSpecialty || attorney.specialties.some(s => s.toLowerCase().includes(selectedSpecialty.toLowerCase()));
+      const matchesBranch = !selectedBranch || attorney.militaryBranches?.includes(selectedBranch);
+      const matchesSpecialty = !selectedSpecialty || attorney.specialties?.some(s => s.toLowerCase().includes(selectedSpecialty.toLowerCase()));
       const matchesPricing = !selectedPricing || attorney.pricingTier === selectedPricing;
       const matchesEmergency = !emergencyOnly || attorney.availableForEmergency;
 

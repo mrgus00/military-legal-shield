@@ -8,6 +8,7 @@ import { MoodProvider } from "@/contexts/MoodContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import BackToTop from "@/components/back-to-top";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
+import { FloatingWhatsAppButton } from "@/components/whatsapp-connector";
 import MilitaryLoadingScreen from "@/components/military-loading-screen";
 import { useLoading } from "@/contexts/LoadingContext";
 import NotFound from "@/pages/not-found";
@@ -55,6 +56,7 @@ import CommunityForum from "@/pages/community-forum";
 import ForumCategory from "@/pages/forum-category";
 import ForumTopic from "@/pages/forum-topic";
 import EducationCenter from "@/pages/education-center";
+import WhatsAppSupport from "@/pages/whatsapp-support";
 import DocumentGenerator from "@/pages/document-generator";
 import DocumentPrep from "@/pages/document-prep";
 import EmergencyConsultation from "@/pages/emergency-consultation";
@@ -131,6 +133,7 @@ function Router() {
       <Route path="/forum/expert/:expertName" component={CommunityForum} />
       <Route path="/forum/register" component={CommunityForum} />
       <Route path="/contact-support" component={ContactSupport} />
+      <Route path="/whatsapp-support" component={WhatsAppSupport} />
       <Route path="/education-center" component={EducationCenter} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />

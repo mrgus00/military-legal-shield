@@ -110,9 +110,9 @@ export default function LawyerDatabase() {
     return filtered;
   }, [attorneys, searchTerm, selectedState, selectedBranch, selectedSpecialty, selectedPricing, emergencyOnly, sortBy]);
 
-  const uniqueStates = Array.from(new Set(attorneys.map(a => a.state))).sort();
-  const uniqueBranches = Array.from(new Set(attorneys.flatMap(a => a.militaryBranches))).sort();
-  const uniqueSpecialties = Array.from(new Set(attorneys.flatMap(a => a.specialties)));
+  const uniqueStates = Array.from(new Set(attorneys.map(a => a.state).filter(Boolean))).sort();
+  const uniqueBranches = Array.from(new Set(attorneys.flatMap(a => a.militaryBranches || []))).sort();
+  const uniqueSpecialties = Array.from(new Set(attorneys.flatMap(a => a.specialties || [])));
 
   const getPricingColor = (tier: string) => {
     switch (tier) {

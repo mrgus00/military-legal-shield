@@ -6,6 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BranchProvider } from "@/contexts/BranchContext";
 import { MoodProvider } from "@/contexts/MoodContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
+import GoogleAnalytics from "@/components/google-analytics";
+import GoogleTagManager from "@/components/google-tag-manager";
+import GoogleSearchConsole, { GoogleBusinessProfile } from "@/components/google-search-console";
 import BackToTop from "@/components/back-to-top";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import { FloatingWhatsAppButton } from "@/components/whatsapp-connector";
@@ -162,6 +165,10 @@ function App() {
         <MoodProvider>
           <BranchProvider>
             <TooltipProvider>
+              <GoogleAnalytics />
+              <GoogleTagManager />
+              <GoogleSearchConsole />
+              <GoogleBusinessProfile />
               <Toaster />
               <Router />
               <BackToTop />

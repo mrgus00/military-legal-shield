@@ -21,6 +21,11 @@ import {
   generateBreadcrumbs,
   generateFAQStructuredData
 } from "./seo";
+import { 
+  submitSitemapToGoogle,
+  generateBusinessProfile,
+  checkIndexingStatus
+} from "./google-submission";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -316,6 +321,11 @@ Allow: /feed.xml`;
     const faqData = generateFAQStructuredData();
     res.json(faqData);
   });
+
+  // Google Search Console submission endpoints
+  app.post('/api/google/submit-sitemap', submitSitemapToGoogle);
+  app.get('/api/google/business-profile', generateBusinessProfile);
+  app.get('/api/google/indexing-status', checkIndexingStatus);
 
   // Gamification routes
   app.use(gamificationRoutes);

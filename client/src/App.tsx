@@ -77,6 +77,7 @@ import SubscriptionSuccess from "@/pages/subscription-success";
 import SMSCenter from "@/pages/sms-center";
 import CDNDashboard from "@/pages/cdn-dashboard";
 import AccessibilityAudit from "@/pages/accessibility-audit";
+import GoogleSearchConsoleDashboard from "@/pages/google-search-console-dashboard";
 
 function Router() {
   return (
@@ -153,6 +154,7 @@ function Router() {
       <Route path="/sms-center" component={SMSCenter} />
       <Route path="/cdn-dashboard" component={CDNDashboard} />
       <Route path="/accessibility-audit" component={AccessibilityAudit} />
+      <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

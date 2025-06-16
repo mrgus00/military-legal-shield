@@ -136,6 +136,7 @@ function Router() {
       <Route path="/whatsapp-support" component={WhatsAppSupport} />
       <Route path="/chat-support" component={ContactSupport} />
       <Route path="/video-consultation" component={ConsultationBooking} />
+      <Route path="/legal-challenges" component={LegalChallenges} />
       <Route path="/education-center" component={EducationCenter} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />

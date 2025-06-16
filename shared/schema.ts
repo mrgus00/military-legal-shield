@@ -388,6 +388,8 @@ export const scenarioAnalytics = pgTable("scenario_analytics", {
   generatedAt: timestamp("generated_at").defaultNow(),
 });
 
+
+
 // Benefits eligibility calculations
 export const benefitsEligibility = pgTable("benefits_eligibility", {
   id: serial("id").primaryKey(),
@@ -1050,13 +1052,11 @@ export type User = typeof users.$inferSelect;
 // Gamification types
 export type LegalChallenge = typeof legalChallenges.$inferSelect;
 export type InsertLegalChallenge = typeof legalChallenges.$inferInsert;
-export type AchievementBadge = typeof achievementBadges.$inferSelect;
-export type InsertAchievementBadge = typeof achievementBadges.$inferInsert;
 export type UserChallengeProgress = typeof userChallengeProgress.$inferSelect;
 export type InsertUserChallengeProgress = typeof userChallengeProgress.$inferInsert;
+export type AchievementBadge = typeof achievementBadges.$inferSelect;
+export type InsertAchievementBadge = typeof achievementBadges.$inferInsert;
 export type UserBadge = typeof userBadges.$inferSelect;
 export type InsertUserBadge = typeof userBadges.$inferInsert;
-export type UserGameStats = typeof userGameStats.$inferSelect;
-export type InsertUserGameStats = typeof userGameStats.$inferInsert;
 
 

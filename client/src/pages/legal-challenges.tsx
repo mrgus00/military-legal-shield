@@ -1,376 +1,529 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trophy, Star, Award, Target, Clock, Users, Zap, Shield, BookOpen, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { 
+  Trophy, 
+  Star, 
+  Clock, 
+  Target, 
+  Award, 
+  BookOpen,
+  Zap,
+  Shield,
+  CheckCircle,
+  Lock,
+  Play,
+  Users,
+  TrendingUp,
+  Calendar,
+  Search,
+  Filter,
+  Flame
+} from "lucide-react";
+import { Link } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
-import type { LegalChallenge, AchievementBadge, UserChallengeProgress, UserGameStats } from "@shared/schema";
 
-interface ChallengeWithProgress extends LegalChallenge {
-  userProgress?: UserChallengeProgress;
+interface Challenge {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  difficulty: string;
+  branch: string;
+  pointsValue: number;
+  timeLimit: number;
+  questions: any[];
+  isCompleted: boolean;
+  userScore?: number;
+  userProgress?: any;
+}
+
+interface UserStats {
+  totalPoints: number;
+  currentStreak: number;
+  longestStreak: number;
+  totalChallengesCompleted: number;
+  totalBadgesEarned: number;
+  rank: string;
+  level: number;
+  experiencePoints: number;
+  nextLevelPoints: number;
+}
+
+interface Badge {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  tier: string;
+  rarity: string;
+  isEarned: boolean;
 }
 
 export default function LegalChallenges() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
-  const [selectedBranch, setSelectedBranch] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const queryClient = useQueryClient();
 
-  // Mock user ID for demo purposes
-  const userId = "demo-user";
-
-  const { data: challenges = [], isLoading: challengesLoading } = useQuery({
-    queryKey: ["/api/challenges", selectedCategory, selectedDifficulty, selectedBranch],
-    queryFn: () => apiRequest("GET", `/api/challenges?${new URLSearchParams({
-      ...(selectedCategory !== "all" && { category: selectedCategory }),
-      ...(selectedDifficulty !== "all" && { difficulty: selectedDifficulty }),
-      ...(selectedBranch !== "all" && { branch: selectedBranch })
-    })}`),
+  const { data: challenges = [], isLoading: challengesLoading } = useQuery<Challenge[]>({
+    queryKey: ["/api/legal-challenges"],
   });
 
-  const { data: userProgress = [] } = useQuery({
-    queryKey: ["/api/user/progress", userId],
-    queryFn: () => apiRequest("GET", `/api/user/${userId}/progress`),
+  const { data: userStats, isLoading: statsLoading } = useQuery<UserStats>({
+    queryKey: ["/api/user-stats"],
   });
 
-  const { data: userBadges = [] } = useQuery({
-    queryKey: ["/api/user/badges", userId],
-    queryFn: () => apiRequest("GET", `/api/user/${userId}/badges`),
+  const { data: badges = [], isLoading: badgesLoading } = useQuery<Badge[]>({
+    queryKey: ["/api/user-badges"],
   });
 
-  const { data: allBadges = [] } = useQuery({
-    queryKey: ["/api/badges"],
-    queryFn: () => apiRequest("GET", "/api/badges"),
+  const { data: dailyChallenge } = useQuery<Challenge>({
+    queryKey: ["/api/daily-challenge"],
   });
 
-  const { data: userStats } = useQuery({
-    queryKey: ["/api/user/stats", userId],
-    queryFn: () => apiRequest("GET", `/api/user/${userId}/stats`),
+  const categories = [
+    { id: "all", name: "All Categories", icon: BookOpen },
+    { id: "ucmj", name: "UCMJ Knowledge", icon: Shield },
+    { id: "emergency", name: "Emergency Response", icon: Zap },
+    { id: "document-prep", name: "Document Preparation", icon: BookOpen },
+    { id: "scenario", name: "Legal Scenarios", icon: Target },
+    { id: "financial", name: "Military Finance", icon: TrendingUp },
+  ];
+
+  const difficulties = [
+    { id: "all", name: "All Levels" },
+    { id: "beginner", name: "Beginner", color: "green" },
+    { id: "intermediate", name: "Intermediate", color: "yellow" },
+    { id: "advanced", name: "Advanced", color: "orange" },
+    { id: "expert", name: "Expert", color: "red" },
+  ];
+
+  const ranks = [
+    "Recruit", "Private", "Specialist", "Corporal", "Sergeant", 
+    "Staff Sergeant", "Sergeant First Class", "Master Sergeant",
+    "First Sergeant", "Sergeant Major", "Lieutenant", "Captain", 
+    "Major", "Lieutenant Colonel", "Colonel", "General"
+  ];
+
+  const filteredChallenges = challenges.filter(challenge => {
+    if (selectedCategory !== "all" && challenge.category !== selectedCategory) return false;
+    if (selectedDifficulty !== "all" && challenge.difficulty !== selectedDifficulty) return false;
+    if (searchTerm && !challenge.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
+        !challenge.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
   });
-
-  const startChallengeMutation = useMutation({
-    mutationFn: async (challengeId: number) => {
-      return apiRequest("POST", `/api/user/${userId}/progress`, {
-        challengeId,
-        status: "in_progress",
-        startedAt: new Date()
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user/progress", userId] });
-    },
-  });
-
-  const updateProgressMutation = useMutation({
-    mutationFn: async ({ progressId, updates }: { progressId: number; updates: any }) => {
-      return apiRequest("PATCH", `/api/progress/${progressId}`, updates);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user/progress", userId] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user/stats", userId] });
-    },
-  });
-
-  // Combine challenges with user progress
-  const challengesWithProgress: ChallengeWithProgress[] = challenges.map((challenge: LegalChallenge) => ({
-    ...challenge,
-    userProgress: userProgress.find((p: UserChallengeProgress) => p.challengeId === challenge.id)
-  }));
-
-  const getProgressPercentage = (challenge: ChallengeWithProgress) => {
-    if (!challenge.userProgress) return 0;
-    if (challenge.userProgress.status === "completed") return 100;
-    return challenge.userProgress.score || 0;
-  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case "beginner": return "bg-green-500";
-      case "intermediate": return "bg-yellow-500";
-      case "advanced": return "bg-red-500";
-      default: return "bg-gray-500";
+      case "beginner": return "bg-green-100 text-green-800";
+      case "intermediate": return "bg-yellow-100 text-yellow-800";
+      case "advanced": return "bg-orange-100 text-orange-800";
+      case "expert": return "bg-red-100 text-red-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
   const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "military_law": return <Shield className="w-4 h-4" />;
-      case "court_martial": return <Target className="w-4 h-4" />;
-      case "administrative": return <BookOpen className="w-4 h-4" />;
-      case "benefits": return <Award className="w-4 h-4" />;
-      default: return <Star className="w-4 h-4" />;
+    const categoryData = categories.find(cat => cat.id === category);
+    return categoryData ? categoryData.icon : BookOpen;
+  };
+
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case "common": return "text-gray-600";
+      case "uncommon": return "text-green-600";
+      case "rare": return "text-blue-600";
+      case "epic": return "text-purple-600";
+      case "legendary": return "text-yellow-600";
+      default: return "text-gray-600";
     }
   };
 
-  const handleStartChallenge = (challengeId: number) => {
-    startChallengeMutation.mutate(challengeId);
-  };
-
-  const handleContinueChallenge = (progressId: number) => {
-    updateProgressMutation.mutate({
-      progressId,
-      updates: { status: "in_progress" }
-    });
-  };
+  if (challengesLoading || statsLoading || badgesLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          Legal Preparedness Challenges
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Sharpen your military legal knowledge through interactive challenges and earn achievement badges
-        </p>
-      </div>
-
-      {/* User Stats Overview */}
-      {userStats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Trophy className="w-6 h-6 text-yellow-500" />
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Points</p>
-                  <p className="text-2xl font-bold">{userStats.totalPoints || 0}</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-green-600 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                <Trophy className="w-10 h-10 text-blue-600" />
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold mb-6">Legal Preparedness Challenges</h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+              Master military legal knowledge through gamified challenges. Earn badges, climb ranks, and prepare for real-world legal situations.
+            </p>
+            
+            {userStats && (
+              <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{userStats.totalPoints}</div>
+                  <div className="text-blue-100">Total Points</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{userStats.rank}</div>
+                  <div className="text-blue-100">Current Rank</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{userStats.currentStreak}</div>
+                  <div className="text-blue-100">Day Streak</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{userStats.totalBadgesEarned}</div>
+                  <div className="text-blue-100">Badges Earned</div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
-                  <p className="text-2xl font-bold">{userStats.challengesCompleted || 0}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Zap className="w-6 h-6 text-blue-500" />
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Current Streak</p>
-                  <p className="text-2xl font-bold">{userStats.currentStreak || 0}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Award className="w-6 h-6 text-purple-500" />
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Badges Earned</p>
-                  <p className="text-2xl font-bold">{userBadges.length}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
         </div>
+      </section>
+
+      {/* Daily Challenge */}
+      {dailyChallenge && (
+        <section className="py-8 bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Card className="border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-6 h-6 text-orange-600" />
+                    <CardTitle className="text-xl">Daily Challenge</CardTitle>
+                    <Badge className="bg-orange-100 text-orange-800">2x Points</Badge>
+                  </div>
+                  <Flame className="w-6 h-6 text-orange-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">{dailyChallenge.title}</h3>
+                    <p className="text-gray-600 mb-3">{dailyChallenge.description}</p>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {dailyChallenge.timeLimit} min
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Star className="w-4 h-4" />
+                        {dailyChallenge.pointsValue * 2} points
+                      </span>
+                    </div>
+                  </div>
+                  <Link href={`/legal-challenges/${dailyChallenge.id}`}>
+                    <Button className="bg-orange-600 hover:bg-orange-700">
+                      <Play className="w-4 h-4 mr-2" />
+                      Start Challenge
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
       )}
 
-      <Tabs defaultValue="challenges" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="challenges">Challenges</TabsTrigger>
-          <TabsTrigger value="badges">Achievements</TabsTrigger>
-        </TabsList>
+      {/* Progress Overview */}
+      {userStats && (
+        <section className="py-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Progress</h2>
+            
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Level Progress */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-blue-600" />
+                    Level {userStats.level}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>Progress to Level {userStats.level + 1}</span>
+                      <span>{userStats.experiencePoints}/{userStats.nextLevelPoints} XP</span>
+                    </div>
+                    <Progress 
+                      value={(userStats.experiencePoints / userStats.nextLevelPoints) * 100} 
+                      className="h-2"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
 
-        <TabsContent value="challenges" className="space-y-6">
-          {/* Filters */}
-          <div className="flex flex-wrap gap-4">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="military_law">Military Law</SelectItem>
-                <SelectItem value="court_martial">Court Martial</SelectItem>
-                <SelectItem value="administrative">Administrative</SelectItem>
-                <SelectItem value="benefits">Benefits & Claims</SelectItem>
-              </SelectContent>
-            </Select>
+              {/* Streak Counter */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <Flame className="w-5 h-5 text-orange-600" />
+                    Streak
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-orange-600">{userStats.currentStreak}</div>
+                    <div className="text-sm text-gray-600">days active</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Best: {userStats.longestStreak} days
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-            <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Select difficulty" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="advanced">Advanced</SelectItem>
-              </SelectContent>
-            </Select>
+              {/* Recent Badges */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="w-5 h-5 text-yellow-600" />
+                    Recent Badges
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2 flex-wrap">
+                    {badges.filter(badge => badge.isEarned).slice(0, 6).map((badge) => (
+                      <div 
+                        key={badge.id}
+                        className={`w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white ${getRarityColor(badge.rarity)}`}
+                        title={badge.name}
+                      >
+                        <Award className="w-5 h-5" />
+                      </div>
+                    ))}
+                    {badges.filter(badge => badge.isEarned).length === 0 && (
+                      <div className="text-sm text-gray-500">Complete challenges to earn badges</div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
 
-            <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Select branch" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Branches</SelectItem>
-                <SelectItem value="army">Army</SelectItem>
-                <SelectItem value="navy">Navy</SelectItem>
-                <SelectItem value="air_force">Air Force</SelectItem>
-                <SelectItem value="marines">Marines</SelectItem>
-                <SelectItem value="coast_guard">Coast Guard</SelectItem>
-                <SelectItem value="space_force">Space Force</SelectItem>
-              </SelectContent>
-            </Select>
+      {/* Filters */}
+      <section className="py-8 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-4 mb-8">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Search challenges..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-4">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md bg-white"
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              
+              <select
+                value={selectedDifficulty}
+                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md bg-white"
+              >
+                {difficulties.map((difficulty) => (
+                  <option key={difficulty.id} value={difficulty.id}>
+                    {difficulty.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Challenges Grid */}
-          {challengesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardHeader>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {challengesWithProgress.map((challenge) => {
-                const progressPercentage = getProgressPercentage(challenge);
-                const isCompleted = challenge.userProgress?.status === "completed";
-                const isInProgress = challenge.userProgress?.status === "in_progress";
+          {/* Category Quick Filters */}
+          <div className="flex gap-2 flex-wrap mb-8">
+            {categories.slice(1).map((category) => {
+              const IconComponent = category.icon;
+              return (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(selectedCategory === category.id ? "all" : category.id)}
+                  className="flex items-center gap-2"
+                >
+                  <IconComponent className="w-4 h-4" />
+                  {category.name}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-                return (
-                  <Card key={challenge.id} className={`transition-all hover:shadow-lg ${isCompleted ? 'border-green-200 bg-green-50 dark:bg-green-900/20' : ''}`}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          {getCategoryIcon(challenge.category)}
-                          {challenge.title}
-                        </CardTitle>
-                        <div className="flex gap-2">
-                          <Badge className={`${getDifficultyColor(challenge.difficulty)} text-white`}>
-                            {challenge.difficulty}
-                          </Badge>
-                          {challenge.branch && (
-                            <Badge variant="outline">{challenge.branch}</Badge>
+      {/* Challenges Grid */}
+      <section className="py-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Available Challenges</h2>
+            <div className="text-sm text-gray-600">
+              {filteredChallenges.length} of {challenges.length} challenges
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredChallenges.map((challenge) => {
+              const IconComponent = getCategoryIcon(challenge.category);
+              return (
+                <Card key={challenge.id} className={`hover:shadow-lg transition-shadow ${challenge.isCompleted ? 'border-green-200 bg-green-50' : ''}`}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${challenge.isCompleted ? 'bg-green-100' : 'bg-blue-100'}`}>
+                          {challenge.isCompleted ? (
+                            <CheckCircle className="w-6 h-6 text-green-600" />
+                          ) : (
+                            <IconComponent className="w-6 h-6 text-blue-600" />
                           )}
                         </div>
-                      </div>
-                      <CardDescription>{challenge.description}</CardDescription>
-                    </CardHeader>
-
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {challenge.estimatedDuration} min
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Star className="w-4 h-4" />
-                            {challenge.pointsReward} points
-                          </span>
+                        <div>
+                          <CardTitle className="text-lg">{challenge.title}</CardTitle>
+                          <Badge className={getDifficultyColor(challenge.difficulty)}>
+                            {challenge.difficulty}
+                          </Badge>
                         </div>
-
-                        {isInProgress && (
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span>Progress</span>
-                              <span>{progressPercentage}%</span>
-                            </div>
-                            <Progress value={progressPercentage} />
-                          </div>
-                        )}
-
-                        {isCompleted && (
-                          <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                            <CheckCircle className="w-4 h-4" />
-                            <span className="text-sm font-medium">Completed!</span>
-                          </div>
-                        )}
                       </div>
-                    </CardContent>
-
-                    <CardFooter>
-                      {!challenge.userProgress ? (
-                        <Button 
-                          onClick={() => handleStartChallenge(challenge.id)}
-                          disabled={startChallengeMutation.isPending}
-                          className="w-full"
-                        >
-                          Start Challenge
-                        </Button>
-                      ) : isInProgress ? (
-                        <Button 
-                          onClick={() => handleContinueChallenge(challenge.userProgress!.id, challenge.userProgress!.currentStep)}
-                          disabled={updateProgressMutation.isPending}
-                          className="w-full"
-                        >
-                          Continue Challenge
-                        </Button>
-                      ) : (
-                        <Button variant="outline" disabled className="w-full">
-                          Challenge Completed
-                        </Button>
+                      {challenge.branch && challenge.branch !== "All" && (
+                        <Badge variant="outline" className="text-xs">
+                          {challenge.branch}
+                        </Badge>
                       )}
-                    </CardFooter>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="badges" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allBadges.map((badge: AchievementBadge) => {
-              const isEarned = userBadges.some((userBadge: any) => userBadge.badgeId === badge.id);
-              
-              return (
-                <Card key={badge.id} className={`transition-all ${isEarned ? 'border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20' : 'opacity-60'}`}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isEarned ? 'bg-yellow-500' : 'bg-gray-300 dark:bg-gray-600'}`}>
-                        <Award className={`w-6 h-6 ${isEarned ? 'text-white' : 'text-gray-500'}`} />
-                      </div>
-                      <div>
-                        <p className="font-semibold">{badge.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{badge.category}</p>
-                      </div>
-                    </CardTitle>
+                    </div>
                   </CardHeader>
+                  
                   <CardContent>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{badge.description}</p>
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm font-medium">{badge.pointsReward} points</span>
+                    <p className="text-gray-600 text-sm mb-4">{challenge.description}</p>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {challenge.timeLimit} min
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Star className="w-4 h-4" />
+                          {challenge.pointsValue} points
+                        </span>
+                      </div>
+                      
+                      {challenge.isCompleted && challenge.userScore && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-green-600 font-medium">Completed</span>
+                          <span className="text-green-600">{challenge.userScore}%</span>
+                        </div>
+                      )}
+                      
+                      <Link href={`/legal-challenges/${challenge.id}`}>
+                        <Button 
+                          className={`w-full ${challenge.isCompleted ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                        >
+                          {challenge.isCompleted ? (
+                            <>
+                              <Trophy className="w-4 h-4 mr-2" />
+                              Review Challenge
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-4 h-4 mr-2" />
+                              Start Challenge
+                            </>
+                          )}
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
-                  {isEarned && (
-                    <CardFooter>
-                      <Badge className="bg-green-500 text-white">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Earned
-                      </Badge>
-                    </CardFooter>
-                  )}
                 </Card>
               );
             })}
           </div>
-        </TabsContent>
-      </Tabs>
+
+          {filteredChallenges.length === 0 && (
+            <div className="text-center py-12">
+              <Target className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No challenges found</h3>
+              <p className="text-gray-600">Try adjusting your filters to see more challenges.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Leaderboard Preview */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Leaderboard</h2>
+            <p className="text-xl text-gray-600">See how you rank against other service members</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <Users className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Overall Ranking</h3>
+                <p className="text-gray-600 text-sm mb-4">Compete with all service members across branches</p>
+                <Link href="/leaderboard">
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    View Rankings
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <Shield className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Branch Rankings</h3>
+                <p className="text-gray-600 text-sm mb-4">See top performers in your military branch</p>
+                <Link href="/leaderboard?tab=branch">
+                  <Button className="bg-green-600 hover:bg-green-700">
+                    Branch Leaders
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <Calendar className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Weekly Champions</h3>
+                <p className="text-gray-600 text-sm mb-4">This week's most active participants</p>
+                <Link href="/leaderboard?tab=weekly">
+                  <Button className="bg-purple-600 hover:bg-purple-700">
+                    Weekly Leaders
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

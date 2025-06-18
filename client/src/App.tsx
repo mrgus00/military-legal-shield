@@ -13,6 +13,7 @@ import BackToTop from "@/components/back-to-top";
 import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import { FloatingWhatsAppButton } from "@/components/whatsapp-connector";
 import MilitaryLoadingScreen from "@/components/military-loading-screen";
+import PWAInstaller from "@/components/pwa-installer";
 import { useLoading } from "@/contexts/LoadingContext";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
@@ -178,6 +179,7 @@ function App() {
               <BackToTop />
               <LegalAssistantChatbot />
               <FloatingWhatsAppButton />
+              <PWAInstaller />
               <AppLoadingScreen />
             </TooltipProvider>
           </BranchProvider>

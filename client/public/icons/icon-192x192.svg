@@ -1,0 +1,48 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="militaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#facc15;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#eab308;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="96" cy="96" r="96" fill="url(#militaryGradient)"/>
+  
+  <!-- Shield Shape -->
+  <path d="M96 32 L64 48 L64 96 C64 128 96 160 96 160 C96 160 128 128 128 96 L128 48 Z" 
+        fill="url(#shieldGradient)" stroke="#ffffff" stroke-width="3"/>
+  
+  <!-- Military Star -->
+  <polygon points="96,56 100,68 112,68 102,76 106,88 96,80 86,88 90,76 80,68 92,68" 
+           fill="#1e40af"/>
+  
+  <!-- Legal Scales -->
+  <g transform="translate(96,100)">
+    <!-- Scale Base -->
+    <rect x="-2" y="0" width="4" height="24" fill="#ffffff"/>
+    
+    <!-- Left Scale -->
+    <line x1="-16" y1="8" x2="-8" y2="8" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-12" y1="4" x2="-12" y2="8" stroke="#ffffff" stroke-width="2"/>
+    
+    <!-- Right Scale -->
+    <line x1="8" y1="8" x2="16" y2="8" stroke="#ffffff" stroke-width="2"/>
+    <line x1="12" y1="4" x2="12" y2="8" stroke="#ffffff" stroke-width="2"/>
+    
+    <!-- Balance Line -->
+    <line x1="-16" y1="4" x2="16" y2="4" stroke="#ffffff" stroke-width="2"/>
+  </g>
+  
+  <!-- Military Insignia -->
+  <circle cx="76" cy="76" r="4" fill="#ffffff"/>
+  <circle cx="116" cy="76" r="4" fill="#ffffff"/>
+  <rect x="74" y="116" width="4" height="8" fill="#ffffff"/>
+  <rect x="94" y="116" width="4" height="8" fill="#ffffff"/>
+  <rect x="114" y="116" width="4" height="8" fill="#ffffff"/>
+</svg>

@@ -156,6 +156,7 @@ function Router() {
       <Route path="/cdn-dashboard" component={CDNDashboard} />
       <Route path="/accessibility-audit" component={AccessibilityAudit} />
       <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
+      <Route path="/ai-case-analysis" component={AICaseAnalysis} />
       <Route component={NotFound} />
     </Switch>
   );

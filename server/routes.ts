@@ -581,12 +581,32 @@ Allow: /feed.xml`;
         aiInsights: {
           nextActions: [
             "Schedule expert witness depositions",
-            "Review opposing counsel's evidence package"
+            "Review opposing counsel's evidence package",
+            "Prepare mitigation narrative"
           ],
-          timelineRisks: ["Discovery deadline approaching"],
-          strategicOpportunities: ["Recent precedent case favorable to defense"]
+          timelineRisks: [
+            "Discovery deadline approaching in 2 weeks",
+            "Key witness deployment schedule conflict"
+          ],
+          strategicOpportunities: [
+            "Recent precedent case favorable to defense",
+            "Opposing counsel showing interest in plea negotiations"
+          ]
         },
-        automatedRecommendations: generateAutomatedRecommendations(caseId),
+        automatedRecommendations: [
+          {
+            action: "Document Review Session",
+            priority: "high",
+            reasoning: "New evidence requires immediate analysis",
+            suggestedDate: "2025-06-19"
+          },
+          {
+            action: "Character Witness Preparation",
+            priority: "medium", 
+            reasoning: "Strengthen mitigation package",
+            suggestedDate: "2025-06-25"
+          }
+        ],
         predictionUpdates: {
           outcomeConfidence: 0.73,
           estimatedResolution: "8-12 weeks",

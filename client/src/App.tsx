@@ -78,6 +78,7 @@ import SMSCenter from "@/pages/sms-center";
 import CDNDashboard from "@/pages/cdn-dashboard";
 import AccessibilityAudit from "@/pages/accessibility-audit";
 import GoogleSearchConsoleDashboard from "@/pages/google-search-console-dashboard";
+import AICaseAnalysis from "@/pages/ai-case-analysis";
 
 function Router() {
   return (

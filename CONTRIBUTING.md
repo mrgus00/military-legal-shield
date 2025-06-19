@@ -1,72 +1,40 @@
-# Contributing to Military Legal Shield Platform
+# Contributing to MilitaryLegalShield
 
-Thank you for your interest in contributing to the Military Legal Shield platform. This project is dedicated to providing essential legal support for military service members, and we welcome contributions that help us achieve this mission.
-
-## Table of Contents
-
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [Development Guidelines](#development-guidelines)
-- [Accessibility Requirements](#accessibility-requirements)
-- [Testing Standards](#testing-standards)
-- [Pull Request Process](#pull-request-process)
-- [Issue Reporting](#issue-reporting)
-- [Security Considerations](#security-considerations)
+Thank you for your interest in contributing to MilitaryLegalShield! This platform serves military personnel worldwide, and we welcome contributions from developers, legal professionals, and military community members.
 
 ## Code of Conduct
 
-### Our Commitment
-
-We are committed to creating a welcoming and inclusive environment for all contributors, especially those with military backgrounds or connections to the military community.
-
-### Expected Behavior
-
-- Respect for all contributors regardless of background, experience level, or military affiliation
-- Professional communication in all interactions
+By participating in this project, you agree to abide by our Code of Conduct:
+- Treat all contributors with respect and professionalism
 - Focus on constructive feedback and collaborative problem-solving
-- Recognition that this platform serves active military personnel in critical situations
-
-### Unacceptable Behavior
-
-- Harassment, discrimination, or inappropriate comments
-- Disrespectful language or behavior toward military service or personnel
-- Sharing sensitive military information or classified content
-- Compromising security or accessibility features
+- Maintain confidentiality regarding sensitive military legal information
+- Follow all applicable laws and military regulations
 
 ## Getting Started
 
-### Prerequisites
-
-Before contributing, ensure you have:
-- Node.js 18+ installed
-- PostgreSQL database access
-- Basic understanding of React, TypeScript, and Express.js
-- Familiarity with accessibility standards (WCAG 2.1 AA)
-- Understanding of military legal terminology (helpful but not required)
-
-### Development Setup
+### Development Environment Setup
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/your-username/military-legal-shield.git
-   cd military-legal-shield
+   git clone https://github.com/your-username/MilitaryLegalShield.git
+   cd MilitaryLegalShield
    ```
 
 2. **Install Dependencies**
    ```bash
-   npm install
+   npm ci
    ```
 
-3. **Environment Setup**
+3. **Environment Configuration**
    ```bash
-   cp .env.example .env
-   # Configure required environment variables
+   cp supabase/environment.example .env
+   # Configure your API keys and database connection
    ```
 
 4. **Database Setup**
    ```bash
-   npm run db:push
-   npm run db:seed  # Optional: seed with sample data
+   npm run db:setup
+   npm run db:seed
    ```
 
 5. **Start Development Server**
@@ -74,323 +42,247 @@ Before contributing, ensure you have:
    npm run dev
    ```
 
-## Development Guidelines
+### Development Standards
 
-### Code Quality Standards
+#### Code Quality
+- **TypeScript**: All new code must be written in TypeScript
+- **ESLint**: Follow the project's ESLint configuration
+- **Prettier**: Use consistent code formatting
+- **Testing**: Write tests for new features and bug fixes
 
-#### TypeScript
-- Use strict TypeScript configuration
-- Define proper interfaces and types in `shared/schema.ts`
-- Avoid `any` types; use proper type definitions
-- Implement comprehensive error handling
+#### Security Requirements
+- **Never commit sensitive data**: API keys, passwords, or personal information
+- **Validate all inputs**: Use Zod schemas for data validation
+- **Follow security best practices**: OWASP guidelines and military-grade security
+- **Audit dependencies**: Check for known vulnerabilities
 
-#### React Components
-- Follow functional component patterns with hooks
-- Use proper prop typing with TypeScript interfaces
-- Implement proper error boundaries
-- Ensure components are accessible by default
+#### Accessibility Standards
+- **WCAG 2.1 AA compliance**: All UI components must meet accessibility standards
+- **Screen reader compatibility**: Test with assistive technologies
+- **Keyboard navigation**: Ensure full keyboard accessibility
+- **Color contrast**: Maintain minimum contrast ratios
 
-#### Backend Development
-- Implement proper input validation using Zod schemas
-- Use parameterized queries to prevent SQL injection
-- Follow RESTful API design principles
-- Implement comprehensive error handling and logging
+## Contribution Types
 
-### File Organization
+### 1. Bug Reports
+Use the bug report template with:
+- Clear description of the issue
+- Steps to reproduce
+- Expected vs. actual behavior
+- Environment details (browser, OS, device)
+- Screenshots or screen recordings when applicable
 
-```
-military-legal-shield/
-├── client/src/
-│   ├── components/          # Reusable UI components
-│   ├── pages/              # Application pages
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utility functions
-│   └── contexts/           # React contexts
-├── server/
-│   ├── routes.ts           # API route definitions
-│   ├── db.ts              # Database configuration
-│   ├── openai.ts          # AI integration
-│   └── auth/              # Authentication logic
-├── shared/
-│   └── schema.ts          # Shared types and schemas
-└── docs/                  # Documentation
-```
+### 2. Feature Requests
+Submit feature requests with:
+- Military use case justification
+- Detailed feature description
+- User story format: "As a [user type], I want [goal] so that [benefit]"
+- Acceptance criteria
+- Legal compliance considerations
 
-### Naming Conventions
+### 3. Code Contributions
+Follow this workflow:
 
-- **Files**: Use kebab-case for file names (`legal-assistant.tsx`)
-- **Components**: Use PascalCase (`LegalAssistant`)
-- **Variables/Functions**: Use camelCase (`generateDocument`)
-- **Constants**: Use SCREAMING_SNAKE_CASE (`MAX_RETRY_ATTEMPTS`)
+#### Before Starting
+1. Check existing issues and pull requests
+2. Create or comment on relevant issue
+3. Get approval for significant changes
+4. Create feature branch from `main`
 
-## Accessibility Requirements
-
-### WCAG 2.1 AA Compliance
-
-All contributions must maintain our accessibility standards:
-
-#### Color and Contrast
-- Minimum contrast ratio of 4.5:1 for normal text
-- Minimum contrast ratio of 3:1 for large text
-- Use color-blind friendly color combinations
-- Test with accessibility tools before submitting
-
-#### Interactive Elements
-- All buttons must have accessible names
-- Form inputs must have associated labels
-- Interactive elements must be keyboard accessible
-- Focus indicators must be clearly visible
-
-#### Mobile Accessibility
-- Touch targets minimum 44px × 44px
-- Support pinch-to-zoom functionality
-- Ensure readable text at 200% zoom
-- Test on actual mobile devices
-
-#### Screen Readers
-- Proper heading hierarchy (h1 → h2 → h3)
-- ARIA labels for complex interactions
-- Alt text for all meaningful images
-- Semantic HTML structure
-
-### Testing Accessibility
-
-Before submitting, run our accessibility validation:
-
+#### Development Process
 ```bash
-npm run accessibility:test
-npm run accessibility:audit
+# Create feature branch
+git checkout -b feature/attorney-matching-improvement
+
+# Make changes with atomic commits
+git add .
+git commit -m "feat: improve attorney matching algorithm
+
+- Add specialty-based scoring system
+- Implement location proximity weighting
+- Update success rate calculation
+- Add unit tests for matching logic"
+
+# Push to your fork
+git push origin feature/attorney-matching-improvement
 ```
 
-## Testing Standards
+#### Pull Request Requirements
+- **Title**: Clear, descriptive summary
+- **Description**: Link to issue, explain changes, include testing notes
+- **Tests**: Add or update tests for new functionality
+- **Documentation**: Update relevant documentation
+- **Screenshots**: Include UI changes screenshots
+- **Legal Review**: Flag any legal compliance implications
 
-### Required Tests
+### 4. Documentation
+Help improve documentation by:
+- Fixing typos and clarifying instructions
+- Adding code examples and use cases
+- Creating guides for new contributors
+- Translating content for international users
 
-#### Unit Tests
-- Test all utility functions
-- Test React component rendering
-- Test API endpoint functionality
-- Test database operations
+### 5. Legal Content
+Military legal professionals can contribute:
+- UCMJ article explanations and updates
+- Legal form templates and examples
+- Case study documentation (anonymized)
+- Regulatory compliance updates
 
-#### Integration Tests
-- Test complete user workflows
-- Test API integration points
-- Test authentication flows
-- Test payment processing
+## Technical Guidelines
 
-#### Accessibility Tests
-- Automated accessibility scanning
-- Manual keyboard navigation testing
-- Screen reader compatibility testing
-- Mobile accessibility verification
+### Frontend Development
+- **React Components**: Use functional components with hooks
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **State Management**: TanStack Query for server state
+- **Routing**: Wouter for client-side routing
+- **Forms**: react-hook-form with Zod validation
 
-### Running Tests
+### Backend Development
+- **API Design**: RESTful endpoints with consistent responses
+- **Database**: Drizzle ORM with PostgreSQL
+- **Authentication**: Secure session management
+- **Error Handling**: Comprehensive error responses
+- **Logging**: Structured logging for debugging
 
+### Database Changes
+- **Migrations**: Use Drizzle migrations for schema changes
+- **Seed Data**: Update seed files for new data requirements
+- **Security**: Implement Row Level Security policies
+- **Performance**: Add appropriate indexes and optimize queries
+
+## Testing Requirements
+
+### Unit Tests
 ```bash
-# Run all tests
-npm test
+# Run unit tests
+npm run test
 
-# Run tests with coverage
+# Run with coverage
 npm run test:coverage
+```
 
-# Run accessibility tests
-npm run test:accessibility
+### Integration Tests
+```bash
+# Run integration tests
+npm run test:integration
+```
 
+### E2E Tests
+```bash
 # Run end-to-end tests
 npm run test:e2e
 ```
 
-## Pull Request Process
-
-### Before Submitting
-
-1. **Code Quality**
-   - Run linting: `npm run lint`
-   - Fix formatting: `npm run format`
-   - Run type checking: `npm run type-check`
-
-2. **Testing**
-   - All tests pass: `npm test`
-   - Accessibility tests pass: `npm run test:accessibility`
-   - Manual testing completed
-
-3. **Documentation**
-   - Update relevant documentation
-   - Add JSDoc comments for new functions
-   - Update changelog if applicable
-
-### Pull Request Template
-
-```markdown
-## Description
-Brief description of changes and motivation.
-
-## Type of Change
-- [ ] Bug fix (non-breaking change)
-- [ ] New feature (non-breaking change)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Accessibility improvement
-
-## Military Context
-- [ ] Changes affect military-specific functionality
-- [ ] Legal terminology verified for accuracy
-- [ ] Compliance with military regulations considered
-
-## Accessibility Checklist
-- [ ] Color contrast meets WCAG 2.1 AA standards
-- [ ] Keyboard navigation tested
-- [ ] Screen reader compatibility verified
-- [ ] Mobile accessibility confirmed
-- [ ] Focus management implemented properly
-
-## Testing
-- [ ] Unit tests added/updated
-- [ ] Integration tests pass
-- [ ] Accessibility tests pass
-- [ ] Manual testing completed
-- [ ] Cross-browser testing completed
-
-## Security
-- [ ] No sensitive information exposed
-- [ ] Input validation implemented
-- [ ] Authentication/authorization checked
-- [ ] Security implications considered
+### Security Testing
+```bash
+# Security audit
+npm audit
+npm run security:scan
 ```
 
-### Review Process
+## Legal Compliance
 
-1. **Automated Checks**
-   - CI/CD pipeline runs all tests
-   - Code quality checks performed
-   - Accessibility validation executed
-   - Security scanning completed
+### Attorney Information
+- Verify attorney licenses and standing
+- Confirm military law experience
+- Validate contact information
+- Document specializations accurately
 
-2. **Human Review**
-   - Code review by maintainers
-   - Military subject matter expert review (if applicable)
-   - Accessibility expert review (for accessibility changes)
-   - Security review (for security-related changes)
+### Data Privacy
+- Protect personally identifiable information
+- Follow GDPR and military privacy regulations
+- Implement proper data retention policies
+- Secure data transmission and storage
 
-3. **Approval Requirements**
-   - At least two approvals required
-   - All automated checks must pass
-   - Documentation must be updated
-   - Accessibility standards must be maintained
+### Military Regulations
+- Comply with DoD cybersecurity requirements
+- Respect classification levels and security clearances
+- Follow military communication protocols
+- Maintain operational security (OPSEC)
 
-## Issue Reporting
+## Review Process
 
-### Bug Reports
+### Code Review Checklist
+- [ ] Code follows project standards and conventions
+- [ ] Tests pass and coverage is maintained
+- [ ] Security vulnerabilities addressed
+- [ ] Accessibility requirements met
+- [ ] Documentation updated
+- [ ] Legal compliance verified
 
-When reporting bugs, include:
-- **Environment**: OS, browser, device type
-- **Steps to Reproduce**: Clear, numbered steps
-- **Expected Behavior**: What should happen
-- **Actual Behavior**: What actually happens
-- **Screenshots**: If applicable
-- **Accessibility Impact**: If the bug affects accessibility
-- **Military Context**: If the bug affects military-specific features
+### Review Timeline
+- **Small changes**: 1-2 business days
+- **Medium features**: 3-5 business days
+- **Large features**: 1-2 weeks
+- **Security fixes**: Same day (priority)
 
-### Feature Requests
+## Release Process
 
-When requesting features, include:
-- **Problem Statement**: What problem does this solve?
-- **Proposed Solution**: How should it work?
-- **Military Use Case**: How does this help service members?
-- **Accessibility Considerations**: How will this remain accessible?
-- **Alternative Solutions**: Other ways to solve the problem
+### Version Management
+- **Semantic Versioning**: MAJOR.MINOR.PATCH
+- **Release Notes**: Detailed changelog for each release
+- **Deprecation Policy**: 90-day notice for breaking changes
+- **Security Updates**: Immediate release for critical issues
 
-### Security Issues
+### Deployment Pipeline
+1. **Development**: Feature branches and pull requests
+2. **Staging**: Automated testing and quality assurance
+3. **Production**: Monitored deployment with rollback capability
+4. **Post-deployment**: Performance monitoring and user feedback
 
-**DO NOT** report security issues in public GitHub issues. Instead:
-- Email: security@militarylegalshield.com
-- Include detailed reproduction steps
-- Allow reasonable time for response before disclosure
+## Community Guidelines
 
-## Security Considerations
+### Communication Channels
+- **GitHub Issues**: Bug reports and feature discussions
+- **Discord**: Real-time community chat
+- **Email**: security@militarylegalshield.com for security issues
 
-### Sensitive Information
+### Recognition
+Contributors will be recognized through:
+- GitHub contributor stats
+- Release notes acknowledgments
+- Community contributor highlights
+- Optional LinkedIn recommendations
 
-- Never commit API keys, secrets, or credentials
-- Avoid logging sensitive user information
-- Use environment variables for configuration
-- Implement proper input sanitization
+### Mentorship
+New contributors can get help through:
+- Detailed contribution guides
+- Pair programming sessions
+- Code review feedback
+- Community Discord support
 
-### Military-Specific Security
+## Legal and Ethical Considerations
 
-- Understand OPSEC (Operations Security) implications
-- Avoid exposing deployment locations or schedules
-- Be cautious with military terminology that could reveal sensitive information
-- Consider classification levels when handling military-related data
+### Professional Responsibility
+- Maintain attorney-client privilege protection
+- Avoid unauthorized practice of law
+- Respect professional boundaries
+- Follow legal ethics guidelines
 
-### Data Protection
+### Military Sensitivity
+- Protect sensitive military information
+- Respect classification requirements
+- Follow OPSEC procedures
+- Consider national security implications
 
-- Implement HIPAA compliance for medical information
-- Follow GDPR guidelines for international users
-- Secure handling of legal documents and communications
-- Proper encryption for data at rest and in transit
-
-## Military Context Guidelines
-
-### Understanding Our Users
-
-Our platform serves:
-- Active duty military personnel across all branches
-- Reserve and National Guard members
-- Military families and dependents
-- Veterans transitioning to civilian life
-- Personnel deployed in various global locations
-
-### Military-Specific Considerations
-
-#### Legal Terminology
-- Use accurate military legal terms (UCMJ, Article 15, Court Martial)
-- Understand rank structures across all service branches
-- Recognize differences in military justice systems
-
-#### Operational Awareness
-- Consider time zones for global military presence
-- Understand deployment and training cycles
-- Recognize emergency nature of some legal situations
-- Account for limited internet access in some locations
-
-#### Cultural Sensitivity
-- Respect military traditions and values
-- Understand chain of command concepts
-- Recognize unique stressors of military life
-- Support military family dynamics
+### Open Source Ethics
+- Respect intellectual property rights
+- Follow open source license requirements
+- Credit original authors and sources
+- Maintain transparency in development
 
 ## Getting Help
 
-### Development Questions
-- **Discord**: Join our developer community
-- **Email**: dev@militarylegalshield.com
-- **Documentation**: Check our comprehensive docs
+### Technical Support
+- **Documentation**: Check project wiki and guides
+- **Issues**: Search existing issues before creating new ones
+- **Discord**: Join community chat for real-time help
+- **Email**: tech@militarylegalshield.com for complex issues
 
-### Military Context Questions
-- **Military Advisors**: Available for consultation
-- **Legal Experts**: Domain-specific guidance
-- **Veteran Contributors**: Peer support and insights
+### Legal Questions
+- **Attorney Network**: Contact verified military attorneys
+- **Legal Resources**: Use platform legal resource library
+- **Professional Consultation**: Seek independent legal advice
 
-### Accessibility Questions
-- **Accessibility Team**: accessibility@militarylegalshield.com
-- **WCAG Guidelines**: Reference materials provided
-- **Testing Tools**: Recommendations and tutorials
-
-## Recognition
-
-Contributors who make significant impacts will be recognized:
-- **Hall of Honor**: Annual recognition for outstanding contributions
-- **Military Appreciation**: Special recognition for veteran contributors
-- **Accessibility Champions**: Recognition for accessibility improvements
-- **Security Heroes**: Recognition for security enhancements
-
-## Thank You
-
-Your contributions help ensure that military service members have access to the legal support they need and deserve. Every improvement to this platform directly impacts the lives of those who serve our nation.
-
-Together, we're building something that truly matters.
-
----
-
-**Questions?** Reach out to our maintainer team at contributors@militarylegalshield.com
+Thank you for contributing to MilitaryLegalShield and supporting our military community!

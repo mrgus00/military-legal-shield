@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024 Military Legal Shield Platform
+Copyright (c) 2025 MilitaryLegalShield
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,47 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
+## Additional Terms for Military Legal Support Platform
 
-## Additional Terms for Military Legal Shield Platform
+### Legal Services Disclaimer
+This software platform facilitates connections between military personnel and 
+licensed attorneys but does not provide legal advice directly. All legal 
+advice and representation are provided by independent licensed attorneys.
 
-This software is specifically designed to provide legal support and assistance 
-to military service members. The following additional considerations apply:
+### Military Information Security
+Users of this software who handle classified or sensitive military information 
+must comply with all applicable Department of Defense security regulations 
+and operational security (OPSEC) procedures.
 
-### Use in Military Context
-- This software is designed to assist military personnel with legal matters
-- It should not be used as a substitute for qualified legal counsel
-- Users should always consult with appropriate military legal authorities
-- Compliance with military regulations and security requirements is essential
+### Attorney Network Terms
+Attorneys participating in the MilitaryLegalShield network maintain their 
+independent professional responsibilities and client relationships. The 
+platform does not create attorney-client relationships on behalf of attorneys.
 
-### Accessibility Commitment
-- This software maintains WCAG 2.1 AA accessibility compliance
-- Modifications must preserve accessibility features for users with disabilities
-- Any changes must be tested for accessibility compliance before deployment
-
-### Security and Privacy
-- This software handles sensitive legal and personal information
-- Implementers must ensure appropriate security measures are in place
-- Data protection and privacy requirements must be maintained
-- Military security protocols should be followed where applicable
-
-### Legal Disclaimer
-- This software provides general legal information and tools
-- It does not constitute legal advice or establish attorney-client relationships
-- Users should seek qualified legal counsel for specific legal matters
-- The software authors disclaim liability for legal outcomes or decisions
-
-### Support for Service Members
-- Priority should be given to ensuring reliable service for military personnel
-- Emergency legal situations require immediate and accessible support
-- Global accessibility is essential for deployed service members
-- Multi-language support should be maintained for international operations
-
-By using this software, you acknowledge that:
-1. You understand its purpose in supporting military legal assistance
-2. You will maintain its accessibility and security standards
-3. You will not use it to compromise military operations or security
-4. You recognize the critical nature of legal support for service members
-
-For questions about licensing or appropriate use, contact:
-support@militarylegalshield.com
+### Data Protection
+This software implements military-grade security measures for protecting 
+sensitive personal and legal information in accordance with applicable 
+privacy laws and military regulations.

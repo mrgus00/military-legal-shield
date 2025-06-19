@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MilitaryLegalShield - Production Monitoring Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .dashboard-container {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .metric-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-unit {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        
+        .chart-container {
+            grid-column: span 2;
+            height: 300px;
+            position: relative;
+        }
+        
+        .logs-container {
+            grid-column: span 2;
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem;
+            border-left: 3px solid #10b981;
+            padding-left: 0.5rem;
+        }
+        
+        .log-error {
+            border-left-color: #ef4444;
+            color: #fecaca;
+        }
+        
+        .log-warning {
+            border-left-color: #f59e0b;
+            color: #fed7aa;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            background: rgba(59, 130, 246, 0.8);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: rgba(59, 130, 246, 1);
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.8);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+        
+        .alert {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎖️ MilitaryLegalShield Monitoring</div>
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span id="system-status">System Operational</span>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- System Health Metrics -->
+        <div class="metric-card">
+            <div class="metric-title">Application Health</div>
+            <div class="metric-value" id="app-health">Healthy</div>
+            <div class="metric-unit">Last checked: <span id="last-check">--</span></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-title">Response Time</div>
+            <div class="metric-value" id="response-time">--</div>
+            <div class="metric-unit">milliseconds</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-title">Active Users</div>
+            <div class="metric-value" id="active-users">--</div>
+            <div class="metric-unit">current sessions</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-title">Memory Usage</div>
+            <div class="metric-value" id="memory-usage">--</div>
+            <div class="metric-unit">MB</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-title">CPU Usage</div>
+            <div class="metric-value" id="cpu-usage">--</div>
+            <div class="metric-unit">percent</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-title">Database Connections</div>
+            <div class="metric-value" id="db-connections">--</div>
+            <div class="metric-unit">active</div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="metric-card chart-container">
+            <div class="metric-title">Response Time Trend</div>
+            <canvas id="performanceChart"></canvas>
+        </div>
+
+        <!-- System Controls -->
+        <div class="metric-card">
+            <div class="metric-title">System Controls</div>
+            <div class="controls">
+                <button class="btn" onclick="restartApplication()">Restart App</button>
+                <button class="btn" onclick="clearCache()">Clear Cache</button>
+                <button class="btn btn-danger" onclick="emergencyMode()">Emergency Mode</button>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="exportLogs()">Export Logs</button>
+                <button class="btn" onclick="runHealthCheck()">Health Check</button>
+                <button class="btn" onclick="purgeCloudflare()">Purge CDN</button>
+            </div>
+        </div>
+
+        <!-- Real-time Logs -->
+        <div class="metric-card logs-container">
+            <div class="metric-title">Real-time Application Logs</div>
+            <div id="logs-content">
+                <div class="log-entry">2024-06-19 04:45:00 - Application started successfully</div>
+                <div class="log-entry">2024-06-19 04:45:01 - Database connection established</div>
+                <div class="log-entry">2024-06-19 04:45:02 - AI services initialized</div>
+                <div class="log-entry">2024-06-19 04:45:03 - PWA service worker registered</div>
+                <div class="log-entry">2024-06-19 04:45:04 - SSL certificate validated</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize performance chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Response Time (ms)',
+                    data: [],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Real-time monitoring functions
+        async function fetchMetrics() {
+            try {
+                const response = await fetch('/api/monitoring/metrics');
+                const data = await response.json();
+                
+                updateMetrics(data);
+                updateChart(data.responseTime);
+                
+            } catch (error) {
+                console.error('Failed to fetch metrics:', error);
+                document.getElementById('system-status').textContent = 'Connection Error';
+            }
+        }
+
+        function updateMetrics(data) {
+            document.getElementById('response-time').textContent = data.responseTime || '--';
+            document.getElementById('active-users').textContent = data.activeUsers || '--';
+            document.getElementById('memory-usage').textContent = data.memoryUsage || '--';
+            document.getElementById('cpu-usage').textContent = data.cpuUsage || '--';
+            document.getElementById('db-connections').textContent = data.dbConnections || '--';
+            document.getElementById('last-check').textContent = new Date().toLocaleTimeString();
+        }
+
+        function updateChart(responseTime) {
+            const now = new Date().toLocaleTimeString();
+            performanceChart.data.labels.push(now);
+            performanceChart.data.datasets[0].data.push(responseTime || 0);
+            
+            // Keep only last 20 data points
+            if (performanceChart.data.labels.length > 20) {
+                performanceChart.data.labels.shift();
+                performanceChart.data.datasets[0].data.shift();
+            }
+            
+            performanceChart.update('none');
+        }
+
+        // Control functions
+        async function restartApplication() {
+            if (confirm('Are you sure you want to restart the application?')) {
+                try {
+                    await fetch('/api/admin/restart', { method: 'POST' });
+                    addLogEntry('Application restart initiated', 'warning');
+                } catch (error) {
+                    addLogEntry('Failed to restart application: ' + error.message, 'error');
+                }
+            }
+        }
+
+        async function clearCache() {
+            try {
+                await fetch('/api/admin/clear-cache', { method: 'POST' });
+                addLogEntry('Cache cleared successfully');
+            } catch (error) {
+                addLogEntry('Failed to clear cache: ' + error.message, 'error');
+            }
+        }
+
+        async function emergencyMode() {
+            if (confirm('Enable emergency mode? This will restrict access to essential functions only.')) {
+                try {
+                    await fetch('/api/admin/emergency-mode', { method: 'POST' });
+                    addLogEntry('Emergency mode activated', 'warning');
+                } catch (error) {
+                    addLogEntry('Failed to activate emergency mode: ' + error.message, 'error');
+                }
+            }
+        }
+
+        async function exportLogs() {
+            try {
+                const response = await fetch('/api/admin/export-logs');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `militarylegalshield-logs-${new Date().toISOString().split('T')[0]}.log`;
+                a.click();
+                addLogEntry('Logs exported successfully');
+            } catch (error) {
+                addLogEntry('Failed to export logs: ' + error.message, 'error');
+            }
+        }
+
+        async function runHealthCheck() {
+            try {
+                const response = await fetch('/api/health/detailed');
+                const data = await response.json();
+                addLogEntry(`Health check completed - Status: ${data.status}`);
+            } catch (error) {
+                addLogEntry('Health check failed: ' + error.message, 'error');
+            }
+        }
+
+        async function purgeCloudflare() {
+            try {
+                await fetch('/api/admin/purge-cdn', { method: 'POST' });
+                addLogEntry('CloudFlare cache purged successfully');
+            } catch (error) {
+                addLogEntry('Failed to purge CDN: ' + error.message, 'error');
+            }
+        }
+
+        function addLogEntry(message, type = 'info') {
+            const logsContent = document.getElementById('logs-content');
+            const timestamp = new Date().toLocaleString();
+            const logClass = type === 'error' ? 'log-error' : type === 'warning' ? 'log-warning' : '';
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${logClass}`;
+            logEntry.textContent = `${timestamp} - ${message}`;
+            
+            logsContent.appendChild(logEntry);
+            logsContent.scrollTop = logsContent.scrollHeight;
+            
+            // Keep only last 50 log entries
+            if (logsContent.children.length > 50) {
+                logsContent.removeChild(logsContent.firstChild);
+            }
+        }
+
+        // Initialize monitoring
+        fetchMetrics();
+        setInterval(fetchMetrics, 5000); // Update every 5 seconds
+
+        // Simulate some initial data
+        setTimeout(() => {
+            updateMetrics({
+                responseTime: 45,
+                activeUsers: 12,
+                memoryUsage: 436,
+                cpuUsage: 23,
+                dbConnections: 8
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

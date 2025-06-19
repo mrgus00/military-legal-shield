@@ -1,0 +1,176 @@
+# Supabase Environment Configuration for MilitaryLegalShield
+# Copy this file to .env and update with your actual values
+
+# ==============================================
+# Supabase Database Configuration
+# ==============================================
+
+# Main database connection string
+# Get this from Supabase Dashboard → Settings → Database → Connection pooling
+DATABASE_URL=postgresql://postgres.[ref]:[password]@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+
+# Direct connection (for migrations and admin tasks)
+DIRECT_URL=postgresql://postgres.[ref]:[password]@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+
+# Supabase project details
+SUPABASE_URL=https://[project-ref].supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# ==============================================
+# Database Connection Pool Settings
+# ==============================================
+
+# Connection pool configuration
+DB_POOL_MIN=2
+DB_POOL_MAX=10
+DB_POOL_IDLE_TIMEOUT=30000
+DB_POOL_CONNECTION_TIMEOUT=5000
+
+# ==============================================
+# AI Services Configuration
+# ==============================================
+
+# OpenAI API for case analysis and document generation
+OPENAI_API_KEY=sk-...
+
+# ==============================================
+# Payment Processing
+# ==============================================
+
+# Stripe configuration for subscription management
+STRIPE_SECRET_KEY=sk_live_... # or sk_test_... for development
+VITE_STRIPE_PUBLIC_KEY=pk_live_... # or pk_test_... for development
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# ==============================================
+# Communication Services
+# ==============================================
+
+# Twilio for emergency notifications and SMS alerts
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=+1...
+
+# ==============================================
+# Image and Media Services
+# ==============================================
+
+# Unsplash for stock images (optional)
+UNSPLASH_ACCESS_KEY=...
+
+# ==============================================
+# Security Configuration
+# ==============================================
+
+# Session management
+SESSION_SECRET=your-secure-random-32-character-string-here
+ENCRYPTION_KEY=your-32-byte-encryption-key-here
+
+# JWT configuration
+JWT_SECRET=your-jwt-secret-key
+JWT_EXPIRES_IN=7d
+
+# ==============================================
+# Application Settings
+# ==============================================
+
+# Environment
+NODE_ENV=production
+
+# Server configuration
+PORT=5000
+HOST=0.0.0.0
+
+# Domain configuration
+DOMAIN=militarylegalshield.com
+REPLIT_DOMAINS=militarylegalshield.com,www.militarylegalshield.com
+
+# ==============================================
+# CDN and Performance
+# ==============================================
+
+# CloudFlare configuration (optional)
+CLOUDFLARE_ZONE_ID=...
+CLOUDFLARE_API_TOKEN=...
+
+# ==============================================
+# Monitoring and Logging
+# ==============================================
+
+# Log levels: error, warn, info, debug
+LOG_LEVEL=info
+
+# Enable features
+ENABLE_LOGGING=true
+ENABLE_MONITORING=true
+ENABLE_HEALTH_CHECKS=true
+
+# ==============================================
+# Feature Flags
+# ==============================================
+
+# PWA features
+ENABLE_PWA=true
+ENABLE_PUSH_NOTIFICATIONS=true
+ENABLE_OFFLINE_MODE=true
+
+# AI features
+ENABLE_AI_ANALYSIS=true
+ENABLE_AI_DOCUMENT_GENERATION=true
+ENABLE_AI_ATTORNEY_MATCHING=true
+
+# ==============================================
+# Development Settings (remove in production)
+# ==============================================
+
+# Development debugging
+DEBUG=false
+VERBOSE_LOGGING=false
+
+# Development database (if different)
+# DEV_DATABASE_URL=postgresql://...
+
+# ==============================================
+# Backup and Recovery
+# ==============================================
+
+# Backup configuration
+BACKUP_ENABLED=true
+BACKUP_FREQUENCY=daily
+BACKUP_RETENTION_DAYS=30
+
+# S3 backup storage (optional)
+# AWS_ACCESS_KEY_ID=...
+# AWS_SECRET_ACCESS_KEY=...
+# AWS_S3_BUCKET=militarylegalshield-backups
+
+# ==============================================
+# Email Configuration (optional)
+# ==============================================
+
+# SMTP settings for notifications
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=...
+# SMTP_PASS=...
+# FROM_EMAIL=noreply@militarylegalshield.com
+
+# ==============================================
+# Analytics and Tracking
+# ==============================================
+
+# Google Analytics
+# GA_TRACKING_ID=G-...
+
+# ==============================================
+# Rate Limiting
+# ==============================================
+
+# API rate limits
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Emergency endpoint limits
+EMERGENCY_RATE_LIMIT_MAX=10
+EMERGENCY_RATE_LIMIT_WINDOW_MS=300000

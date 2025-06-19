@@ -67,29 +67,41 @@ export default function MilitaryBranchesBanner() {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4 md:gap-6 items-center justify-items-center w-full max-w-full no-scroll-x">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center w-full max-w-full no-scroll-x">
           {branches.map((branch) => (
             <Link key={branch.name} href={branch.route}>
               <button 
-                className={`text-center group w-full max-w-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded-lg p-1 sm:p-3 md:p-4 mobile-card ${
-                  selectedBranch === branch.branchId ? 'bg-navy-50 ring-2 ring-navy-300' : 'hover:bg-gray-50'
+                className={`text-center group w-full max-w-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 rounded-xl p-3 sm:p-4 md:p-6 mobile-card shadow-lg hover:shadow-2xl ${
+                  selectedBranch === branch.branchId 
+                    ? 'bg-gradient-to-br from-blue-50 to-indigo-100 ring-4 ring-blue-400 shadow-xl' 
+                    : 'bg-white hover:bg-gradient-to-br hover:from-gray-50 hover:to-blue-50'
                 }`}
                 onClick={() => setBranch(branch.branchId)}
                 aria-label={`View ${branch.name} legal resources and attorneys`}
               >
-                <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto mb-1 sm:mb-3 rounded-lg bg-white shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-md transition-shadow flex-shrink-0">
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto mb-3 sm:mb-4 rounded-xl bg-gradient-to-br from-white to-gray-50 shadow-md border-2 border-gray-200 flex items-center justify-center overflow-hidden group-hover:shadow-xl group-hover:border-blue-300 transition-all duration-300 flex-shrink-0">
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-50/20 to-indigo-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <img
                     src={branch.image}
                     alt={`${branch.name} emblem`}
-                    className="w-full h-full object-cover responsive-image"
+                    className="w-full h-full object-cover rounded-lg group-hover:scale-110 transition-transform duration-300 relative z-10"
                   />
+                  <div className="absolute inset-0 ring-2 ring-transparent group-hover:ring-blue-300 rounded-xl transition-all duration-300"></div>
                 </div>
-                <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 leading-tight responsive-text text-overflow-safe">
+                <h4 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-1 leading-tight group-hover:text-blue-900 transition-colors duration-300">
                   {branch.name}
                 </h4>
-                <p className="text-xs text-gray-600 responsive-text text-overflow-safe">
+                <p className="text-xs sm:text-sm text-gray-600 group-hover:text-blue-700 transition-colors duration-300 font-medium">
                   Est. {branch.established}
                 </p>
+                <div className="mt-2 sm:mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="inline-flex items-center text-xs text-blue-600 font-semibold">
+                    <span>View Attorneys</span>
+                    <svg className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
               </button>
             </Link>
           ))}

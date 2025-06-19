@@ -127,6 +127,7 @@ function Router() {
       <Route path="/lawyer-database" component={LawyerDatabase} />
       <Route path="/court-martial-defense" component={CourtMartialDefense} />
       <Route path="/family-law-poas" component={FamilyLawPOAs} />
+      <Route path="/family-legal" component={FamilyLawPOAs} />
       <Route path="/ucmj-support" component={UCMJSupport} />
       <Route path="/va-benefits-claims" component={VABenefitsClaims} />
       <Route path="/legal-documents" component={LegalDocuments} />

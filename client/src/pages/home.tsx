@@ -681,7 +681,7 @@ export default function Home() {
                     </MilitaryTooltip>
                   </li>
                 </ul>
-                <Link href="/family-legal">
+                <Link href="/family-law-poas">
                   <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
                     Explore Services
                   </Button>

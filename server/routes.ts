@@ -26,6 +26,14 @@ import {
   generateBusinessProfile,
   checkIndexingStatus
 } from "./google-submission";
+import {
+  submitSitemapToSearchEngines,
+  submitUrlForImmediateIndexing,
+  getStructuredData,
+  generateGoogleAnalyticsConfig,
+  generateFacebookPixelConfig,
+  generateLinkedInInsightConfig
+} from "./platform-submission";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1097,6 +1105,48 @@ Allow: /feed.xml`;
     } catch (error) {
       console.error("Error cancelling subscription:", error);
       res.status(500).json({ message: "Failed to cancel subscription" });
+    }
+  });
+
+  // Platform submission and tracking endpoints
+  app.post("/api/submit-to-search-engines", submitSitemapToSearchEngines);
+  app.post("/api/submit-url-for-indexing", submitUrlForImmediateIndexing);
+  app.get("/api/structured-data", getStructuredData);
+  
+  // Analytics configuration endpoints
+  app.get("/api/analytics-config/google", (req, res) => {
+    res.json(generateGoogleAnalyticsConfig());
+  });
+  
+  app.get("/api/analytics-config/facebook", (req, res) => {
+    res.json(generateFacebookPixelConfig());
+  });
+  
+  app.get("/api/analytics-config/linkedin", (req, res) => {
+    res.json(generateLinkedInInsightConfig());
+  });
+
+  // Automated platform submission endpoint
+  app.post("/api/platform-launch", async (req, res) => {
+    try {
+      const results = await Promise.allSettled([
+        submitSitemapToSearchEngines(req, res),
+        submitSitemapToGoogle(req, res),
+        generateBusinessProfile(req, res)
+      ]);
+      
+      res.json({
+        success: true,
+        message: "Platform launch completed - submitted to all major search engines",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Platform launch error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Platform launch failed",
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 

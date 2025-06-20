@@ -1571,24 +1571,24 @@ Allow: /feed.xml`;
         .where(
           and(
             or(
-              eq(attorneys.branch, branch),
-              eq(attorneys.branch, 'all')
+              eq(attorneys.militaryBranch, branch),
+              eq(attorneys.militaryBranch, 'all')
             ),
-            ilike(attorneys.specializations, `%${caseType}%`)
+            ilike(attorneys.specialties, `%${caseType}%`)
           )
         )
         .limit(3);
 
       return result.map(attorney => ({
         id: attorney.id,
-        name: attorney.name,
-        firm: attorney.firm,
+        name: `${attorney.firstName} ${attorney.lastName}`,
+        firm: attorney.firmName || 'Independent Practice',
         location: attorney.location,
-        experience: attorney.experienceYears,
-        specializations: attorney.specializations?.split(',') || [],
+        experience: attorney.experience || 5,
+        specializations: attorney.specialties || [],
         rating: 4.5 + Math.random() * 0.5, // Simulated rating
         responseTime: '< 2 hours',
-        consultationFee: attorney.consultationFee || 'Free initial consultation'
+        consultationFee: attorney.hourlyRate ? `$${attorney.hourlyRate}/hour` : 'Free initial consultation'
       }));
     } catch (error) {
       console.error('Error getting recommended attorneys:', error);

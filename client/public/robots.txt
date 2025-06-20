@@ -1,41 +1,34 @@
-# Robots.txt for MilitaryLegalShield.com
-# Allow all search engines to crawl the site
-
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemap
 Sitemap: https://militarylegalshield.com/sitemap.xml
 
-# Specific crawl directives for major search engines
-User-agent: Googlebot
-Allow: /
+# High Priority Pages
+Allow: /attorneys
+Allow: /emergency-consultation
+Allow: /court-martial-defense
+Allow: /family-law-poas
+Allow: /ai-case-analysis
+
+# Branch-specific pages
+Allow: /attorneys?branch=army
+Allow: /attorneys?branch=navy
+Allow: /attorneys?branch=marines
+Allow: /attorneys?branch=airforce
+Allow: /attorneys?branch=coastguard
+Allow: /attorneys?branch=spaceforce
+
+# Legal Resources
+Allow: /ucmj-support
+Allow: /va-benefits-claims
+Allow: /legal-documents
+Allow: /resources
+
+# Support Pages
+Allow: /pricing
+Allow: /help-center
+Allow: /contact-support
+
+# Crawl-delay for better server performance
 Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 1
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-# Disallow private admin areas (if any exist in future)
-Disallow: /admin/
-Disallow: /api/
-Disallow: /.well-known/
-
-# Allow RSS feeds
-Allow: /rss.xml
-Allow: /feed.xml
-Allow: /feed.json

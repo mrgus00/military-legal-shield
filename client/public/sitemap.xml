@@ -5,99 +5,160 @@
         xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-
-  <!-- Homepage -->
+  
+  <!-- Main Pages -->
   <url>
     <loc>https://militarylegalshield.com/</loc>
-    <lastmod>2025-01-16</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <mobile:mobile/>
   </url>
-
-  <!-- Main Service Pages -->
+  
   <url>
-    <loc>https://militarylegalshield.com/urgent-match</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://militarylegalshield.com/attorneys</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <mobile:mobile/>
   </url>
-
-  <url>
-    <loc>https://militarylegalshield.com/lawyer-database</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://militarylegalshield.com/legal-challenges</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
+  
   <url>
     <loc>https://militarylegalshield.com/emergency-consultation</loc>
-    <lastmod>2025-01-16</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+    <mobile:mobile/>
   </url>
-
+  
   <url>
-    <loc>https://militarylegalshield.com/document-generator</loc>
-    <lastmod>2025-01-16</lastmod>
+    <loc>https://militarylegalshield.com/court-martial-defense</loc>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <mobile:mobile/>
   </url>
-
+  
   <url>
-    <loc>https://militarylegalshield.com/military-justice</loc>
-    <lastmod>2025-01-16</lastmod>
+    <loc>https://militarylegalshield.com/family-law-poas</loc>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <mobile:mobile/>
   </url>
-
+  
+  <url>
+    <loc>https://militarylegalshield.com/ucmj-support</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/va-benefits-claims</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/ai-case-analysis</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <!-- Military Branch Specific Pages -->
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=army</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=navy</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=marines</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=airforce</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=coastguard</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <url>
+    <loc>https://militarylegalshield.com/attorneys?branch=spaceforce</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
+  <!-- Additional Pages -->
+  <url>
+    <loc>https://militarylegalshield.com/pricing</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+  
   <url>
     <loc>https://militarylegalshield.com/consultation-booking</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <mobile:mobile/>
   </url>
-
+  
   <url>
-    <loc>https://militarylegalshield.com/benefits-eligibility</loc>
-    <lastmod>2025-01-16</lastmod>
+    <loc>https://militarylegalshield.com/resources</loc>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    <mobile:mobile/>
   </url>
-
+  
   <url>
-    <loc>https://militarylegalshield.com/chat-support</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://militarylegalshield.com/video-consultation</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://militarylegalshield.com/help-center</loc>
-    <lastmod>2025-01-16</lastmod>
+    <loc>https://militarylegalshield.com/education</loc>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+    <mobile:mobile/>
   </url>
-
-  <!-- RSS Feeds -->
+  
   <url>
-    <loc>https://militarylegalshield.com/rss.xml</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
+    <loc>https://militarylegalshield.com/help-center</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <mobile:mobile/>
   </url>
-
+  
 </urlset>

@@ -1299,6 +1299,407 @@ Allow: /feed.xml`;
     }
   });
 
+  // Legal Roadmap API Endpoints
+  
+  // Get available roadmap templates
+  app.get('/api/legal-roadmap/templates', async (req, res) => {
+    try {
+      const templates = [
+        {
+          id: 'court-martial',
+          name: 'Court-Martial Defense',
+          description: 'Complete defense process for court-martial proceedings',
+          estimatedDuration: '45-90 days',
+          complexity: 'high',
+          urgencyLevel: 'urgent',
+          branches: ['army', 'navy', 'airforce', 'marines', 'coastguard', 'spaceforce'],
+          categories: ['consultation', 'preparation', 'documentation', 'proceedings', 'resolution']
+        },
+        {
+          id: 'family-law',
+          name: 'Military Family Law',
+          description: 'Family legal protection and power of attorney setup',
+          estimatedDuration: '30-60 days',
+          complexity: 'medium',
+          urgencyLevel: 'routine',
+          branches: ['army', 'navy', 'airforce', 'marines', 'coastguard', 'spaceforce'],
+          categories: ['consultation', 'documentation', 'preparation', 'resolution']
+        },
+        {
+          id: 'administrative-separation',
+          name: 'Administrative Separation',
+          description: 'Defense against administrative separation proceedings',
+          estimatedDuration: '30-45 days',
+          complexity: 'medium',
+          urgencyLevel: 'urgent',
+          branches: ['army', 'navy', 'airforce', 'marines', 'coastguard', 'spaceforce'],
+          categories: ['consultation', 'preparation', 'documentation', 'proceedings']
+        },
+        {
+          id: 'security-clearance',
+          name: 'Security Clearance Issues',
+          description: 'Appeal and reinstatement of security clearances',
+          estimatedDuration: '60-180 days',
+          complexity: 'high',
+          urgencyLevel: 'high',
+          branches: ['army', 'navy', 'airforce', 'marines', 'coastguard', 'spaceforce'],
+          categories: ['consultation', 'investigation', 'documentation', 'appeal', 'resolution']
+        },
+        {
+          id: 'meb-peb',
+          name: 'MEB/PEB Process',
+          description: 'Medical evaluation and physical evaluation board proceedings',
+          estimatedDuration: '90-180 days',
+          complexity: 'high',
+          urgencyLevel: 'medium',
+          branches: ['army', 'navy', 'airforce', 'marines', 'coastguard', 'spaceforce'],
+          categories: ['consultation', 'medical-review', 'documentation', 'board-proceedings', 'resolution']
+        }
+      ];
+
+      res.json(templates);
+    } catch (error) {
+      console.error('Error fetching roadmap templates:', error);
+      res.status(500).json({ error: 'Failed to fetch roadmap templates' });
+    }
+  });
+
+  // Get specific roadmap by case type and branch
+  app.get('/api/legal-roadmap/:caseType/:branch', async (req, res) => {
+    try {
+      const { caseType, branch } = req.params;
+      const { userId } = req.query;
+
+      // Generate roadmap based on case type and branch
+      const roadmap = await generateLegalRoadmap(caseType, branch, userId as string);
+      
+      res.json(roadmap);
+    } catch (error) {
+      console.error('Error fetching legal roadmap:', error);
+      res.status(500).json({ error: 'Failed to fetch legal roadmap' });
+    }
+  });
+
+  // Update roadmap step progress
+  app.post('/api/legal-roadmap/progress', async (req, res) => {
+    try {
+      const { roadmapId, stepId, status, completedAt, notes } = req.body;
+
+      // Update step progress in database
+      const result = await db.execute(sql`
+        INSERT INTO roadmap_progress (roadmap_id, step_id, status, completed_at, notes, updated_at)
+        VALUES (${roadmapId}, ${stepId}, ${status}, ${completedAt}, ${notes}, NOW())
+        ON CONFLICT (roadmap_id, step_id) 
+        DO UPDATE SET 
+          status = EXCLUDED.status,
+          completed_at = EXCLUDED.completed_at,
+          notes = EXCLUDED.notes,
+          updated_at = NOW()
+      `);
+
+      res.json({ success: true, updated: result.rowCount });
+    } catch (error) {
+      console.error('Error updating roadmap progress:', error);
+      res.status(500).json({ error: 'Failed to update roadmap progress' });
+    }
+  });
+
+  // Get roadmap analytics and insights
+  app.get('/api/legal-roadmap/analytics/:roadmapId', async (req, res) => {
+    try {
+      const { roadmapId } = req.params;
+
+      const analytics = await db.execute(sql`
+        SELECT 
+          COUNT(*) as total_steps,
+          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_steps,
+          COUNT(CASE WHEN status = 'current' THEN 1 END) as current_steps,
+          COUNT(CASE WHEN status = 'blocked' THEN 1 END) as blocked_steps,
+          AVG(CASE WHEN completed_at IS NOT NULL THEN 
+            EXTRACT(DAY FROM completed_at - created_at) 
+          END) as avg_completion_days
+        FROM roadmap_progress 
+        WHERE roadmap_id = ${roadmapId}
+      `);
+
+      const timelineData = await db.execute(sql`
+        SELECT step_id, status, completed_at, notes
+        FROM roadmap_progress 
+        WHERE roadmap_id = ${roadmapId}
+        ORDER BY created_at ASC
+      `);
+
+      res.json({
+        analytics: analytics.rows[0],
+        timeline: timelineData.rows
+      });
+    } catch (error) {
+      console.error('Error fetching roadmap analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch roadmap analytics' });
+    }
+  });
+
+  // Generate roadmap recommendations
+  app.post('/api/legal-roadmap/recommendations', async (req, res) => {
+    try {
+      const { caseType, branch, urgency, complexity, userProfile } = req.body;
+
+      const recommendations = {
+        suggestedAttorneys: await getRecommendedAttorneys(caseType, branch),
+        criticalDeadlines: getCriticalDeadlines(caseType),
+        riskFactors: assessRiskFactors(caseType, complexity),
+        resourcePriority: prioritizeResources(caseType, urgency),
+        timelineAdjustments: calculateTimelineAdjustments(urgency, complexity),
+        nextActions: getNextActionItems(caseType, urgency)
+      };
+
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Error generating roadmap recommendations:', error);
+      res.status(500).json({ error: 'Failed to generate recommendations' });
+    }
+  });
+
+  // Helper functions for Legal Roadmap
+  
+  async function generateLegalRoadmap(caseType: string, branch: string, userId?: string) {
+    const roadmapTemplates = {
+      'court-martial': {
+        caseType: 'Court-Martial Defense',
+        branch: branch.charAt(0).toUpperCase() + branch.slice(1),
+        currentStep: userId ? await getCurrentUserStep(userId, caseType) : 1,
+        totalSteps: 8,
+        estimatedCompletion: '45-90 days',
+        urgencyLevel: 'urgent' as const,
+        milestones: [
+          { step: 2, title: 'Legal Representation Secured', importance: 'Critical foundation for defense' },
+          { step: 5, title: 'Article 32 Hearing', importance: 'Key procedural milestone' },
+          { step: 7, title: 'Court-Martial Trial', importance: 'Final determination phase' }
+        ],
+        steps: [
+          {
+            id: 'initial-consultation',
+            title: 'Initial Emergency Consultation',
+            description: 'Immediate legal assessment and rights advisement',
+            status: 'completed' as const,
+            category: 'consultation' as const,
+            estimatedDays: 1,
+            priority: 'critical' as const,
+            requirements: ['Notification of charges', 'Service record available', 'Contact information'],
+            outcomes: ['Rights fully explained', 'Initial defense strategy outlined', 'Attorney-client privilege established'],
+            tips: ['Exercise right to remain silent', 'Do not discuss case with anyone except attorney', 'Preserve all relevant documents'],
+            resources: [
+              { title: 'Military Rights Guide', url: '/resources/military-rights', type: 'guide' as const },
+              { title: 'Emergency Legal Hotline', url: 'tel:1-800-MILITARY', type: 'contact' as const }
+            ]
+          },
+          {
+            id: 'attorney-selection',
+            title: 'Military Defense Attorney Selection',
+            description: 'Choose between detailed defense counsel or civilian attorney',
+            status: 'completed' as const,
+            category: 'consultation' as const,
+            estimatedDays: 3,
+            priority: 'critical' as const,
+            requirements: ['Review attorney qualifications', 'Assess case complexity', 'Financial considerations'],
+            outcomes: ['Attorney retained', 'Defense team assembled', 'Communication protocols established'],
+            tips: ['Consider attorney\'s court-martial experience', 'Evaluate trial success rates', 'Ensure 24/7 availability'],
+            resources: [
+              { title: 'Attorney Selection Guide', url: '/resources/attorney-selection', type: 'guide' as const },
+              { title: 'Court-Martial Attorney Directory', url: '/attorneys?specialization=court-martial', type: 'document' as const }
+            ]
+          }
+        ]
+      },
+      'family-law': {
+        caseType: 'Military Family Law',
+        branch: branch.charAt(0).toUpperCase() + branch.slice(1),
+        currentStep: userId ? await getCurrentUserStep(userId, caseType) : 1,
+        totalSteps: 6,
+        estimatedCompletion: '30-60 days',
+        urgencyLevel: 'routine' as const,
+        milestones: [
+          { step: 2, title: 'Legal Documents Prepared', importance: 'Foundation for family protection' },
+          { step: 4, title: 'Command Notification', importance: 'Official recognition of family status' },
+          { step: 6, title: 'Legal Protections Activated', importance: 'Full family legal coverage' }
+        ],
+        steps: [
+          {
+            id: 'family-consultation',
+            title: 'Family Legal Consultation',
+            description: 'Comprehensive review of family legal needs and military regulations',
+            status: 'completed' as const,
+            category: 'consultation' as const,
+            estimatedDays: 1,
+            priority: 'high' as const,
+            requirements: ['Family status documentation', 'Military orders', 'Dependent information'],
+            outcomes: ['Legal needs assessed', 'Documentation requirements identified', 'Timeline established'],
+            tips: ['Bring all family-related documents', 'Consider future deployments', 'Address custody concerns early'],
+            resources: [
+              { title: 'Military Family Law Guide', url: '/resources/family-law-guide', type: 'guide' as const },
+              { title: 'Family Readiness Checklist', url: '/resources/family-readiness', type: 'document' as const }
+            ]
+          }
+        ]
+      }
+    };
+
+    return roadmapTemplates[caseType as keyof typeof roadmapTemplates] || roadmapTemplates['court-martial'];
+  }
+
+  async function getCurrentUserStep(userId: string, caseType: string): Promise<number> {
+    try {
+      const result = await db.execute(sql`
+        SELECT MAX(step_order) as current_step
+        FROM roadmap_progress 
+        WHERE user_id = ${userId} 
+        AND case_type = ${caseType}
+        AND status = 'completed'
+      `);
+      
+      return (result.rows[0]?.current_step as number || 0) + 1;
+    } catch (error) {
+      console.error('Error getting current user step:', error);
+      return 1;
+    }
+  }
+
+  async function getRecommendedAttorneys(caseType: string, branch: string) {
+    try {
+      const result = await db.select()
+        .from(attorneys)
+        .where(
+          and(
+            or(
+              eq(attorneys.branch, branch),
+              eq(attorneys.branch, 'all')
+            ),
+            ilike(attorneys.specializations, `%${caseType}%`)
+          )
+        )
+        .limit(3);
+
+      return result.map(attorney => ({
+        id: attorney.id,
+        name: attorney.name,
+        firm: attorney.firm,
+        location: attorney.location,
+        experience: attorney.experienceYears,
+        specializations: attorney.specializations?.split(',') || [],
+        rating: 4.5 + Math.random() * 0.5, // Simulated rating
+        responseTime: '< 2 hours',
+        consultationFee: attorney.consultationFee || 'Free initial consultation'
+      }));
+    } catch (error) {
+      console.error('Error getting recommended attorneys:', error);
+      return [];
+    }
+  }
+
+  function getCriticalDeadlines(caseType: string) {
+    const deadlineMap = {
+      'court-martial': [
+        { deadline: '72 hours', requirement: 'Initial attorney consultation', urgency: 'immediate' as const },
+        { deadline: '10 days', requirement: 'Pre-trial motion filing', urgency: 'urgent' as const },
+        { deadline: '30 days', requirement: 'Article 32 hearing preparation', urgency: 'urgent' as const }
+      ],
+      'family-law': [
+        { deadline: '7 days', requirement: 'Document preparation initiation', urgency: 'routine' as const },
+        { deadline: '14 days', requirement: 'Power of attorney completion', urgency: 'urgent' as const },
+        { deadline: '30 days', requirement: 'Command notification', urgency: 'routine' as const }
+      ],
+      'administrative-separation': [
+        { deadline: '7 days', requirement: 'Response to separation notice', urgency: 'immediate' as const },
+        { deadline: '15 days', requirement: 'Administrative board preparation', urgency: 'urgent' as const }
+      ]
+    };
+
+    return deadlineMap[caseType as keyof typeof deadlineMap] || deadlineMap['court-martial'];
+  }
+
+  function assessRiskFactors(caseType: string, complexity: string) {
+    const baseRisks = {
+      'court-martial': [
+        { risk: 'Potential for punitive discharge', severity: 'high' as const, mitigation: 'Strong character evidence and defense strategy' },
+        { risk: 'Loss of security clearance', severity: 'high' as const, mitigation: 'Proactive clearance defense coordination' },
+        { risk: 'Criminal record implications', severity: 'medium' as const, mitigation: 'Plea negotiation and sentencing mitigation' }
+      ],
+      'family-law': [
+        { risk: 'Incomplete power of attorney', severity: 'medium' as const, mitigation: 'Comprehensive document review and notarization' },
+        { risk: 'Deployment family separation issues', severity: 'medium' as const, mitigation: 'Detailed family care planning' }
+      ]
+    };
+
+    const risks = baseRisks[caseType as keyof typeof baseRisks] || baseRisks['court-martial'];
+    
+    if (complexity === 'high') {
+      return risks.map(risk => ({ ...risk, severity: 'high' as const }));
+    }
+    
+    return risks;
+  }
+
+  function prioritizeResources(caseType: string, urgency: string) {
+    const resourceMap = {
+      'court-martial': {
+        immediate: ['Emergency legal consultation', 'Rights advisement', 'Attorney selection'],
+        urgent: ['Evidence preservation', 'Witness identification', 'Character references'],
+        routine: ['Legal research', 'Trial preparation', 'Sentencing mitigation']
+      },
+      'family-law': {
+        immediate: ['Power of attorney preparation', 'Emergency contact setup'],
+        urgent: ['Document notarization', 'Command notification'],
+        routine: ['Family care planning', 'Deployment preparation']
+      }
+    };
+
+    const caseResources = resourceMap[caseType as keyof typeof resourceMap] || resourceMap['court-martial'];
+    return caseResources[urgency as keyof typeof caseResources] || caseResources.routine;
+  }
+
+  function calculateTimelineAdjustments(urgency: string, complexity: string) {
+    const baseMultiplier = urgency === 'emergency' ? 0.5 : urgency === 'urgent' ? 0.75 : 1.0;
+    const complexityMultiplier = complexity === 'high' ? 1.5 : complexity === 'medium' ? 1.2 : 1.0;
+    
+    return {
+      timelineMultiplier: baseMultiplier * complexityMultiplier,
+      recommendedAdjustments: [
+        urgency === 'emergency' && 'Accelerate all initial steps by 50%',
+        complexity === 'high' && 'Add additional preparation time for complex procedures',
+        'Consider parallel processing of non-dependent steps'
+      ].filter(Boolean)
+    };
+  }
+
+  function getNextActionItems(caseType: string, urgency: string) {
+    const actionMap = {
+      'court-martial': {
+        emergency: [
+          { step: 'Contact emergency legal hotline immediately', priority: 'immediate' as const, deadline: 'Within 1 hour' },
+          { step: 'Exercise right to remain silent', priority: 'immediate' as const, deadline: 'Immediate' },
+          { step: 'Secure legal representation', priority: 'immediate' as const, deadline: 'Within 24 hours' }
+        ],
+        urgent: [
+          { step: 'Schedule attorney consultation', priority: 'urgent' as const, deadline: 'Within 48 hours' },
+          { step: 'Gather all relevant documents', priority: 'urgent' as const, deadline: 'Within 72 hours' },
+          { step: 'Identify potential witnesses', priority: 'routine' as const, deadline: 'Within 1 week' }
+        ]
+      },
+      'family-law': {
+        routine: [
+          { step: 'Schedule family legal consultation', priority: 'routine' as const, deadline: 'Within 1 week' },
+          { step: 'Compile family documentation', priority: 'routine' as const, deadline: 'Within 3 days' },
+          { step: 'Review deployment timeline', priority: 'routine' as const, deadline: 'Within 5 days' }
+        ]
+      }
+    };
+
+    const caseActions = actionMap[caseType as keyof typeof actionMap];
+    if (!caseActions) return actionMap['court-martial'].urgent;
+    
+    return caseActions[urgency as keyof typeof caseActions] || Object.values(caseActions)[0];
+  }
+
   // Send welcome SMS for new users
   app.post('/api/sms/welcome', async (req, res) => {
     try {

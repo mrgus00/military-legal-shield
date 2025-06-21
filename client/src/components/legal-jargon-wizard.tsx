@@ -192,25 +192,52 @@ export default function LegalJargonWizard({}: JargonWizardProps) {
     
     setIsSimplifying(true);
     
-    // Simulate API call to simplify legal text
-    setTimeout(() => {
-      let simplified = inputText;
-      
-      // Replace common legal jargon with simplified terms
-      const replacements = legalTerms.reduce((acc, term) => {
-        const regex = new RegExp(`\\b${term.term}\\b`, 'gi');
-        acc[term.term] = term.simplification;
-        return acc;
-      }, {} as Record<string, string>);
-      
-      Object.entries(replacements).forEach(([jargon, simple]) => {
-        const regex = new RegExp(`\\b${jargon}\\b`, 'gi');
-        simplified = simplified.replace(regex, `${simple} (${jargon})`);
+    try {
+      const response = await apiRequest('POST', '/api/simplify-legal-text', { 
+        text: inputText 
       });
       
-      setSimplifiedText(simplified);
+      setSimplificationResult(response);
+      setSimplifiedText(response.simplifiedText);
+      
+      toast({
+        title: "Text Simplified Successfully!",
+        description: `${response.termsReplaced} legal terms were simplified.`,
+      });
+      
+    } catch (error) {
+      console.error('Error simplifying text:', error);
+      toast({
+        title: "Simplification Error",
+        description: "Failed to simplify text. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSimplifying(false);
-    }, 2000);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied to Clipboard",
+      description: "Text has been copied to your clipboard.",
+    });
+  };
+
+  const downloadAsText = (text: string, filename: string) => {
+    const element = document.createElement("a");
+    const file = new Blob([text], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    
+    toast({
+      title: "File Downloaded",
+      description: `${filename} has been downloaded.`,
+    });
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -287,14 +314,50 @@ export default function LegalJargonWizard({}: JargonWizardProps) {
           </Button>
           
           {simplifiedText && (
-            <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <h4 className="font-semibold text-green-800 dark:text-green-200">Simplified Version:</h4>
+            <div className="mt-6 space-y-4">
+              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <h4 className="font-semibold text-green-800 dark:text-green-200">Simplified Version:</h4>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(simplifiedText)}
+                      className="h-8 px-2"
+                    >
+                      <Copy className="w-4 h-4 mr-1" />
+                      Copy
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => downloadAsText(simplifiedText, 'simplified-legal-text.txt')}
+                      className="h-8 px-2"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      Download
+                    </Button>
+                  </div>
+                </div>
+                <p className="text-green-700 dark:text-green-300 leading-relaxed mb-3">
+                  {simplifiedText}
+                </p>
+                {simplificationResult && (
+                  <div className="mt-3 pt-3 border-t border-green-200 dark:border-green-700">
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      {simplificationResult.explanation}
+                    </p>
+                    {simplificationResult.termsReplaced > 0 && (
+                      <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+                        ✓ Simplified {simplificationResult.termsReplaced} legal terms
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
-              <p className="text-green-700 dark:text-green-300 leading-relaxed">
-                {simplifiedText}
-              </p>
             </div>
           )}
         </CardContent>

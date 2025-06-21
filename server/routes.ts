@@ -185,6 +185,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication middleware
   await setupAuth(app);
   
+  // Add analytics tracking middleware
+  app.use(analyticsMiddleware);
+  
   // Domain verification endpoint
   app.get('/api/health', (req, res) => {
     res.json({
@@ -198,6 +201,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
   // Public access - no authentication
+  
+  // Real-time analytics endpoints
+  app.get('/api/analytics', getAnalytics);
+  app.post('/api/analytics/reset', resetAnalytics);
   
   // Apply CDN cache headers to static assets
   app.use('/assets', cacheMiddleware);

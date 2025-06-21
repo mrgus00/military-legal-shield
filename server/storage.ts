@@ -1,11 +1,11 @@
 import { 
-  users, attorneys, legalResources, educationModules, consultations, emergencyConsultations,
+  users, authUsers, attorneys, legalResources, educationModules, consultations, emergencyConsultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
   benefitsEligibility, benefitsDatabase, legalChallenges, achievementBadges, userChallengeProgress,
   userBadges, userGameStats, challengeLeaderboard,
-  type User, type InsertUser,
+  type User, type InsertUser, type AuthUser, type InsertAuthUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
   type EducationModule, type InsertEducationModule,
@@ -1375,16 +1375,16 @@ export class DatabaseStorage implements IStorage {
 
   // User methods for Replit Auth
   async getUser(id: string): Promise<User | undefined> {
-    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    const result = await this.db.select().from(authUsers).where(eq(authUsers.id, id)).limit(1);
     return result[0];
   }
 
   async upsertUser(userData: InsertUser): Promise<User> {
     const result = await this.db
-      .insert(users)
+      .insert(authUsers)
       .values(userData)
       .onConflictDoUpdate({
-        target: users.id,
+        target: authUsers.id,
         set: {
           ...userData,
           updatedAt: new Date(),

@@ -13,8 +13,8 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table for Replit Auth
-export const users = pgTable("users", {
+// Authentication users table for Replit Auth (separate from main users)
+export const authUsers = pgTable("auth_users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
@@ -31,6 +31,29 @@ export const users = pgTable("users", {
   emergencyCredits: integer("emergency_credits").default(0), // For emergency response usage
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Main users table (existing structure preserved)
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull(),
+  password: text("password").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  branch: text("branch").notNull(),
+  rank: text("rank"),
+  isActive: boolean("is_active").default(true),
+  email: text("email").notNull(),
+  subscriptionTier: text("subscription_tier").notNull().default("free"),
+  subscriptionStatus: text("subscription_status").default("active"),
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
+  emergencyCredits: integer("emergency_credits").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  profileImageUrl: varchar("profile_image_url"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
@@ -1046,8 +1069,10 @@ export const challengeLeaderboard = pgTable("challenge_leaderboard", {
 });
 
 // User types for Replit Auth
-export type UpsertUser = typeof users.$inferInsert;
-export type User = typeof users.$inferSelect;
+export type UpsertUser = typeof authUsers.$inferInsert;
+export type User = typeof authUsers.$inferSelect;
+export type AuthUser = typeof authUsers.$inferSelect;
+export type InsertAuthUser = typeof authUsers.$inferInsert;
 
 // Gamification types
 export type LegalChallenge = typeof legalChallenges.$inferSelect;

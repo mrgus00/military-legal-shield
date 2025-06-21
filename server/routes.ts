@@ -34,6 +34,7 @@ import {
   generateFacebookPixelConfig,
   generateLinkedInInsightConfig
 } from "./platform-submission";
+import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";

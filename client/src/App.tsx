@@ -49,6 +49,7 @@ import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import JargonWizard from "@/pages/jargon-wizard";
+import Leaderboard from "@/pages/leaderboard";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import BenefitsEligibility from "@/pages/benefits-eligibility";
 import LawyerDatabase from "@/pages/lawyer-database-simple";
@@ -148,6 +149,7 @@ function Router() {
       <Route path="/chat-support" component={ContactSupport} />
       <Route path="/video-consultation" component={ConsultationBooking} />
       <Route path="/legal-challenges" component={LegalChallenges} />
+      <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/education-center" component={EducationCenter} />
       <Route path="/document-wizard" component={DocumentGenerator} />
       <Route path="/document-generator" component={DocumentPrep} />

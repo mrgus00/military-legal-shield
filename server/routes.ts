@@ -1789,5 +1789,89 @@ Allow: /feed.xml`;
     }
   });
 
+  // Legal Jargon Wizard API endpoint
+  app.post('/api/simplify-legal-text', async (req, res) => {
+    try {
+      const { text } = req.body;
+      
+      if (!text || typeof text !== 'string') {
+        return res.status(400).json({ error: 'Text is required' });
+      }
+
+      // Define legal jargon replacements
+      const legalTerms = [
+        { jargon: 'court-martial', simple: 'military trial' },
+        { jargon: 'article 15', simple: 'non-judicial punishment' },
+        { jargon: 'ucmj', simple: 'military rule book' },
+        { jargon: 'administrative separation', simple: 'military discharge process' },
+        { jargon: 'security clearance', simple: 'government trust level' },
+        { jargon: 'jag officer', simple: 'military lawyer' },
+        { jargon: 'va disability rating', simple: 'injury compensation level' },
+        { jargon: 'service-connected disability', simple: 'military-caused injury/illness' },
+        { jargon: 'nonjudicial punishment', simple: 'commander\'s discipline' },
+        { jargon: 'pcs orders', simple: 'moving instructions' },
+        { jargon: 'dependent', simple: 'military family member' },
+        { jargon: 'general discharge', simple: 'standard military exit' },
+        { jargon: 'honorable discharge', simple: 'good military exit' },
+        { jargon: 'other than honorable', simple: 'poor military exit' },
+        { jargon: 'bad conduct discharge', simple: 'disciplinary military exit' },
+        { jargon: 'dishonorable discharge', simple: 'criminal military exit' },
+        { jargon: 'summary court-martial', simple: 'minor military trial' },
+        { jargon: 'special court-martial', simple: 'medium military trial' },
+        { jargon: 'general court-martial', simple: 'serious military trial' },
+        { jargon: 'commanding officer', simple: 'military boss' },
+        { jargon: 'chain of command', simple: 'military leadership structure' },
+        { jargon: 'military occupational specialty', simple: 'military job' },
+        { jargon: 'mos', simple: 'military job' },
+        { jargon: 'permanent change of station', simple: 'military move' },
+        { jargon: 'temporary duty', simple: 'short-term assignment' },
+        { jargon: 'tdy', simple: 'short-term assignment' },
+        { jargon: 'basic allowance for housing', simple: 'housing money' },
+        { jargon: 'bah', simple: 'housing money' },
+        { jargon: 'basic allowance for subsistence', simple: 'food money' },
+        { jargon: 'bas', simple: 'food money' }
+      ];
+
+      let simplifiedText = text;
+      
+      // Replace legal jargon with simple terms
+      legalTerms.forEach(({ jargon, simple }) => {
+        const regex = new RegExp(`\\b${jargon}\\b`, 'gi');
+        simplifiedText = simplifiedText.replace(regex, `${simple} (${jargon})`);
+      });
+
+      // Additional simplification patterns
+      simplifiedText = simplifiedText
+        .replace(/\bpursuant to\b/gi, 'according to')
+        .replace(/\bwhereas\b/gi, 'since')
+        .replace(/\btherefore\b/gi, 'so')
+        .replace(/\bheretofore\b/gi, 'before this')
+        .replace(/\bhereinafter\b/gi, 'from now on')
+        .replace(/\bnotwithstanding\b/gi, 'despite')
+        .replace(/\bforthwith\b/gi, 'immediately')
+        .replace(/\bshall\b/gi, 'must')
+        .replace(/\bmay\b(?!\s+\d)/gi, 'can')
+        .replace(/\bprovided that\b/gi, 'if')
+        .replace(/\bin the event that\b/gi, 'if')
+        .replace(/\bprior to\b/gi, 'before')
+        .replace(/\bsubsequent to\b/gi, 'after');
+
+      const explanation = "This text has been simplified by replacing complex legal terms with everyday language. The original legal terms are shown in parentheses to help you recognize them in official documents.";
+
+      res.json({ 
+        originalText: text,
+        simplifiedText,
+        explanation,
+        termsReplaced: legalTerms.filter(({ jargon }) => 
+          new RegExp(`\\b${jargon}\\b`, 'gi').test(text)
+        ).length
+      });
+
+    } catch (error) {
+      console.error('Legal text simplification error:', error);
+      res.status(500).json({ error: 'Failed to simplify legal text' });
+    }
+  });
+
   return httpServer;
 }

@@ -48,6 +48,7 @@ import LeaveReview from "@/pages/leave-review";
 import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
+import JargonWizard from "@/pages/jargon-wizard";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import BenefitsEligibility from "@/pages/benefits-eligibility";
 import LawyerDatabase from "@/pages/lawyer-database-simple";
@@ -123,6 +124,7 @@ function Router() {
       <Route path="/leave-review" component={LeaveReview} />
       <Route path="/financial-wizard" component={FinancialWizard} />
       <Route path="/storytelling-corner" component={StorytellingCorner} />
+      <Route path="/jargon-wizard" component={JargonWizard} />
       <Route path="/benefits-calculator" component={BenefitsCalculator} />
       <Route path="/benefits-eligibility" component={BenefitsEligibility} />
       <Route path="/lawyer-database" component={LawyerDatabase} />

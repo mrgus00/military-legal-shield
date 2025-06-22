@@ -427,6 +427,11 @@ export default function Home() {
                       Browse Attorney Database
                     </Button>
                   </Link>
+                  <Link href="/jargon-wizard">
+                    <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                      Legal Jargon Wizard
+                    </Button>
+                  </Link>
                   <Link href="/emergency-consultation">
                     <Button size="lg" variant="outline">
                       Emergency Legal Help

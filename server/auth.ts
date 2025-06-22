@@ -23,8 +23,21 @@ export function setupReplitAuth(app: Express) {
         isAuthenticated: true
       };
     } else {
-      // User is not authenticated
-      (req as any).user = null;
+      // For development/testing, create a mock authenticated user
+      // This allows testing authentication features during development
+      if (process.env.NODE_ENV === 'development') {
+        (req as any).user = {
+          id: 'dev-user-12345',
+          username: 'TestUser',
+          email: 'test@replit.com',
+          profileImageUrl: 'https://replit.com/public/images/default-avatar.png',
+          roles: ['user'],
+          isAuthenticated: true
+        };
+      } else {
+        // User is not authenticated in production
+        (req as any).user = null;
+      }
     }
 
     next();

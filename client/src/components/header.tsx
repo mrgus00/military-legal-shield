@@ -91,7 +91,7 @@ export default function Header() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/jargon-wizard" className="flex items-center">
-                      <Brain className="mr-3 h-4 w-4" />
+                      <BookOpen className="mr-3 h-4 w-4" />
                       Legal Jargon Wizard
                     </Link>
                   </DropdownMenuItem>

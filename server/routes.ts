@@ -896,7 +896,7 @@ Allow: /feed.xml`;
   app.post("/api/consultations/book", requireAuth, async (req: any, res) => {
     try {
       // Check if user has premium access
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user || user.subscriptionTier === 'free') {
@@ -951,7 +951,7 @@ Allow: /feed.xml`;
         return res.status(500).json({ message: "Payment processing not available" });
       }
 
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user || !user.email) {
@@ -1065,7 +1065,7 @@ Allow: /feed.xml`;
   // Get user subscription status
   app.get("/api/subscription-status", requireAuth, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user) {
@@ -1099,7 +1099,7 @@ Allow: /feed.xml`;
         return res.status(500).json({ message: "Payment processing not available" });
       }
 
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user || !user.stripeSubscriptionId) {

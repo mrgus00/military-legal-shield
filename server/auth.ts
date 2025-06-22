@@ -62,10 +62,12 @@ export async function getCurrentUser(req: Request): Promise<any> {
   // Store/update user in database
   try {
     await storage.upsertUser({
-      id: user.id,
-      email: user.email,
-      firstName: user.username, // Use username as firstName for now
+      email: user.email || '',
+      firstName: user.username || '', // Use username as firstName for now
       lastName: '', // Replit doesn't provide separate first/last names
+      username: user.username || '',
+      password: '', // Not needed for Replit auth
+      branch: '', // Will be set by user later
       profileImageUrl: user.profileImageUrl
     });
   } catch (error) {

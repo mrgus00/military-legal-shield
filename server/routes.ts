@@ -9,7 +9,7 @@ import { insertConsultationSchema, insertEmergencyConsultationSchema, attorneys,
 import { eq, ilike, and, or } from "drizzle-orm";
 import { z } from "zod";
 import { analyzeCareerTransition, type CareerAssessmentRequest, getLegalAssistantResponse, type LegalAssistantRequest } from "./openai";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupReplitAuth, setupAuthRoutes, requireAuth, optionalAuth, getCurrentUser } from "./auth";
 import { handleRSSFeed, handleJSONFeed } from "./rss";
 import { twilioService, type EmergencyAlert } from "./twilio";
 import { cdnService, cacheMiddleware } from "./cdn";
@@ -182,8 +182,9 @@ function calculateComprehensiveBenefits(eligibilityData: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication middleware
-  await setupAuth(app);
+  // Setup Replit built-in auth middleware
+  setupReplitAuth(app);
+  setupAuthRoutes(app);
   
   // Add analytics tracking middleware
   app.use(analyticsMiddleware);
@@ -892,7 +893,7 @@ Allow: /feed.xml`;
   });
 
   // PREMIUM FEATURE: Book consultation endpoint
-  app.post("/api/consultations/book", isAuthenticated, async (req: any, res) => {
+  app.post("/api/consultations/book", requireAuth, async (req: any, res) => {
     try {
       // Check if user has premium access
       const userId = req.user.claims.sub;
@@ -944,7 +945,7 @@ Allow: /feed.xml`;
   // Stripe subscription management endpoints
   
   // Create subscription checkout session
-  app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
+  app.post("/api/create-subscription", requireAuth, async (req: any, res) => {
     try {
       if (!stripe) {
         return res.status(500).json({ message: "Payment processing not available" });
@@ -1062,7 +1063,7 @@ Allow: /feed.xml`;
   });
 
   // Get user subscription status
-  app.get("/api/subscription-status", isAuthenticated, async (req: any, res) => {
+  app.get("/api/subscription-status", requireAuth, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -1092,7 +1093,7 @@ Allow: /feed.xml`;
   });
 
   // Cancel subscription
-  app.post("/api/cancel-subscription", isAuthenticated, async (req: any, res) => {
+  app.post("/api/cancel-subscription", requireAuth, async (req: any, res) => {
     try {
       if (!stripe) {
         return res.status(500).json({ message: "Payment processing not available" });

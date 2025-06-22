@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone, FileText } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone, FileText, Brain } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -89,6 +89,12 @@ export default function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/jargon-wizard" className="flex items-center">
+                      <Brain className="mr-3 h-4 w-4" />
+                      Legal Jargon Wizard
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/benefits-eligibility" className="flex items-center">
                       <FileText className="mr-3 h-4 w-4" />

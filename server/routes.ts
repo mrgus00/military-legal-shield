@@ -385,6 +385,279 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to fetch dashboard data' });
     }
   });
+
+  // Legal Jargon Wizard endpoints
+  
+  // Get popular legal terms
+  app.get('/api/jargon/popular', async (req: Request, res: Response) => {
+    try {
+      const popularTerms = [
+        {
+          term: "Article 15",
+          legalDefinition: "Non-judicial punishment under the Uniform Code of Military Justice",
+          simplifiedDefinition: "A disciplinary action that doesn't go to court - like getting grounded but in the military",
+          examples: ["Extra duty", "Reduction in rank", "Forfeiture of pay"],
+          category: "UCMJ",
+          difficulty: "beginner",
+          militaryContext: "Used for minor infractions that don't warrant court-martial",
+          relatedTerms: ["Non-judicial punishment", "Company grade Article 15", "Field grade Article 15"]
+        },
+        {
+          term: "Court-Martial",
+          legalDefinition: "A military court convened to try members of the armed forces accused of offenses under military law",
+          simplifiedDefinition: "Military court trial - the serious version of military justice",
+          examples: ["Summary court-martial", "Special court-martial", "General court-martial"],
+          category: "Military Justice",
+          difficulty: "intermediate",
+          militaryContext: "Used for serious offenses or when Article 15 is refused",
+          relatedTerms: ["UCMJ", "Military trial", "Court proceedings"]
+        },
+        {
+          term: "Administrative Separation",
+          legalDefinition: "Discharge from military service for reasons other than misconduct or disability",
+          simplifiedDefinition: "Being discharged from military service for administrative reasons",
+          examples: ["Failure to meet standards", "Personality disorder", "Hardship discharge"],
+          category: "Separations",
+          difficulty: "advanced",
+          militaryContext: "Alternative to punitive discharge for various administrative reasons",
+          relatedTerms: ["Discharge", "Separation board", "Administrative board"]
+        }
+      ];
+      
+      res.json(popularTerms);
+    } catch (error) {
+      console.error('Error fetching popular terms:', error);
+      res.status(500).json({ message: 'Failed to fetch popular terms' });
+    }
+  });
+
+  // Search legal terms
+  app.post('/api/jargon/search', async (req: Request, res: Response) => {
+    try {
+      const { query } = req.body;
+      
+      // Mock database of legal terms
+      const termDatabase = [
+        {
+          term: "Article 15",
+          legalDefinition: "Non-judicial punishment under the Uniform Code of Military Justice",
+          simplifiedDefinition: "A disciplinary action that doesn't go to court - like getting grounded but in the military",
+          examples: ["Extra duty for 14 days", "Reduction in rank by one grade", "Forfeiture of half month's pay"],
+          category: "UCMJ",
+          difficulty: "beginner",
+          militaryContext: "Used for minor infractions that don't warrant court-martial",
+          relatedTerms: ["Non-judicial punishment", "Company grade Article 15", "Field grade Article 15"]
+        },
+        {
+          term: "Security Clearance",
+          legalDefinition: "A status granted to individuals allowing them access to classified information",
+          simplifiedDefinition: "Government background check that lets you access classified information",
+          examples: ["Secret clearance", "Top Secret clearance", "SCI access"],
+          category: "Security",
+          difficulty: "beginner",
+          militaryContext: "Required for many military positions involving sensitive information",
+          relatedTerms: ["Background investigation", "Clearance adjudication", "Security violation"]
+        },
+        {
+          term: "Nonjudicial Punishment",
+          legalDefinition: "Disciplinary action taken by a commanding officer without convening a court-martial",
+          simplifiedDefinition: "Punishment given by your commander without going to military court",
+          examples: ["Restriction to base", "Extra duties", "Reduction in pay"],
+          category: "UCMJ",
+          difficulty: "beginner",
+          militaryContext: "Alternative to court-martial for minor offenses",
+          relatedTerms: ["Article 15", "Captain's Mast", "Office Hours"]
+        }
+      ];
+
+      const results = termDatabase.filter(term => 
+        term.term.toLowerCase().includes(query.toLowerCase()) ||
+        term.simplifiedDefinition.toLowerCase().includes(query.toLowerCase()) ||
+        term.category.toLowerCase().includes(query.toLowerCase())
+      );
+
+      res.json({
+        query,
+        results,
+        totalFound: results.length
+      });
+    } catch (error) {
+      console.error('Error searching terms:', error);
+      res.status(500).json({ message: 'Search failed' });
+    }
+  });
+
+  // Simplify legal text
+  app.post('/api/jargon/simplify', async (req: Request, res: Response) => {
+    try {
+      const { text, context, audienceLevel } = req.body;
+      
+      // Mock simplification logic (in production, this would use AI/NLP)
+      let simplified = text;
+      const keyTerms: string[] = [];
+
+      // Simple pattern matching and replacement
+      const replacements = {
+        'pursuant to': 'according to',
+        'notwithstanding': 'despite',
+        'heretofore': 'before this',
+        'whereas': 'since',
+        'aforementioned': 'mentioned above',
+        'subsequent to': 'after',
+        'prior to': 'before',
+        'in accordance with': 'following',
+        'Article 15': 'non-judicial punishment (like military detention)',
+        'court-martial': 'military court trial',
+        'administrative separation': 'discharge from military',
+        'security clearance': 'background check for classified access',
+        'commanding officer': 'your commander',
+        'non-judicial punishment': 'punishment without going to court'
+      };
+
+      Object.entries(replacements).forEach(([legal, simple]) => {
+        if (simplified.toLowerCase().includes(legal.toLowerCase())) {
+          keyTerms.push(legal);
+          const regex = new RegExp(legal, 'gi');
+          simplified = simplified.replace(regex, simple);
+        }
+      });
+
+      // Adjust complexity based on audience level
+      if (audienceLevel === 'recruit') {
+        simplified = simplified.replace(/shall/g, 'must');
+        simplified = simplified.replace(/may/g, 'can');
+        simplified = simplified.replace(/provisions/g, 'rules');
+      }
+
+      res.json({
+        original: text,
+        simplified,
+        keyTerms,
+        context,
+        audienceLevel,
+        simplificationLevel: keyTerms.length > 0 ? 'high' : 'low'
+      });
+    } catch (error) {
+      console.error('Error simplifying text:', error);
+      res.status(500).json({ message: 'Text simplification failed' });
+    }
+  });
+
+  // Generate quiz question
+  app.post('/api/jargon/quiz', async (req: Request, res: Response) => {
+    try {
+      const quizQuestions = [
+        {
+          question: "What is an Article 15 in simple terms?",
+          options: [
+            "A military court trial",
+            "Punishment without going to court",
+            "A discharge from military",
+            "A promotion ceremony"
+          ],
+          correctAnswer: "Punishment without going to court",
+          explanation: "Article 15 is non-judicial punishment - discipline given by your commander without needing a court trial.",
+          difficulty: "beginner",
+          category: "UCMJ"
+        },
+        {
+          question: "What does 'pursuant to' mean in legal language?",
+          options: [
+            "In addition to",
+            "According to",
+            "Instead of",
+            "Because of"
+          ],
+          correctAnswer: "According to",
+          explanation: "'Pursuant to' is legal jargon that simply means 'according to' or 'following'.",
+          difficulty: "beginner",
+          category: "Legal Language"
+        },
+        {
+          question: "What is a security clearance?",
+          options: [
+            "Permission to leave base",
+            "Background check for classified access",
+            "Medical clearance for duty",
+            "Financial approval for purchases"
+          ],
+          correctAnswer: "Background check for classified access",
+          explanation: "A security clearance is a government background investigation that allows access to classified information.",
+          difficulty: "beginner",
+          category: "Security"
+        },
+        {
+          question: "What does 'notwithstanding' mean?",
+          options: [
+            "Despite",
+            "Including",
+            "Therefore",
+            "However"
+          ],
+          correctAnswer: "Despite",
+          explanation: "'Notwithstanding' is fancy legal language that simply means 'despite' or 'in spite of'.",
+          difficulty: "intermediate",
+          category: "Legal Language"
+        }
+      ];
+
+      const randomQuestion = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
+      
+      res.json(randomQuestion);
+    } catch (error) {
+      console.error('Error generating quiz:', error);
+      res.status(500).json({ message: 'Quiz generation failed' });
+    }
+  });
+
+  // Get term categories
+  app.get('/api/jargon/categories', async (req: Request, res: Response) => {
+    try {
+      const categories = [
+        {
+          name: "UCMJ",
+          description: "Uniform Code of Military Justice terms",
+          termCount: 25,
+          difficulty: "beginner"
+        },
+        {
+          name: "Court-Martial",
+          description: "Military court proceedings and terminology",
+          termCount: 18,
+          difficulty: "intermediate"
+        },
+        {
+          name: "Administrative Law",
+          description: "Military administrative processes",
+          termCount: 22,
+          difficulty: "advanced"
+        },
+        {
+          name: "Security Clearance",
+          description: "Security and clearance related terms",
+          termCount: 15,
+          difficulty: "beginner"
+        },
+        {
+          name: "Family Law",
+          description: "Military family and dependent issues",
+          termCount: 12,
+          difficulty: "intermediate"
+        },
+        {
+          name: "Criminal Law",
+          description: "Military criminal justice terminology",
+          termCount: 20,
+          difficulty: "advanced"
+        }
+      ];
+
+      res.json(categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      res.status(500).json({ message: 'Failed to fetch categories' });
+    }
+  });
   
   // Add analytics tracking middleware
   app.use(analyticsMiddleware);

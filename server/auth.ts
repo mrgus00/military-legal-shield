@@ -3,39 +3,31 @@ import { storage } from "./storage";
 
 // Replit built-in authentication using headers
 export function setupReplitAuth(app: Express) {
-  // Middleware to parse Replit auth from headers
+  // Middleware to handle authentication
   app.use((req: Request, res: Response, next: NextFunction) => {
-    // Replit provides user info in headers when authenticated
-    const userId = req.headers['x-replit-user-id'] as string;
-    const userName = req.headers['x-replit-user-name'] as string;
-    const userEmail = req.headers['x-replit-user-email'] as string;
-    const userProfileUrl = req.headers['x-replit-user-profile-image'] as string;
-    const userRoles = req.headers['x-replit-user-roles'] as string;
+    // Check for Replit authentication headers first
+    const replitUserId = req.headers['x-replit-user-id'] as string;
+    const replitUserName = req.headers['x-replit-user-name'] as string;
+    const replitUserEmail = req.headers['x-replit-user-email'] as string;
+    const replitUserProfile = req.headers['x-replit-user-profile-image'] as string;
 
-    if (userId && userName) {
+    if (replitUserId && replitUserName) {
       // User is authenticated via Replit
       (req as any).user = {
-        id: userId,
-        username: userName,
-        email: userEmail,
-        profileImageUrl: userProfileUrl,
-        roles: userRoles ? userRoles.split(',') : [],
+        id: replitUserId,
+        username: replitUserName,
+        email: replitUserEmail,
+        profileImageUrl: replitUserProfile,
+        roles: ['user'],
         isAuthenticated: true
       };
     } else {
-      // For development/testing, create a mock authenticated user
-      // This allows testing authentication features during development
-      if (process.env.NODE_ENV === 'development') {
-        (req as any).user = {
-          id: 'dev-user-12345',
-          username: 'TestUser',
-          email: 'test@replit.com',
-          profileImageUrl: 'https://replit.com/public/images/default-avatar.png',
-          roles: ['user'],
-          isAuthenticated: true
-        };
+      // Check for session-based authentication (fallback)
+      const sessionUser = (req as any).session?.user;
+      if (sessionUser) {
+        (req as any).user = sessionUser;
       } else {
-        // User is not authenticated in production
+        // No authentication found
         (req as any).user = null;
       }
     }
@@ -72,15 +64,13 @@ export async function getCurrentUser(req: Request): Promise<any> {
     return null;
   }
 
-  // Store/update user in database
+  // Store/update user in database for auth_users table
   try {
-    await storage.upsertUser({
+    await storage.upsertAuthUser({
+      id: user.id,
       email: user.email || '',
       firstName: user.username || '', // Use username as firstName for now
       lastName: '', // Replit doesn't provide separate first/last names
-      username: user.username || '',
-      password: '', // Not needed for Replit auth
-      branch: '', // Will be set by user later
       profileImageUrl: user.profileImageUrl
     });
   } catch (error) {
@@ -108,17 +98,44 @@ export function setupAuthRoutes(app: Express) {
     }
   });
 
-  // Login redirect (handled by Replit)
+  // Login endpoint
   app.get('/api/login', (req: Request, res: Response) => {
-    // In Replit, authentication is handled automatically
-    // Redirect to home page
+    // Check if user is already authenticated
+    if ((req as any).user) {
+      return res.redirect('/');
+    }
+    
+    // For development, simulate authentication
+    if (process.env.NODE_ENV === 'development') {
+      // Create a mock session
+      (req as any).session = (req as any).session || {};
+      (req as any).session.user = {
+        id: 'dev-user-' + Date.now(),
+        username: 'TestUser',
+        email: 'test@militarylegalshield.com',
+        profileImageUrl: '/assets/default-avatar.png',
+        roles: ['user'],
+        isAuthenticated: true
+      };
+      return res.redirect('/');
+    }
+    
+    // In production, redirect to Replit authentication
     res.redirect('/');
   });
 
-  // Logout (handled by Replit)
+  // Sign up endpoint
+  app.get('/api/signup', (req: Request, res: Response) => {
+    // For new users, same flow as login in Replit environment
+    res.redirect('/api/login');
+  });
+
+  // Logout endpoint
   app.get('/api/logout', (req: Request, res: Response) => {
-    // In Replit, logout is handled by the platform
-    // Redirect to home page
+    // Clear session data
+    if ((req as any).session) {
+      (req as any).session.destroy();
+    }
     res.redirect('/');
   });
 

@@ -43,6 +43,7 @@ export interface IStorage {
   // User methods for Replit Auth
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: InsertUser): Promise<User>;
+  upsertAuthUser(user: any): Promise<any>;
 
   // Attorney methods
   getAttorneys(): Promise<Attorney[]>;
@@ -1380,6 +1381,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async upsertUser(userData: InsertUser): Promise<User> {
+    const result = await this.db
+      .insert(authUsers)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: authUsers.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return result[0];
+  }
+
+  async upsertAuthUser(userData: any): Promise<any> {
     const result = await this.db
       .insert(authUsers)
       .values(userData)

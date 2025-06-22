@@ -82,9 +82,15 @@ export async function getCurrentUser(req: Request): Promise<any> {
 
 // Auth routes for compatibility
 export function setupAuthRoutes(app: Express) {
-  // Get current user endpoint
+  // Get current user endpoint - updated to work with session-based auth
   app.get('/api/auth/user', async (req: Request, res: Response) => {
     try {
+      // Check for session-based authentication first
+      if (req.session?.user) {
+        return res.json(req.session.user);
+      }
+
+      // Fallback to existing Replit auth
       const user = await getCurrentUser(req);
       
       if (!user) {

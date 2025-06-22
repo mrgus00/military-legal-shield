@@ -186,6 +186,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupReplitAuth(app);
   setupAuthRoutes(app);
   
+  // Add form-based authentication endpoints
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+      }
+
+      // For demonstration, accept any valid email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(401).json({ message: 'Invalid email format' });
+      }
+
+      // Create user session
+      const user = {
+        id: `user-${Date.now()}`,
+        email: email,
+        firstName: email.split('@')[0].split('.')[0] || 'User',
+        lastName: email.split('@')[0].split('.')[1] || 'MLS',
+        militaryBranch: 'Army',
+        rank: 'Sergeant'
+      };
+
+      req.session = req.session || {};
+      req.session.userId = user.id;
+      req.session.user = user;
+      
+      res.json({ 
+        message: 'Login successful',
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Login failed' });
+    }
+  });
+
+  app.post('/api/auth/register', async (req, res) => {
+    try {
+      const { email, password, firstName, lastName } = req.body;
+      
+      if (!email || !password || !firstName || !lastName) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+      }
+
+      // Create new user
+      const newUser = {
+        id: `user-${Date.now()}`,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        militaryBranch: 'Army',
+        rank: 'Sergeant'
+      };
+
+      // Store user session
+      req.session = req.session || {};
+      req.session.userId = newUser.id;
+      req.session.user = newUser;
+      
+      res.json({ 
+        message: 'Registration successful',
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName
+        }
+      });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ message: 'Registration failed' });
+    }
+  });
+
+  app.post('/api/auth/demo-login', async (req, res) => {
+    try {
+      // Create demo user
+      const demoUser = {
+        id: 'demo-user-' + Date.now(),
+        email: 'demo@militarylegalshield.com',
+        firstName: 'Demo',
+        lastName: 'User',
+        militaryBranch: 'Army',
+        rank: 'Sergeant'
+      };
+
+      // Store demo user session
+      req.session = req.session || {};
+      req.session.userId = demoUser.id;
+      req.session.user = demoUser;
+      
+      res.json({ 
+        message: 'Demo login successful',
+        user: demoUser
+      });
+    } catch (error) {
+      console.error('Demo login error:', error);
+      res.status(500).json({ message: 'Demo login failed' });
+    }
+  });
+
+  app.post('/api/auth/logout', (req, res) => {
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Logout error:', err);
+          return res.status(500).json({ message: 'Logout failed' });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Logout successful' });
+      });
+    } else {
+      res.json({ message: 'No active session' });
+    }
+  });
+  
   // Add analytics tracking middleware
   app.use(analyticsMiddleware);
   

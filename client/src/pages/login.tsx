@@ -1,17 +1,82 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Shield, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import Logo from "@/components/logo";
 
 export default function Login() {
-  const handleReplitLogin = () => {
-    // In development, simulate login
-    if (process.env.NODE_ENV === 'development') {
-      window.location.href = '/api/login';
-    } else {
-      // In production, trigger Replit OAuth
-      window.location.href = '/api/login';
+  const [, setLocation] = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { toast } = useToast();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await apiRequest('POST', '/api/auth/login', {
+        email,
+        password
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Welcome back!",
+          description: "You have been successfully signed in.",
+        });
+        setLocation('/');
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Sign in failed",
+          description: error.message || "Invalid email or password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Sign in failed",
+        description: "Please check your connection and try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiRequest('POST', '/api/auth/demo-login');
+      
+      if (response.ok) {
+        toast({
+          title: "Demo account activated",
+          description: "You're now signed in with a demo account.",
+        });
+        setLocation('/');
+      } else {
+        toast({
+          title: "Demo login failed",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Demo login failed",
+        description: "Please check your connection and try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -36,20 +101,62 @@ export default function Login() {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            <div className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
               <Button 
-                onClick={handleReplitLogin}
+                type="submit"
                 className="w-full bg-navy-800 hover:bg-navy-900 text-white py-3"
                 size="lg"
+                disabled={isLoading}
               >
                 <Shield className="mr-2 h-5 w-5" />
-                Sign In with Replit
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
-              
-              <div className="text-center text-sm text-gray-600">
-                Secure authentication powered by Replit
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-muted-foreground">Or</span>
               </div>
             </div>
+
+            <Button 
+              onClick={handleDemoLogin}
+              variant="outline"
+              className="w-full"
+              size="lg"
+              disabled={isLoading}
+            >
+              Try Demo Account
+            </Button>
 
             <div className="border-t pt-6">
               <div className="text-center text-sm text-gray-600">

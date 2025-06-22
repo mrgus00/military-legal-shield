@@ -312,6 +312,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: 'No active session' });
     }
   });
+
+  // Dashboard data endpoint
+  app.get('/api/dashboard', async (req: Request, res: Response) => {
+    try {
+      // Check authentication
+      const sessionUser = (req.session as any)?.user;
+      if (!sessionUser) {
+        return res.status(401).json({ message: 'Not authenticated' });
+      }
+
+      // Return dashboard data
+      const dashboardData = {
+        user: sessionUser,
+        stats: {
+          documentsCreated: 7,
+          consultations: 3,
+          learningProgress: 85,
+          activeCases: 1
+        },
+        recentActivities: [
+          {
+            type: "document",
+            title: "Power of Attorney generated",
+            timestamp: "2 hours ago",
+            status: "completed"
+          },
+          {
+            type: "consultation",
+            title: "Attorney consultation scheduled",
+            timestamp: "1 day ago",
+            status: "upcoming"
+          },
+          {
+            type: "learning",
+            title: "UCMJ basics course completed",
+            timestamp: "3 days ago",
+            status: "completed"
+          }
+        ],
+        upcomingEvents: [
+          {
+            title: "Attorney Consultation",
+            time: "Tomorrow at 2:00 PM",
+            type: "Virtual"
+          },
+          {
+            title: "Legal Workshop",
+            time: "Friday at 10:00 AM",
+            type: "Base Legal"
+          }
+        ],
+        learningProgress: [
+          {
+            course: "UCMJ Fundamentals",
+            progress: 85
+          },
+          {
+            course: "Administrative Separations",
+            progress: 60
+          },
+          {
+            course: "Security Clearance Process",
+            progress: 30
+          }
+        ]
+      };
+
+      res.json(dashboardData);
+    } catch (error) {
+      console.error('Dashboard error:', error);
+      res.status(500).json({ message: 'Failed to fetch dashboard data' });
+    }
+  });
   
   // Add analytics tracking middleware
   app.use(analyticsMiddleware);

@@ -85,6 +85,7 @@ import AICaseAnalysis from "@/pages/ai-case-analysis";
 import LegalRoadmap from "@/pages/legal-roadmap";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
+import Dashboard from "@/pages/dashboard";
 
 function Router() {
   return (
@@ -169,6 +170,7 @@ function Router() {
       <Route path="/legal-roadmap" component={LegalRoadmap} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );

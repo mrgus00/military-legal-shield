@@ -48,7 +48,7 @@ export default function Signup() {
           title: "Account created successfully!",
           description: "Welcome to Military Legal Shield. You are now signed in.",
         });
-        setLocation('/');
+        setLocation('/dashboard');
       } else {
         const error = await response.json();
         toast({
@@ -78,7 +78,7 @@ export default function Signup() {
           title: "Demo account activated",
           description: "You're now signed in with a demo account.",
         });
-        setLocation('/');
+        setLocation('/dashboard');
       } else {
         toast({
           title: "Demo signup failed",

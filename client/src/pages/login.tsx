@@ -31,7 +31,7 @@ export default function Login() {
           title: "Welcome back!",
           description: "You have been successfully signed in.",
         });
-        setLocation('/');
+        setLocation('/dashboard');
       } else {
         const error = await response.json();
         toast({
@@ -61,7 +61,7 @@ export default function Login() {
           title: "Demo account activated",
           description: "You're now signed in with a demo account.",
         });
-        setLocation('/');
+        setLocation('/dashboard');
       } else {
         toast({
           title: "Demo login failed",

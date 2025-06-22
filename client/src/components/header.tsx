@@ -179,6 +179,12 @@ export default function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
+                      <Link href="/dashboard" className="flex items-center">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href="/case-tracking" className="flex items-center">
                         <BookOpen className="mr-2 h-4 w-4" />
                         My Cases

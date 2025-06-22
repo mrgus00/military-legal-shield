@@ -199,7 +199,7 @@ export default function Header() {
                     <a href="/api/login">Sign In</a>
                   </Button>
                   <Button asChild className="bg-navy-800 hover:bg-navy-900">
-                    <a href="/api/login">Sign Up</a>
+                    <a href="/api/signup">Sign Up</a>
                   </Button>
                 </div>
               )}
@@ -239,7 +239,7 @@ export default function Header() {
                             <a href="/api/login">Sign In</a>
                           </Button>
                           <Button className="w-full bg-navy-800 hover:bg-navy-900" asChild>
-                            <a href="/api/login">Sign Up</a>
+                            <a href="/api/signup">Sign Up</a>
                           </Button>
                         </div>
                       )}

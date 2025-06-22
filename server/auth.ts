@@ -101,7 +101,7 @@ export function setupAuthRoutes(app: Express) {
   // Login endpoint
   app.get('/api/login', (req: Request, res: Response) => {
     // Check if user is already authenticated
-    if ((req as any).user) {
+    if ((req as any).user && (req as any).user.isAuthenticated) {
       return res.redirect('/');
     }
     
@@ -120,14 +120,19 @@ export function setupAuthRoutes(app: Express) {
       return res.redirect('/');
     }
     
-    // In production, redirect to Replit authentication
-    res.redirect('/');
+    // Redirect to client-side login page
+    res.redirect('/login');
   });
 
   // Sign up endpoint
   app.get('/api/signup', (req: Request, res: Response) => {
-    // For new users, same flow as login in Replit environment
-    res.redirect('/api/login');
+    // Check if user is already authenticated
+    if ((req as any).user && (req as any).user.isAuthenticated) {
+      return res.redirect('/');
+    }
+    
+    // Redirect to client-side signup page
+    res.redirect('/signup');
   });
 
   // Logout endpoint

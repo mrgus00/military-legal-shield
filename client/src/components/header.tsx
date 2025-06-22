@@ -196,10 +196,10 @@ export default function Header() {
               ) : (
                 <div className="flex items-center space-x-2">
                   <Button variant="ghost" asChild>
-                    <a href="/api/login">Sign In</a>
+                    <Link href="/login">Sign In</Link>
                   </Button>
                   <Button asChild className="bg-navy-800 hover:bg-navy-900">
-                    <a href="/api/signup">Sign Up</a>
+                    <Link href="/signup">Sign Up</Link>
                   </Button>
                 </div>
               )}
@@ -236,10 +236,10 @@ export default function Header() {
                       {!isAuthenticated && (
                         <div className="space-y-2">
                           <Button variant="outline" className="w-full" asChild>
-                            <a href="/api/login">Sign In</a>
+                            <Link href="/login">Sign In</Link>
                           </Button>
                           <Button className="w-full bg-navy-800 hover:bg-navy-900" asChild>
-                            <a href="/api/signup">Sign Up</a>
+                            <Link href="/signup">Sign Up</Link>
                           </Button>
                         </div>
                       )}

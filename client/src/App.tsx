@@ -83,6 +83,8 @@ import AccessibilityAudit from "@/pages/accessibility-audit";
 import GoogleSearchConsoleDashboard from "@/pages/google-search-console-dashboard";
 import AICaseAnalysis from "@/pages/ai-case-analysis";
 import LegalRoadmap from "@/pages/legal-roadmap";
+import Login from "@/pages/login";
+import Signup from "@/pages/signup";
 
 function Router() {
   return (
@@ -165,6 +167,8 @@ function Router() {
       <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
       <Route path="/ai-case-analysis" component={AICaseAnalysis} />
       <Route path="/legal-roadmap" component={LegalRoadmap} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -86,8 +86,8 @@ export function setupAuthRoutes(app: Express) {
   app.get('/api/auth/user', async (req: Request, res: Response) => {
     try {
       // Check for session-based authentication first
-      if (req.session?.user) {
-        return res.json(req.session.user);
+      if ((req.session as any)?.user) {
+        return res.json((req.session as any).user);
       }
 
       // Fallback to existing Replit auth

@@ -211,9 +211,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         rank: 'Sergeant'
       };
 
-      req.session = req.session || {};
-      req.session.userId = user.id;
-      req.session.user = user;
+      (req.session as any).userId = user.id;
+      (req.session as any).user = user;
       
       res.json({ 
         message: 'Login successful',
@@ -255,9 +254,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Store user session
-      req.session = req.session || {};
-      req.session.userId = newUser.id;
-      req.session.user = newUser;
+      (req.session as any).userId = newUser.id;
+      (req.session as any).user = newUser;
       
       res.json({ 
         message: 'Registration successful',
@@ -287,9 +285,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Store demo user session
-      req.session = req.session || {};
-      req.session.userId = demoUser.id;
-      req.session.user = demoUser;
+      (req.session as any).userId = demoUser.id;
+      (req.session as any).user = demoUser;
       
       res.json({ 
         message: 'Demo login successful',

@@ -436,8 +436,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { query } = req.body;
       
-      // Mock database of legal terms
+      // Comprehensive database of legal terms
       const termDatabase = [
+        // UCMJ Terms
         {
           term: "Article 15",
           legalDefinition: "Non-judicial punishment under the Uniform Code of Military Justice",
@@ -449,16 +450,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           relatedTerms: ["Non-judicial punishment", "Company grade Article 15", "Field grade Article 15"]
         },
         {
-          term: "Security Clearance",
-          legalDefinition: "A status granted to individuals allowing them access to classified information",
-          simplifiedDefinition: "Government background check that lets you access classified information",
-          examples: ["Secret clearance", "Top Secret clearance", "SCI access"],
-          category: "Security",
-          difficulty: "beginner",
-          militaryContext: "Required for many military positions involving sensitive information",
-          relatedTerms: ["Background investigation", "Clearance adjudication", "Security violation"]
-        },
-        {
           term: "Nonjudicial Punishment",
           legalDefinition: "Disciplinary action taken by a commanding officer without convening a court-martial",
           simplifiedDefinition: "Punishment given by your commander without going to military court",
@@ -467,6 +458,141 @@ export async function registerRoutes(app: Express): Promise<Server> {
           difficulty: "beginner",
           militaryContext: "Alternative to court-martial for minor offenses",
           relatedTerms: ["Article 15", "Captain's Mast", "Office Hours"]
+        },
+        {
+          term: "Article 86",
+          legalDefinition: "Absence without leave under the Uniform Code of Military Justice",
+          simplifiedDefinition: "Being absent from duty without permission - going AWOL",
+          examples: ["Missing formation", "Overstaying leave", "Failure to report for duty"],
+          category: "UCMJ",
+          difficulty: "beginner",
+          militaryContext: "Common charge for unauthorized absence from duty",
+          relatedTerms: ["AWOL", "Desertion", "Unauthorized absence"]
+        },
+        {
+          term: "Article 92",
+          legalDefinition: "Failure to obey order or regulation under the Uniform Code of Military Justice",
+          simplifiedDefinition: "Not following orders or breaking military rules",
+          examples: ["Disobeying direct orders", "Violating safety regulations", "Ignoring standard procedures"],
+          category: "UCMJ",
+          difficulty: "beginner",
+          militaryContext: "Covers violations of lawful orders and regulations",
+          relatedTerms: ["Disobedience", "Insubordination", "Violation of regulations"]
+        },
+        // Court-Martial Terms
+        {
+          term: "Summary Court-Martial",
+          legalDefinition: "The lowest level of court-martial for minor offenses with limited sentencing authority",
+          simplifiedDefinition: "Quick military trial for minor offenses with lighter punishments",
+          examples: ["Maximum 30 days confinement", "Reduction to E-1", "Forfeiture of pay"],
+          category: "Court-Martial",
+          difficulty: "intermediate",
+          militaryContext: "Used for minor violations when Article 15 is refused or inappropriate",
+          relatedTerms: ["Special court-martial", "General court-martial", "Military trial"]
+        },
+        {
+          term: "Special Court-Martial",
+          legalDefinition: "Intermediate level court-martial with moderate sentencing authority",
+          simplifiedDefinition: "Mid-level military trial for more serious offenses",
+          examples: ["Maximum 1 year confinement", "Bad conduct discharge", "Reduction in rank"],
+          category: "Court-Martial",
+          difficulty: "intermediate",
+          militaryContext: "Most common type of court-martial for serious misconduct",
+          relatedTerms: ["Summary court-martial", "General court-martial", "BCD"]
+        },
+        {
+          term: "General Court-Martial",
+          legalDefinition: "Highest level of court-martial with full sentencing authority including death penalty",
+          simplifiedDefinition: "Most serious military trial for major crimes",
+          examples: ["Life imprisonment", "Dishonorable discharge", "Death penalty"],
+          category: "Court-Martial",
+          difficulty: "advanced",
+          militaryContext: "Reserved for the most serious military offenses",
+          relatedTerms: ["Capital punishment", "Dishonorable discharge", "Life sentence"]
+        },
+        // Security Clearance Terms
+        {
+          term: "Security Clearance",
+          legalDefinition: "A status granted to individuals allowing them access to classified information",
+          simplifiedDefinition: "Government background check that lets you access classified information",
+          examples: ["Secret clearance", "Top Secret clearance", "SCI access"],
+          category: "Security Clearance",
+          difficulty: "beginner",
+          militaryContext: "Required for many military positions involving sensitive information",
+          relatedTerms: ["Background investigation", "Clearance adjudication", "Security violation"]
+        },
+        {
+          term: "Adjudication",
+          legalDefinition: "The process of determining whether to grant, deny, or revoke a security clearance",
+          simplifiedDefinition: "Decision-making process for security clearance approval",
+          examples: ["Favorable determination", "Unfavorable determination", "Conditional clearance"],
+          category: "Security Clearance",
+          difficulty: "intermediate",
+          militaryContext: "Final step in security clearance investigation process",
+          relatedTerms: ["Investigation", "Determination", "Clearance decision"]
+        },
+        // Administrative Law Terms
+        {
+          term: "Administrative Separation",
+          legalDefinition: "Discharge from military service for reasons other than misconduct or disability",
+          simplifiedDefinition: "Being discharged from military service for administrative reasons",
+          examples: ["Failure to meet standards", "Personality disorder", "Hardship discharge"],
+          category: "Administrative Law",
+          difficulty: "advanced",
+          militaryContext: "Alternative to punitive discharge for various administrative reasons",
+          relatedTerms: ["Discharge", "Separation board", "Administrative board"]
+        },
+        {
+          term: "Chapter 14",
+          legalDefinition: "Administrative separation for misconduct under Army regulations",
+          simplifiedDefinition: "Getting kicked out of the Army for bad behavior (administrative process)",
+          examples: ["Pattern of misconduct", "Drug use", "Serious offense"],
+          category: "Administrative Law",
+          difficulty: "advanced",
+          militaryContext: "Common Army administrative separation for disciplinary issues",
+          relatedTerms: ["Administrative separation", "Misconduct separation", "Other than honorable"]
+        },
+        // Family Law Terms
+        {
+          term: "Power of Attorney",
+          legalDefinition: "Legal document giving someone authority to act on your behalf",
+          simplifiedDefinition: "Legal paper that lets someone handle your business when you can't",
+          examples: ["Financial POA", "Healthcare POA", "General POA"],
+          category: "Family Law",
+          difficulty: "beginner",
+          militaryContext: "Essential for deployments and family care arrangements",
+          relatedTerms: ["Legal authority", "Representative", "Proxy"]
+        },
+        {
+          term: "Family Care Plan",
+          legalDefinition: "Required document outlining care arrangements for family members during deployment",
+          simplifiedDefinition: "Plan showing who will take care of your family when you deploy",
+          examples: ["Childcare arrangements", "Financial support", "Emergency contacts"],
+          category: "Family Law",
+          difficulty: "beginner",
+          militaryContext: "Mandatory for service members with dependents",
+          relatedTerms: ["Deployment planning", "Family support", "Dependent care"]
+        },
+        // Criminal Law Terms
+        {
+          term: "Mens Rea",
+          legalDefinition: "The mental element of a crime; guilty mind or criminal intent",
+          simplifiedDefinition: "Having the intention to commit a crime - knowing it was wrong",
+          examples: ["Intentional acts", "Knowing violation", "Willful misconduct"],
+          category: "Criminal Law",
+          difficulty: "advanced",
+          militaryContext: "Required element for many military criminal charges",
+          relatedTerms: ["Criminal intent", "Guilty mind", "Mental state"]
+        },
+        {
+          term: "Actus Reus",
+          legalDefinition: "The physical element of a crime; the guilty act",
+          simplifiedDefinition: "Actually doing the criminal act - the physical part of the crime",
+          examples: ["Physical assault", "Theft of property", "Unauthorized absence"],
+          category: "Criminal Law",
+          difficulty: "advanced",
+          militaryContext: "Must be proven along with intent for criminal conviction",
+          relatedTerms: ["Criminal act", "Physical element", "Guilty act"]
         }
       ];
 

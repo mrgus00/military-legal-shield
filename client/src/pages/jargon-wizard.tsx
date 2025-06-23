@@ -49,6 +49,7 @@ export default function JargonWizard() {
   const [audienceLevel, setAudienceLevel] = useState<'recruit' | 'nco' | 'officer'>('recruit');
   const [gameScore, setGameScore] = useState(0);
   const [currentQuiz, setCurrentQuiz] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("search");
   const { toast } = useToast();
 
   // Fetch popular terms
@@ -211,7 +212,7 @@ export default function JargonWizard() {
           </div>
         </div>
 
-        <Tabs defaultValue="search" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="search" className="flex items-center gap-2">
               <Search className="h-4 w-4" />
@@ -514,12 +515,32 @@ export default function JargonWizard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {['UCMJ', 'Court-Martial', 'Administrative Law', 'Security Clearance', 'Family Law', 'Criminal Law'].map((category) => (
-                    <Card key={category} className="cursor-pointer hover:shadow-md transition-shadow">
+                  {[
+                    { name: 'UCMJ', terms: 25, description: 'Uniform Code of Military Justice' },
+                    { name: 'Court-Martial', terms: 18, description: 'Military court proceedings' },
+                    { name: 'Administrative Law', terms: 22, description: 'Military administrative processes' },
+                    { name: 'Security Clearance', terms: 15, description: 'Security and clearance terms' },
+                    { name: 'Family Law', terms: 12, description: 'Military family issues' },
+                    { name: 'Criminal Law', terms: 20, description: 'Military criminal justice' }
+                  ].map((category) => (
+                    <Card 
+                      key={category.name} 
+                      className="cursor-pointer hover:shadow-md transition-shadow hover:bg-blue-50"
+                      onClick={() => {
+                        setSearchTerm(category.name);
+                        searchMutation.mutate(category.name);
+                        setActiveTab("search");
+                        toast({
+                          title: `Browsing ${category.name}`,
+                          description: `Found ${category.terms} terms in this category`,
+                        });
+                      }}
+                    >
                       <CardContent className="p-4 text-center">
                         <BookOpen className="h-8 w-8 mx-auto text-blue-500 mb-2" />
-                        <h3 className="font-semibold">{category}</h3>
-                        <p className="text-sm text-gray-600">15 terms</p>
+                        <h3 className="font-semibold text-lg">{category.name}</h3>
+                        <p className="text-sm text-gray-600 mb-1">{category.description}</p>
+                        <p className="text-xs text-blue-600 font-medium">{category.terms} terms available</p>
                       </CardContent>
                     </Card>
                   ))}

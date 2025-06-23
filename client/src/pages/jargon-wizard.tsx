@@ -538,10 +538,10 @@ export default function JargonWizard() {
                             body: JSON.stringify({ query: category.name })
                           });
                           const data = await response.json();
-                          setLibraryTerms(data.terms || []);
+                          setLibraryTerms(data.results || []);
                           toast({
                             title: `Browsing ${category.name}`,
-                            description: `Found ${data.terms?.length || 0} terms in this category`,
+                            description: `Found ${data.results?.length || 0} terms in this category`,
                           });
                         } catch (error) {
                           toast({

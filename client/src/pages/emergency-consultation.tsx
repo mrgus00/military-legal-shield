@@ -34,6 +34,27 @@ interface EmergencyBookingData {
   contactMethod: 'phone' | 'video' | 'in-person';
   phoneNumber: string;
   email: string;
+  budgetRange?: string;
+  preferredLanguage?: string;
+  securityClearanceLevel?: string;
+  deploymentStatus?: string;
+}
+
+interface Attorney {
+  id: number;
+  firstName: string;
+  lastName: string;
+  firmName: string;
+  specialties: string[];
+  location: string;
+  rating: number;
+  responseTime: string;
+  hourlyRate: string;
+  availableSlots: string[];
+  emergencyAvailable: boolean;
+  languages: string[];
+  militaryBackground: boolean;
+  securityClearanceExperience: boolean;
 }
 
 export default function EmergencyConsultation() {
@@ -239,20 +260,28 @@ export default function EmergencyConsultation() {
                     <Badge className={getUrgencyColor('immediate')}>
                       Emergency Available
                     </Badge>
-                    <Button 
-                      onClick={() => handleAttorneySelect(attorney)}
-                      disabled={confirmBookingMutation.isPending}
-                      className="w-full"
-                    >
-                      {confirmBookingMutation.isPending ? (
-                        <>Booking...</>
-                      ) : (
-                        <>
-                          Book Now
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </>
-                      )}
-                    </Button>
+                    <div className="space-y-2">
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium">Rate:</span> {attorney.hourlyRate || '$300-500/hr'}
+                      </div>
+                      <Button 
+                        onClick={() => handleAttorneySelect(attorney)}
+                        disabled={confirmBookingMutation.isPending}
+                        className="w-full"
+                      >
+                        {confirmBookingMutation.isPending ? (
+                          <>Processing Payment...</>
+                        ) : (
+                          <>
+                            Book & Pay
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </>
+                        )}
+                      </Button>
+                      <p className="text-xs text-gray-500 text-center">
+                        Secure payment via Stripe
+                      </p>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -377,6 +406,77 @@ export default function EmergencyConsultation() {
                 value={bookingData.location}
                 onChange={(e) => setBookingData({...bookingData, location: e.target.value})}
               />
+            </div>
+          </div>
+
+          {/* Enhanced Filtering Options */}
+          <div className="grid md:grid-cols-2 gap-4 border-t pt-4">
+            <div>
+              <Label htmlFor="budgetRange">Budget Range</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.budgetRange || ''}
+                onChange={(e) => setBookingData({...bookingData, budgetRange: e.target.value})}
+              >
+                <option value="">Select budget range</option>
+                <option value="under-500">Under $500</option>
+                <option value="500-1500">$500 - $1,500</option>
+                <option value="1500-5000">$1,500 - $5,000</option>
+                <option value="5000-plus">$5,000+</option>
+                <option value="payment-plan">Payment Plan Available</option>
+                <option value="military-discount">Military Discount Expected</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="preferredLanguage">Preferred Language</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.preferredLanguage || ''}
+                onChange={(e) => setBookingData({...bookingData, preferredLanguage: e.target.value})}
+              >
+                <option value="">English (Default)</option>
+                <option value="spanish">Spanish</option>
+                <option value="korean">Korean</option>
+                <option value="german">German</option>
+                <option value="japanese">Japanese</option>
+                <option value="arabic">Arabic</option>
+                <option value="tagalog">Tagalog</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="securityClearanceLevel">Security Clearance Level</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.securityClearanceLevel || ''}
+                onChange={(e) => setBookingData({...bookingData, securityClearanceLevel: e.target.value})}
+              >
+                <option value="">None/Not Applicable</option>
+                <option value="confidential">Confidential</option>
+                <option value="secret">Secret</option>
+                <option value="top-secret">Top Secret</option>
+                <option value="ts-sci">TS/SCI</option>
+                <option value="q-clearance">Q Clearance</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="deploymentStatus">Current Status</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.deploymentStatus || ''}
+                onChange={(e) => setBookingData({...bookingData, deploymentStatus: e.target.value})}
+              >
+                <option value="">Select status</option>
+                <option value="stateside">Stateside</option>
+                <option value="deployed">Currently Deployed</option>
+                <option value="pcs">PCS Orders</option>
+                <option value="training">Training/TDY</option>
+                <option value="leave">On Leave</option>
+                <option value="separating">Separating Soon</option>
+                <option value="reserves">Reserves/Guard</option>
+              </select>
             </div>
           </div>
 

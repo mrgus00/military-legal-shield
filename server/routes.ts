@@ -818,28 +818,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
         location: location || undefined
       });
 
-      // Filter and sort attorneys based on criteria
+      const { budgetRange, preferredLanguage, securityClearanceLevel, deploymentStatus } = requestBody;
+
+      // Enhanced filtering and matching logic
       let matchedAttorneys = availableAttorneys.filter(attorney => {
         // Match by military branch
         if (militaryBranch && attorney.militaryBranches?.includes(militaryBranch)) {
           return true;
         }
+        
         // Match by legal issue specialization
         if (legalIssue) {
           const issueMap: Record<string, string[]> = {
-            'court-martial': ['Court-Martial Defense', 'UCMJ Violations'],
-            'article-15': ['UCMJ Violations', 'Administrative Law'],
-            'security-clearance': ['Security Clearance'],
-            'administrative': ['Administrative Law', 'Administrative Separation'],
-            'family': ['Family Law'],
-            'criminal': ['Criminal Defense'],
-            'financial': ['Financial Law']
+            'court-martial': ['Court-Martial Defense', 'UCMJ Violations', 'Military Criminal Law'],
+            'article-15': ['UCMJ Violations', 'Administrative Law', 'Nonjudicial Punishment'],
+            'security-clearance': ['Security Clearance', 'Government Investigations', 'Administrative Law'],
+            'administrative': ['Administrative Law', 'Administrative Separation', 'Military Personnel Law'],
+            'family': ['Family Law', 'Military Family Law', 'Divorce'],
+            'criminal': ['Criminal Defense', 'Military Criminal Law'],
+            'financial': ['Financial Law', 'Debt Relief', 'Consumer Protection']
           };
           const relevantSpecs = issueMap[legalIssue] || [];
           return attorney.specialties?.some(spec => 
             relevantSpecs.some(relevantSpec => spec.includes(relevantSpec))
           );
         }
+
+        // Budget filtering
+        if (budgetRange) {
+          const budgetMatches = {
+            'under-500': attorney.pricingTier === 'budget' || attorney.hourlyRate?.includes('$200-400'),
+            '500-1500': attorney.pricingTier === 'standard' || attorney.hourlyRate?.includes('$300-500'),
+            '1500-5000': attorney.pricingTier === 'premium' || attorney.hourlyRate?.includes('$400-600'),
+            '5000-plus': attorney.pricingTier === 'premium',
+            'payment-plan': attorney.servicesOffered?.includes('Payment plans'),
+            'military-discount': attorney.servicesOffered?.includes('Military discount')
+          };
+          if (!budgetMatches[budgetRange as keyof typeof budgetMatches]) return false;
+        }
+
+        // Security clearance experience filtering
+        if (securityClearanceLevel && securityClearanceLevel !== 'none') {
+          const clearanceLevels = ['confidential', 'secret', 'top-secret', 'ts-sci', 'q-clearance'];
+          const hasSecurityExperience = attorney.specialties?.some(spec => 
+            spec.toLowerCase().includes('security clearance') || 
+            spec.toLowerCase().includes('government investigations')
+          );
+          if (!hasSecurityExperience) return false;
+        }
+
         return true;
       });
 
@@ -892,31 +919,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/confirm-emergency-booking', async (req: Request, res: Response) => {
     try {
-      const { attorneyId, selectedTime, urgencyLevel, legalIssue, phoneNumber, contactMethod } = req.body;
+      const { attorney, bookingData, selectedTime, urgencyLevel, legalIssue, phoneNumber, contactMethod } = req.body;
       
       // Generate confirmation details
       const confirmationNumber = `EMC-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
       
+      // Calculate consultation fee based on urgency
+      const baseFee = 150;
+      const urgencyMultiplier = {
+        'immediate': 2.0,
+        'urgent': 1.5,
+        'priority': 1.0
+      };
+      const consultationFee = baseFee * (urgencyMultiplier[urgencyLevel] || 1.0);
+      
+      // Create Stripe payment intent if configured
+      let paymentDetails = null;
+      if (process.env.STRIPE_SECRET_KEY) {
+        try {
+          const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(consultationFee * 100),
+            currency: 'usd',
+            metadata: {
+              confirmationNumber,
+              attorneyName: attorney?.name || 'Military Attorney',
+              urgencyLevel,
+              legalIssue
+            },
+            description: `Emergency Legal Consultation - ${urgencyLevel.toUpperCase()}`
+          });
+          
+          paymentDetails = {
+            clientSecret: paymentIntent.client_secret,
+            amount: consultationFee,
+            currency: 'usd',
+            status: 'requires_payment_method'
+          };
+        } catch (stripeError) {
+          console.error('Stripe payment setup error:', stripeError);
+        }
+      }
+      
+      // Send automated notifications
+      const responseTime = urgencyLevel === 'immediate' ? '30 minutes' : 
+                          urgencyLevel === 'urgent' ? '2 hours' : '24 hours';
+      
+      // SMS notification via Twilio if configured
+      if (phoneNumber && process.env.TWILIO_ACCOUNT_SID) {
+        try {
+          const twilioClient = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+          await twilioClient.messages.create({
+            body: `Emergency Legal Consultation Confirmed! Confirmation: ${confirmationNumber}. Attorney will contact you within ${responseTime}. Check email for payment details.`,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to: phoneNumber
+          });
+        } catch (twilioError) {
+          console.error('SMS notification error:', twilioError);
+        }
+      }
+      
+      // Email notification preparation
+      const emailNotification = {
+        to: bookingData?.email || 'client@example.com',
+        subject: `Emergency Consultation Confirmed - ${confirmationNumber}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #dc2626;">Emergency Legal Consultation Confirmed</h2>
+            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3>Consultation Details</h3>
+              <p><strong>Confirmation Number:</strong> ${confirmationNumber}</p>
+              <p><strong>Attorney:</strong> ${attorney?.name || 'Assigned Military Attorney'}</p>
+              <p><strong>Legal Issue:</strong> ${legalIssue}</p>
+              <p><strong>Urgency Level:</strong> ${urgencyLevel.toUpperCase()}</p>
+              <p><strong>Response Time:</strong> Within ${responseTime}</p>
+              <p><strong>Consultation Fee:</strong> $${consultationFee}</p>
+            </div>
+            ${paymentDetails ? `
+            <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3>Payment Required</h3>
+              <p>Please complete payment to confirm your consultation.</p>
+              <p><strong>Amount:</strong> $${consultationFee}</p>
+              <p>Payment link will be provided in your consultation portal.</p>
+            </div>
+            ` : ''}
+            <div style="background: #e0f2fe; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3>Next Steps</h3>
+              <ol>
+                <li>Complete payment using the secure payment link</li>
+                <li>Prepare relevant documents and case details</li>
+                <li>Attorney will contact you within ${responseTime}</li>
+                <li>Keep this confirmation number for reference</li>
+              </ol>
+            </div>
+            <p style="color: #666; font-size: 14px;">
+              For immediate assistance, call our emergency hotline: 1-800-MIL-LEGAL
+            </p>
+          </div>
+        `
+      };
+      
       // Create booking record
       const booking = {
         confirmationNumber,
-        attorneyId,
-        scheduledTime: selectedTime,
+        attorneyId: attorney?.id,
+        attorneyName: attorney?.name || 'Military Attorney',
+        scheduledTime: selectedTime || new Date(Date.now() + 30 * 60 * 1000).toISOString(),
         contactMethod,
-        status: 'confirmed',
+        status: paymentDetails ? 'pending_payment' : 'confirmed',
+        urgencyLevel,
+        legalIssue,
+        consultationFee,
+        responseTime,
         emergencyHotline: '1-800-MIL-LEGAL',
         instructions: {
           phone: 'Attorney will call you at the scheduled time',
-          video: 'You will receive a video call link 15 minutes before the consultation',
+          video: 'You will receive a secure video call link 15 minutes before consultation',
           'in-person': 'Please arrive 15 minutes early at the attorney\'s office'
-        }
+        },
+        paymentDetails,
+        emailNotification
       };
 
       analytics.trackAttorneyMatch();
+      analytics.trackEmergencyRequest();
 
       res.json({
         success: true,
         booking,
+        paymentRequired: !!paymentDetails,
         message: 'Emergency consultation confirmed successfully'
       });
 
@@ -924,7 +1055,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Emergency booking confirmation error:', error);
       res.status(500).json({ 
         success: false, 
-        message: 'Failed to confirm emergency booking' 
+        message: 'Failed to confirm emergency booking',
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   });

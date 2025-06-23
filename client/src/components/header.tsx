@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone, FileText, Brain } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone, FileText, Brain, AlertTriangle } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -65,9 +65,9 @@ export default function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/emergency-consultation" className="flex items-center">
-                      <Phone className="mr-3 h-4 w-4" />
-                      DUI/DWI Assistance
+                    <Link href="/emergency-consultation" className="flex items-center text-red-600 font-medium">
+                      <AlertTriangle className="mr-3 h-4 w-4" />
+                      Emergency Legal Help
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

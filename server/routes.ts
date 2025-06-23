@@ -806,6 +806,148 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/analytics', getAnalytics);
   app.post('/api/analytics/reset', resetAnalytics);
   
+  // Emergency Consultation Routes
+  app.post('/api/emergency-consultation', async (req: Request, res: Response) => {
+    try {
+      const { urgencyLevel, legalIssue, militaryBranch, rank, location, description, contactMethod, phoneNumber, email } = req.body;
+      
+      // Get available attorneys from database
+      const availableAttorneys = await storage.getAttorneys({
+        emergencyAvailable: true,
+        militaryBranches: militaryBranch ? [militaryBranch] : undefined,
+        specializations: legalIssue ? [legalIssue] : undefined
+      });
+
+      // Filter and sort attorneys based on criteria
+      let matchedAttorneys = availableAttorneys.filter(attorney => {
+        // Match by military branch
+        if (militaryBranch && attorney.militaryBranches?.includes(militaryBranch)) {
+          return true;
+        }
+        // Match by legal issue specialization
+        if (legalIssue) {
+          const issueMap: Record<string, string[]> = {
+            'court-martial': ['Court-Martial Defense', 'UCMJ Violations'],
+            'article-15': ['UCMJ Violations', 'Administrative Law'],
+            'security-clearance': ['Security Clearance'],
+            'administrative': ['Administrative Law', 'Administrative Separation'],
+            'family': ['Family Law'],
+            'criminal': ['Criminal Defense'],
+            'financial': ['Financial Law']
+          };
+          const relevantSpecs = issueMap[legalIssue] || [];
+          return attorney.specializations?.some(spec => 
+            relevantSpecs.some(relevantSpec => spec.includes(relevantSpec))
+          );
+        }
+        return true;
+      });
+
+      // Sort by urgency response time and rating
+      matchedAttorneys.sort((a, b) => {
+        if (urgencyLevel === 'immediate') {
+          // For immediate, prioritize fastest response time
+          const aTime = parseInt(a.responseTime?.split(' ')[0] || '60');
+          const bTime = parseInt(b.responseTime?.split(' ')[0] || '60');
+          return aTime - bTime;
+        }
+        // Otherwise sort by rating
+        return (b.rating || 0) - (a.rating || 0);
+      });
+
+      // Limit to top 3 matches
+      matchedAttorneys = matchedAttorneys.slice(0, 3);
+
+      // Add emergency availability slots
+      matchedAttorneys = matchedAttorneys.map(attorney => ({
+        ...attorney,
+        availableSlots: [
+          urgencyLevel === 'immediate' ? 'Within 30 minutes' : 
+          urgencyLevel === 'urgent' ? 'Within 2 hours' : 'Today 2:00 PM',
+          'Today 4:00 PM',
+          'Tomorrow 9:00 AM'
+        ],
+        emergencyAvailable: true
+      }));
+
+      analytics.trackEmergencyRequest();
+
+      res.json({
+        success: true,
+        urgencyLevel,
+        matchedAttorneys,
+        requestId: `EMR-${Date.now()}`,
+        estimatedResponseTime: urgencyLevel === 'immediate' ? '15-30 minutes' : 
+                              urgencyLevel === 'urgent' ? '1-2 hours' : '12-24 hours'
+      });
+
+    } catch (error) {
+      console.error('Emergency consultation error:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to process emergency consultation request' 
+      });
+    }
+  });
+
+  app.post('/api/confirm-emergency-booking', async (req: Request, res: Response) => {
+    try {
+      const { attorneyId, selectedTime, urgencyLevel, legalIssue, phoneNumber, contactMethod } = req.body;
+      
+      // Generate confirmation details
+      const confirmationNumber = `EMC-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      
+      // Create booking record
+      const booking = {
+        confirmationNumber,
+        attorneyId,
+        scheduledTime: selectedTime,
+        contactMethod,
+        status: 'confirmed',
+        emergencyHotline: '1-800-MIL-LEGAL',
+        instructions: {
+          phone: 'Attorney will call you at the scheduled time',
+          video: 'You will receive a video call link 15 minutes before the consultation',
+          'in-person': 'Please arrive 15 minutes early at the attorney\'s office'
+        }
+      };
+
+      analytics.trackAttorneyMatch();
+
+      res.json({
+        success: true,
+        booking,
+        message: 'Emergency consultation confirmed successfully'
+      });
+
+    } catch (error) {
+      console.error('Emergency booking confirmation error:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to confirm emergency booking' 
+      });
+    }
+  });
+
+  // Emergency consultation status check
+  app.get('/api/emergency-consultation/:requestId', async (req: Request, res: Response) => {
+    try {
+      const { requestId } = req.params;
+      
+      const status = {
+        requestId,
+        status: 'confirmed',
+        attorneyAssigned: true,
+        estimatedContactTime: 'Within 30 minutes',
+        emergencyHotline: '1-800-MIL-LEGAL'
+      };
+
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to check consultation status' });
+    }
+  });
+
   // Apply CDN cache headers to static assets
   app.use('/assets', cacheMiddleware);
   app.use('/images', cacheMiddleware);

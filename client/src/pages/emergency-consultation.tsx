@@ -1,590 +1,500 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import { AlertTriangle, Clock, Phone, Video, Calendar } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { 
+  AlertTriangle, 
+  Clock, 
+  Phone, 
+  Video, 
+  MapPin, 
+  Calendar,
+  Shield,
+  Zap,
+  User,
+  FileText,
+  CheckCircle,
+  ArrowRight
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { insertEmergencyConsultationSchema } from "@shared/schema";
-import { useEmergencyLoading } from "@/hooks/useMilitaryLoading";
-import PageLayout from "@/components/page-layout";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
-const emergencyFormSchema = insertEmergencyConsultationSchema.extend({
-  preferredDateTime: z.string().min(1, "Preferred date/time is required"),
-  alternateDateTime: z.string().optional(),
-});
-
-type EmergencyFormData = z.infer<typeof emergencyFormSchema>;
-
-const urgencyLevels = [
-  { value: "critical", label: "Critical", color: "destructive", description: "Immediate legal action required (court deadline within 24-48 hours)" },
-  { value: "high", label: "High Priority", color: "orange", description: "Urgent issue requiring quick response (within 1-3 days)" },
-  { value: "moderate", label: "Moderate", color: "yellow", description: "Important but can wait 3-7 days for response" }
-];
-
-const legalIssueTypes = [
-  "Article 15 (Non-judicial punishment)",
-  "Court-martial charges",
-  "Criminal investigation",
-  "Security clearance issues",
-  "Administrative separation",
-  "Medical evaluation board",
-  "Financial misconduct",
-  "Sexual assault allegations",
-  "Domestic violence charges",
-  "Drug-related offenses",
-  "AWOL/Desertion charges",
-  "Military justice violations",
-  "Command investigation",
-  "IG complaint assistance",
-  "Other military legal matter"
-];
-
-const militaryBranches = [
-  "U.S. Army",
-  "U.S. Navy", 
-  "U.S. Air Force",
-  "U.S. Marine Corps",
-  "U.S. Coast Guard",
-  "U.S. Space Force"
-];
-
-const timeZones = [
-  "EST - Eastern Standard Time",
-  "CST - Central Standard Time", 
-  "MST - Mountain Standard Time",
-  "PST - Pacific Standard Time",
-  "AKST - Alaska Standard Time",
-  "HST - Hawaii Standard Time",
-  "CET - Central European Time",
-  "GMT - Greenwich Mean Time"
-];
+interface EmergencyBookingData {
+  urgencyLevel: 'immediate' | 'urgent' | 'priority';
+  legalIssue: string;
+  militaryBranch: string;
+  rank: string;
+  location: string;
+  description: string;
+  preferredTime: string;
+  contactMethod: 'phone' | 'video' | 'in-person';
+  phoneNumber: string;
+  email: string;
+}
 
 export default function EmergencyConsultation() {
-  const [selectedAttorney, setSelectedAttorney] = useState<number | null>(null);
+  const [step, setStep] = useState(1);
+  const [bookingData, setBookingData] = useState<EmergencyBookingData>({
+    urgencyLevel: 'urgent',
+    legalIssue: '',
+    militaryBranch: '',
+    rank: '',
+    location: '',
+    description: '',
+    preferredTime: '',
+    contactMethod: 'phone',
+    phoneNumber: '',
+    email: ''
+  });
+  const [matchedAttorneys, setMatchedAttorneys] = useState<any[]>([]);
+  const [selectedAttorney, setSelectedAttorney] = useState<any>(null);
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const { toast } = useToast();
-  const { startMilitarySequence } = useEmergencyLoading();
 
-  const form = useForm<EmergencyFormData>({
-    resolver: zodResolver(emergencyFormSchema),
-    defaultValues: {
-      urgencyLevel: "high",
-      consultationType: "phone",
-      timeZone: "EST - Eastern Standard Time",
-      hasDeadline: false
+  const emergencyBookingMutation = useMutation({
+    mutationFn: async (data: EmergencyBookingData) => {
+      return await apiRequest('POST', '/api/emergency-consultation', data);
+    },
+    onSuccess: (data) => {
+      setMatchedAttorneys(data.matchedAttorneys || []);
+      setStep(2);
+      toast({
+        title: "Emergency Consultation Request Submitted",
+        description: `Found ${data.matchedAttorneys?.length || 0} available attorneys`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Booking Failed",
+        description: "Unable to process emergency consultation request",
+        variant: "destructive"
+      });
     }
   });
 
-  // Get available attorneys for emergency consultations
-  const { data: emergencyAttorneys, isLoading: attorneysLoading } = useQuery({
-    queryKey: ["/api/attorneys/emergency"],
-  });
-
-  const createConsultationMutation = useMutation({
-    mutationFn: async (data: EmergencyFormData) => {
-      // Trigger emergency loading sequence
-      startMilitarySequence(4000);
-      
-      const formattedData = {
-        ...data,
-        preferredDateTime: new Date(data.preferredDateTime).toISOString(),
-        alternateDateTime: data.alternateDateTime ? new Date(data.alternateDateTime).toISOString() : null,
-        deadlineDate: data.deadlineDate ? new Date(data.deadlineDate).toISOString() : null,
-        assignedAttorneyId: selectedAttorney,
-      };
-      return apiRequest("POST", "/api/emergency-consultations", formattedData);
+  const confirmBookingMutation = useMutation({
+    mutationFn: async (attorneyData: any) => {
+      return await apiRequest('POST', '/api/confirm-emergency-booking', {
+        ...bookingData,
+        attorneyId: attorneyData.id,
+        selectedTime: attorneyData.availableSlots[0]
+      });
     },
     onSuccess: () => {
+      setBookingConfirmed(true);
+      setStep(3);
       toast({
-        title: "Emergency Consultation Requested",
-        description: "Your request has been submitted. The attorney will contact you within 2 hours.",
+        title: "Emergency Consultation Confirmed",
+        description: "You will receive confirmation details shortly",
       });
-      queryClient.invalidateQueries({ queryKey: ["/api/emergency-consultations"] });
-      form.reset();
-      setSelectedAttorney(null);
-    },
-    onError: (error: any) => {
-      console.error("Emergency consultation error:", error);
-      toast({
-        title: "Request Failed",
-        description: error.message || "Please check your information and try again.",
-        variant: "destructive",
-      });
-    },
+    }
   });
 
-  const onSubmit = (data: EmergencyFormData) => {
-    if (!selectedAttorney) {
+  const handleEmergencySubmit = () => {
+    if (!bookingData.legalIssue || !bookingData.militaryBranch || !bookingData.phoneNumber) {
       toast({
-        title: "Attorney Required",
-        description: "Please select an attorney for your emergency consultation.",
-        variant: "destructive",
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive"
       });
       return;
     }
-    
-    createConsultationMutation.mutate({
-      ...data,
-      attorneyId: selectedAttorney,
-    });
+    emergencyBookingMutation.mutate(bookingData);
   };
 
-  return (
-    <PageLayout>
-      <div className="bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 dark:from-red-950/20 dark:via-orange-950/20 dark:to-yellow-950/20 py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <AlertTriangle className="h-8 w-8 text-red-600" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Emergency Legal Consultation
-            </h1>
+  const handleAttorneySelect = (attorney: any) => {
+    setSelectedAttorney(attorney);
+    confirmBookingMutation.mutate(attorney);
+  };
+
+  const getUrgencyColor = (level: string) => {
+    switch (level) {
+      case 'immediate': return 'bg-red-100 text-red-800 border-red-200';
+      case 'urgent': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'priority': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  if (step === 3 && bookingConfirmed) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 space-y-6">
+        <div className="text-center space-y-4">
+          <div className="flex justify-center">
+            <CheckCircle className="h-16 w-16 text-green-500" />
           </div>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Get immediate legal assistance from specialized military defense attorneys. 
-            Response guaranteed within 2 hours for critical issues.
-          </p>
+          <h1 className="text-3xl font-bold text-green-700">Emergency Consultation Confirmed</h1>
+          <p className="text-gray-600">Your emergency legal consultation has been successfully booked</p>
         </div>
 
-        {/* Urgency Level Selection */}
-        <Card className="mb-6 border-red-200 dark:border-red-800">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-red-600" />
-              Urgency Level
+        <Card className="border-green-200">
+          <CardHeader className="bg-green-50">
+            <CardTitle className="flex items-center gap-2 text-green-700">
+              <Calendar className="h-5 w-5" />
+              Consultation Details
             </CardTitle>
-            <CardDescription>
-              Select the urgency level that best describes your situation
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              {urgencyLevels.map((level) => (
-                <Card 
-                  key={level.value}
-                  className={`cursor-pointer transition-all ${
-                    form.watch("urgencyLevel") === level.value 
-                      ? "ring-2 ring-red-500 bg-red-50 dark:bg-red-950/50" 
-                      : "hover:bg-gray-50 dark:hover:bg-gray-800"
-                  }`}
-                  onClick={() => form.setValue("urgencyLevel", level.value as any)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold">{level.label}</h3>
-                      <Badge variant={level.color as any}>{level.value.toUpperCase()}</Badge>
+          <CardContent className="p-6 space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Attorney</Label>
+                <p className="text-lg font-semibold">{selectedAttorney?.name}</p>
+                <p className="text-sm text-gray-600">{selectedAttorney?.firm}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Consultation Time</Label>
+                <p className="text-lg font-semibold">{selectedAttorney?.availableSlots[0]}</p>
+                <p className="text-sm text-gray-600">via {bookingData.contactMethod}</p>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-800 mb-2">What happens next:</h4>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• You'll receive a confirmation email within 5 minutes</li>
+                <li>• Attorney will contact you 15 minutes before scheduled time</li>
+                <li>• Prepare any relevant documents for the consultation</li>
+                <li>• Emergency support hotline: 1-800-MIL-LEGAL</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-4">
+              <Button 
+                onClick={() => window.location.href = '/dashboard'}
+                className="flex-1"
+              >
+                Return to Dashboard
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => window.location.href = '/legal-roadmap'}
+                className="flex-1"
+              >
+                View Legal Resources
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (step === 2) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold">Available Emergency Attorneys</h1>
+          <p className="text-gray-600">Select an attorney for immediate consultation</p>
+        </div>
+
+        <div className="grid gap-4">
+          {matchedAttorneys.map((attorney, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow border-l-4 border-l-red-500">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-3 flex-1">
+                    <div>
+                      <h3 className="text-xl font-semibold">{attorney.name}</h3>
+                      <p className="text-gray-600">{attorney.firm}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <MapPin className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-600">{attorney.location}</span>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {level.description}
-                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {attorney.specializations?.slice(0, 3).map((spec: string, i: number) => (
+                        <Badge key={i} variant="secondary" className="text-xs">
+                          {spec}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <Label className="text-gray-700">Experience</Label>
+                        <p className="font-medium">{attorney.experience} years</p>
+                      </div>
+                      <div>
+                        <Label className="text-gray-700">Success Rate</Label>
+                        <p className="font-medium">{attorney.successRate}%</p>
+                      </div>
+                      <div>
+                        <Label className="text-gray-700">Response Time</Label>
+                        <p className="font-medium">{attorney.responseTime}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-gray-700">Next Available</Label>
+                      <p className="font-medium text-green-600">{attorney.availableSlots?.[0] || 'Within 1 hour'}</p>
+                    </div>
+                  </div>
+
+                  <div className="text-right space-y-2">
+                    <Badge className={getUrgencyColor('immediate')}>
+                      Emergency Available
+                    </Badge>
+                    <Button 
+                      onClick={() => handleAttorneySelect(attorney)}
+                      disabled={confirmBookingMutation.isPending}
+                      className="w-full"
+                    >
+                      {confirmBookingMutation.isPending ? (
+                        <>Booking...</>
+                      ) : (
+                        <>
+                          Book Now
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Emergency Header */}
+      <Card className="border-red-200 bg-red-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-red-700">
+            <AlertTriangle className="h-6 w-6" />
+            Emergency Legal Consultation
+          </CardTitle>
+          <CardDescription className="text-red-600">
+            Get immediate legal assistance from qualified military attorneys
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      {/* Urgency Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5" />
+            How urgent is your legal issue?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { level: 'immediate', title: 'Immediate', desc: 'Within 30 minutes', icon: AlertTriangle },
+              { level: 'urgent', title: 'Urgent', desc: 'Within 2 hours', icon: Clock },
+              { level: 'priority', title: 'Priority', desc: 'Within 24 hours', icon: Calendar }
+            ].map(({ level, title, desc, icon: Icon }) => (
+              <Card 
+                key={level}
+                className={`cursor-pointer transition-all ${
+                  bookingData.urgencyLevel === level 
+                    ? 'border-red-500 bg-red-50' 
+                    : 'hover:border-gray-300'
+                }`}
+                onClick={() => setBookingData({...bookingData, urgencyLevel: level as any})}
+              >
+                <CardContent className="p-4 text-center">
+                  <Icon className="h-8 w-8 mx-auto mb-2 text-red-500" />
+                  <h3 className="font-semibold">{title}</h3>
+                  <p className="text-sm text-gray-600">{desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Legal Issue Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Legal Issue Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="legalIssue">Type of Legal Issue *</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.legalIssue}
+                onChange={(e) => setBookingData({...bookingData, legalIssue: e.target.value})}
+              >
+                <option value="">Select issue type</option>
+                <option value="court-martial">Court-Martial</option>
+                <option value="article-15">Article 15 / NJP</option>
+                <option value="security-clearance">Security Clearance</option>
+                <option value="administrative">Administrative Separation</option>
+                <option value="family">Family/Divorce</option>
+                <option value="criminal">Criminal Defense</option>
+                <option value="financial">Financial/Debt</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="militaryBranch">Military Branch *</Label>
+              <select 
+                className="w-full p-2 border rounded-md"
+                value={bookingData.militaryBranch}
+                onChange={(e) => setBookingData({...bookingData, militaryBranch: e.target.value})}
+              >
+                <option value="">Select branch</option>
+                <option value="army">U.S. Army</option>
+                <option value="navy">U.S. Navy</option>
+                <option value="air-force">U.S. Air Force</option>
+                <option value="marines">U.S. Marines</option>
+                <option value="coast-guard">U.S. Coast Guard</option>
+                <option value="space-force">U.S. Space Force</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="rank">Rank</Label>
+              <Input 
+                id="rank"
+                placeholder="e.g., SSG, LT, etc."
+                value={bookingData.rank}
+                onChange={(e) => setBookingData({...bookingData, rank: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="location">Location/Base</Label>
+              <Input 
+                id="location"
+                placeholder="Current duty station"
+                value={bookingData.location}
+                onChange={(e) => setBookingData({...bookingData, location: e.target.value})}
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="description">Brief Description of Issue</Label>
+            <Textarea 
+              id="description"
+              placeholder="Provide key details about your legal situation..."
+              rows={4}
+              value={bookingData.description}
+              onChange={(e) => setBookingData({...bookingData, description: e.target.value})}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Contact Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Contact Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="phoneNumber">Phone Number *</Label>
+              <Input 
+                id="phoneNumber"
+                type="tel"
+                placeholder="(555) 123-4567"
+                value={bookingData.phoneNumber}
+                onChange={(e) => setBookingData({...bookingData, phoneNumber: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Email Address</Label>
+              <Input 
+                id="email"
+                type="email"
+                placeholder="your.email@mail.mil"
+                value={bookingData.email}
+                onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label>Preferred Consultation Method</Label>
+            <div className="flex gap-4 mt-2">
+              {[
+                { method: 'phone', icon: Phone, label: 'Phone Call' },
+                { method: 'video', icon: Video, label: 'Video Call' },
+                { method: 'in-person', icon: MapPin, label: 'In-Person' }
+              ].map(({ method, icon: Icon, label }) => (
+                <Card 
+                  key={method}
+                  className={`cursor-pointer flex-1 ${
+                    bookingData.contactMethod === method 
+                      ? 'border-blue-500 bg-blue-50' 
+                      : 'hover:border-gray-300'
+                  }`}
+                  onClick={() => setBookingData({...bookingData, contactMethod: method as any})}
+                >
+                  <CardContent className="p-3 text-center">
+                    <Icon className="h-6 w-6 mx-auto mb-1" />
+                    <p className="text-sm font-medium">{label}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Available Emergency Attorneys */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Select Attorney</CardTitle>
-            <CardDescription>
-              Choose from attorneys available for emergency consultations
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {attorneysLoading ? (
-              <div className="animate-pulse space-y-4">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                {(emergencyAttorneys || []).map((attorney: any) => (
-                  <Card 
-                    key={attorney.id}
-                    className={`cursor-pointer transition-all ${
-                      selectedAttorney === attorney.id 
-                        ? "ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-950/50" 
-                        : "hover:bg-gray-50 dark:hover:bg-gray-800"
-                    }`}
-                    onClick={() => setSelectedAttorney(attorney.id)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{attorney.firstName} {attorney.lastName}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{attorney.location}</p>
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            {attorney.specialties.slice(0, 3).map((specialty: string) => (
-                              <Badge key={specialty} variant="secondary" className="text-xs">
-                                {specialty}
-                              </Badge>
-                            ))}
-                          </div>
-                          <p className="text-sm text-green-600 dark:text-green-400">
-                            Response time: {attorney.responseTime || "< 2 hours"}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center gap-1 mb-1">
-                            <span className="text-sm font-medium">{attorney.rating}</span>
-                            <span className="text-yellow-500">★</span>
-                          </div>
-                          <p className="text-xs text-gray-500">{attorney.experience}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+      {/* Submit Button */}
+      <Card className="border-red-200">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-lg">Request Emergency Consultation</h3>
+              <p className="text-sm text-gray-600">
+                Attorney will contact you within {
+                  bookingData.urgencyLevel === 'immediate' ? '30 minutes' :
+                  bookingData.urgencyLevel === 'urgent' ? '2 hours' : '24 hours'
+                }
+              </p>
+            </div>
+            <Button 
+              onClick={handleEmergencySubmit}
+              disabled={emergencyBookingMutation.isPending}
+              size="lg"
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {emergencyBookingMutation.isPending ? (
+                <>Processing...</>
+              ) : (
+                <>
+                  <Shield className="h-5 w-5 mr-2" />
+                  Get Emergency Help
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Emergency Consultation Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Emergency Consultation Details</CardTitle>
-            <CardDescription>
-              Provide detailed information about your legal emergency
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Personal Information */}
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="clientFirstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name *</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="clientLastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name *</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="clientEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address *</FormLabel>
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="clientPhone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
-                        <FormControl>
-                          <Input type="tel" {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="clientBranch"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Military Branch *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select branch" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {militaryBranches.map((branch) => (
-                              <SelectItem key={branch} value={branch}>
-                                {branch}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="clientRank"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Military Rank</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., E-5, O-3, W-2" {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Legal Issue Details */}
-                <FormField
-                  control={form.control}
-                  name="legalIssueType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Type of Legal Issue *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select issue type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {legalIssueTypes.map((issue) => (
-                            <SelectItem key={issue} value={issue}>
-                              {issue}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="incidentDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Incident Description *</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          rows={6}
-                          placeholder="Provide a detailed description of your legal situation. Include relevant dates, locations, and people involved. The more information you provide, the better we can assist you."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Consultation Preferences */}
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="consultationType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Consultation Type *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select consultation type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="phone">
-                              <div className="flex items-center gap-2">
-                                <Phone className="h-4 w-4" />
-                                Phone Call
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="video">
-                              <div className="flex items-center gap-2">
-                                <Video className="h-4 w-4" />
-                                Video Call
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="in-person">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                In-Person Meeting
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="timeZone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Time Zone *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select time zone" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {timeZones.map((tz) => (
-                              <SelectItem key={tz} value={tz}>
-                                {tz}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="preferredDateTime"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Preferred Date/Time *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="datetime-local" 
-                            {...field}
-                            min={new Date().toISOString().slice(0, 16)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="alternateDateTime"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Alternate Date/Time</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="datetime-local" 
-                            {...field}
-                            min={new Date().toISOString().slice(0, 16)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Deadline Information */}
-                <FormField
-                  control={form.control}
-                  name="hasDeadline"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value || false}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          This matter has a court deadline or time-sensitive requirement
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                {form.watch("hasDeadline") && (
-                  <FormField
-                    control={form.control}
-                    name="deadlineDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Deadline Date *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="datetime-local" 
-                            {...field}
-                            min={new Date().toISOString().slice(0, 16)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                <FormField
-                  control={form.control}
-                  name="additionalNotes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Additional Notes</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          value={field.value || ""}
-                          rows={3}
-                          placeholder="Any additional information that might be helpful for the attorney to know..."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button 
-                  type="submit" 
-                  className="w-full bg-red-600 hover:bg-red-700 text-white"
-                  disabled={createConsultationMutation.isPending || !selectedAttorney}
-                >
-                  {createConsultationMutation.isPending ? (
-                    "Submitting Request..."
-                  ) : (
-                    "Request Emergency Consultation"
-                  )}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-        </div>
-      </div>
-    </PageLayout>
+      {/* Emergency Disclaimer */}
+      <Card className="border-yellow-200 bg-yellow-50">
+        <CardContent className="p-4">
+          <p className="text-sm text-yellow-800">
+            <strong>Emergency Disclaimer:</strong> This service is for urgent legal consultation. 
+            For life-threatening emergencies, call 911 immediately. For mental health crises, 
+            contact the Military Crisis Line at 1-800-273-8255.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

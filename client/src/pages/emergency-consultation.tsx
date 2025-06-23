@@ -78,9 +78,10 @@ export default function EmergencyConsultation() {
 
   const emergencyBookingMutation = useMutation({
     mutationFn: async (data: EmergencyBookingData) => {
-      return await apiRequest('POST', '/api/emergency-consultation', data);
+      const response = await apiRequest('POST', '/api/emergency-consultation', data);
+      return response;
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setMatchedAttorneys(data.matchedAttorneys || []);
       setStep(2);
       toast({

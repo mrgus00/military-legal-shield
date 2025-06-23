@@ -809,13 +809,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Emergency Consultation Routes
   app.post('/api/emergency-consultation', async (req: Request, res: Response) => {
     try {
-      const { urgencyLevel, legalIssue, militaryBranch, rank, location, description, contactMethod, phoneNumber, email } = req.body;
+      const requestBody = req.body;
+      const { urgencyLevel, legalIssue, militaryBranch, rank, location, description, contactMethod, phoneNumber, email } = requestBody;
       
       // Get available attorneys from database
       const availableAttorneys = await storage.getAttorneys({
         emergencyAvailable: true,
-        militaryBranches: militaryBranch ? [militaryBranch] : undefined,
-        specializations: legalIssue ? [legalIssue] : undefined
+        location: location || undefined
       });
 
       // Filter and sort attorneys based on criteria
@@ -836,7 +836,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             'financial': ['Financial Law']
           };
           const relevantSpecs = issueMap[legalIssue] || [];
-          return attorney.specializations?.some(spec => 
+          return attorney.specialties?.some(spec => 
             relevantSpecs.some(relevantSpec => spec.includes(relevantSpec))
           );
         }

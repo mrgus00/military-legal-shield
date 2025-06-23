@@ -1445,8 +1445,41 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Attorney methods
-  async getAttorneys(): Promise<Attorney[]> {
-    return await this.db.select().from(attorneys).where(eq(attorneys.isActive, true));
+  async getAttorneys(filters?: {
+    emergencyAvailable?: boolean;
+    militaryBranches?: string[];
+    specializations?: string[];
+    location?: string;
+    pricingTier?: string;
+  }): Promise<Attorney[]> {
+    let query = this.db.select().from(attorneys).where(eq(attorneys.isActive, true));
+    
+    if (filters?.emergencyAvailable) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        eq(attorneys.availableForEmergency, true)
+      ));
+    }
+    
+    if (filters?.location) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        or(
+          ilike(attorneys.state, `%${filters.location}%`),
+          ilike(attorneys.city, `%${filters.location}%`),
+          ilike(attorneys.location, `%${filters.location}%`)
+        )
+      ));
+    }
+    
+    if (filters?.pricingTier) {
+      query = query.where(and(
+        eq(attorneys.isActive, true),
+        eq(attorneys.pricingTier, filters.pricingTier)
+      ));
+    }
+    
+    return await query.orderBy(desc(attorneys.rating));
   }
 
   async getAttorney(id: number): Promise<Attorney | undefined> {

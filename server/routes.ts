@@ -806,6 +806,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/analytics', getAnalytics);
   app.post('/api/analytics/reset', resetAnalytics);
   
+  // Follow-up consultation scheduling
+  app.post('/api/schedule-followup', async (req: Request, res: Response) => {
+    try {
+      const followUpData = req.body;
+      
+      // Create follow-up consultation record
+      const consultationId = `FOLLOWUP-${Date.now()}`;
+      
+      // Simulate scheduling confirmation
+      const confirmationData = {
+        consultationId,
+        status: 'scheduled',
+        attorneyName: 'Col. Sarah Mitchell',
+        scheduledDateTime: `${followUpData.preferredDate} at ${followUpData.preferredTime}`,
+        consultationType: followUpData.consultationType,
+        urgency: followUpData.urgency,
+        estimatedDuration: followUpData.urgency === 'priority' ? 60 : 
+                          followUpData.urgency === 'urgent' ? 45 : 30,
+        meetingLink: followUpData.consultationType === 'video' ? 
+          `https://militarylegalshield.com/video-consultation/${consultationId}` : null,
+        callInNumber: followUpData.consultationType === 'phone' ? 
+          '+1-800-MIL-LEGAL' : null,
+        officeAddress: followUpData.consultationType === 'in-person' ? 
+          '123 Military Legal Plaza, Norfolk, VA 23511' : null
+      };
+
+      res.json(confirmationData);
+    } catch (error) {
+      console.error('Follow-up scheduling error:', error);
+      res.status(500).json({ error: 'Failed to schedule follow-up consultation' });
+    }
+  });
+
+  // Video consultation status and management
+  app.get('/api/video-consultation/:id', async (req: Request, res: Response) => {
+    try {
+      const consultationId = req.params.id;
+      
+      // Simulate consultation details retrieval
+      const consultationData = {
+        id: consultationId,
+        status: 'active',
+        attorneyName: 'Col. Sarah Mitchell',
+        clientName: 'Service Member',
+        scheduledTime: new Date().toISOString(),
+        duration: 60,
+        roomUrl: `https://militarylegalshield.com/video-room/${consultationId}`,
+        recordingEnabled: true,
+        participantCount: 2
+      };
+
+      res.json(consultationData);
+    } catch (error) {
+      console.error('Video consultation retrieval error:', error);
+      res.status(500).json({ error: 'Failed to retrieve consultation details' });
+    }
+  });
+
+  // End video consultation
+  app.post('/api/video-consultation/:id/end', async (req: Request, res: Response) => {
+    try {
+      const consultationId = req.params.id;
+      const duration = req.body.duration || 0;
+      
+      // Create consultation summary
+      const summary = {
+        consultationId,
+        endTime: new Date().toISOString(),
+        duration: Math.floor(duration / 60), // Convert to minutes
+        status: 'completed',
+        followUpRequired: req.body.followUpRequired || false,
+        documentsDiscussed: req.body.documentsDiscussed || [],
+        nextSteps: [
+          'Consultation summary will be emailed within 24 hours',
+          'Legal documents discussed will be prepared',
+          'Follow-up scheduling available if needed'
+        ]
+      };
+
+      res.json(summary);
+    } catch (error) {
+      console.error('Video consultation end error:', error);
+      res.status(500).json({ error: 'Failed to end consultation' });
+    }
+  });
+
   // Emergency Consultation Routes
   app.post('/api/emergency-consultation', async (req: Request, res: Response) => {
     try {

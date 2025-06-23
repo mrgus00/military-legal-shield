@@ -50,6 +50,7 @@ import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
 import JargonWizard from "@/pages/jargon-wizard";
 import EmergencyConsultation from "@/pages/emergency-consultation";
+import ScheduleFollowUp from "@/pages/schedule-followup";
 import Leaderboard from "@/pages/leaderboard";
 import BenefitsCalculator from "@/pages/benefits-calculator";
 import BenefitsEligibility from "@/pages/benefits-eligibility";
@@ -124,7 +125,15 @@ function Router() {
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />
-      <Route path="/video-consultation" component={VideoConsultation} />
+      <Route path="/video-consultation/:id" component={() => 
+        <VideoConsultation 
+          consultationId="CONS-123" 
+          attorneyName="Col. Sarah Mitchell" 
+          scheduledTime="Today 3:00 PM" 
+          duration={60} 
+        />
+      } />
+      <Route path="/schedule-followup" component={ScheduleFollowUp} />
       <Route path="/leave-review" component={LeaveReview} />
       <Route path="/financial-wizard" component={FinancialWizard} />
       <Route path="/storytelling-corner" component={StorytellingCorner} />

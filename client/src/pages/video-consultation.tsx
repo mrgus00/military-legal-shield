@@ -1,290 +1,312 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
-import VideoCall from '@/components/video-call';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useState, useEffect, useRef } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { 
-  Calendar, 
-  Clock, 
-  Shield, 
   Video, 
-  MessageSquare, 
-  FileText,
-  CheckCircle
-} from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import type { Attorney } from '@shared/schema';
+  VideoOff, 
+  Mic, 
+  MicOff, 
+  Phone, 
+  PhoneOff,
+  MessageCircle,
+  Share2,
+  Clock,
+  Calendar
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-export default function VideoConsultation() {
-  const [location, setLocation] = useLocation();
-  const [selectedAttorney, setSelectedAttorney] = useState<Attorney | null>(null);
-  const [consultationStarted, setConsultationStarted] = useState(false);
+interface VideoConsultationProps {
+  consultationId: string;
+  attorneyName: string;
+  scheduledTime: string;
+  duration: number;
+}
 
-  const { data: attorneys } = useQuery<Attorney[]>({
-    queryKey: ["/api/attorneys"],
-  });
+export default function VideoConsultation({ 
+  consultationId, 
+  attorneyName, 
+  scheduledTime, 
+  duration 
+}: VideoConsultationProps) {
+  const [isConnected, setIsConnected] = useState(false);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [callDuration, setCallDuration] = useState(0);
+  const [connectionStatus, setConnectionStatus] = useState<'waiting' | 'connecting' | 'connected' | 'ended'>('waiting');
+  const { toast } = useToast();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  const availableAttorneys = attorneys?.filter(attorney => 
-    attorney.isVerified && attorney.isActive
-  ) || [];
+  useEffect(() => {
+    // Initialize video consultation
+    initializeVideoCall();
+    
+    // Start call timer when connected
+    let timer: NodeJS.Timeout;
+    if (isConnected) {
+      timer = setInterval(() => {
+        setCallDuration(prev => prev + 1);
+      }, 1000);
+    }
+    
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isConnected]);
 
-  const handleAttorneySelect = (attorney: Attorney) => {
-    setSelectedAttorney(attorney);
+  const initializeVideoCall = async () => {
+    try {
+      setConnectionStatus('connecting');
+      
+      // Get user media
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: isVideoEnabled, 
+        audio: isAudioEnabled 
+      });
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      
+      // Simulate connection delay
+      setTimeout(() => {
+        setIsConnected(true);
+        setConnectionStatus('connected');
+        toast({
+          title: "Video Consultation Connected",
+          description: `Connected with ${attorneyName}`,
+        });
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Video initialization error:', error);
+      toast({
+        title: "Camera Access Required",
+        description: "Please allow camera and microphone access for video consultation",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleConsultationStart = () => {
-    setConsultationStarted(true);
+  const toggleVideo = () => {
+    setIsVideoEnabled(!isVideoEnabled);
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !isVideoEnabled;
+      }
+    }
   };
 
-  const handleConsultationEnd = () => {
-    setConsultationStarted(false);
-    setSelectedAttorney(null);
+  const toggleAudio = () => {
+    setIsAudioEnabled(!isAudioEnabled);
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !isAudioEnabled;
+      }
+    }
   };
 
-  if (consultationStarted && selectedAttorney) {
+  const endCall = () => {
+    setConnectionStatus('ended');
+    setIsConnected(false);
+    
+    // Stop all media tracks
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    
+    toast({
+      title: "Consultation Ended",
+      description: "Your video consultation has ended. Follow-up information will be sent via email.",
+    });
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  if (connectionStatus === 'ended') {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="h-screen flex flex-col">
-          <div className="flex-1 relative">
-            <VideoCall
-              attorneyName={`${selectedAttorney.firstName} ${selectedAttorney.lastName}`}
-              specialty={selectedAttorney.specialties[0]}
-              onCallEnd={handleConsultationEnd}
-            />
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto p-6 space-y-6">
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="text-green-700">Consultation Completed</CardTitle>
+            <CardDescription>
+              Your video consultation with {attorneyName} has ended
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Duration</p>
+                <p className="font-medium">{formatDuration(callDuration)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Consultation ID</p>
+                <p className="font-medium">{consultationId}</p>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-blue-900">Next Steps</h4>
+              <ul className="list-disc list-inside text-sm text-blue-800 space-y-1">
+                <li>Consultation summary will be emailed within 24 hours</li>
+                <li>Follow-up scheduling available if needed</li>
+                <li>Legal documents discussed will be prepared</li>
+                <li>Payment receipt sent to your email</li>
+              </ul>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button onClick={() => window.location.href = '/dashboard'}>
+                Return to Dashboard
+              </Button>
+              <Button variant="outline" onClick={() => window.location.href = '/schedule-followup'}>
+                <Calendar className="h-4 w-4 mr-2" />
+                Schedule Follow-up
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Video Consultation Center
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Connect directly with military law experts through secure video calls. 
-            Get immediate legal guidance from verified attorneys specializing in military law.
-          </p>
-        </div>
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Video Consultation with {attorneyName}</CardTitle>
+              <CardDescription>
+                Scheduled: {scheduledTime} | Duration: {duration} minutes
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-4">
+              <Badge variant={connectionStatus === 'connected' ? 'default' : 'secondary'}>
+                {connectionStatus === 'waiting' && 'Waiting for attorney'}
+                {connectionStatus === 'connecting' && 'Connecting...'}
+                {connectionStatus === 'connected' && `Connected • ${formatDuration(callDuration)}`}
+              </Badge>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
 
-        {/* Security Notice */}
-        <Card className="mb-8 border-l-4 border-l-green-500 animate-slide-up">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-6 h-6 text-green-600" />
-              <div>
-                <h3 className="font-semibold text-gray-900">Secure & Encrypted</h3>
-                <p className="text-gray-600">
-                  All video consultations are end-to-end encrypted and HIPAA compliant. 
-                  Your conversations are completely private and secure.
-                </p>
-              </div>
+      {/* Video Interface */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Attorney Video */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{attorneyName}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="aspect-video bg-gray-900 rounded-lg relative overflow-hidden">
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              {!isConnected && (
+                <div className="absolute inset-0 flex items-center justify-center text-white">
+                  <div className="text-center">
+                    <Video className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p>Waiting for attorney to join...</p>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
-        {!selectedAttorney ? (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Available Attorneys for Video Consultation
-            </h2>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {availableAttorneys.map((attorney, index) => (
-                <Card 
-                  key={attorney.id} 
-                  className={`cursor-pointer transition-all duration-300 hover-lift animate-fade-in stagger-${Math.min(index + 1, 5)}`}
-                  onClick={() => handleAttorneySelect(attorney)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4 mb-4">
-                      <Avatar className="w-16 h-16">
-                        <AvatarFallback className="bg-navy-800 text-white">
-                          {attorney.firstName[0]}{attorney.lastName[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg">
-                          {attorney.firstName} {attorney.lastName}
-                        </h3>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <Badge variant="secondary" className="bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Available Now
-                          </Badge>
-                          {attorney.isVerified && (
-                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                              Verified
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 mb-4">
-                      <div className="flex flex-wrap gap-1">
-                        {attorney.specialties.slice(0, 2).map((specialty, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {specialty}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {attorney.experience}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-600">
-                        Response time: ~2 min
-                      </div>
-                      <Button 
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white hover-scale transition-smooth"
-                      >
-                        <Video className="w-4 h-4 mr-1" />
-                        Connect
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+        {/* Client Video */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">You</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="aspect-video bg-gray-900 rounded-lg relative overflow-hidden">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+              {!isVideoEnabled && (
+                <div className="absolute inset-0 flex items-center justify-center text-white">
+                  <VideoOff className="h-12 w-12 opacity-50" />
+                </div>
+              )}
             </div>
+          </CardContent>
+        </Card>
+      </div>
 
-            {availableAttorneys.length === 0 && (
-              <Card className="text-center py-12">
-                <CardContent>
-                  <Video className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No Attorneys Available
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    All attorneys are currently in consultation. Please try again in a few minutes 
-                    or schedule an appointment.
-                  </p>
-                  <Button 
-                    onClick={() => setLocation('/consultation-booking')}
-                    className="bg-navy-800 hover:bg-navy-900 text-white"
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Schedule Appointment
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        ) : (
-          <Card className="max-w-2xl mx-auto animate-scale-in">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-3">
-                <Avatar className="w-12 h-12">
-                  <AvatarFallback className="bg-navy-800 text-white">
-                    {selectedAttorney.firstName[0]}{selectedAttorney.lastName[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-xl font-semibold">
-                    {selectedAttorney.firstName} {selectedAttorney.lastName}
-                  </h3>
-                  <p className="text-gray-600">{selectedAttorney.specialties[0]}</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
+      {/* Controls */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex justify-center items-center gap-4">
+            <Button
+              variant={isVideoEnabled ? "default" : "destructive"}
+              size="lg"
+              onClick={toggleVideo}
+              className="rounded-full w-12 h-12 p-0"
+            >
+              {isVideoEnabled ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
+            </Button>
             
-            <CardContent className="space-y-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-900 mb-2">Before Your Consultation</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Ensure you have a stable WiFi connection</li>
-                  <li>• Test your camera and microphone</li>
-                  <li>• Prepare any relevant documents</li>
-                  <li>• Find a quiet, private location</li>
-                </ul>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                    <Video className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Ready to Start</h4>
-                    <p className="text-sm text-gray-600">Secure video consultation</p>
-                  </div>
-                </div>
-                <Button 
-                  onClick={handleConsultationStart}
-                  className="bg-green-600 hover:bg-green-700 text-white click-ripple hover-glow"
-                >
-                  Start Video Call
-                </Button>
-              </div>
-
-              <div className="flex space-x-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setSelectedAttorney(null)}
-                  className="flex-1 hover-scale transition-smooth"
-                >
-                  Choose Different Attorney
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="flex-1 hover-scale transition-smooth"
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Send Message First
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Features */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
-          <Card className="text-center hover-lift transition-smooth">
-            <CardContent className="p-6">
-              <Video className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-lg mb-2">HD Video Quality</h3>
-              <p className="text-gray-600 text-sm">
-                Crystal clear video and audio for effective communication
-              </p>
-            </CardContent>
-          </Card>
+            <Button
+              variant={isAudioEnabled ? "default" : "destructive"}
+              size="lg"
+              onClick={toggleAudio}
+              className="rounded-full w-12 h-12 p-0"
+            >
+              {isAudioEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+            </Button>
+            
+            <Button
+              variant="destructive"
+              size="lg"
+              onClick={endCall}
+              className="rounded-full w-12 h-12 p-0"
+            >
+              <PhoneOff className="h-5 w-5" />
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full w-12 h-12 p-0"
+            >
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full w-12 h-12 p-0"
+            >
+              <Share2 className="h-5 w-5" />
+            </Button>
+          </div>
           
-          <Card className="text-center hover-lift transition-smooth">
-            <CardContent className="p-6">
-              <Shield className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-lg mb-2">Secure & Private</h3>
-              <p className="text-gray-600 text-sm">
-                End-to-end encryption ensures your consultations remain confidential
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card className="text-center hover-lift transition-smooth">
-            <CardContent className="p-6">
-              <FileText className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-lg mb-2">Document Sharing</h3>
-              <p className="text-gray-600 text-sm">
-                Share documents securely during your consultation
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-
-      <Footer />
+          <div className="text-center mt-4 text-sm text-gray-600">
+            <p>Your consultation is being recorded for quality assurance and legal documentation purposes</p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

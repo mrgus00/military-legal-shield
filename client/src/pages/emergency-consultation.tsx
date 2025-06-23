@@ -17,7 +17,9 @@ import {
   User,
   FileText,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  Star,
+  CalendarDays
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
@@ -55,6 +57,15 @@ interface Attorney {
   languages: string[];
   militaryBackground: boolean;
   securityClearanceExperience: boolean;
+  videoConsultationEnabled: boolean;
+  reviewCount: number;
+  recentReviews: Array<{
+    rating: number;
+    comment: string;
+    clientInitials: string;
+    date: string;
+  }>;
+  nextAvailableSlot: string;
 }
 
 export default function EmergencyConsultation() {
@@ -236,20 +247,82 @@ export default function EmergencyConsultation() {
                       ))}
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-4 text-sm">
+                    <div className="grid md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <Label className="text-gray-700">Experience</Label>
                         <p className="font-medium">{attorney.experience} years</p>
                       </div>
                       <div>
-                        <Label className="text-gray-700">Success Rate</Label>
-                        <p className="font-medium">{attorney.successRate}%</p>
+                        <Label className="text-gray-700">Rating</Label>
+                        <div className="flex items-center gap-1">
+                          <div className="flex">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={star} 
+                                className={`h-4 w-4 ${
+                                  star <= attorney.rating 
+                                    ? 'text-yellow-400 fill-current' 
+                                    : 'text-gray-300'
+                                }`} 
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-gray-600">
+                            ({attorney.reviewCount || 0} reviews)
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-gray-700">Video Available</Label>
+                        <div className="flex items-center gap-1">
+                          {attorney.videoConsultationEnabled ? (
+                            <>
+                              <Video className="h-4 w-4 text-green-600" />
+                              <span className="text-green-600 font-medium">Yes</span>
+                            </>
+                          ) : (
+                            <>
+                              <Phone className="h-4 w-4 text-blue-600" />
+                              <span className="text-blue-600 font-medium">Phone Only</span>
+                            </>
+                          )}
+                        </div>
                       </div>
                       <div>
                         <Label className="text-gray-700">Response Time</Label>
                         <p className="font-medium">{attorney.responseTime}</p>
                       </div>
                     </div>
+
+                    {/* Recent Reviews Section */}
+                    {attorney.recentReviews && attorney.recentReviews.length > 0 && (
+                      <div className="border-t pt-3 mt-3">
+                        <Label className="text-gray-700 text-sm">Recent Client Feedback</Label>
+                        <div className="space-y-2 mt-2">
+                          {attorney.recentReviews.slice(0, 2).map((review, idx) => (
+                            <div key={idx} className="bg-gray-50 p-2 rounded text-xs">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="flex">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star 
+                                      key={star} 
+                                      className={`h-3 w-3 ${
+                                        star <= review.rating 
+                                          ? 'text-yellow-400 fill-current' 
+                                          : 'text-gray-300'
+                                      }`} 
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-gray-600">- {review.clientInitials}</span>
+                                <span className="text-gray-500">{review.date}</span>
+                              </div>
+                              <p className="text-gray-700 italic">"{review.comment}"</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     <div>
                       <Label className="text-gray-700">Next Available</Label>
@@ -261,10 +334,58 @@ export default function EmergencyConsultation() {
                     <Badge className={getUrgencyColor('immediate')}>
                       Emergency Available
                     </Badge>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="text-sm text-gray-600">
                         <span className="font-medium">Rate:</span> {attorney.hourlyRate || '$300-500/hr'}
                       </div>
+                      
+                      {/* Consultation Method Selection */}
+                      <div className="space-y-2">
+                        <Label className="text-xs text-gray-700">Consultation Method</Label>
+                        <div className="flex gap-2">
+                          {attorney.videoConsultationEnabled && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 text-xs"
+                              onClick={() => setBookingData({...bookingData, contactMethod: 'video'})}
+                            >
+                              <Video className="h-3 w-3 mr-1" />
+                              Video
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 text-xs"
+                            onClick={() => setBookingData({...bookingData, contactMethod: 'phone'})}
+                          >
+                            <Phone className="h-3 w-3 mr-1" />
+                            Phone
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Available Time Slots */}
+                      {attorney.availableSlots && attorney.availableSlots.length > 0 && (
+                        <div className="space-y-2">
+                          <Label className="text-xs text-gray-700">Next Available</Label>
+                          <div className="grid grid-cols-2 gap-1">
+                            {attorney.availableSlots.slice(0, 4).map((slot, idx) => (
+                              <Button
+                                key={idx}
+                                variant="outline"
+                                size="sm"
+                                className="text-xs p-1"
+                                onClick={() => setBookingData({...bookingData, preferredTime: slot})}
+                              >
+                                {slot}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       <Button 
                         onClick={() => handleAttorneySelect(attorney)}
                         disabled={confirmBookingMutation.isPending}

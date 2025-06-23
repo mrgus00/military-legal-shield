@@ -13,6 +13,7 @@ import {
   MessageCircle, 
   Star, 
   ArrowRight,
+  ArrowLeft,
   Zap,
   Target,
   Users,
@@ -50,6 +51,8 @@ export default function JargonWizard() {
   const [gameScore, setGameScore] = useState(0);
   const [currentQuiz, setCurrentQuiz] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("search");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [libraryTerms, setLibraryTerms] = useState<any[]>([]);
   const { toast } = useToast();
 
   // Fetch popular terms
@@ -526,14 +529,27 @@ export default function JargonWizard() {
                     <Card 
                       key={category.name} 
                       className="cursor-pointer hover:shadow-md transition-shadow hover:bg-blue-50"
-                      onClick={() => {
-                        setSearchTerm(category.name);
-                        searchMutation.mutate(category.name);
-                        setActiveTab("search");
-                        toast({
-                          title: `Browsing ${category.name}`,
-                          description: `Found ${category.terms} terms in this category`,
-                        });
+                      onClick={async () => {
+                        setSelectedCategory(category.name);
+                        try {
+                          const response = await fetch('/api/jargon/search', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ query: category.name })
+                          });
+                          const data = await response.json();
+                          setLibraryTerms(data.terms || []);
+                          toast({
+                            title: `Browsing ${category.name}`,
+                            description: `Found ${data.terms?.length || 0} terms in this category`,
+                          });
+                        } catch (error) {
+                          toast({
+                            title: "Error",
+                            description: "Failed to load terms",
+                            variant: "destructive"
+                          });
+                        }
                       }}
                     >
                       <CardContent className="p-4 text-center">
@@ -547,6 +563,98 @@ export default function JargonWizard() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Display selected category terms */}
+            {selectedCategory && libraryTerms.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5" />
+                    {selectedCategory} Terms
+                  </CardTitle>
+                  <CardDescription>
+                    {libraryTerms.length} terms found in {selectedCategory}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {libraryTerms.map((term, index) => (
+                      <Card key={index} className="border-l-4 border-l-blue-500">
+                        <CardContent className="p-4">
+                          <div className="space-y-3">
+                            <div className="flex items-start justify-between">
+                              <h4 className="text-lg font-semibold text-blue-600">{term.term}</h4>
+                              <Badge variant="secondary" className="text-xs">
+                                {term.difficulty}
+                              </Badge>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div>
+                                <h5 className="font-medium text-sm text-gray-700 mb-1">Legal Definition</h5>
+                                <p className="text-sm text-gray-600">{term.legalDefinition}</p>
+                              </div>
+                              <div>
+                                <h5 className="font-medium text-sm text-gray-700 mb-1">Plain English</h5>
+                                <p className="text-sm text-green-700 font-medium">{term.simplifiedDefinition}</p>
+                              </div>
+                            </div>
+
+                            <div>
+                              <h5 className="font-medium text-sm text-gray-700 mb-1">Military Context</h5>
+                              <p className="text-sm text-gray-600">{term.militaryContext}</p>
+                            </div>
+
+                            {term.examples && term.examples.length > 0 && (
+                              <div>
+                                <h5 className="font-medium text-sm text-gray-700 mb-1">Examples</h5>
+                                <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
+                                  {term.examples.map((example, i) => (
+                                    <li key={i}>{example}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {term.relatedTerms && term.relatedTerms.length > 0 && (
+                              <div>
+                                <h5 className="font-medium text-sm text-gray-700 mb-1">Related Terms</h5>
+                                <div className="flex flex-wrap gap-2">
+                                  {term.relatedTerms.map((related, i) => (
+                                    <Badge key={i} variant="outline" className="text-xs">
+                                      {related}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Back to categories button */}
+            {selectedCategory && (
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setLibraryTerms([]);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <ArrowRight className="h-4 w-4 rotate-180" />
+                    Back to Categories
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
 

@@ -48,6 +48,7 @@ import LeaveReview from "@/pages/leave-review";
 import FinancialWizard from "@/pages/financial-wizard";
 import StorytellingCorner from "@/pages/storytelling-corner";
 import VideoConsultation from "@/pages/video-consultation";
+import Widgets from "@/pages/widgets";
 import JargonWizard from "@/pages/jargon-wizard";
 import EmergencyConsultation from "@/pages/emergency-consultation";
 import ScheduleFollowUp from "@/pages/schedule-followup";
@@ -177,6 +178,7 @@ function Router() {
       <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
       <Route path="/ai-case-analysis" component={AICaseAnalysis} />
       <Route path="/legal-roadmap" component={LegalRoadmap} />
+      <Route path="/widgets" component={Widgets} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/dashboard" component={Dashboard} />

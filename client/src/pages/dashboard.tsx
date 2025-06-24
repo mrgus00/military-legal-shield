@@ -48,6 +48,13 @@ export default function Dashboard() {
 
   const quickActions = [
     {
+      title: "Smart Widgets",
+      description: "Access Google Calendar, Drive & AI insights",
+      href: "/widgets",
+      icon: Grid3X3,
+      color: "bg-purple-500"
+    },
+    {
       title: "Find Attorney",
       description: "Connect with military legal experts",
       icon: Users,

@@ -14,10 +14,12 @@ import {
   Bell,
   MessageSquare,
   BookOpen,
-  MapPin
+  MapPin,
+  Grid3X3
 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import WidgetDashboard from "@/components/WidgetDashboard";
 
 export default function Dashboard() {
   const { user, isLoading: authLoading } = useAuth();
@@ -198,8 +200,8 @@ export default function Dashboard() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="widgets">Smart Widgets</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
-            <TabsTrigger value="attorneys">Attorneys</TabsTrigger>
             <TabsTrigger value="learning">Learning</TabsTrigger>
           </TabsList>
 
@@ -299,6 +301,10 @@ export default function Dashboard() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="widgets" className="space-y-6">
+            <WidgetDashboard />
+          </TabsContent>
+
           <TabsContent value="documents">
             <Card>
               <CardHeader>
@@ -341,7 +347,7 @@ export default function Dashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="attorneys">
+          <TabsContent value="learning">
             <Card>
               <CardHeader>
                 <CardTitle>Attorney Network</CardTitle>

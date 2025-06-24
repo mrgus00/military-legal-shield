@@ -182,10 +182,12 @@ export default function FamilyLawPOAs() {
                         Create Document
                       </Button>
                     </Link>
-                    <Button variant="outline">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Template
-                    </Button>
+                    <a href="/attached_assets/General_Power_of_Attorney_1750042491350.docx" download>
+                      <Button variant="outline">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Template
+                      </Button>
+                    </a>
                   </div>
                 </div>
               </CardContent>
@@ -226,10 +228,12 @@ export default function FamilyLawPOAs() {
                         Create Document
                       </Button>
                     </Link>
-                    <Button variant="outline">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Template
-                    </Button>
+                    <a href="/attached_assets/Special_Power_of_Attorney_1750042491353.docx" download>
+                      <Button variant="outline">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Template
+                      </Button>
+                    </a>
                   </div>
                 </div>
               </CardContent>

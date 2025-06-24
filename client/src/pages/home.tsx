@@ -657,10 +657,26 @@ export default function Home() {
               </CardHeader>
               <CardContent className="text-center">
                 <ul className="text-gray-600 space-y-2 mb-6">
-                  <li>• Court-Martial Defense</li>
-                  <li>• Article 15 Proceedings</li>
-                  <li>• Administrative Separations</li>
-                  <li>• Security Clearance Issues</li>
+                  <li>
+                    <Link href="/court-martial-defense" className="hover:text-red-600">
+                      • Court-Martial Defense
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/legal-documents" className="hover:text-red-600">
+                      • Article 15 Proceedings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/consultation-booking?service=admin-separation" className="hover:text-red-600">
+                      • Administrative Separations
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/consultation-booking?service=security-clearance" className="hover:text-red-600">
+                      • Security Clearance Issues
+                    </Link>
+                  </li>
                 </ul>
                 <MilitaryTooltip 
                   content={MILITARY_TOOLTIPS.COURT_MARTIAL}
@@ -690,14 +706,26 @@ export default function Home() {
                 <ul className="text-gray-600 space-y-2 mb-6">
                   <li>
                     <MilitaryTooltip content={MILITARY_TOOLTIPS.WILL_TESTAMENT} type="info" position="right">
-                      <span className="cursor-help border-b border-dotted border-gray-400">• Wills & Powers of Attorney</span>
+                      <Link href="/family-law-poas" className="cursor-help border-b border-dotted border-gray-400 hover:text-blue-600">
+                        • Wills & Powers of Attorney
+                      </Link>
                     </MilitaryTooltip>
                   </li>
-                  <li>• Divorce & Custody</li>
-                  <li>• PCS Legal Support</li>
+                  <li>
+                    <Link href="/family-law-poas" className="hover:text-blue-600">
+                      • Divorce & Custody
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/legal-documents" className="hover:text-blue-600">
+                      • PCS Legal Support
+                    </Link>
+                  </li>
                   <li>
                     <MilitaryTooltip content={MILITARY_TOOLTIPS.FAMILY_CARE_PLAN} type="warning" position="right">
-                      <span className="cursor-help border-b border-dotted border-gray-400">• Family Care Plans</span>
+                      <Link href="/document-generator?type=family-care-plan" className="cursor-help border-b border-dotted border-gray-400 hover:text-blue-600">
+                        • Family Care Plans
+                      </Link>
                     </MilitaryTooltip>
                   </li>
                 </ul>
@@ -723,16 +751,28 @@ export default function Home() {
                 <ul className="text-gray-600 space-y-2 mb-6">
                   <li>
                     <MilitaryTooltip content={MILITARY_TOOLTIPS.VA_BENEFITS} type="success" position="left">
-                      <span className="cursor-help border-b border-dotted border-gray-400">• VA Disability Claims</span>
+                      <Link href="/va-benefits-claims" className="cursor-help border-b border-dotted border-gray-400 hover:text-green-600">
+                        • VA Disability Claims
+                      </Link>
                     </MilitaryTooltip>
                   </li>
-                  <li>• Benefits Appeals</li>
+                  <li>
+                    <Link href="/va-benefits-claims" className="hover:text-green-600">
+                      • Benefits Appeals
+                    </Link>
+                  </li>
                   <li>
                     <MilitaryTooltip content={MILITARY_TOOLTIPS.DISCHARGE_UPGRADE} type="warning" position="left">
-                      <span className="cursor-help border-b border-dotted border-gray-400">• Discharge Upgrades</span>
+                      <Link href="/consultation-booking?service=discharge-upgrade" className="cursor-help border-b border-dotted border-gray-400 hover:text-green-600">
+                        • Discharge Upgrades
+                      </Link>
                     </MilitaryTooltip>
                   </li>
-                  <li>• Medical Board Reviews</li>
+                  <li>
+                    <Link href="/consultation-booking?service=medical-board" className="hover:text-green-600">
+                      • Medical Board Reviews
+                    </Link>
+                  </li>
                 </ul>
                 <Link href="/benefits-calculator">
                   <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
@@ -808,11 +848,15 @@ export default function Home() {
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Legal Q&A Database</span>
+                    <Link href="/forum" className="text-blue-600 hover:text-blue-800 underline">
+                      Legal Q&A Database
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Document Templates</span>
+                    <Link href="/legal-documents" className="text-blue-600 hover:text-blue-800 underline">
+                      Document Templates
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
@@ -822,12 +866,16 @@ export default function Home() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Community Forum Access</span>
+                    <Link href="/forum" className="text-blue-600 hover:text-blue-800 underline">
+                      Community Forum Access
+                    </Link>
                   </li>
                 </ul>
-                <Button variant="outline" className="w-full">
-                  Get Started Free
-                </Button>
+                <Link href="/signup">
+                  <Button variant="outline" className="w-full">
+                    Get Started Free
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -850,19 +898,27 @@ export default function Home() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>24/7 Attorney Hotline</span>
+                    <Link href="/emergency-consultation" className="text-blue-600 hover:text-blue-800 underline">
+                      24/7 Attorney Hotline
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Document Review</span>
+                    <Link href="/document-generator" className="text-blue-600 hover:text-blue-800 underline">
+                      Document Review
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Legal Consultations</span>
+                    <Link href="/consultation-booking" className="text-blue-600 hover:text-blue-800 underline">
+                      Legal Consultations
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Emergency Legal Assistance</span>
+                    <Link href="/emergency-defense" className="text-blue-600 hover:text-blue-800 underline">
+                      Emergency Legal Assistance
+                    </Link>
                   </li>
                 </ul>
                 <Link href="/pricing">
@@ -887,19 +943,27 @@ export default function Home() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Family Legal Coverage</span>
+                    <Link href="/family-law-poas" className="text-blue-600 hover:text-blue-800 underline">
+                      Family Legal Coverage
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Multiple Consultations</span>
+                    <Link href="/consultation-booking" className="text-blue-600 hover:text-blue-800 underline">
+                      Multiple Consultations
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Priority Attorney Matching</span>
+                    <Link href="/attorneys" className="text-blue-600 hover:text-blue-800 underline">
+                      Priority Attorney Matching
+                    </Link>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Worldwide Coverage</span>
+                    <Link href="/lawyer-database" className="text-blue-600 hover:text-blue-800 underline">
+                      Worldwide Coverage
+                    </Link>
                   </li>
                 </ul>
                 <Link href="/pricing">

@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "wouter";
-import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart, Globe, BookOpen, Gavel, MapPin, Search, HelpCircle, Languages, Award, Lock, DollarSign } from "lucide-react";
+import { Shield, Users, Clock, Star, Mail, CheckCircle, ArrowRight, Phone, Video, MessageSquare, AlertTriangle, Scale, FileText, Heart, Globe, BookOpen, Gavel, MapPin, Search, HelpCircle, Languages, Award, Lock, DollarSign, Grid3X3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/page-layout";
 import { apiRequest } from "@/lib/queryClient";
@@ -331,6 +331,21 @@ export default function Home() {
                 <Link href="/lawyer-database">
                   <Button className="bg-green-600 hover:bg-green-700 text-white w-full">
                     Find Attorneys
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-purple-200 hover-lift transition-smooth card-interactive touch-optimized bg-gradient-to-br from-purple-50 to-purple-100 border-2">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Grid3X3 className="w-8 h-8 text-purple-600 mr-3" />
+                  <h3 className="text-lg font-bold text-navy-900">Smart Widgets</h3>
+                </div>
+                <p className="text-gray-700 mb-4">→ Google Calendar, Drive & AI Assistant</p>
+                <Link href="/widgets">
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
+                    Access Widgets
                   </Button>
                 </Link>
               </CardContent>

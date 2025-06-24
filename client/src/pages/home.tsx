@@ -313,9 +313,9 @@ export default function Home() {
                   <h3 className="text-lg font-bold text-navy-900">Need POA?</h3>
                 </div>
                 <p className="text-gray-700 mb-4">→ Find a Lawyer</p>
-                <Link href="/attorneys">
+                <Link href="/family-law-poas">
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
-                    Find Attorney
+                    Get POA Documents
                   </Button>
                 </Link>
               </CardContent>

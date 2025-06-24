@@ -146,7 +146,7 @@ export default function FamilyLawPOAs() {
             <p className="text-xl text-gray-600">Essential legal documents for deployment and military life</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center gap-3">
@@ -196,6 +196,52 @@ export default function FamilyLawPOAs() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center gap-3">
+                  <Shield className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <CardTitle className="text-xl">Medical Power of Attorney</CardTitle>
+                    <Badge className="bg-blue-100 text-blue-800 mt-1">Healthcare</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <p className="text-gray-600">
+                    Authorizes your designated person to make healthcare decisions for you and your 
+                    family members when you're unable to do so.
+                  </p>
+                  
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Includes:</h4>
+                    <ul className="space-y-1 text-gray-600">
+                      <li>• Medical treatment decisions</li>
+                      <li>• TRICARE and insurance claims</li>
+                      <li>• Hospital admissions</li>
+                      <li>• Family member healthcare</li>
+                      <li>• Emergency medical decisions</li>
+                      <li>• Medical record access</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link href="/document-generator?type=medical-poa">
+                      <Button className="bg-blue-600 hover:bg-blue-700">
+                        Create Document
+                      </Button>
+                    </Link>
+                    <a href="/attached_assets/Medical-Power-of-Attorney-Form_1750042491351.docx" download>
+                      <Button variant="outline">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Template
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center gap-3">
                   <Shield className="w-8 h-8 text-red-600" />
                   <div>
                     <CardTitle className="text-xl">Special Power of Attorney</CardTitle>
@@ -216,7 +262,6 @@ export default function FamilyLawPOAs() {
                       <li>• Vehicle sales or purchases</li>
                       <li>• Real estate closings</li>
                       <li>• Specific financial transactions</li>
-                      <li>• Medical decisions</li>
                       <li>• Child care authorizations</li>
                       <li>• Government benefit claims</li>
                     </ul>
@@ -287,12 +332,24 @@ export default function FamilyLawPOAs() {
             ))}
           </div>
 
-          <div className="text-center mt-8">
-            <Link href="/document-generator">
-              <Button size="lg" className="bg-navy-900 hover:bg-navy-800">
-                Start Deployment Prep
-              </Button>
-            </Link>
+          <div className="text-center mt-8 space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/document-generator">
+                <Button size="lg" className="bg-navy-900 hover:bg-navy-800">
+                  <FileText className="w-5 h-5 mr-2" />
+                  Start Deployment Prep
+                </Button>
+              </Link>
+              <Link href="/consultation-booking?service=deployment">
+                <Button size="lg" variant="outline" className="border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white">
+                  <Users className="w-5 h-5 mr-2" />
+                  Get Professional Help
+                </Button>
+              </Link>
+            </div>
+            <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+              Our attorneys can help you complete all deployment preparations and ensure your family is protected while you serve.
+            </p>
           </div>
         </div>
       </section>

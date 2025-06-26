@@ -83,7 +83,7 @@ export default function WhatsAppConnector({
       iconColor: "text-red-600",
       badge: "Emergency - 24/7",
       badgeColor: "bg-red-100 text-red-800",
-      responseTime: "less than 5 minutes"
+      responseTime: "under 5 minutes"
     },
     consultation: {
       title: "WhatsApp Consultation Booking",
@@ -107,7 +107,7 @@ export default function WhatsAppConnector({
       iconColor: "text-green-600",
       badge: "24/7 Available",
       badgeColor: "bg-green-100 text-green-800",
-      responseTime: "less than 15 minutes"
+      responseTime: "under 15 minutes"
     }
   };
 

@@ -142,7 +142,7 @@ export const MILITARY_TOOLTIPS = {
   SECURITY_CLEARANCE: "🔐 CLASSIFIED: Security clearance issues can affect your military career and civilian opportunities. Immediate legal consultation recommended.",
   
   // Emergency Procedures
-  EMERGENCY_CONTACT: "🚨 EMERGENCY PROTOCOL: 24/7 hotline for urgent legal situations. Response time: less than 2 hours for critical cases.",
+  EMERGENCY_CONTACT: "🚨 EMERGENCY PROTOCOL: 24/7 hotline for urgent legal situations. Response time: under 2 hours for critical cases.",
   DEPLOYMENT_LEGAL: "⚠️ DEPLOYMENT READY: Ensure all legal documents (POA, will, family care plan) are current before deployment.",
   
   // Documentation

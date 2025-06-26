@@ -14,6 +14,17 @@ import { setupReplitAuth, setupAuthRoutes, requireAuth, optionalAuth, getCurrent
 import { handleRSSFeed, handleJSONFeed } from "./rss";
 import { twilioService, type EmergencyAlert } from "./twilio";
 import { cdnService, cacheMiddleware } from "./cdn";
+import { 
+  cacheMiddleware as perfCacheMiddleware, 
+  performanceMonitoring, 
+  staticAssetOptimization,
+  performanceCache,
+  queryOptimizer,
+  cdnOptimizer,
+  performanceMetrics,
+  generateResourceHints
+} from './performance';
+import { imageOptimizationMiddleware, imageOptimizer, criticalResourcePreloader } from './image-optimization';
 import gamificationRoutes from "./gamification-routes";
 import { 
   generateStructuredData, 
@@ -184,6 +195,13 @@ function calculateComprehensiveBenefits(eligibilityData: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Performance monitoring middleware (global)
+  app.use(performanceMonitoring);
+  app.use(staticAssetOptimization);
+  
+  // Image optimization middleware
+  app.use(imageOptimizationMiddleware);
+  
   // Setup Replit built-in auth middleware
   setupReplitAuth(app);
   setupAuthRoutes(app);
@@ -810,6 +828,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Real-time analytics endpoints
   app.get('/api/analytics', getAnalytics);
   app.post('/api/analytics/reset', resetAnalytics);
+  
+  // Performance optimization endpoints
+  app.get('/api/performance/metrics', (req, res) => {
+    try {
+      const metrics = performanceMetrics.getMetrics();
+      const cacheStats = performanceCache.getStats();
+      const imageStats = imageOptimizer.getCacheStats();
+      
+      res.json({
+        performance: metrics,
+        cache: cacheStats,
+        images: imageStats,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Performance metrics error:', error);
+      res.status(500).json({ error: 'Failed to get performance metrics' });
+    }
+  });
+  
+  app.post('/api/performance/cache/clear', (req, res) => {
+    try {
+      const { pattern } = req.body;
+      
+      if (pattern) {
+        performanceCache.invalidate(pattern);
+        res.json({ message: `Cache cleared for pattern: ${pattern}` });
+      } else {
+        // Clear all cache
+        performanceCache.invalidate('.*');
+        res.json({ message: 'All cache cleared' });
+      }
+    } catch (error) {
+      console.error('Cache clear error:', error);
+      res.status(500).json({ error: 'Failed to clear cache' });
+    }
+  });
+  
+  app.get('/api/performance/resource-hints', (req, res) => {
+    try {
+      const hints = generateResourceHints();
+      const preloadTags = criticalResourcePreloader.generatePreloadTags();
+      
+      res.json({
+        resourceHints: hints,
+        preloadTags: preloadTags,
+        criticalCSS: criticalResourcePreloader.generateCriticalCSS()
+      });
+    } catch (error) {
+      console.error('Resource hints error:', error);
+      res.status(500).json({ error: 'Failed to generate resource hints' });
+    }
+  });
   
   // Follow-up consultation scheduling
   app.post('/api/schedule-followup', async (req: Request, res: Response) => {

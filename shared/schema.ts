@@ -163,24 +163,36 @@ export const consultations = pgTable("consultations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// One-click emergency legal consultation booking system
 export const emergencyConsultations = pgTable("emergency_consultations", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Can be null for guest bookings
   fullName: text("full_name").notNull(),
   rank: text("rank"),
-  branch: text("branch"),
+  branch: text("branch").notNull(), // Army, Navy, Air Force, Marines, Coast Guard, Space Force
   unit: text("unit"),
+  location: text("location").notNull(), // Base/state for attorney matching
   email: text("email").notNull(),
   phone: text("phone").notNull(),
-  legalIssue: text("legal_issue").notNull(),
+  legalIssueType: text("legal_issue_type").notNull(), // court-martial, administrative, security-clearance, etc.
   urgencyLevel: text("urgency_level").notNull(), // immediate, urgent, priority
-  description: text("description"),
-  availableTimeSlots: text("available_time_slots").array(),
-  preferredContactMethod: text("preferred_contact_method"),
-  status: text("status").default("pending"), // pending, assigned, contacted, resolved
-  assignedAttorneyId: integer("assigned_attorney_id"),
-  contactedAt: timestamp("contacted_at"),
-  resolvedAt: timestamp("resolved_at"),
-  notes: text("notes"),
+  issueDescription: text("issue_description").notNull(),
+  timeConstraints: text("time_constraints"), // court date, deadline, etc.
+  contactMethod: text("contact_method").notNull(), // phone, video, in-person
+  preferredTime: text("preferred_time"), // ASAP, specific time slot
+  priorAttorney: boolean("prior_attorney").default(false),
+  status: text("status").default("pending"), // pending, matched, in-progress, completed, cancelled
+  assignedAttorneyId: integer("assigned_attorney_id").references(() => attorneys.id),
+  matchedAt: timestamp("matched_at"),
+  consultationDate: timestamp("consultation_date"),
+  consultationDuration: integer("consultation_duration"), // in minutes
+  consultationNotes: text("consultation_notes"),
+  followUpRequired: boolean("follow_up_required").default(false),
+  followUpDate: timestamp("follow_up_date"),
+  satisfactionRating: integer("satisfaction_rating"), // 1-5
+  feedback: text("feedback"),
+  isEmergency: boolean("is_emergency").default(true),
+  priorityScore: integer("priority_score").default(100), // For triage ranking
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -477,6 +489,8 @@ export const benefitsDatabase = pgTable("benefits_database", {
   lastUpdated: timestamp("last_updated").defaultNow(),
 });
 
+
+
 // Learning paths for gamified education
 export const learningPaths = pgTable("learning_paths", {
   id: serial("id").primaryKey(),
@@ -633,16 +647,7 @@ export const insertConsultationSchema = createInsertSchema(consultations).omit({
   createdAt: true,
 });
 
-export const insertEmergencyConsultationSchema = createInsertSchema(emergencyConsultations).omit({
-  id: true,
-  status: true,
-  assignedAttorneyId: true,
-  contactedAt: true,
-  resolvedAt: true,
-  notes: true,
-  createdAt: true,
-  updatedAt: true,
-});
+
 
 // Type exports for emergency consultations (moved to end of file to avoid duplicates)
 
@@ -1107,5 +1112,35 @@ export type AchievementBadge = typeof achievementBadges.$inferSelect;
 export type InsertAchievementBadge = typeof achievementBadges.$inferInsert;
 export type UserBadge = typeof userBadges.$inferSelect;
 export type InsertUserBadge = typeof userBadges.$inferInsert;
+
+// Emergency consultation schema and types
+export const insertEmergencyConsultationSchema = createInsertSchema(emergencyConsultations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  urgencyLevel: z.enum(["immediate", "urgent", "priority"]),
+  legalIssueType: z.enum([
+    "court-martial", 
+    "administrative", 
+    "security-clearance", 
+    "meb-peb", 
+    "discharge", 
+    "finance", 
+    "family", 
+    "landlord-tenant",
+    "criminal",
+    "other"
+  ]),
+  branch: z.enum(["Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"]),
+  contactMethod: z.enum(["phone", "video", "in-person"]),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  email: z.string().email(),
+  issueDescription: z.string().min(50, "Please provide at least 50 characters describing your legal issue"),
+  location: z.string().min(2, "Location is required for attorney matching"),
+});
+
+export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
+export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
 
 

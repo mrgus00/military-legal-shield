@@ -1035,6 +1035,7 @@ export class DatabaseStorage implements IStorage {
           location: "Norfolk, VA",
           state: "VA",
           city: "Norfolk",
+          attorneyType: "government",
           experience: "Government DSO",
           rating: 5,
           reviewCount: 0,

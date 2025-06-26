@@ -69,8 +69,14 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
+      // Track lead capture attempt
+      trackEngagement('lead_capture_attempt', 'homepage', 'email_signup');
+      
       // In a real implementation, this would capture the lead
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      
+      // Track successful lead capture
+      trackEngagement('lead_capture_success', 'homepage', 'email_signup');
       
       toast({
         title: "Welcome to Mil-Legal!",
@@ -79,6 +85,9 @@ export default function Home() {
       
       setEmail("");
     } catch (error) {
+      // Track lead capture failure
+      trackEngagement('lead_capture_error', 'homepage', 'email_signup');
+      
       toast({
         title: "Something went wrong",
         description: "Please try again or contact support.",
@@ -137,7 +146,11 @@ export default function Home() {
               {/* Immediate CTA */}
               <div className="mb-6 sm:mb-8 px-1 sm:px-2 w-full max-w-full">
                 <Link href="/urgent-match">
-                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button">
+                  <Button 
+                    size="lg" 
+                    className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button"
+                    onClick={() => trackLegalEvent('attorney_search_initiated', 'homepage', 'hero_cta')}
+                  >
                     <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 flex-shrink-0" />
                     <span className="text-overflow-safe">Connect with a Lawyer Now</span>
                   </Button>
@@ -184,7 +197,12 @@ export default function Home() {
             {/* Secondary CTA */}
             <div className="text-center">
               <Link href="/consultation-booking">
-                <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                  onClick={() => trackConsultationRequest('consultation_booking_initiated', 'homepage', 'secondary_cta')}
+                >
                   <Phone className="w-5 h-5 mr-2" />
                   Start Now
                 </Button>

@@ -700,6 +700,18 @@ export const insertUserSubscriptionSchema = createInsertSchema(userSubscriptions
   updatedAt: true,
 });
 
+// Google OAuth types
+export const insertGoogleUserSchema = createInsertSchema(googleUsers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastLoginAt: true,
+});
+
+export type GoogleUser = typeof googleUsers.$inferSelect;
+export type InsertGoogleUser = z.infer<typeof insertGoogleUserSchema>;
+export type UpsertGoogleUser = typeof googleUsers.$inferInsert;
+
 export const insertEmergencyServiceSchema = createInsertSchema(emergencyServices).omit({
   id: true,
   requestedAt: true,

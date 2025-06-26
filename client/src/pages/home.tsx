@@ -16,6 +16,8 @@ import MobileSEOHead, { SEO_CONFIGS } from "@/components/mobile-seo-head";
 import { useSEO, seoConfigs } from "@/hooks/useSEO";
 import { getMobileEmergencyContacts, createClickablePhone, createClickableEmail } from "@/lib/mobile-contact";
 import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
+import GoogleSignIn from "@/components/google-signin";
+import { trackLegalEvent, trackConsultationRequest, trackEngagement } from "@/lib/analytics";
 import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {

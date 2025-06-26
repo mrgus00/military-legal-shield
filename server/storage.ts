@@ -1,11 +1,12 @@
 import { 
-  users, authUsers, attorneys, legalResources, educationModules, consultations, emergencyConsultations,
+  users, authUsers, googleUsers, attorneys, legalResources, educationModules, consultations, emergencyConsultations,
   legalCases, emergencyResources, forumQuestions, forumAnswers, legalDocuments,
   conversations, messages, attorneyVerificationDocs, attorneyReviews, attorneyVerificationRequests,
   legalScenarios, scenarioSessions, scenarioAnalytics, stories, documentTemplates, generatedDocuments,
   benefitsEligibility, benefitsDatabase, legalChallenges, achievementBadges, userChallengeProgress,
   userBadges, userGameStats, challengeLeaderboard,
   type User, type InsertUser, type AuthUser, type InsertAuthUser,
+  type GoogleUser, type InsertGoogleUser, type UpsertGoogleUser,
   type Attorney, type InsertAttorney,
   type LegalResource, type InsertLegalResource,
   type EducationModule, type InsertEducationModule,
@@ -44,6 +45,11 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: InsertUser): Promise<User>;
   upsertAuthUser(user: any): Promise<any>;
+  
+  // Google OAuth methods
+  getUserByGoogleId(googleId: string): Promise<GoogleUser | undefined>;
+  createGoogleUser(userData: InsertGoogleUser): Promise<GoogleUser>;
+  updateGoogleUserLastLogin(id: number): Promise<void>;
 
   // Attorney methods
   getAttorneys(): Promise<Attorney[]>;
@@ -3142,10 +3148,48 @@ export class DatabaseStorage implements IStorage {
   async updateLeaderboard(): Promise<void> {
     try {
       // Implementation for updating leaderboard rankings
-      // This would calculate rankings based on user game stats
-      console.log("Leaderboard update implemented");
+      console.log("Leaderboard update functionality placeholder");
     } catch (error) {
       console.error("Error updating leaderboard:", error);
+    }
+  }
+
+  // Google OAuth methods implementation
+  async getUserByGoogleId(googleId: string): Promise<GoogleUser | undefined> {
+    try {
+      const [user] = await this.db.select().from(googleUsers).where(eq(googleUsers.googleId, googleId));
+      return user;
+    } catch (error) {
+      console.error("Error fetching user by Google ID:", error);
+      return undefined;
+    }
+  }
+
+  async createGoogleUser(userData: InsertGoogleUser): Promise<GoogleUser> {
+    try {
+      const [user] = await this.db.insert(googleUsers).values({
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastLoginAt: new Date()
+      }).returning();
+      return user;
+    } catch (error) {
+      console.error("Error creating Google user:", error);
+      throw new Error("Failed to create Google user");
+    }
+  }
+
+  async updateGoogleUserLastLogin(id: number): Promise<void> {
+    try {
+      await this.db.update(googleUsers)
+        .set({ 
+          lastLoginAt: new Date(),
+          updatedAt: new Date()
+        })
+        .where(eq(googleUsers.id, id));
+    } catch (error) {
+      console.error("Error updating Google user last login:", error);
     }
   }
 }

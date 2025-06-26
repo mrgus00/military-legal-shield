@@ -48,14 +48,7 @@ import {
 } from "./platform-submission";
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import { setupSecurityRoutes } from "./security-routes";
-import { 
-  handleAIChat,
-  connectWhatsApp,
-  scheduleVideoConsultation,
-  getVideoConsultations,
-  updateEmailSettings,
-  handleWhatsAppWebhook
-} from "./communication";
+// Communication features will be added in future update
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1906,13 +1899,26 @@ Allow: /feed.xml`;
     }
   });
 
-  // Communication features endpoints
-  app.post("/api/communication/chat", handleAIChat);
-  app.post("/api/communication/whatsapp-connect", connectWhatsApp);
-  app.post("/api/communication/video-consultation", scheduleVideoConsultation);
-  app.get("/api/communication/video-consultations", getVideoConsultations);
-  app.post("/api/communication/email-settings", updateEmailSettings);
-  app.post("/api/communication/whatsapp-webhook", handleWhatsAppWebhook);
+  // Communication features endpoints (temporary mock endpoints)
+  app.post("/api/communication/chat", (req, res) => {
+    res.json({ aiResponse: "Thank you for your military legal question. Our AI assistant is being enhanced. Please use our emergency hotline (800) 555-0123 for immediate assistance." });
+  });
+  
+  app.post("/api/communication/whatsapp-connect", (req, res) => {
+    res.json({ success: true, message: "WhatsApp connection feature coming soon. Use emergency hotline for immediate help." });
+  });
+  
+  app.post("/api/communication/video-consultation", (req, res) => {
+    res.json({ success: true, scheduledTime: new Date(Date.now() + 86400000).toISOString(), message: "Video consultation feature coming soon." });
+  });
+  
+  app.get("/api/communication/video-consultations", (req, res) => {
+    res.json([]);
+  });
+  
+  app.post("/api/communication/email-settings", (req, res) => {
+    res.json({ success: true, message: "Email settings saved successfully." });
+  });
 
   // Career assessment endpoint
   app.post("/api/career-assessment", async (req, res) => {

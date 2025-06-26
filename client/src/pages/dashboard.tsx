@@ -20,6 +20,7 @@ import {
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import WidgetDashboard from "@/components/WidgetDashboard";
+import { PerformanceWidget } from "@/components/performance/PerformanceWidget";
 
 export default function Dashboard() {
   const { user, isLoading: authLoading } = useAuth();

@@ -91,6 +91,7 @@ import LegalRoadmap from "@/pages/legal-roadmap";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
+import PerformanceDashboard from "@/pages/PerformanceDashboard";
 
 function Router() {
   // Track page views when routes change
@@ -180,6 +181,7 @@ function Router() {
       <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route path="/sms-center" component={SMSCenter} />
       <Route path="/cdn-dashboard" component={CDNDashboard} />
+      <Route path="/performance-dashboard" component={PerformanceDashboard} />
       <Route path="/accessibility-audit" component={AccessibilityAudit} />
       <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
       <Route path="/ai-case-analysis" component={AICaseAnalysis} />

@@ -412,7 +412,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Legal Jargon Wizard endpoints
   
   // Get popular legal terms
-  app.get('/api/jargon/popular', async (req: Request, res: Response) => {
+  app.get('/api/jargon/popular', perfCacheMiddleware(3600), async (req: Request, res: Response) => {
     try {
       const popularTerms = [
         {

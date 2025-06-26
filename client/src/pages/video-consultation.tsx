@@ -23,12 +23,11 @@ interface VideoConsultationProps {
   duration?: number;
 }
 
-export default function VideoConsultation({ 
-  consultationId = "demo-consultation-001", 
-  attorneyName = "Lt. Colonel Sarah Martinez (Ret.)", 
-  scheduledTime = "2:00 PM EST", 
-  duration = 60 
-}: VideoConsultationProps = {}) {
+export default function VideoConsultation() {
+  const consultationId = "demo-consultation-001";
+  const attorneyName = "Lt. Colonel Sarah Martinez (Ret.)";
+  const scheduledTime = "2:00 PM EST";
+  const duration = 60;
   const [isConnected, setIsConnected] = useState(false);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);

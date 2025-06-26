@@ -48,6 +48,14 @@ import {
 } from "./platform-submission";
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import { setupSecurityRoutes } from "./security-routes";
+import { 
+  handleAIChat,
+  connectWhatsApp,
+  scheduleVideoConsultation,
+  getVideoConsultations,
+  updateEmailSettings,
+  handleWhatsAppWebhook
+} from "./communication";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1897,6 +1905,14 @@ Allow: /feed.xml`;
       });
     }
   });
+
+  // Communication features endpoints
+  app.post("/api/communication/chat", handleAIChat);
+  app.post("/api/communication/whatsapp-connect", connectWhatsApp);
+  app.post("/api/communication/video-consultation", scheduleVideoConsultation);
+  app.get("/api/communication/video-consultations", getVideoConsultations);
+  app.post("/api/communication/email-settings", updateEmailSettings);
+  app.post("/api/communication/whatsapp-webhook", handleWhatsAppWebhook);
 
   // Career assessment endpoint
   app.post("/api/career-assessment", async (req, res) => {

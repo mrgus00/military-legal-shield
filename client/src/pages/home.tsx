@@ -891,11 +891,21 @@ export default function Home() {
                     </Link>
                   </li>
                 </ul>
-                <Link href="/signup">
-                  <Button variant="outline" className="w-full">
-                    Get Started Free
-                  </Button>
-                </Link>
+                <div className="space-y-3">
+                  <Link href="/signup">
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => trackEngagement('signup_initiated', 'pricing', 'basic_plan')}
+                    >
+                      Get Started Free
+                    </Button>
+                  </Link>
+                  <GoogleSignIn 
+                    onSuccess={() => trackEngagement('google_signin_success', 'pricing', 'basic_plan')}
+                    onError={() => trackEngagement('google_signin_error', 'pricing', 'basic_plan')}
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -942,7 +952,10 @@ export default function Home() {
                   </li>
                 </ul>
                 <Link href="/pricing">
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                  <Button 
+                    className="w-full bg-orange-600 hover:bg-orange-700"
+                    onClick={() => trackEngagement('premium_plan_initiated', 'pricing', 'premium_upgrade')}
+                  >
                     Start Premium Plan
                   </Button>
                 </Link>
@@ -987,7 +1000,11 @@ export default function Home() {
                   </li>
                 </ul>
                 <Link href="/pricing">
-                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
+                    onClick={() => trackEngagement('family_plan_initiated', 'pricing', 'family_upgrade')}
+                  >
                     Choose Family Plan
                   </Button>
                 </Link>
@@ -1063,7 +1080,10 @@ export default function Home() {
                   position="left"
                 >
                   <Link href="/urgent-match">
-                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold">
+                    <Button 
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold"
+                      onClick={() => trackEmergencyContact('emergency_legal_help_initiated', 'cta_section', 'primary_emergency')}
+                    >
                       <Shield className="w-5 h-5 mr-3" />
                       Emergency Legal Help
                     </Button>
@@ -1071,7 +1091,10 @@ export default function Home() {
                 </MilitaryTooltip>
                 
                 <Link href="/pricing">
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold">
+                  <Button 
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold"
+                    onClick={() => trackEngagement('view_all_plans_initiated', 'cta_section', 'pricing_overview')}
+                  >
                     View All Plans & Pricing
                   </Button>
                 </Link>
@@ -1081,7 +1104,11 @@ export default function Home() {
                   type="success"
                   position="left"
                 >
-                  <Button variant="outline" className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50">
+                  <Button 
+                    variant="outline" 
+                    className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50"
+                    onClick={() => trackEngagement('free_trial_initiated', 'cta_section', 'trial_signup')}
+                  >
                     Start Free Trial
                   </Button>
                 </MilitaryTooltip>

@@ -193,6 +193,32 @@ function Router() {
   );
 }
 
+function AppContent() {
+  const { loadingState } = useLoading();
+  
+  return (
+    <>
+      <GoogleAnalytics />
+      <GoogleTagManager />
+      <GoogleSearchConsole />
+      <GoogleBusinessProfile />
+      <Toaster />
+      <Router />
+      <BackToTop />
+      <LegalAssistantChatbot />
+      <FloatingWhatsAppButton />
+      <PWAInstaller />
+      <MilitaryLoadingScreen 
+        isLoading={loadingState.isLoading}
+        loadingText={loadingState.loadingText}
+        variant={loadingState.variant}
+        progress={loadingState.progress}
+        showProgress={loadingState.showProgress}
+      />
+    </>
+  );
+}
+
 function App() {
   // Initialize Google Analytics when app loads
   useEffect(() => {
@@ -209,36 +235,12 @@ function App() {
         <MoodProvider>
           <BranchProvider>
             <TooltipProvider>
-              <GoogleAnalytics />
-              <GoogleTagManager />
-              <GoogleSearchConsole />
-              <GoogleBusinessProfile />
-              <Toaster />
-              <Router />
-              <BackToTop />
-              <LegalAssistantChatbot />
-              <FloatingWhatsAppButton />
-              <PWAInstaller />
-              <AppLoadingScreen />
+              <AppContent />
             </TooltipProvider>
           </BranchProvider>
         </MoodProvider>
       </LoadingProvider>
     </QueryClientProvider>
-  );
-}
-
-function AppLoadingScreen() {
-  const { loadingState } = useLoading();
-  
-  return (
-    <MilitaryLoadingScreen 
-      isLoading={loadingState.isLoading}
-      loadingText={loadingState.loadingText}
-      variant={loadingState.variant}
-      progress={loadingState.progress}
-      showProgress={loadingState.showProgress}
-    />
   );
 }
 

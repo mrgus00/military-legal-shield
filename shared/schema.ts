@@ -34,6 +34,30 @@ export const authUsers = pgTable("auth_users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Google OAuth users table
+export const googleUsers = pgTable("google_users", {
+  id: serial("id").primaryKey(),
+  googleId: varchar("google_id").unique().notNull(),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  displayName: varchar("display_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  branch: text("branch"),
+  rank: text("rank"),
+  subscriptionTier: text("subscription_tier").notNull().default("free"),
+  subscriptionStatus: text("subscription_status").default("active"),
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  emergencyCredits: integer("emergency_credits").default(0),
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Main users table (existing structure preserved)
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),

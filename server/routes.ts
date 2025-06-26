@@ -35,6 +35,7 @@ import {
   generateLinkedInInsightConfig
 } from "./platform-submission";
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
+import { setupSecurityRoutes } from "./security-routes";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -185,6 +186,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit built-in auth middleware
   setupReplitAuth(app);
   setupAuthRoutes(app);
+  
+  // Setup enhanced security routes
+  setupSecurityRoutes(app);
   
   // Add form-based authentication endpoints
   app.post('/api/auth/login', async (req, res) => {

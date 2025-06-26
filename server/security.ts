@@ -32,107 +32,174 @@ export function setupSecurity(app: Express) {
   app.set('trust proxy', 1);
 }
 
+// Simple rate limiting implementation (manual)
+interface RateLimitStore {
+  [key: string]: { count: number; resetTime: number };
+}
+
+const rateLimitStore: RateLimitStore = {};
+
 // General API rate limiting
-export const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+export function generalLimiter(req: Request, res: Response, next: NextFunction) {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const maxRequests = 100;
+  const now = Date.now();
+  
+  if (!rateLimitStore[ip] || now > rateLimitStore[ip].resetTime) {
+    rateLimitStore[ip] = { count: 1, resetTime: now + windowMs };
+    return next();
+  }
+  
+  rateLimitStore[ip].count++;
+  
+  if (rateLimitStore[ip].count > maxRequests) {
+    return res.status(429).json({
+      error: 'Too many requests from this IP, please try again later.',
+      retryAfter: '15 minutes'
+    });
+  }
+  
+  next();
+}
 
 // Stricter rate limiting for authentication endpoints
-export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 login attempts per windowMs
-  message: {
-    error: 'Too many authentication attempts, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  skipSuccessfulRequests: true,
-});
-
-// Emergency consultation rate limiting (more permissive for urgent needs)
-export const emergencyLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // 10 emergency requests per hour
-  message: {
-    error: 'Emergency consultation limit reached. For immediate assistance, call our 24/7 hotline.',
-    emergencyContact: '1-800-MILITARY-LAW'
-  },
-});
-
-// Attorney search rate limiting
-export const attorneySearchLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 20, // 20 searches per 5 minutes
-  message: {
-    error: 'Too many attorney searches. Please refine your criteria and try again.',
-    retryAfter: '5 minutes'
-  },
-});
-
-// Document generation rate limiting with premium user exemption
-export const documentLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // 10 document generations per hour for free users
-  message: {
-    error: 'Document generation limit reached. Upgrade to premium for unlimited access.',
-    upgradeUrl: '/pricing'
-  },
-  skip: (req: Request) => {
-    const user = (req as any).user;
-    return user && user.subscriptionTier === 'premium';
+export function authLimiter(req: Request, res: Response, next: NextFunction) {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const key = `auth_${ip}`;
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const maxRequests = 5;
+  const now = Date.now();
+  
+  if (!rateLimitStore[key] || now > rateLimitStore[key].resetTime) {
+    rateLimitStore[key] = { count: 1, resetTime: now + windowMs };
+    return next();
   }
-});
+  
+  rateLimitStore[key].count++;
+  
+  if (rateLimitStore[key].count > maxRequests) {
+    return res.status(429).json({
+      error: 'Too many authentication attempts, please try again later.',
+      retryAfter: '15 minutes'
+    });
+  }
+  
+  next();
+}
+
+// Emergency consultation rate limiting
+export function emergencyLimiter(req: Request, res: Response, next: NextFunction) {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const key = `emergency_${ip}`;
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const maxRequests = 10;
+  const now = Date.now();
+  
+  if (!rateLimitStore[key] || now > rateLimitStore[key].resetTime) {
+    rateLimitStore[key] = { count: 1, resetTime: now + windowMs };
+    return next();
+  }
+  
+  rateLimitStore[key].count++;
+  
+  if (rateLimitStore[key].count > maxRequests) {
+    return res.status(429).json({
+      error: 'Emergency consultation limit reached. For immediate assistance, call our 24/7 hotline.',
+      emergencyContact: '1-800-MILITARY-LAW'
+    });
+  }
+  
+  next();
+}
+
+// Document generation rate limiting with premium exemption
+export function documentLimiter(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (user && user.subscriptionTier === 'premium') {
+    return next(); // Skip rate limiting for premium users
+  }
+  
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const key = `document_${ip}`;
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const maxRequests = 10;
+  const now = Date.now();
+  
+  if (!rateLimitStore[key] || now > rateLimitStore[key].resetTime) {
+    rateLimitStore[key] = { count: 1, resetTime: now + windowMs };
+    return next();
+  }
+  
+  rateLimitStore[key].count++;
+  
+  if (rateLimitStore[key].count > maxRequests) {
+    return res.status(429).json({
+      error: 'Document generation limit reached. Upgrade to premium for unlimited access.',
+      upgradeUrl: '/pricing'
+    });
+  }
+  
+  next();
+}
 
 // AI case analysis rate limiting with premium exemption
-export const aiAnalysisLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // 5 AI analyses per hour for free users
-  message: {
-    error: 'AI case analysis limit reached. Upgrade to premium for unlimited access.',
-    upgradeUrl: '/pricing'
-  },
-  skip: (req: Request) => {
-    const user = (req as any).user;
-    return user && user.subscriptionTier === 'premium';
+export function aiAnalysisLimiter(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (user && user.subscriptionTier === 'premium') {
+    return next(); // Skip rate limiting for premium users
   }
-});
-
-// Premium user rate limiter (more generous limits)
-export const premiumLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // 500 requests per 15 minutes for premium users
-  message: {
-    error: 'Premium rate limit exceeded. Please contact support if you need higher limits.',
-    support: '/contact-support'
-  },
-});
-
-// Consultation booking rate limiting
-export const consultationLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  max: 3, // 3 consultation bookings per day for free users
-  message: {
-    error: 'Daily consultation booking limit reached. Upgrade to premium for unlimited bookings.',
-    upgradeUrl: '/pricing'
-  },
-  skip: (req: Request) => {
-    const user = (req as any).user;
-    return user && user.subscriptionTier === 'premium';
+  
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const key = `ai_analysis_${ip}`;
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const maxRequests = 5;
+  const now = Date.now();
+  
+  if (!rateLimitStore[key] || now > rateLimitStore[key].resetTime) {
+    rateLimitStore[key] = { count: 1, resetTime: now + windowMs };
+    return next();
   }
-});
+  
+  rateLimitStore[key].count++;
+  
+  if (rateLimitStore[key].count > maxRequests) {
+    return res.status(429).json({
+      error: 'AI case analysis limit reached. Upgrade to premium for unlimited access.',
+      upgradeUrl: '/pricing'
+    });
+  }
+  
+  next();
+}
 
 // Create tiered rate limiter based on user subscription
 export function createTieredLimiter(req: Request, res: Response, next: NextFunction) {
   const user = (req as any).user;
   
   if (user && user.subscriptionTier === 'premium') {
-    return premiumLimiter(req, res, next);
+    // Premium users get higher limits
+    const ip = req.ip || req.connection.remoteAddress || 'unknown';
+    const key = `premium_${ip}`;
+    const windowMs = 15 * 60 * 1000; // 15 minutes
+    const maxRequests = 500;
+    const now = Date.now();
+    
+    if (!rateLimitStore[key] || now > rateLimitStore[key].resetTime) {
+      rateLimitStore[key] = { count: 1, resetTime: now + windowMs };
+      return next();
+    }
+    
+    rateLimitStore[key].count++;
+    
+    if (rateLimitStore[key].count > maxRequests) {
+      return res.status(429).json({
+        error: 'Premium rate limit exceeded. Please contact support if you need higher limits.',
+        support: '/contact-support'
+      });
+    }
+    
+    return next();
   } else {
     return generalLimiter(req, res, next);
   }
@@ -189,7 +256,7 @@ export function requireEnhancedAuth(req: Request, res: Response, next: NextFunct
 // CSRF protection for state-changing operations
 export function validateCSRF(req: Request, res: Response, next: NextFunction) {
   const token = req.headers['x-csrf-token'] || req.body._csrf;
-  const sessionToken = req.session?.csrfToken;
+  const sessionToken = (req.session as any)?.csrfToken;
   
   if (!token || !sessionToken || token !== sessionToken) {
     return res.status(403).json({ 
@@ -206,10 +273,9 @@ export function generateCSRFToken(req: Request, res: Response) {
   const token = Math.random().toString(36).substring(2, 15) + 
                 Math.random().toString(36).substring(2, 15);
   
-  if (!req.session) {
-    req.session = {};
+  if (req.session) {
+    (req.session as any).csrfToken = token;
   }
-  req.session.csrfToken = token;
   
   res.json({ csrfToken: token });
 }

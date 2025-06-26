@@ -7,10 +7,13 @@ import { setupSecurity, addSecurityHeaders, generalLimiter } from "./security";
 import { analyticsMiddleware } from "./analytics";
 
 const app = express();
+// Setup security middleware first
+setupSecurity(app);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session configuration
+// Session configuration with enhanced security
 app.use(session({
   secret: process.env.SESSION_SECRET || 'military-legal-shield-dev-secret',
   resave: false,
@@ -18,12 +21,19 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'strict' // CSRF protection
   }
 }));
 
 // Trust proxy for proper domain handling
 app.set('trust proxy', true);
+
+// Apply general rate limiting to all routes
+app.use(generalLimiter);
+
+// Add security headers to all responses
+app.use(addSecurityHeaders);
 
 // Force HTTPS and handle custom domain
 app.use((req, res, next) => {

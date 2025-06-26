@@ -14,8 +14,8 @@ interface BranchContextType {
 const BranchContext = createContext<BranchContextType | undefined>(undefined);
 
 export function BranchProvider({ children }: { children: ReactNode }) {
-  const [selectedBranch, setSelectedBranch] = useState<string>('army');
-  const [branchTheme, setBranchTheme] = useState<BranchTheme>(getBranchTheme('army'));
+  const [selectedBranch, setSelectedBranch] = useState<string>(getCurrentBranch());
+  const [branchTheme, setBranchTheme] = useState<BranchTheme>(getBranchTheme(selectedBranch));
 
   const setBranch = (branchId: string) => {
     setSelectedBranch(branchId);
@@ -44,13 +44,6 @@ export function BranchProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Initialize from localStorage after component mounts
-    const savedBranch = getCurrentBranch();
-    if (savedBranch !== selectedBranch) {
-      setSelectedBranch(savedBranch);
-      setBranchTheme(getBranchTheme(savedBranch));
-    }
-    
     // Apply initial theme
     applyBranchTheme(selectedBranch);
 

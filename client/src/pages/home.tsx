@@ -16,8 +16,6 @@ import MobileSEOHead, { SEO_CONFIGS } from "@/components/mobile-seo-head";
 import { useSEO, seoConfigs } from "@/hooks/useSEO";
 import { getMobileEmergencyContacts, createClickablePhone, createClickableEmail } from "@/lib/mobile-contact";
 import MilitaryTooltip, { MILITARY_TOOLTIPS } from "@/components/military-tooltip";
-import GoogleSignIn from "@/components/google-signin";
-import { trackLegalEvent, trackConsultationRequest, trackEngagement } from "@/lib/analytics";
 import courtImage from "@assets/court_1749846710218.png";
 
 export default function Home() {
@@ -69,14 +67,8 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
-      // Track lead capture attempt
-      trackEngagement('lead_capture_attempt', 'homepage', 'email_signup');
-      
       // In a real implementation, this would capture the lead
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      // Track successful lead capture
-      trackEngagement('lead_capture_success', 'homepage', 'email_signup');
       
       toast({
         title: "Welcome to Mil-Legal!",
@@ -85,9 +77,6 @@ export default function Home() {
       
       setEmail("");
     } catch (error) {
-      // Track lead capture failure
-      trackEngagement('lead_capture_error', 'homepage', 'email_signup');
-      
       toast({
         title: "Something went wrong",
         description: "Please try again or contact support.",
@@ -146,11 +135,7 @@ export default function Home() {
               {/* Immediate CTA */}
               <div className="mb-6 sm:mb-8 px-1 sm:px-2 w-full max-w-full">
                 <Link href="/urgent-match">
-                  <Button 
-                    size="lg" 
-                    className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button"
-                    onClick={() => trackLegalEvent('attorney_search_initiated', 'homepage', 'hero_cta')}
-                  >
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button">
                     <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 flex-shrink-0" />
                     <span className="text-overflow-safe">Connect with a Lawyer Now</span>
                   </Button>
@@ -197,12 +182,7 @@ export default function Home() {
             {/* Secondary CTA */}
             <div className="text-center">
               <Link href="/consultation-booking">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-                  onClick={() => trackConsultationRequest('consultation_booking_initiated', 'homepage', 'secondary_cta')}
-                >
+                <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm">
                   <Phone className="w-5 h-5 mr-2" />
                   Start Now
                 </Button>
@@ -481,7 +461,7 @@ export default function Home() {
                   <div className="text-sm text-gray-600">Average Success Rate</div>
                 </div>
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-600">&lt; 4hrs</div>
+                  <div className="text-2xl font-bold text-blue-600">{"< 4hrs"}</div>
                   <div className="text-sm text-gray-600">Average Response Time</div>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
@@ -891,21 +871,11 @@ export default function Home() {
                     </Link>
                   </li>
                 </ul>
-                <div className="space-y-3">
-                  <Link href="/signup">
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => trackEngagement('signup_initiated', 'pricing', 'basic_plan')}
-                    >
-                      Get Started Free
-                    </Button>
-                  </Link>
-                  <GoogleSignIn 
-                    onSuccess={() => trackEngagement('google_signin_success', 'pricing', 'basic_plan')}
-                    onError={() => trackEngagement('google_signin_error', 'pricing', 'basic_plan')}
-                  />
-                </div>
+                <Link href="/signup">
+                  <Button variant="outline" className="w-full">
+                    Get Started Free
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -952,10 +922,7 @@ export default function Home() {
                   </li>
                 </ul>
                 <Link href="/pricing">
-                  <Button 
-                    className="w-full bg-orange-600 hover:bg-orange-700"
-                    onClick={() => trackEngagement('premium_plan_initiated', 'pricing', 'premium_upgrade')}
-                  >
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700">
                     Start Premium Plan
                   </Button>
                 </Link>
@@ -1000,11 +967,7 @@ export default function Home() {
                   </li>
                 </ul>
                 <Link href="/pricing">
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
-                    onClick={() => trackEngagement('family_plan_initiated', 'pricing', 'family_upgrade')}
-                  >
+                  <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
                     Choose Family Plan
                   </Button>
                 </Link>
@@ -1080,10 +1043,7 @@ export default function Home() {
                   position="left"
                 >
                   <Link href="/urgent-match">
-                    <Button 
-                      className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold"
-                      onClick={() => trackEmergencyContact('emergency_legal_help_initiated', 'cta_section', 'primary_emergency')}
-                    >
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold">
                       <Shield className="w-5 h-5 mr-3" />
                       Emergency Legal Help
                     </Button>
@@ -1091,10 +1051,7 @@ export default function Home() {
                 </MilitaryTooltip>
                 
                 <Link href="/pricing">
-                  <Button 
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold"
-                    onClick={() => trackEngagement('view_all_plans_initiated', 'cta_section', 'pricing_overview')}
-                  >
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold">
                     View All Plans & Pricing
                   </Button>
                 </Link>
@@ -1104,11 +1061,7 @@ export default function Home() {
                   type="success"
                   position="left"
                 >
-                  <Button 
-                    variant="outline" 
-                    className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50"
-                    onClick={() => trackEngagement('free_trial_initiated', 'cta_section', 'trial_signup')}
-                  >
+                  <Button variant="outline" className="w-full py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50">
                     Start Free Trial
                   </Button>
                 </MilitaryTooltip>

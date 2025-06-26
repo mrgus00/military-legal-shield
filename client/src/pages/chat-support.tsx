@@ -48,35 +48,35 @@ export default function ChatSupport() {
     {
       title: "Emergency Legal Help",
       description: "Immediate assistance for urgent legal matters",
-      responseTime: "&lt; 2 minutes",
+      responseTime: "< 2 minutes",
       color: "red",
       message: "🚨 EMERGENCY: I need immediate legal assistance with an urgent matter."
     },
     {
       title: "Court-Martial Support",
       description: "Defense assistance and legal representation",
-      responseTime: "&lt; 5 minutes", 
+      responseTime: "< 5 minutes", 
       color: "orange",
       message: "⚖️ I need help with court-martial proceedings and defense."
     },
     {
       title: "Family Law Issues",
       description: "Divorce, custody, and deployment preparations",
-      responseTime: "&lt; 5 minutes",
+      responseTime: "< 5 minutes",
       color: "pink",
       message: "👨‍👩‍👧‍👦 I need assistance with military family law matters."
     },
     {
       title: "VA Benefits Claims",
       description: "Disability claims and benefits assistance",
-      responseTime: "&lt; 10 minutes",
+      responseTime: "< 10 minutes",
       color: "green",
       message: "🎖️ I need help with VA disability claims and benefits."
     },
     {
       title: "General Questions",
       description: "Platform support and general inquiries",
-      responseTime: "&lt; 15 minutes",
+      responseTime: "< 15 minutes",
       color: "blue",
       message: "💬 I have a general question about military legal services."
     }
@@ -211,7 +211,7 @@ export default function ChatSupport() {
                   </div>
                   <Badge className="bg-white text-blue-600">
                     <Clock className="w-3 h-3 mr-1" />
-                    &lt; 2 min response
+                    < 2 min response
                   </Badge>
                 </div>
               </CardHeader>

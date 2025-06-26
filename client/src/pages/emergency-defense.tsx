@@ -31,7 +31,7 @@ export default function EmergencyDefense() {
       type: "Court-Martial Charges",
       description: "Facing formal military court proceedings",
       urgency: "Critical",
-      responseTime: "&lt; 2 hours",
+      responseTime: "< 2 hours",
       icon: Scale,
       color: "red"
     },
@@ -39,7 +39,7 @@ export default function EmergencyDefense() {
       type: "Article 15/NJP",
       description: "Non-judicial punishment proceedings",
       urgency: "High",
-      responseTime: "&lt; 4 hours", 
+      responseTime: "< 4 hours", 
       icon: FileText,
       color: "orange"
     },
@@ -47,7 +47,7 @@ export default function EmergencyDefense() {
       type: "Security Clearance Issues",
       description: "Clearance suspension or revocation",
       urgency: "High",
-      responseTime: "&lt; 6 hours",
+      responseTime: "< 6 hours",
       icon: Shield,
       color: "orange"
     },
@@ -55,7 +55,7 @@ export default function EmergencyDefense() {
       type: "Criminal Investigation",
       description: "Under investigation by CID/NCIS/OSI",
       urgency: "Critical",
-      responseTime: "&lt; 1 hour",
+      responseTime: "< 1 hour",
       icon: AlertTriangle,
       color: "red"
     }

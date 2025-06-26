@@ -8,10 +8,6 @@ declare global {
 
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return; // Skip on server-side rendering
-  }
-
   const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
   if (!measurementId) {

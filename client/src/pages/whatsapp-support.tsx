@@ -22,7 +22,7 @@ export default function WhatsAppSupport() {
       number: "+1-800-645-5342",
       description: "Immediate assistance for urgent legal matters",
       hours: "24/7 Available",
-      responseTime: "< 5 minutes",
+      responseTime: "less than 5 minutes",
       type: "emergency"
     },
     {
@@ -30,7 +30,7 @@ export default function WhatsAppSupport() {
       number: "+1-800-645-5342",
       description: "Questions, guidance, and general assistance",
       hours: "24/7 Available", 
-      responseTime: "< 15 minutes",
+      responseTime: "less than 15 minutes",
       type: "support"
     },
     {

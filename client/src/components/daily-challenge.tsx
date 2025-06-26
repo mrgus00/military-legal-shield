@@ -19,7 +19,7 @@ export default function DailyChallenge() {
   const [challengeCompleted, setChallengeCompleted] = useState(false);
   const [completionResult, setCompletionResult] = useState<{ correct: boolean; timeSpent: number } | null>(null);
 
-  const { data: dailyChallenge } = useQuery<DailyChallenge & { challenge: MicroChallenge }>({
+  const { data: dailyChallenge } = useQuery&lt;DailyChallenge & { challenge: MicroChallenge }&gt;({
     queryKey: ['/api/daily-challenge'],
   });
 

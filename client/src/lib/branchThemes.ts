@@ -347,6 +347,10 @@ export function getBranchTheme(branchId: string): BranchTheme {
 }
 
 export function applyBranchTheme(branchId: string) {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return; // Skip on server-side rendering
+  }
+  
   const theme = getBranchTheme(branchId);
   const root = document.documentElement;
   
@@ -359,7 +363,9 @@ export function applyBranchTheme(branchId: string) {
   root.style.setProperty('--muted', theme.colors.muted);
   
   // Store the current branch for other components to use
-  localStorage.setItem('selectedBranch', branchId);
+  if (window.localStorage) {
+    localStorage.setItem('selectedBranch', branchId);
+  }
   
   // Dispatch custom event for components to listen to
   window.dispatchEvent(new CustomEvent('branchThemeChanged', { 
@@ -368,7 +374,10 @@ export function applyBranchTheme(branchId: string) {
 }
 
 export function getCurrentBranch(): string {
-  return localStorage.getItem('selectedBranch') || 'army';
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return localStorage.getItem('selectedBranch') || 'army';
+  }
+  return 'army';
 }
 
 export function getCurrentBranchTheme(): BranchTheme {

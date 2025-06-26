@@ -88,13 +88,15 @@ export function MoodProvider({ children }: MoodProviderProps) {
 
   // Update CSS variables when mood changes
   useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty('--mood-primary', colors.primary);
-    root.style.setProperty('--mood-secondary', colors.secondary);
-    root.style.setProperty('--mood-accent', colors.accent);
-    root.style.setProperty('--mood-background', colors.background);
-    root.style.setProperty('--mood-text', colors.text);
-    root.style.setProperty('--mood-border', colors.border);
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      root.style.setProperty('--mood-primary', colors.primary);
+      root.style.setProperty('--mood-secondary', colors.secondary);
+      root.style.setProperty('--mood-accent', colors.accent);
+      root.style.setProperty('--mood-background', colors.background);
+      root.style.setProperty('--mood-text', colors.text);
+      root.style.setProperty('--mood-border', colors.border);
+    }
   }, [colors]);
 
   const setMood = (mood: MoodState) => {
@@ -186,9 +188,11 @@ export function useMoodDetection() {
   const { detectMoodFromContext, detectMoodFromContent } = useMood();
   
   useEffect(() => {
-    // Detect mood from current URL path
-    const path = window.location.pathname;
-    detectMoodFromContext(path);
+    if (typeof window !== 'undefined') {
+      // Detect mood from current URL path
+      const path = window.location.pathname;
+      detectMoodFromContext(path);
+    }
   }, [detectMoodFromContext]);
   
   return { detectMoodFromContent };

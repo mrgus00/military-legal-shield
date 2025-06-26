@@ -17,6 +17,10 @@ export function useSEO(config: SEOConfig) {
   const [location] = useLocation();
 
   useEffect(() => {
+    if (typeof document === 'undefined') {
+      return; // Skip on server-side rendering
+    }
+
     // Update document title
     document.title = config.title;
 
@@ -60,6 +64,8 @@ export function useSEO(config: SEOConfig) {
 }
 
 function updateMetaTag(name: string, content: string, attribute: 'name' | 'property' = 'name') {
+  if (typeof document === 'undefined') return;
+  
   let element = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
   
   if (!element) {
@@ -72,6 +78,8 @@ function updateMetaTag(name: string, content: string, attribute: 'name' | 'prope
 }
 
 function updateCanonicalLink(url: string) {
+  if (typeof document === 'undefined') return;
+  
   let element = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
   
   if (!element) {
@@ -84,6 +92,8 @@ function updateCanonicalLink(url: string) {
 }
 
 function updateStructuredData(data: object) {
+  if (typeof document === 'undefined') return;
+  
   // Remove existing structured data
   const existing = document.querySelector('script[type="application/ld+json"]');
   if (existing) {

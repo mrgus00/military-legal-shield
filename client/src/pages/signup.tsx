@@ -25,45 +25,15 @@ export default function Signup() {
     e.preventDefault();
     setIsLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const response = await apiRequest('POST', '/api/auth/register', {
-        email: formData.email,
-        password: formData.password,
-        firstName: formData.firstName,
-        lastName: formData.lastName
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Account created successfully!",
-          description: "Welcome to Military Legal Shield. You are now signed in.",
-        });
-        setLocation('/dashboard');
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Registration failed",
-          description: error.message || "Unable to create account. Please try again.",
-          variant: "destructive",
-        });
-      }
+      // Redirect to Replit authentication for signup
+      window.location.href = '/api/login';
     } catch (error) {
       toast({
         title: "Registration failed",
         description: "Please check your connection and try again",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };

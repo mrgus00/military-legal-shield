@@ -21,32 +21,14 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await apiRequest('POST', '/api/auth/login', {
-        email,
-        password
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Welcome back!",
-          description: "You have been successfully signed in.",
-        });
-        setLocation('/dashboard');
-      } else {
-        const error = await response.json();
-        toast({
-          title: "Sign in failed",
-          description: error.message || "Invalid email or password",
-          variant: "destructive",
-        });
-      }
+      // Redirect to Replit authentication
+      window.location.href = '/api/login';
     } catch (error) {
       toast({
         title: "Sign in failed",
         description: "Please check your connection and try again",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };

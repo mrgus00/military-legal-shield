@@ -139,74 +139,113 @@ export function PerformanceOptimization() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Performance Dashboard</h1>
-          <p className="text-muted-foreground">
+    <div className="space-y-4 sm:space-y-6 px-3 sm:px-4 lg:px-6">
+      {/* Header - Mobile Optimized */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Performance Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
             Monitor and optimize system performance in real-time
           </p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between sm:justify-end space-x-2">
+          <Badge 
+            variant={performanceScore >= 80 ? "default" : performanceScore >= 60 ? "secondary" : "destructive"}
+            className={`text-xs sm:text-sm px-2 sm:px-3 py-1 ${
+              performanceScore >= 80 
+                ? 'bg-green-600 hover:bg-green-700 text-white' 
+                : performanceScore >= 60 
+                ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
+                : 'bg-red-600 hover:bg-red-700 text-white'
+            }`}
+          >
+            Score: {performanceScore}
+          </Badge>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => refetch()}
             disabled={isLoading}
+            className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 px-2 sm:px-3"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
         </div>
       </div>
 
-      {/* Performance Score Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
+      {/* Performance Score Card - Mobile Optimized */}
+      <Card className="border-gray-200 dark:border-gray-700 shadow-sm">
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl text-gray-900 dark:text-white">
+            <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
             Performance Score
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <div className="text-4xl font-bold">{performanceScore}</div>
-              <div className="text-muted-foreground">/100</div>
+        <CardContent className="pt-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 mb-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">{performanceScore}</div>
+              <div className="text-gray-500 dark:text-gray-400 text-lg sm:text-xl">/100</div>
             </div>
             <Badge 
               variant={performanceScore > 80 ? 'default' : performanceScore > 60 ? 'secondary' : 'destructive'}
-              className="text-lg px-4 py-2"
+              className={`text-sm sm:text-base px-3 sm:px-4 py-1 sm:py-2 font-medium ${
+                performanceScore > 80 
+                  ? 'bg-green-600 hover:bg-green-700 text-white' 
+                  : performanceScore > 60 
+                  ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
+                  : 'bg-red-600 hover:bg-red-700 text-white'
+              }`}
             >
               {performanceScore > 80 ? 'Excellent' : performanceScore > 60 ? 'Good' : 'Needs Improvement'}
             </Badge>
           </div>
-          <Progress value={performanceScore} className="h-3 mb-4" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Cache Hit Rate</span>
-              <span className="font-medium">{metrics.performance.cacheHitRate.toFixed(1)}%</span>
+          <Progress value={performanceScore} className="h-2 sm:h-3 mb-4 bg-gray-200 dark:bg-gray-700" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-sm">
+            <div className="flex justify-between p-2 sm:p-0 bg-gray-50 dark:bg-gray-800 sm:bg-transparent sm:dark:bg-transparent rounded">
+              <span className="text-gray-600 dark:text-gray-400">Cache Hit Rate</span>
+              <span className="font-medium text-gray-900 dark:text-white">{metrics.performance.cacheHitRate.toFixed(1)}%</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Avg Response Time</span>
-              <span className="font-medium">{metrics.performance.averageResponseTime.toFixed(0)}ms</span>
+            <div className="flex justify-between p-2 sm:p-0 bg-gray-50 dark:bg-gray-800 sm:bg-transparent sm:dark:bg-transparent rounded">
+              <span className="text-gray-600 dark:text-gray-400">Avg Response Time</span>
+              <span className="font-medium text-gray-900 dark:text-white">{metrics.performance.averageResponseTime.toFixed(0)}ms</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Slow Request Rate</span>
-              <span className="font-medium">{metrics.performance.slowRequestRate.toFixed(1)}%</span>
+            <div className="flex justify-between p-2 sm:p-0 bg-gray-50 dark:bg-gray-800 sm:bg-transparent sm:dark:bg-transparent rounded">
+              <span className="text-gray-600 dark:text-gray-400">Slow Request Rate</span>
+              <span className="font-medium text-gray-900 dark:text-white">{metrics.performance.slowRequestRate.toFixed(1)}%</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Tabs */}
+      {/* Tabs - Mobile Optimized */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="cache">Cache</TabsTrigger>
-          <TabsTrigger value="images">Images</TabsTrigger>
-          <TabsTrigger value="actions">Actions</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto sm:h-10 gap-1 p-1 bg-gray-100 dark:bg-gray-800">
+          <TabsTrigger 
+            value="overview" 
+            className="text-xs sm:text-sm py-2 sm:py-1.5 px-2 sm:px-3 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm"
+          >
+            Overview
+          </TabsTrigger>
+          <TabsTrigger 
+            value="cache" 
+            className="text-xs sm:text-sm py-2 sm:py-1.5 px-2 sm:px-3 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm"
+          >
+            Cache
+          </TabsTrigger>
+          <TabsTrigger 
+            value="images" 
+            className="text-xs sm:text-sm py-2 sm:py-1.5 px-2 sm:px-3 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm"
+          >
+            Images
+          </TabsTrigger>
+          <TabsTrigger 
+            value="actions" 
+            className="text-xs sm:text-sm py-2 sm:py-1.5 px-2 sm:px-3 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm"
+          >
+            Actions
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">

@@ -3,6 +3,8 @@ import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
+import { setupSecurity, addSecurityHeaders, generalLimiter } from "./security";
+import { analyticsMiddleware } from "./analytics";
 
 const app = express();
 app.use(express.json());

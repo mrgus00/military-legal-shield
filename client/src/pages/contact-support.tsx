@@ -48,7 +48,7 @@ export default function ContactSupport() {
       description: "Real-time support for questions and guidance",
       contact: "Available through website",
       availability: "24/7 Available",
-      responseTime: "< 2 minutes",
+      responseTime: "&lt; 2 minutes",
       color: "blue",
       action: "Start Chat",
       link: "/chat-support"

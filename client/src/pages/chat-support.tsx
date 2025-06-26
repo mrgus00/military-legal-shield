@@ -55,28 +55,28 @@ export default function ChatSupport() {
     {
       title: "Court-Martial Support",
       description: "Defense assistance and legal representation",
-      responseTime: "< 5 minutes", 
+      responseTime: "&lt; 5 minutes", 
       color: "orange",
       message: "⚖️ I need help with court-martial proceedings and defense."
     },
     {
       title: "Family Law Issues",
       description: "Divorce, custody, and deployment preparations",
-      responseTime: "< 5 minutes",
+      responseTime: "&lt; 5 minutes",
       color: "pink",
       message: "👨‍👩‍👧‍👦 I need assistance with military family law matters."
     },
     {
       title: "VA Benefits Claims",
       description: "Disability claims and benefits assistance",
-      responseTime: "< 10 minutes",
+      responseTime: "&lt; 10 minutes",
       color: "green",
       message: "🎖️ I need help with VA disability claims and benefits."
     },
     {
       title: "General Questions",
       description: "Platform support and general inquiries",
-      responseTime: "< 15 minutes",
+      responseTime: "&lt; 15 minutes",
       color: "blue",
       message: "💬 I have a general question about military legal services."
     }

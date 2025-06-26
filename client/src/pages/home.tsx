@@ -481,7 +481,7 @@ export default function Home() {
                   <div className="text-sm text-gray-600">Average Success Rate</div>
                 </div>
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-600">{"< 4hrs"}</div>
+                  <div className="text-2xl font-bold text-blue-600">&lt; 4hrs</div>
                   <div className="text-sm text-gray-600">Average Response Time</div>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">

@@ -41,10 +41,14 @@ const rateLimitStore: RateLimitStore = {};
 
 // General API rate limiting
 export function generalLimiter(req: Request, res: Response, next: NextFunction) {
+  // Skip rate limiting for static assets and development files
+  if (req.path.includes('.') || req.path.startsWith('/src/') || req.path.startsWith('/@fs/')) {
+    return next();
+  }
   
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
   const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxRequests = 100;
+  const maxRequests = 1000; // Increased for development
   const now = Date.now();
   
   if (!rateLimitStore[ip] || now > rateLimitStore[ip].resetTime) {

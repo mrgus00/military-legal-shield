@@ -1,5 +1,6 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import express from "express";
+import type { RequestWithBody, RequestWithParams, AuthenticatedRequest } from "./types";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";

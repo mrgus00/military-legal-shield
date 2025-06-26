@@ -1,5 +1,5 @@
 import React from 'react';
-import { PerformanceOptimization } from '@/components/performance/PerformanceOptimization';
+import PerformanceOptimization from '@/components/performance/PerformanceOptimization';
 
 export default function PerformanceDashboard() {
   return (

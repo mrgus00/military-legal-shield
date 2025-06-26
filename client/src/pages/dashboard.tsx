@@ -310,7 +310,14 @@ export default function Dashboard() {
           </TabsContent>
 
           <TabsContent value="widgets" className="space-y-6">
-            <WidgetDashboard />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <WidgetDashboard />
+              </div>
+              <div className="space-y-6">
+                <PerformanceWidget showTitle={true} autoRefresh={true} />
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="documents">

@@ -11,6 +11,7 @@ import { Menu, ChevronDown, User, LogOut, Shield, Scale, BookOpen, Users, Phone,
 import { Link, useLocation } from "wouter";
 import Logo from "@/components/logo";
 import { useAuth } from "@/hooks/useAuth";
+import { PerformanceIndicator } from "@/components/performance/PerformanceWidget";
 
 export default function Header() {
   const [location] = useLocation();
@@ -168,6 +169,9 @@ export default function Header() {
             </nav>
 
             <div className="flex items-center space-x-4">
+              {/* Performance Indicator */}
+              <PerformanceIndicator />
+              
               <Link href="/urgent-match">
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 font-medium hidden sm:inline-flex">
                   Connect with a Lawyer

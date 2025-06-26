@@ -17,18 +17,18 @@ import {
 import { useToast } from "@/hooks/use-toast";
 
 interface VideoConsultationProps {
-  consultationId: string;
-  attorneyName: string;
-  scheduledTime: string;
-  duration: number;
+  consultationId?: string;
+  attorneyName?: string;
+  scheduledTime?: string;
+  duration?: number;
 }
 
 export default function VideoConsultation({ 
-  consultationId, 
-  attorneyName, 
-  scheduledTime, 
-  duration 
-}: VideoConsultationProps) {
+  consultationId = "demo-consultation-001", 
+  attorneyName = "Lt. Colonel Sarah Martinez (Ret.)", 
+  scheduledTime = "2:00 PM EST", 
+  duration = 60 
+}: VideoConsultationProps = {}) {
   const [isConnected, setIsConnected] = useState(false);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);

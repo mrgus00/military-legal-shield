@@ -48,7 +48,7 @@ export default function ChatSupport() {
     {
       title: "Emergency Legal Help",
       description: "Immediate assistance for urgent legal matters",
-      responseTime: "< 2 minutes",
+      responseTime: "&lt; 2 minutes",
       color: "red",
       message: "🚨 EMERGENCY: I need immediate legal assistance with an urgent matter."
     },
@@ -211,7 +211,7 @@ export default function ChatSupport() {
                   </div>
                   <Badge className="bg-white text-blue-600">
                     <Clock className="w-3 h-3 mr-1" />
-                    < 2 min response
+                    &lt; 2 min response
                   </Badge>
                 </div>
               </CardHeader>

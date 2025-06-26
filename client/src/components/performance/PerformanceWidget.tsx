@@ -92,21 +92,27 @@ export function PerformanceWidget({
 
   if (compact) {
     return (
-      <Card className={className}>
-        <CardContent className="p-3">
-          <div className="flex items-center justify-between">
+      <Card className={`${className} border-gray-200 dark:border-gray-700 shadow-sm`}>
+        <CardContent className="p-2 sm:p-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Performance</span>
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
+              <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Performance</span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between sm:justify-end space-x-2">
               <Badge 
                 variant={performanceScore > 80 ? 'default' : performanceScore > 60 ? 'secondary' : 'destructive'}
-                className="text-xs"
+                className={`text-xs px-2 py-0.5 ${
+                  performanceScore > 80 
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : performanceScore > 60 
+                    ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
+                    : 'bg-red-600 hover:bg-red-700 text-white'
+                }`}
               >
                 {performanceScore}/100
               </Badge>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-gray-600 dark:text-gray-400">
                 {metrics.performance.cacheHitRate.toFixed(0)}% cache
               </div>
             </div>

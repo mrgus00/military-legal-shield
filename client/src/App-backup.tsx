@@ -93,8 +93,8 @@ import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
 
 function Router() {
-  // Temporarily disabled analytics to fix hook violations
-  // useAnalytics();
+  // Track page views when routes change
+  useAnalytics();
   
   return (
     <Switch>

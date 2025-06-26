@@ -39,8 +39,12 @@ interface RateLimitStore {
 
 const rateLimitStore: RateLimitStore = {};
 
-// General API rate limiting
+// General API rate limiting (temporarily disabled for debugging)
 export function generalLimiter(req: Request, res: Response, next: NextFunction) {
+  // Temporarily disabled for debugging - always allow requests
+  next();
+  return;
+  
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 100;

@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import express from "express";
-import type { RequestWithBody, RequestWithParams, AuthenticatedRequest } from "./types";
+import type { TypedRequest, AuthenticatedRequest } from "./types";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
@@ -1435,16 +1435,17 @@ Allow: /feed.xml`;
       const locationState = location?.includes(',') ? location.split(',')[1]?.trim() : location;
       const specializationArray = Array.isArray(specializations) ? specializations : [caseType];
       
-      let attorneys;
+      let attorneyResults: any[] = [];
       try {
-        const result = await db.select().from(storage.attorneys || storage).limit(5);
-        attorneys = Array.isArray(result) ? result : [];
+        // Use the correct database table from schema
+        const result = await db.select().from(attorneys).limit(5);
+        attorneyResults = Array.isArray(result) ? result : [];
       } catch (dbError) {
-        // Query from actual attorney database
+        // Fallback to storage method
         try {
-          attorneys = await storage.getAllAttorneys?.() || [];
+          attorneyResults = await storage.getAttorneys?.({}) || [];
         } catch {
-          attorneys = [];
+          attorneyResults = [];
         }
       }
 
@@ -2544,8 +2545,8 @@ Allow: /feed.xml`;
         .where(
           and(
             or(
-              eq(attorneys.militaryBranch, branch),
-              eq(attorneys.militaryBranch, 'all')
+              ilike(attorneys.militaryBranches, `%${branch}%`),
+              ilike(attorneys.militaryBranches, '%all%')
             ),
             ilike(attorneys.specialties, `%${caseType}%`)
           )

@@ -132,14 +132,35 @@ export default function Home() {
                 <span className="sm:hidden"> </span>From emergency defense to everyday legal needs—we're here 24/7.
               </p>
               
-              {/* Immediate CTA */}
+              {/* Emergency & Regular CTA Buttons */}
               <div className="mb-6 sm:mb-8 px-1 sm:px-2 w-full max-w-full">
-                <Link href="/urgent-match">
-                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-8 md:px-12 py-3 sm:py-4 text-sm sm:text-lg md:text-xl font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full max-w-full sm:max-w-md mx-auto responsive-button">
-                    <Scale className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 flex-shrink-0" />
-                    <span className="text-overflow-safe">Connect with a Lawyer Now</span>
-                  </Button>
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-4xl mx-auto">
+                  {/* Emergency Consultation - Red/Urgent */}
+                  <Link href="/emergency-consultation" className="flex-1">
+                    <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-lg font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full border border-red-500 animate-pulse">
+                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                      <span className="text-overflow-safe">Emergency Legal Help</span>
+                    </Button>
+                  </Link>
+                  
+                  {/* Regular Consultation - Orange/Professional */}
+                  <Link href="/urgent-match" className="flex-1">
+                    <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-lg font-bold rounded-xl transform transition hover:scale-105 shadow-2xl w-full">
+                      <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                      <span className="text-overflow-safe">Find Attorney</span>
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* Emergency Contact Info */}
+                <div className="text-center mt-4 sm:mt-6">
+                  <p className="text-white text-xs sm:text-sm opacity-90 mb-2">
+                    <span className="font-semibold">Emergency Hotline:</span> (800) 555-0123
+                  </p>
+                  <p className="text-white text-xs opacity-75">
+                    Available 24/7 for immediate legal threats
+                  </p>
+                </div>
               </div>
             </div>
 

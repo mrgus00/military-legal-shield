@@ -1851,12 +1851,12 @@ Allow: /feed.xml`;
         const emergencyAlert: EmergencyAlert = {
           fullName: consultationData.fullName,
           rank: consultationData.rank || 'Unknown',
-          branch: consultationData.branch || 'Unknown',
+          branch: consultationData.branch,
           phoneNumber: consultationData.phone,
-          legalIssue: consultationData.legalIssue,
+          legalIssue: consultationData.legalIssueType,
           urgencyLevel: consultationData.urgencyLevel as 'critical' | 'high' | 'medium',
-          location: consultationData.preferredContactMethod,
-          additionalDetails: consultationData.description || ''
+          location: consultationData.location,
+          additionalDetails: consultationData.issueDescription
         };
 
         // Send emergency alert via SMS

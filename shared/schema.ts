@@ -1118,6 +1118,18 @@ export const insertEmergencyConsultationSchema = createInsertSchema(emergencyCon
   id: true,
   createdAt: true,
   updatedAt: true,
+  matchedAt: true,
+  consultationDate: true,
+  consultationDuration: true,
+  consultationNotes: true,
+  followUpRequired: true,
+  followUpDate: true,
+  satisfactionRating: true,
+  feedback: true,
+  isEmergency: true,
+  priorityScore: true,
+  assignedAttorneyId: true,
+  status: true,
 }).extend({
   urgencyLevel: z.enum(["immediate", "urgent", "priority"]),
   legalIssueType: z.enum([
@@ -1142,5 +1154,7 @@ export const insertEmergencyConsultationSchema = createInsertSchema(emergencyCon
 
 export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
 export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
+
+
 
 

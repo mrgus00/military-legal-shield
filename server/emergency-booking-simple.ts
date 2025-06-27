@@ -108,18 +108,20 @@ export async function createEmergencyBooking(req: Request, res: Response) {
       
       // Notify client via SMS
       if (clientPhone) {
-        await twilioService.sendSMS(
-          clientPhone,
-          `Emergency legal consultation confirmed! Reference: ${bookingReference}. Attorney ${attorneyName} will contact you at ${scheduledDateTime.toLocaleTimeString()}. Reply STOP to opt out.`
-        );
+        await twilioService.sendSMS({
+          to: clientPhone,
+          message: `Emergency legal consultation confirmed! Reference: ${bookingReference}. Attorney ${attorneyName} will contact you at ${scheduledDateTime.toLocaleTimeString()}. Reply STOP to opt out.`,
+          type: 'emergency'
+        });
       }
       
       // Notify attorney via SMS
       if (selectedAttorney.phone) {
-        await twilioService.sendSMS(
-          selectedAttorney.phone,
-          `URGENT: Emergency consultation booked. Reference: ${bookingReference}. Contact client at ${clientPhone} regarding ${bookingData.issueType}. Scheduled: ${scheduledDateTime.toLocaleTimeString()}`
-        );
+        await twilioService.sendSMS({
+          to: selectedAttorney.phone,
+          message: `URGENT: Emergency consultation booked. Reference: ${bookingReference}. Contact client at ${clientPhone} regarding ${bookingData.issueType}. Scheduled: ${scheduledDateTime.toLocaleTimeString()}`,
+          type: 'emergency'
+        });
       }
     } catch (smsError) {
       console.error("SMS notification failed:", smsError);
@@ -274,10 +276,11 @@ export async function handleEmergencyHotline(req: Request, res: Response) {
     
     // Send immediate response SMS
     if (phone) {
-      await twilioService.sendSMS(
-        phone,
-        "Emergency hotline activated. A legal representative will call you within 5 minutes. If this is a life-threatening emergency, call 911 immediately."
-      );
+      await twilioService.sendSMS({
+        to: phone,
+        message: "Emergency hotline activated. A legal representative will call you within 5 minutes. If this is a life-threatening emergency, call 911 immediately.",
+        type: 'emergency'
+      });
     }
     
     // Alert on-duty attorney
@@ -293,10 +296,11 @@ export async function handleEmergencyHotline(req: Request, res: Response) {
       .limit(1);
     
     if (onDutyAttorneys.length > 0 && onDutyAttorneys[0].phone) {
-      await twilioService.sendSMS(
-        onDutyAttorneys[0].phone,
-        `CRITICAL: Emergency hotline call from ${phone}. Message: ${briefMessage}. Call immediately.`
-      );
+      await twilioService.sendSMS({
+        to: onDutyAttorneys[0].phone,
+        message: `CRITICAL: Emergency hotline call from ${phone}. Message: ${briefMessage}. Call immediately.`,
+        type: 'emergency'
+      });
     }
     
     res.json({

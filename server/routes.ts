@@ -56,6 +56,15 @@ import {
   getUserPublicKey,
   secureMessagingHealth
 } from "./secure-messaging";
+// Emergency booking system
+import {
+  createEmergencyBooking,
+  getBookingStatus,
+  updateBookingStatus,
+  getUserEmergencyBookings,
+  handleEmergencyHotline,
+  getAvailableEmergencyAttorneys
+} from "./emergency-booking-simple";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1912,6 +1921,14 @@ Allow: /feed.xml`;
   app.post("/api/secure-messaging/register-key", registerUserKey);
   app.get("/api/secure-messaging/user-key/:userId", getUserPublicKey);
   app.get("/api/secure-messaging/health", secureMessagingHealth);
+
+  // Emergency booking system routes
+  app.post("/api/emergency-booking/create", createEmergencyBooking);
+  app.get("/api/emergency-booking/status/:reference", getBookingStatus);
+  app.put("/api/emergency-booking/update/:reference", updateBookingStatus);
+  app.get("/api/emergency-booking/user-bookings", getUserEmergencyBookings);
+  app.post("/api/emergency-booking/hotline", handleEmergencyHotline);
+  app.get("/api/emergency-booking/available-attorneys", getAvailableEmergencyAttorneys);
 
   // Communication features endpoints (basic versions)
   app.post("/api/communication/chat", (req, res) => {

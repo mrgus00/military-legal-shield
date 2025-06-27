@@ -94,6 +94,7 @@ import PerformanceDashboard from "@/pages/PerformanceDashboard";
 import SimpleCommunicationHub from "@/pages/SimpleCommunicationHub";
 import SecureMessaging from "@/pages/SecureMessaging";
 import MobileDashboard from "@/pages/MobileDashboard";
+import EmergencyBooking from "@/pages/EmergencyBooking";
 
 function Router() {
   // Track page views when routes change

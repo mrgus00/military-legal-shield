@@ -30,6 +30,7 @@ import {
   Pause,
   RotateCcw
 } from 'lucide-react';
+import { HomeButton } from '@/components/HomeButton';
 
 interface HolographicMessage {
   id: string;
@@ -341,6 +342,9 @@ const HolographicAssistant: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <div className="flex justify-start mb-6">
+            <HomeButton className="bg-gray-800/50 border-gray-600 text-white hover:bg-gray-700/50" />
+          </div>
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4 border border-blue-500/30">
               <Sparkles className="w-4 h-4" />

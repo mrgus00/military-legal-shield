@@ -26,6 +26,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
+import { HomeButton } from '@/components/HomeButton';
 
 interface SEOMetrics {
   totalImpressions: number;
@@ -193,9 +194,12 @@ export default function MarketingDashboard() {
         
         {/* Header */}
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Marketing Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400">Monitor SEO, social media, and referral performance</p>
+          <div className="flex items-center gap-4">
+            <HomeButton />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Marketing Dashboard</h1>
+              <p className="text-gray-600 dark:text-gray-400">Monitor SEO, social media, and referral performance</p>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
             <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>

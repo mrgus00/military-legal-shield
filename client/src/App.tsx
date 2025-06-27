@@ -99,7 +99,7 @@ import MobileDashboard from "@/pages/MobileDashboard";
 
 function Router() {
   // Track page views when routes change
-  useAnalytics();
+  // useAnalytics(); // Temporarily disabled to fix hook issue
   
   return (
     <Switch>
@@ -214,24 +214,10 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LoadingProvider>
-        <MoodProvider>
-          <BranchProvider>
             <TooltipProvider>
-              <GoogleAnalytics />
-              <GoogleTagManager />
-              <GoogleSearchConsole />
-              <GoogleBusinessProfile />
               <Toaster />
               <Router />
-              <BackToTop />
-              <LegalAssistantChatbot />
-              <FloatingWhatsAppButton />
-              <PWAInstaller />
             </TooltipProvider>
-          </BranchProvider>
-        </MoodProvider>
-      </LoadingProvider>
     </QueryClientProvider>
   );
 }

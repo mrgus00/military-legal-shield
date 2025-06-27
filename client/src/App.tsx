@@ -14,8 +14,8 @@ import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import { FloatingWhatsAppButton } from "@/components/whatsapp-connector";
 import MilitaryLoadingScreen from "@/components/military-loading-screen";
 import PWAInstaller from "@/components/pwa-installer";
-import PWAInstallPrompt from "@/components/mobile/PWAInstallPrompt";
-import { useLoading } from "@/contexts/LoadingContext";
+
+
 import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
@@ -228,8 +228,6 @@ function App() {
               <LegalAssistantChatbot />
               <FloatingWhatsAppButton />
               <PWAInstaller />
-              <PWAInstallPrompt />
-              <AppLoadingScreen />
             </TooltipProvider>
           </BranchProvider>
         </MoodProvider>
@@ -238,18 +236,6 @@ function App() {
   );
 }
 
-function AppLoadingScreen() {
-  const { loadingState } = useLoading();
-  
-  return (
-    <MilitaryLoadingScreen 
-      isLoading={loadingState.isLoading}
-      loadingText={loadingState.loadingText}
-      variant={loadingState.variant}
-      progress={loadingState.progress}
-      showProgress={loadingState.showProgress}
-    />
-  );
-}
+
 
 export default App;

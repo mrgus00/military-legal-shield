@@ -15,7 +15,8 @@ import {
   Shield,
   Lock,
   Timer,
-  EyeOff
+  EyeOff,
+  Smartphone
 } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
@@ -306,6 +307,25 @@ export default function SimpleCommunicationHub() {
                     </Button>
                   </Link>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Mobile Dashboard Link */}
+          <div className="mt-8 text-center">
+            <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              <CardContent className="py-6">
+                <h3 className="text-xl font-bold mb-2 flex items-center justify-center gap-2">
+                  <Smartphone className="w-6 h-6" />
+                  Mobile App Features
+                </h3>
+                <p className="mb-4">Access advanced PWA features, offline capabilities, and mobile-optimized tools</p>
+                <Link href="/mobile-dashboard">
+                  <Button className="bg-white text-blue-600 hover:bg-gray-100 font-semibold">
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    Open Mobile Dashboard
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

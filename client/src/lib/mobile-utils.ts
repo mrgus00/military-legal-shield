@@ -240,7 +240,10 @@ export async function scheduleBackgroundSync(tag: string, data?: any): Promise<b
       await cache.put(`/sync-${tag}`, new Response(JSON.stringify(data)));
     }
 
-    await registration.sync.register(tag);
+    // Type assertion for sync property
+    if ('sync' in registration) {
+      await (registration as any).sync.register(tag);
+    }
     return true;
   } catch (error) {
     console.error('Failed to schedule background sync:', error);
@@ -251,10 +254,16 @@ export async function scheduleBackgroundSync(tag: string, data?: any): Promise<b
 // Web Share API
 export async function shareContent(data: ShareData): Promise<boolean> {
   if (!('share' in navigator)) {
-    // Fallback to clipboard or other sharing methods
-    if (data.url && 'clipboard' in navigator) {
+    // Fallback to copying URL
+    if (data.url) {
       try {
-        await navigator.clipboard.writeText(data.url);
+        // Simple fallback without clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = data.url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
         return true;
       } catch (error) {
         console.error('Failed to copy to clipboard:', error);

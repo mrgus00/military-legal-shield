@@ -11,8 +11,13 @@ import {
   Send, 
   Calendar,
   MessageCircle,
-  Headphones
+  Headphones,
+  Shield,
+  Lock,
+  Timer,
+  EyeOff
 } from "lucide-react";
+import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/page-layout";
 
@@ -243,6 +248,63 @@ export default function SimpleCommunicationHub() {
                     <li>• Emergency consultation confirmations</li>
                     <li>• Legal resource recommendations</li>
                   </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Secure Messaging - NEW Signal-like Features */}
+            <Card className="bg-white/95 backdrop-blur-sm lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-blue-600" />
+                  Secure Military Messaging
+                </CardTitle>
+                <CardDescription>
+                  Signal-like privacy with end-to-end encryption, self-destructing messages, and minimal metadata logging
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <Lock className="w-8 h-8 text-blue-600" />
+                    <div>
+                      <h4 className="font-semibold text-blue-800">End-to-End Encryption</h4>
+                      <p className="text-sm text-blue-600">Military-grade cryptography</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <Timer className="w-8 h-8 text-blue-600" />
+                    <div>
+                      <h4 className="font-semibold text-blue-800">Self-Destructing Messages</h4>
+                      <p className="text-sm text-blue-600">Auto-delete after set time</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <EyeOff className="w-8 h-8 text-blue-600" />
+                    <div>
+                      <h4 className="font-semibold text-blue-800">No Metadata Logging</h4>
+                      <p className="text-sm text-blue-600">Zero IP or timestamp storage</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3">Privacy Features</h3>
+                  <ul className="space-y-2 text-sm mb-4">
+                    <li>• Forward secrecy with ephemeral keys for each message</li>
+                    <li>• Messages automatically deleted from server after delivery</li>
+                    <li>• No user identification or personal data stored</li>
+                    <li>• Perfect for sensitive military legal communications</li>
+                  </ul>
+                  
+                  <Link href="/secure-messaging">
+                    <Button className="bg-white text-blue-600 hover:bg-gray-100 font-semibold">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Open Secure Messaging
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

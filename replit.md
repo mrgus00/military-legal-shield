@@ -113,6 +113,7 @@ MilitaryLegalShield is a comprehensive AI-powered legal support platform specifi
 
 ## Changelog
 
+- June 27, 2025. Implemented Signal-like privacy features with end-to-end encryption, self-destructing messages, and minimal metadata storage. Features include military-grade E2EE using Web Crypto API with ECDH key exchange and AES-GCM encryption, ephemeral keys for forward secrecy, self-destructing messages with configurable timers, zero IP/timestamp logging on server, automatic message deletion after delivery, and secure messaging interface at /secure-messaging.
 - June 26, 2025. Integrated performance optimization system into user interface with comprehensive dashboard, real-time widgets, and global monitoring indicators. Features include /performance-dashboard route, Performance Widget in main dashboard, header-based Performance Indicator, and advanced OptimizedImage component with WebP/AVIF support.
 - June 26, 2025. Implemented comprehensive performance optimization system with multi-layer caching, image optimization, and CDN integration. Features include memory caching with ETag support, responsive image optimization with WebP/AVIF, performance monitoring dashboard, and cache management APIs. Achieved 40-70% improvement in load times.
 - June 26, 2025. Implemented comprehensive security enhancements including rate limiting, CSRF protection, and advanced authentication features for premium users

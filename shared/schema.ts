@@ -290,6 +290,51 @@ export const userSubscriptions = pgTable("user_subscriptions", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Emergency Consultation Bookings - Enhanced for one-click system
+export const emergencyBookings = pgTable("emergency_bookings", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  bookingReference: text("booking_reference").notNull().unique(), // Quick reference for tracking
+  urgencyLevel: text("urgency_level").notNull(), // critical, urgent, high, routine
+  issueType: text("issue_type").notNull(), // court-martial, security-clearance, administrative, etc.
+  briefDescription: text("brief_description").notNull(),
+  preferredContactMethod: text("preferred_contact_method").notNull(), // phone, video, in-person
+  contactInfo: jsonb("contact_info").notNull(), // phone, email, location preference
+  status: text("status").notNull().default("pending"), // pending, confirmed, in-progress, completed, cancelled
+  scheduledDateTime: timestamp("scheduled_date_time"),
+  estimatedDuration: integer("estimated_duration").default(30), // minutes
+  attorneyResponseTime: timestamp("attorney_response_time"),
+  connectionTime: timestamp("connection_time"),
+  completionTime: timestamp("completion_time"),
+  cost: integer("cost").default(0), // in cents
+  isEmergencyCredit: boolean("is_emergency_credit").default(false),
+  meetingLink: text("meeting_link"), // For video consultations
+  meetingPassword: text("meeting_password"),
+  notes: text("notes"), // Attorney notes
+  followUpRequired: boolean("follow_up_required").default(false),
+  satisfaction: integer("satisfaction"), // 1-5 rating
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Attorney Availability for real-time booking
+export const attorneyAvailability = pgTable("attorney_availability", {
+  id: serial("id").primaryKey(),
+  attorneyId: integer("attorney_id").references(() => attorneys.id),
+  dayOfWeek: integer("day_of_week").notNull(), // 0-6 (Sunday-Saturday)
+  startTime: text("start_time").notNull(), // "09:00"
+  endTime: text("end_time").notNull(), // "17:00"
+  timezone: text("timezone").notNull().default("America/New_York"),
+  isEmergencyAvailable: boolean("is_emergency_available").default(false),
+  emergencyResponseTime: integer("emergency_response_time").default(15), // minutes
+  maxDailyEmergencyBookings: integer("max_daily_emergency_bookings").default(3),
+  currentEmergencyBookings: integer("current_emergency_bookings").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Emergency Service Usage
 export const emergencyServices = pgTable("emergency_services", {
   id: serial("id").primaryKey(),
@@ -1154,6 +1199,46 @@ export const insertEmergencyConsultationSchema = createInsertSchema(emergencyCon
 
 export type EmergencyConsultation = typeof emergencyConsultations.$inferSelect;
 export type InsertEmergencyConsultation = z.infer<typeof insertEmergencyConsultationSchema>;
+
+// Emergency Booking Schemas
+export const insertEmergencyBookingSchema = createInsertSchema(emergencyBookings, {
+  urgencyLevel: z.enum(["critical", "urgent", "high", "routine"]),
+  issueType: z.enum([
+    "court-martial",
+    "security-clearance", 
+    "administrative-action",
+    "meb-peb",
+    "discharge-upgrade",
+    "family-law",
+    "finance",
+    "criminal",
+    "other"
+  ]),
+  briefDescription: z.string().min(20, "Please provide at least 20 characters describing the issue"),
+  preferredContactMethod: z.enum(["phone", "video", "in-person"]),
+  contactInfo: z.object({
+    phone: z.string().min(10, "Phone number required"),
+    email: z.string().email("Valid email required"),
+    location: z.string().optional(),
+    preferredTime: z.string().optional(),
+    timezone: z.string().default("America/New_York")
+  }),
+  estimatedDuration: z.number().min(15).max(240).default(30),
+});
+
+export const insertAttorneyAvailabilitySchema = createInsertSchema(attorneyAvailability, {
+  dayOfWeek: z.number().min(0).max(6),
+  startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format"),
+  endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format"),
+  timezone: z.string().default("America/New_York"),
+  emergencyResponseTime: z.number().min(5).max(60).default(15),
+  maxDailyEmergencyBookings: z.number().min(1).max(10).default(3),
+});
+
+export type EmergencyBooking = typeof emergencyBookings.$inferSelect;
+export type InsertEmergencyBooking = z.infer<typeof insertEmergencyBookingSchema>;
+export type AttorneyAvailability = typeof attorneyAvailability.$inferSelect;
+export type InsertAttorneyAvailability = z.infer<typeof insertAttorneyAvailabilitySchema>;
 
 
 

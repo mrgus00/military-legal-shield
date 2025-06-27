@@ -48,6 +48,7 @@ import {
 } from "./platform-submission";
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import { setupSecurityRoutes } from "./security-routes";
+import { processHolographicGuidance, getGuidanceTemplates, getSessionHistory } from './holographic-guidance';
 // Secure messaging system with Signal-like privacy features
 import {
   sendSecureMessage,
@@ -2809,6 +2810,11 @@ Allow: /feed.xml`;
       res.status(500).json({ error: 'Failed to send welcome SMS' });
     }
   });
+
+  // Holographic Legal Guidance Assistant API Endpoints
+  app.post('/api/holographic-guidance/process', processHolographicGuidance);
+  app.get('/api/holographic-guidance/templates', getGuidanceTemplates);
+  app.get('/api/holographic-guidance/sessions', getSessionHistory);
 
   // CDN and Cloudflare management endpoints
   app.post('/api/cdn/purge-cache', async (req, res) => {

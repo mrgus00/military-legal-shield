@@ -3,9 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { BranchProvider } from "@/contexts/BranchContext";
-import { MoodProvider } from "@/contexts/MoodContext";
-import { LoadingProvider } from "@/contexts/LoadingContext";
+import { AppProvider } from "@/contexts/AppContext";
 import GoogleAnalytics from "@/components/google-analytics";
 import GoogleTagManager from "@/components/google-tag-manager";
 import GoogleSearchConsole, { GoogleBusinessProfile } from "@/components/google-search-console";
@@ -144,6 +142,7 @@ function Router() {
       <Route path="/emergency-consultation" component={EmergencyConsultation} />
       <Route path="/communication-hub" component={SimpleCommunicationHub} />
       <Route path="/secure-messaging" component={SecureMessaging} />
+      <Route path="/mobile-dashboard" component={MobileDashboard} />
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />
@@ -222,13 +221,15 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="min-h-screen bg-gray-50">
-          <h1 className="text-2xl font-bold p-8">Military Legal Shield</h1>
-          <Router />
-        </div>
-        <Toaster />
-      </TooltipProvider>
+      <AppProvider>
+        <TooltipProvider>
+          <div className="min-h-screen bg-gray-50">
+            <h1 className="text-2xl font-bold p-8">Military Legal Shield</h1>
+            <Router />
+          </div>
+          <Toaster />
+        </TooltipProvider>
+      </AppProvider>
     </QueryClientProvider>
   );
 }

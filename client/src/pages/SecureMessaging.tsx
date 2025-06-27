@@ -221,6 +221,9 @@ export default function SecureMessaging() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex justify-start mb-6">
+          <HomeButton className="bg-slate-800/50 border-slate-600 text-white hover:bg-slate-700/50" />
+        </div>
         {/* Header */}
         <Card className="border-blue-200/20 bg-white/95 backdrop-blur-sm">
           <CardHeader>

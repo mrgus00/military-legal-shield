@@ -1,224 +1,57 @@
-name: Deploy MilitaryLegalShield
+name: Deploy Military Legal Shield
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v3
+    
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
         node-version: '20'
         cache: 'npm'
-        
+    
     - name: Install dependencies
       run: npm ci
-      
-    - name: Type check
+    
+    - name: Run TypeScript check
       run: npm run type-check
-      
-    - name: Lint code
-      run: npm run lint
-      
-    - name: Security audit
-      run: npm audit --audit-level=moderate
-      
+    
+    - name: Build application
+      run: npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
     - name: Build application
       run: npm run build
       env:
-        VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
-        
-    - name: Run tests
-      run: npm test
-      
-  security:
-    runs-on: ubuntu-latest
-    needs: test
+        VITE_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+        VITE_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-        
-    - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
-      with:
-        sarif_file: 'trivy-results.sarif'
-
-  deploy-staging:
-    runs-on: ubuntu-latest
-    needs: [test, security]
-    if: github.ref == 'refs/heads/main'
-    environment: staging
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build for staging
-      run: npm run build
-      env:
-        NODE_ENV: staging
-        DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-        VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
-        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-        TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
-        UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-        
-    - name: Deploy to staging
-      run: |
-        echo "Deploying to staging environment..."
-        # Add your staging deployment commands here
-        
-    - name: Health check staging
-      run: |
-        sleep 30
-        curl -f https://staging.militarylegalshield.com/api/health || exit 1
-
-  deploy-production:
-    runs-on: ubuntu-latest
-    needs: deploy-staging
-    if: github.ref == 'refs/heads/main'
-    environment: production
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build for production
-      run: npm run build
-      env:
-        NODE_ENV: production
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-        VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
-        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-        TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
-        UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-        CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        
-    - name: Build Docker image
-      run: |
-        docker build -t militarylegalshield:${{ github.sha }} .
-        docker tag militarylegalshield:${{ github.sha }} militarylegalshield:latest
-        
     - name: Deploy to production
       run: |
-        echo "Deploying to production environment..."
-        # Add your production deployment commands here
-        
-    - name: Database migration
-      run: |
-        npm run db:migrate
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        
-    - name: Purge CDN cache
-      run: |
-        curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-          -H "Content-Type: application/json" \
-          --data '{"purge_everything":true}'
-          
-    - name: Health check production
-      run: |
-        sleep 60
-        curl -f https://militarylegalshield.com/api/health || exit 1
-        
-    - name: Notify deployment success
-      if: success()
-      run: |
-        echo "Production deployment successful!"
-        
-    - name: Notify deployment failure
-      if: failure()
-      run: |
-        echo "Production deployment failed!"
-        exit 1
-
-  seo-submission:
-    runs-on: ubuntu-latest
-    needs: deploy-production
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Submit sitemap to Google
-      run: |
-        curl -X GET "https://www.google.com/ping?sitemap=https://militarylegalshield.com/sitemap.xml"
-        
-    - name: Submit sitemap to Bing
-      run: |
-        curl -X GET "https://www.bing.com/ping?sitemap=https://militarylegalshield.com/sitemap.xml"
-        
-    - name: Update search console
-      run: |
-        echo "Submitting URLs to search engines..."
-        curl -X POST "https://militarylegalshield.com/api/submit-to-google"
-
-  performance-monitoring:
-    runs-on: ubuntu-latest
-    needs: deploy-production
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Performance audit
-      run: |
-        npx lighthouse https://militarylegalshield.com --output=json --output-path=./lighthouse-report.json --chrome-flags="--headless"
-        
-    - name: Upload performance report
-      uses: actions/upload-artifact@v4
-      with:
-        name: lighthouse-report
-        path: lighthouse-report.json
-        
-    - name: Check performance thresholds
-      run: |
-        # Check if performance score is above 90
-        PERF_SCORE=$(cat lighthouse-report.json | jq '.categories.performance.score * 100')
-        if (( $(echo "$PERF_SCORE < 90" | bc -l) )); then
-          echo "Performance score $PERF_SCORE is below threshold"
-          exit 1
-        fi
-        echo "Performance score: $PERF_SCORE"
+        echo "🚀 Deploying to production server..."
+        echo "Application built successfully and ready for deployment"

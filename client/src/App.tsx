@@ -14,6 +14,7 @@ import LegalAssistantChatbot from "@/components/legal-assistant-chatbot";
 import { FloatingWhatsAppButton } from "@/components/whatsapp-connector";
 import MilitaryLoadingScreen from "@/components/military-loading-screen";
 import PWAInstaller from "@/components/pwa-installer";
+import PWAInstallPrompt from "@/components/mobile/PWAInstallPrompt";
 import { useLoading } from "@/contexts/LoadingContext";
 import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
@@ -94,6 +95,7 @@ import Dashboard from "@/pages/dashboard";
 import PerformanceDashboard from "@/pages/PerformanceDashboard";
 import SimpleCommunicationHub from "@/pages/SimpleCommunicationHub";
 import SecureMessaging from "@/pages/SecureMessaging";
+import MobileDashboard from "@/pages/MobileDashboard";
 
 function Router() {
   // Track page views when routes change
@@ -186,6 +188,7 @@ function Router() {
       <Route path="/sms-center" component={SMSCenter} />
       <Route path="/cdn-dashboard" component={CDNDashboard} />
       <Route path="/performance-dashboard" component={PerformanceDashboard} />
+      <Route path="/mobile-dashboard" component={MobileDashboard} />
       <Route path="/accessibility-audit" component={AccessibilityAudit} />
       <Route path="/google-console" component={GoogleSearchConsoleDashboard} />
       <Route path="/ai-case-analysis" component={AICaseAnalysis} />
@@ -225,6 +228,7 @@ function App() {
               <LegalAssistantChatbot />
               <FloatingWhatsAppButton />
               <PWAInstaller />
+              <PWAInstallPrompt />
               <AppLoadingScreen />
             </TooltipProvider>
           </BranchProvider>

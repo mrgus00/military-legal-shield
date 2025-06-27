@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import EmergencyBookingWidget from '@/components/EmergencyBookingWidget';
 import { useQuery } from '@tanstack/react-query';
 import { Phone, Shield, Clock, Users, Star, AlertTriangle, Zap } from 'lucide-react';
+import { HomeButton } from '@/components/HomeButton';
 
 const EmergencyBooking: React.FC = () => {
   const [showBookingWidget, setShowBookingWidget] = useState(false);
@@ -25,6 +26,9 @@ const EmergencyBooking: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex justify-start mb-6">
+          <HomeButton />
+        </div>
         {/* Hero Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-4">

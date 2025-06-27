@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { militaryEncryption, messageExpirationManager, EncryptedMessage, MessageOptions } from "@/lib/encryption";
 import { apiRequest } from "@/lib/queryClient";
 import { Shield, Lock, Timer, AlertTriangle, CheckCircle, Send, Key, Eye, EyeOff } from "lucide-react";
+import { HomeButton } from "@/components/HomeButton";
 
 interface SecureMessage {
   id: string;

@@ -23,6 +23,7 @@ import PWAInstallPrompt from '@/components/mobile/PWAInstallPrompt';
 import MobileNotificationManager from '@/components/mobile/MobileNotificationManager';
 import OfflineHandler from '@/components/mobile/OfflineHandler';
 import { useMobileCapabilities, useViewport, shareContent } from '@/lib/mobile-utils';
+import { HomeButton } from '@/components/HomeButton';
 
 export default function MobileDashboard() {
   const capabilities = useMobileCapabilities();
@@ -116,6 +117,9 @@ export default function MobileDashboard() {
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
+            <div className="flex justify-start mb-6">
+              <HomeButton className="bg-blue-800/50 border-blue-600 text-white hover:bg-blue-700/50" />
+            </div>
             <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
               <Smartphone className="w-10 h-10" />
               Mobile App Dashboard

@@ -473,6 +473,7 @@ const HolographicAssistant: React.FC = () => {
         {/* Header Controls */}
         <div className="flex items-center justify-between mb-6 bg-gray-900/70 backdrop-blur-sm rounded-lg p-4">
           <div className="flex items-center gap-4">
+            <HomeButton className="bg-gray-800/50 border-gray-600 text-white hover:bg-gray-700/50" />
             <Button
               variant="outline"
               size="sm"

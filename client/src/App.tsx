@@ -103,7 +103,15 @@ function Router() {
   
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={() => (
+        <div className="p-8">
+          <h2 className="text-xl mb-4">Welcome to Military Legal Shield</h2>
+          <p className="mb-4">Platform is working! Testing mobile PWA features...</p>
+          <a href="/mobile-dashboard" className="text-blue-600 underline">
+            Visit Mobile Dashboard
+          </a>
+        </div>
+      )} />
       <Route path="/urgent-match" component={UrgentMatch} />
       <Route path="/messages" component={Messages} />
       <Route path="/case-tracking" component={CaseTracking} />
@@ -214,10 +222,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-              <Toaster />
-              <Router />
-            </TooltipProvider>
+      <TooltipProvider>
+        <div className="min-h-screen bg-gray-50">
+          <h1 className="text-2xl font-bold p-8">Military Legal Shield</h1>
+          <Router />
+        </div>
+        <Toaster />
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }

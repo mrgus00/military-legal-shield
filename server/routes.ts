@@ -50,6 +50,20 @@ import {
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import { setupSecurityRoutes } from "./security-routes";
 import { processHolographicGuidance, getGuidanceTemplates, getSessionHistory } from './holographic-guidance';
+// Marketing integration system
+import {
+  createReferral,
+  trackReferralConversion,
+  getReferralStats,
+  trackSEOMetrics,
+  getSEOReport,
+  trackSocialShare,
+  getSocialEngagementReport,
+  createMarketingCampaign,
+  updateCampaignPerformance,
+  trackPixel,
+  generateShareableContent
+} from './marketing-integration';
 // Secure messaging system with Signal-like privacy features
 import {
   sendSecureMessage,
@@ -2247,6 +2261,92 @@ Allow: /feed.xml`;
         message: "Platform launch failed",
         error: error instanceof Error ? error.message : 'Unknown error'
       });
+    }
+  });
+
+  // Marketing Integration API Endpoints
+  
+  // Referral System
+  app.post("/api/marketing/referrals", requireAuth, createReferral);
+  app.post("/api/marketing/referrals/convert", trackReferralConversion);
+  app.get("/api/marketing/referrals/stats/:userId", requireAuth, getReferralStats);
+  
+  // SEO Metrics
+  app.post("/api/marketing/seo/track", trackSEOMetrics);
+  app.get("/api/marketing/seo/report", getSEOReport);
+  
+  // Social Media Integration
+  app.post("/api/marketing/social/share", trackSocialShare);
+  app.get("/api/marketing/social/engagement", getSocialEngagementReport);
+  app.post("/api/marketing/social/generate-content", generateShareableContent);
+  
+  // Marketing Campaigns
+  app.post("/api/marketing/campaigns", requireAuth, createMarketingCampaign);
+  app.put("/api/marketing/campaigns/:campaignId/performance", requireAuth, updateCampaignPerformance);
+  
+  // Tracking Pixel
+  app.get("/api/marketing/track-pixel", trackPixel);
+  
+  // UTM Parameter Generator
+  app.get("/api/marketing/utm-generator", (req, res) => {
+    const { campaign, source, medium, content } = req.query;
+    
+    if (!campaign || !source || !medium) {
+      return res.status(400).json({ error: "Campaign, source, and medium parameters are required" });
+    }
+    
+    const params = new URLSearchParams({
+      utm_campaign: campaign as string,
+      utm_source: source as string,
+      utm_medium: medium as string,
+    });
+    
+    if (content) {
+      params.set('utm_content', content as string);
+    }
+    
+    res.json({
+      utmParams: params.toString(),
+      fullUrl: `${req.protocol}://${req.get('host')}?${params.toString()}`
+    });
+  });
+  
+  // A/B Testing Support
+  app.post("/api/marketing/ab-test/assign", (req, res) => {
+    const { testId, userId, sessionId } = req.body;
+    
+    // Simple A/B test assignment (50/50 split)
+    const variant = Math.random() < 0.5 ? 'A' : 'B';
+    
+    res.json({
+      testId,
+      variant,
+      assignedAt: new Date().toISOString()
+    });
+  });
+  
+  // Marketing Dashboard Data
+  app.get("/api/marketing/dashboard", requireAuth, async (req, res) => {
+    try {
+      const [
+        seoReport,
+        socialEngagement,
+        // campaignPerformance,
+        // referralStats
+      ] = await Promise.all([
+        getSEOReport({ query: { timeRange: 'month' } } as any, {} as any),
+        getSocialEngagementReport({} as any, {} as any),
+        // Add more parallel data fetching as needed
+      ]);
+      
+      res.json({
+        seo: seoReport,
+        social: socialEngagement,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Marketing dashboard error:', error);
+      res.status(500).json({ error: 'Failed to fetch marketing dashboard data' });
     }
   });
 

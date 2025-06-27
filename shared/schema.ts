@@ -1240,6 +1240,223 @@ export type InsertEmergencyBooking = z.infer<typeof insertEmergencyBookingSchema
 export type AttorneyAvailability = typeof attorneyAvailability.$inferSelect;
 export type InsertAttorneyAvailability = z.infer<typeof insertAttorneyAvailabilitySchema>;
 
+// Marketing Integration Tables
+
+// Referral tracking system
+export const referrals = pgTable("referrals", {
+  id: serial("id").primaryKey(),
+  referrerUserId: varchar("referrer_user_id").notNull(),
+  referredUserId: varchar("referred_user_id"),
+  referredEmail: varchar("referred_email").notNull(),
+  referralCode: varchar("referral_code").unique().notNull(),
+  source: varchar("source").notNull(), // email, social, direct, affiliate
+  campaignId: varchar("campaign_id"),
+  status: varchar("status").notNull().default("pending"), // pending, completed, failed
+  metadata: jsonb("metadata"), // Additional tracking data
+  rewardAmount: integer("reward_amount").default(0),
+  convertedAt: timestamp("converted_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// SEO metrics tracking
+export const seoMetrics = pgTable("seo_metrics", {
+  id: serial("id").primaryKey(),
+  page: varchar("page").notNull(),
+  keywords: text("keywords").array().notNull(),
+  impressions: integer("impressions").notNull().default(0),
+  clicks: integer("clicks").notNull().default(0),
+  avgPosition: integer("avg_position").notNull().default(0),
+  ctr: integer("ctr").notNull().default(0), // Click-through rate as percentage
+  conversionRate: integer("conversion_rate").notNull().default(0),
+  organicTraffic: integer("organic_traffic").notNull().default(0),
+  trackedAt: timestamp("tracked_at").defaultNow(),
+});
+
+// Social media sharing tracking
+export const socialShares = pgTable("social_shares", {
+  id: serial("id").primaryKey(),
+  platform: varchar("platform").notNull(), // facebook, twitter, linkedin, instagram, tiktok
+  contentType: varchar("content_type").notNull(), // attorney-match, emergency-booking, legal-guide, success-story
+  contentId: varchar("content_id").notNull(),
+  userId: varchar("user_id"),
+  shareText: text("share_text").notNull(),
+  shareUrl: varchar("share_url").notNull(),
+  likes: integer("likes").notNull().default(0),
+  shares: integer("shares").notNull().default(0),
+  comments: integer("comments").notNull().default(0),
+  clickThroughs: integer("click_throughs").notNull().default(0),
+  sharedAt: timestamp("shared_at").defaultNow(),
+});
+
+// Marketing campaigns management
+export const marketingCampaigns = pgTable("marketing_campaigns", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  type: varchar("type").notNull(), // social, email, ppc, content, referral
+  status: varchar("status").notNull().default("active"), // active, paused, completed
+  budget: integer("budget").notNull().default(0),
+  spend: integer("spend").notNull().default(0),
+  targetAudience: jsonb("target_audience").notNull(),
+  impressions: integer("impressions").notNull().default(0),
+  clicks: integer("clicks").notNull().default(0),
+  conversions: integer("conversions").notNull().default(0),
+  cost: integer("cost").notNull().default(0),
+  roi: integer("roi").notNull().default(0), // Return on investment as percentage
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// UTM tracking for campaign attribution
+export const utmTracking = pgTable("utm_tracking", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id"),
+  sessionId: varchar("session_id").notNull(),
+  utmSource: varchar("utm_source"),
+  utmMedium: varchar("utm_medium"),
+  utmCampaign: varchar("utm_campaign"),
+  utmContent: varchar("utm_content"),
+  utmTerm: varchar("utm_term"),
+  landingPage: varchar("landing_page").notNull(),
+  referrer: varchar("referrer"),
+  userAgent: text("user_agent"),
+  ipAddress: varchar("ip_address"),
+  converted: boolean("converted").default(false),
+  conversionType: varchar("conversion_type"), // signup, consultation, subscription
+  conversionValue: integer("conversion_value").default(0),
+  trackedAt: timestamp("tracked_at").defaultNow(),
+});
+
+// A/B testing framework
+export const abTests = pgTable("ab_tests", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  status: varchar("status").notNull().default("active"), // active, paused, completed
+  variants: jsonb("variants").notNull(), // Array of test variants
+  trafficSplit: jsonb("traffic_split").notNull(), // Percentage allocation
+  targetPages: text("target_pages").array(),
+  conversionGoal: varchar("conversion_goal").notNull(),
+  startDate: timestamp("start_date").defaultNow(),
+  endDate: timestamp("end_date"),
+  results: jsonb("results"), // Test results and statistics
+  winningVariant: varchar("winning_variant"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User participation in A/B tests
+export const userAbTests = pgTable("user_ab_tests", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id"),
+  sessionId: varchar("session_id").notNull(),
+  testId: integer("test_id").references(() => abTests.id),
+  variant: varchar("variant").notNull(),
+  converted: boolean("converted").default(false),
+  conversionValue: integer("conversion_value").default(0),
+  assignedAt: timestamp("assigned_at").defaultNow(),
+  convertedAt: timestamp("converted_at"),
+});
+
+// Email marketing campaigns
+export const emailCampaigns = pgTable("email_campaigns", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  subject: varchar("subject").notNull(),
+  content: text("content").notNull(),
+  segmentId: integer("segment_id"),
+  status: varchar("status").notNull().default("draft"), // draft, scheduled, sent, paused
+  scheduledAt: timestamp("scheduled_at"),
+  sentAt: timestamp("sent_at"),
+  recipients: integer("recipients").default(0),
+  opens: integer("opens").default(0),
+  clicks: integer("clicks").default(0),
+  unsubscribes: integer("unsubscribes").default(0),
+  bounces: integer("bounces").default(0),
+  conversions: integer("conversions").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User email engagement tracking
+export const emailEngagement = pgTable("email_engagement", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  campaignId: integer("campaign_id").references(() => emailCampaigns.id),
+  emailAddress: varchar("email_address").notNull(),
+  status: varchar("status").notNull(), // sent, opened, clicked, bounced, unsubscribed
+  actionTaken: varchar("action_taken"), // link_clicked, button_clicked, reply, forward
+  actionData: jsonb("action_data"), // Additional context about the action
+  trackedAt: timestamp("tracked_at").defaultNow(),
+});
+
+// Create insert schemas for marketing tables
+export const insertReferralSchema = createInsertSchema(referrals).omit({
+  id: true,
+  convertedAt: true,
+  rewardAmount: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertSeoMetricsSchema = createInsertSchema(seoMetrics).omit({
+  id: true,
+  trackedAt: true,
+});
+
+export const insertSocialShareSchema = createInsertSchema(socialShares).omit({
+  id: true,
+  sharedAt: true,
+});
+
+export const insertMarketingCampaignSchema = createInsertSchema(marketingCampaigns).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUtmTrackingSchema = createInsertSchema(utmTracking).omit({
+  id: true,
+  trackedAt: true,
+});
+
+export const insertAbTestSchema = createInsertSchema(abTests).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertEmailCampaignSchema = createInsertSchema(emailCampaigns).omit({
+  id: true,
+  sentAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Marketing integration types
+export type Referral = typeof referrals.$inferSelect;
+export type InsertReferral = z.infer<typeof insertReferralSchema>;
+
+export type SeoMetric = typeof seoMetrics.$inferSelect;
+export type InsertSeoMetric = z.infer<typeof insertSeoMetricsSchema>;
+
+export type SocialShare = typeof socialShares.$inferSelect;
+export type InsertSocialShare = z.infer<typeof insertSocialShareSchema>;
+
+export type MarketingCampaign = typeof marketingCampaigns.$inferSelect;
+export type InsertMarketingCampaign = z.infer<typeof insertMarketingCampaignSchema>;
+
+export type UtmTracking = typeof utmTracking.$inferSelect;
+export type InsertUtmTracking = z.infer<typeof insertUtmTrackingSchema>;
+
+export type AbTest = typeof abTests.$inferSelect;
+export type InsertAbTest = z.infer<typeof insertAbTestSchema>;
+
+export type EmailCampaign = typeof emailCampaigns.$inferSelect;
+export type InsertEmailCampaign = z.infer<typeof insertEmailCampaignSchema>;
+
 
 
 

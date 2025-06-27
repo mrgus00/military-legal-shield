@@ -96,6 +96,7 @@ import SecureMessaging from "@/pages/SecureMessaging";
 import MobileDashboard from "@/pages/MobileDashboard";
 import EmergencyBooking from "@/pages/EmergencyBooking";
 import HolographicGuidance from "@/pages/HolographicGuidance";
+import MarketingDashboard from "@/pages/MarketingDashboard";
 
 function Router() {
   // Track page views when routes change
@@ -128,6 +129,11 @@ function Router() {
               <h3 className="font-semibold text-green-800 mb-2">🔐 Secure Messaging</h3>
               <p className="text-sm text-green-700">Signal-like encrypted communications</p>
             </a>
+            
+            <a href="/marketing-dashboard" className="p-4 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors">
+              <h3 className="font-semibold text-orange-800 mb-2">📊 Marketing Dashboard</h3>
+              <p className="text-sm text-orange-700">SEO analytics, social media tracking & referrals</p>
+            </a>
           </div>
           
           <div className="bg-gray-50 p-4 rounded-lg">
@@ -137,6 +143,9 @@ function Router() {
               <li>✅ Holographic legal guidance assistant active</li>
               <li>✅ Mobile PWA enhancements active</li>
               <li>✅ End-to-end encryption enabled</li>
+              <li>✅ Marketing integration system deployed</li>
+              <li>✅ SEO tracking and social media analytics active</li>
+              <li>✅ Referral tracking and UTM campaign support active</li>
               <li>✅ Dynamic port configuration implemented</li>
               <li>✅ Context providers restored</li>
             </ul>
@@ -178,6 +187,7 @@ function Router() {
       <Route path="/mobile-dashboard" component={MobileDashboard} />
       <Route path="/emergency-booking" component={EmergencyBooking} />
       <Route path="/holographic-guidance" component={HolographicGuidance} />
+      <Route path="/marketing-dashboard" component={MarketingDashboard} />
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />

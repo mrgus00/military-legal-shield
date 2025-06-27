@@ -43,10 +43,11 @@ export default function SocialShareButton({
   const generateShareContent = async () => {
     setIsGenerating(true);
     try {
-      const content = await apiRequest('POST', '/api/marketing/social/generate-content', {
+      const response = await apiRequest('POST', '/api/marketing/social/generate-content', {
         contentType,
         contentId
       });
+      const content = await response.json();
       setShareContent(content);
     } catch (error) {
       toast({

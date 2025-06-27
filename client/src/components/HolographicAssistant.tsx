@@ -196,9 +196,9 @@ const HolographicAssistant: React.FC = () => {
       context?: any;
     }) => {
       const response = await apiRequest('POST', '/api/holographic-guidance/process', query);
-      return response;
+      return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       if (currentSession) {
         const newMessage: HolographicMessage = {
           id: Date.now().toString(),

@@ -77,7 +77,10 @@ export default function MarketingDashboard() {
   // Fetch SEO report with time range
   const { data: seoData, isLoading: isSeoLoading } = useQuery<SEOMetrics>({
     queryKey: ['/api/marketing/seo/report', selectedTimeRange],
-    queryFn: () => apiRequest('GET', `/api/marketing/seo/report?timeRange=${selectedTimeRange}`)
+    queryFn: async () => {
+      const response = await apiRequest('GET', `/api/marketing/seo/report?timeRange=${selectedTimeRange}`);
+      return response.json();
+    }
   });
 
   // Fetch social engagement
@@ -125,9 +128,11 @@ export default function MarketingDashboard() {
 
   // Generate shareable content mutation
   const generateContentMutation = useMutation({
-    mutationFn: (contentData: { contentType: string; contentId: string }) =>
-      apiRequest('POST', '/api/marketing/social/generate-content', contentData),
-    onSuccess: (data) => {
+    mutationFn: async (contentData: { contentType: string; contentId: string }) => {
+      const response = await apiRequest('POST', '/api/marketing/social/generate-content', contentData);
+      return response.json();
+    },
+    onSuccess: (data: any) => {
       navigator.clipboard.writeText(data.shareUrl);
       toast({
         title: "Content Generated",

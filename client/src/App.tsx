@@ -95,6 +95,7 @@ import SimpleCommunicationHub from "@/pages/SimpleCommunicationHub";
 import SecureMessaging from "@/pages/SecureMessaging";
 import MobileDashboard from "@/pages/MobileDashboard";
 import EmergencyBooking from "@/pages/EmergencyBooking";
+import HolographicGuidance from "@/pages/HolographicGuidance";
 
 function Router() {
   // Track page views when routes change
@@ -107,10 +108,15 @@ function Router() {
           <h2 className="text-3xl font-bold mb-6 text-gray-900">Welcome to Military Legal Shield</h2>
           <p className="mb-6 text-lg text-gray-600">Your comprehensive legal support platform is now active!</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <a href="/emergency-booking" className="p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
               <h3 className="font-semibold text-red-800 mb-2">🚨 Emergency Booking</h3>
               <p className="text-sm text-red-700">One-click emergency legal consultation system</p>
+            </a>
+            
+            <a href="/holographic-guidance" className="p-4 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors">
+              <h3 className="font-semibold text-purple-800 mb-2">✨ Holographic Assistant</h3>
+              <p className="text-sm text-purple-700">AI-powered immersive legal guidance</p>
             </a>
             
             <a href="/mobile-dashboard" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
@@ -128,6 +134,7 @@ function Router() {
             <h3 className="font-semibold mb-2">Platform Status</h3>
             <ul className="text-sm text-gray-600 space-y-1">
               <li>✅ Emergency booking system deployed</li>
+              <li>✅ Holographic legal guidance assistant active</li>
               <li>✅ Mobile PWA enhancements active</li>
               <li>✅ End-to-end encryption enabled</li>
               <li>✅ Dynamic port configuration implemented</li>
@@ -170,6 +177,7 @@ function Router() {
       <Route path="/secure-messaging" component={SecureMessaging} />
       <Route path="/mobile-dashboard" component={MobileDashboard} />
       <Route path="/emergency-booking" component={EmergencyBooking} />
+      <Route path="/holographic-guidance" component={HolographicGuidance} />
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />

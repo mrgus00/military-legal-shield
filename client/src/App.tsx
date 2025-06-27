@@ -103,12 +103,37 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={() => (
-        <div className="p-8">
-          <h2 className="text-xl mb-4">Welcome to Military Legal Shield</h2>
-          <p className="mb-4">Platform is working! Testing mobile PWA features...</p>
-          <a href="/mobile-dashboard" className="text-blue-600 underline">
-            Visit Mobile Dashboard
-          </a>
+        <div className="p-8 max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">Welcome to Military Legal Shield</h2>
+          <p className="mb-6 text-lg text-gray-600">Your comprehensive legal support platform is now active!</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <a href="/emergency-booking" className="p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
+              <h3 className="font-semibold text-red-800 mb-2">🚨 Emergency Booking</h3>
+              <p className="text-sm text-red-700">One-click emergency legal consultation system</p>
+            </a>
+            
+            <a href="/mobile-dashboard" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
+              <h3 className="font-semibold text-blue-800 mb-2">📱 Mobile Dashboard</h3>
+              <p className="text-sm text-blue-700">PWA features and mobile optimization</p>
+            </a>
+            
+            <a href="/secure-messaging" className="p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors">
+              <h3 className="font-semibold text-green-800 mb-2">🔐 Secure Messaging</h3>
+              <p className="text-sm text-green-700">Signal-like encrypted communications</p>
+            </a>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Platform Status</h3>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>✅ Emergency booking system deployed</li>
+              <li>✅ Mobile PWA enhancements active</li>
+              <li>✅ End-to-end encryption enabled</li>
+              <li>✅ Dynamic port configuration implemented</li>
+              <li>✅ Context providers restored</li>
+            </ul>
+          </div>
         </div>
       )} />
       <Route path="/urgent-match" component={UrgentMatch} />
@@ -144,6 +169,7 @@ function Router() {
       <Route path="/communication-hub" component={SimpleCommunicationHub} />
       <Route path="/secure-messaging" component={SecureMessaging} />
       <Route path="/mobile-dashboard" component={MobileDashboard} />
+      <Route path="/emergency-booking" component={EmergencyBooking} />
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />

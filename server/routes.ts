@@ -48,7 +48,14 @@ import {
 } from "./platform-submission";
 import { analytics, analyticsMiddleware, getAnalytics, resetAnalytics } from "./analytics";
 import { setupSecurityRoutes } from "./security-routes";
-// Communication features will be added in future update
+// Secure messaging system with Signal-like privacy features
+import {
+  sendSecureMessage,
+  getSecureMessage,
+  registerUserKey,
+  getUserPublicKey,
+  secureMessagingHealth
+} from "./secure-messaging";
 import Stripe from "stripe";
 import path from "path";
 import fs from "fs";
@@ -1899,7 +1906,14 @@ Allow: /feed.xml`;
     }
   });
 
-  // Communication features endpoints (temporary mock endpoints)
+  // Secure messaging endpoints with Signal-like privacy features
+  app.post("/api/secure-messaging/send", sendSecureMessage);
+  app.get("/api/secure-messaging/message/:messageId", getSecureMessage);
+  app.post("/api/secure-messaging/register-key", registerUserKey);
+  app.get("/api/secure-messaging/user-key/:userId", getUserPublicKey);
+  app.get("/api/secure-messaging/health", secureMessagingHealth);
+
+  // Communication features endpoints (basic versions)
   app.post("/api/communication/chat", (req, res) => {
     res.json({ aiResponse: "Thank you for your military legal question. Our AI assistant is being enhanced. Please use our emergency hotline (800) 555-0123 for immediate assistance." });
   });

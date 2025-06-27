@@ -93,6 +93,7 @@ import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
 import PerformanceDashboard from "@/pages/PerformanceDashboard";
 import SimpleCommunicationHub from "@/pages/SimpleCommunicationHub";
+import SecureMessaging from "@/pages/SecureMessaging";
 
 function Router() {
   // Track page views when routes change
@@ -132,6 +133,7 @@ function Router() {
       <Route path="/consultation-booking" component={ConsultationBooking} />
       <Route path="/emergency-consultation" component={EmergencyConsultation} />
       <Route path="/communication-hub" component={SimpleCommunicationHub} />
+      <Route path="/secure-messaging" component={SecureMessaging} />
       <Route path="/emergency-defense" component={EmergencyDefense} />
       <Route path="/military-justice" component={MilitaryJustice} />
       <Route path="/injury-claims" component={InjuryClaims} />

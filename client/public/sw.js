@@ -1,7 +1,9 @@
-// MilitaryLegalShield Service Worker
-const CACHE_NAME = 'military-legal-shield-v1.0.0';
-const STATIC_CACHE = 'static-v1.0.0';
-const DYNAMIC_CACHE = 'dynamic-v1.0.0';
+// MilitaryLegalShield Advanced Mobile Service Worker
+const CACHE_NAME = 'military-legal-shield-v2.0.0';
+const STATIC_CACHE = 'static-v2.0.0';
+const DYNAMIC_CACHE = 'dynamic-v2.0.0';
+const IMAGE_CACHE = 'images-v2.0.0';
+const API_CACHE = 'api-v2.0.0';
 
 // Files to cache for offline functionality
 const STATIC_FILES = [
@@ -15,7 +17,11 @@ const STATIC_FILES = [
   '/resources',
   '/education',
   '/legal-resources',
-  '/emergency-consultation'
+  '/emergency-consultation',
+  '/secure-messaging',
+  '/communication-hub',
+  '/performance-dashboard',
+  '/offline'
 ];
 
 // API endpoints to cache for offline access
@@ -23,8 +29,18 @@ const API_CACHE_PATTERNS = [
   '/api/attorneys',
   '/api/legal-resources',
   '/api/emergency-contacts',
-  '/api/seo/status'
+  '/api/seo/status',
+  '/api/ai/quick-analysis',
+  '/api/performance/metrics'
 ];
+
+// Mobile-specific optimizations
+const MOBILE_OPTIMIZATIONS = {
+  maxCacheSize: 50 * 1024 * 1024, // 50MB
+  maxCacheAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  backgroundSyncTag: 'military-legal-sync',
+  notificationTag: 'military-legal-notification'
+};
 
 // Install event - cache static files
 self.addEventListener('install', (event) => {
@@ -353,4 +369,144 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('Service Worker: Script loaded successfully');
+// Advanced Mobile Features
+
+// File sharing and Web Share Target API handler
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SHARE_TARGET') {
+    event.waitUntil(handleSharedContent(event.data));
+  }
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// Handle shared files and content for mobile integration
+async function handleSharedContent(data) {
+  console.log('Service Worker: Handling shared content', data);
+  
+  try {
+    // Store shared content for processing
+    const cache = await caches.open(DYNAMIC_CACHE);
+    await cache.put('/shared-content', new Response(JSON.stringify(data)));
+    
+    // Show notification about shared content
+    await self.registration.showNotification('Document Shared', {
+      body: 'Legal document received and ready for analysis',
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/badge-72x72.png',
+      tag: 'shared-document',
+      actions: [
+        {
+          action: 'analyze',
+          title: 'Analyze Document',
+          icon: '/icons/analyze-icon.png'
+        },
+        {
+          action: 'view',
+          title: 'View Document',
+          icon: '/icons/view-icon.png'
+        }
+      ]
+    });
+    
+    // Notify the main app
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'SHARED_CONTENT_AVAILABLE',
+        data: data
+      });
+    });
+  } catch (error) {
+    console.error('Service Worker: Error handling shared content', error);
+  }
+}
+
+// Periodic background sync for mobile optimization
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'legal-updates') {
+    event.waitUntil(fetchLegalUpdates());
+  }
+});
+
+async function fetchLegalUpdates() {
+  try {
+    const response = await fetch('/api/legal-updates');
+    if (response.ok) {
+      const updates = await response.json();
+      
+      // Show notification if there are important updates
+      if (updates.urgent && updates.urgent.length > 0) {
+        await self.registration.showNotification('Urgent Legal Update', {
+          body: updates.urgent[0].message,
+          icon: '/icons/icon-192x192.png',
+          badge: '/icons/badge-72x72.png',
+          tag: 'urgent-legal-update',
+          requireInteraction: true,
+          vibrate: [200, 100, 200, 100, 200],
+          data: { url: '/legal-updates' }
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Service Worker: Error fetching legal updates', error);
+  }
+}
+
+// Mobile performance optimizations
+async function optimizeForMobile() {
+  // Preload critical resources for mobile
+  const criticalResources = [
+    '/api/emergency-contacts',
+    '/api/attorneys/nearby',
+    '/api/legal-resources/urgent'
+  ];
+  
+  const cache = await caches.open(API_CACHE);
+  
+  for (const resource of criticalResources) {
+    try {
+      const response = await fetch(resource);
+      if (response.ok) {
+        await cache.put(resource, response.clone());
+      }
+    } catch (error) {
+      console.log('Service Worker: Failed to preload', resource);
+    }
+  }
+}
+
+// Battery and network optimization
+async function adaptToConnectionType() {
+  if ('connection' in navigator) {
+    const connection = navigator.connection;
+    
+    // Adjust caching strategy based on connection type
+    if (connection.effectiveType === '4g') {
+      // High quality caching for 4G
+      await optimizeForMobile();
+    } else if (connection.effectiveType === '3g' || connection.effectiveType === '2g') {
+      // Conservative caching for slower connections
+      console.log('Service Worker: Optimizing for slower connection');
+    }
+    
+    // Listen for connection changes
+    connection.addEventListener('change', () => {
+      console.log('Service Worker: Connection changed to', connection.effectiveType);
+    });
+  }
+}
+
+// Initialize mobile optimizations
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    Promise.all([
+      adaptToConnectionType(),
+      optimizeForMobile()
+    ])
+  );
+});
+
+console.log('Service Worker: Advanced mobile features loaded successfully');

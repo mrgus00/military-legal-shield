@@ -2,14 +2,17 @@
   "name": "MilitaryLegalShield - Military Legal Support",
   "short_name": "MilLegalShield",
   "description": "Comprehensive legal support platform for military personnel with AI-powered case analysis and attorney matching.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#1e40af",
   "theme_color": "#1e40af",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "scope": "/",
   "lang": "en-US",
-  "categories": ["legal", "military", "professional", "government"],
+  "dir": "ltr",
+  "categories": ["legal", "military", "professional", "government", "productivity"],
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9",
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -81,11 +84,25 @@
       "name": "Emergency Legal Help",
       "short_name": "Emergency",
       "description": "Get immediate legal assistance for urgent military matters",
-      "url": "/urgent-match",
+      "url": "/urgent-match?source=shortcut",
       "icons": [
         {
           "src": "/icons/emergency-icon.png",
-          "sizes": "96x96"
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Secure Messaging",
+      "short_name": "Secure Chat",
+      "description": "End-to-end encrypted messaging for sensitive legal communications",
+      "url": "/secure-messaging?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/secure-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     },
@@ -93,11 +110,12 @@
       "name": "AI Case Analysis",
       "short_name": "AI Analysis",
       "description": "Analyze your case with AI predictions and recommendations",
-      "url": "/ai-case-analysis",
+      "url": "/ai-case-analysis?source=shortcut",
       "icons": [
         {
           "src": "/icons/ai-icon.png",
-          "sizes": "96x96"
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     },
@@ -105,28 +123,40 @@
       "name": "Find Attorneys",
       "short_name": "Attorneys",
       "description": "Connect with qualified military defense attorneys",
-      "url": "/find-attorneys",
+      "url": "/find-attorneys?source=shortcut",
       "icons": [
         {
           "src": "/icons/attorney-icon.png",
-          "sizes": "96x96"
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     },
     {
-      "name": "Document Generator",
-      "short_name": "Documents",
-      "description": "Generate legal documents with AI assistance",
-      "url": "/document-generator",
+      "name": "Communication Hub",
+      "short_name": "Chat Hub",
+      "description": "Multi-channel communication with legal experts",
+      "url": "/communication-hub?source=shortcut",
       "icons": [
         {
-          "src": "/icons/document-icon.png",
-          "sizes": "96x96"
+          "src": "/icons/chat-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     }
   ],
-  "related_applications": [],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.militarylegalshield.app",
+      "id": "com.militarylegalshield.app"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/military-legal-shield/id123456789"
+    }
+  ],
   "prefer_related_applications": false,
   "edge_side_panel": {
     "preferred_width": 400
@@ -135,6 +165,43 @@
     {
       "protocol": "web+militarylegal",
       "url": "/urgent-match?case=%s"
+    },
+    {
+      "protocol": "web+milsecure",
+      "url": "/secure-messaging?channel=%s"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/share-handler",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "documents",
+          "accept": ["application/pdf", "image/*", "text/plain", ".doc", ".docx"]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/document-analysis",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "application/msword": [".doc"],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+        "text/plain": [".txt"],
+        "image/*": [".jpg", ".jpeg", ".png", ".gif"]
+      }
+    }
+  ],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "navigate-new"]
+  },
+  "handle_links": "preferred",
+  "capture_links": "existing-client-navigate"
 }

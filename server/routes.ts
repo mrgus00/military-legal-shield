@@ -26,6 +26,7 @@ import {
 } from './performance';
 import { imageOptimizationMiddleware, imageOptimizer, criticalResourcePreloader } from './image-optimization';
 import gamificationRoutes from "./gamification-routes";
+
 import { 
   generateStructuredData, 
   generateMetaTags, 
